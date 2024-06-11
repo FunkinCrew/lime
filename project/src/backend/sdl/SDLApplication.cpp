@@ -3,6 +3,10 @@
 #include "SDLJoystick.h"
 #include <system/System.h>
 
+#ifdef LIME_SDL_SOUND
+#include "SDL_sound.h"
+#endif
+
 #ifdef HX_MACOS
 #include <CoreFoundation/CoreFoundation.h>
 #endif
@@ -49,6 +53,10 @@ namespace lime {
 
 		#if defined(ANDROID) || defined (IPHONE)
 		SDL_SetEventFilter (HandleAppLifecycleEvent, NULL);
+		#endif
+
+		#ifdef LIME_SDL_SOUND
+		Sound_Init ();
 		#endif
 
 		SDL_LogSetPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
@@ -802,6 +810,10 @@ namespace lime {
 
 		applicationEvent.type = EXIT;
 		ApplicationEvent::Dispatch (&applicationEvent);
+
+		#ifdef LIME_SDL_SOUND
+		Sound_Quit ();
+		#endif
 
 		SDL_Quit ();
 
