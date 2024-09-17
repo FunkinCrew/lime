@@ -9,6 +9,12 @@ jobs:
         with:
           submodules: true
 
+      - name: Install Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r15c
+
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
@@ -33,13 +39,14 @@ jobs:
         run: |
           haxelib run lime setup -alias -y
           lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME
+          lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
           lime config JAVA_HOME $JAVA_HOME_11_X64
           lime config ANDROID_SETUP true
 
       - name: Rebuild Lime (Android)
         run: |
-          lime rebuild android -D HXCPP_ARM64 -final -eval -nocolor -verbose -nocffi
+          lime rebuild android -D HXCPP_ARMV7 -final -eval -nocolor -nocffi
+          lime rebuild android -D HXCPP_ARM64 -final -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
