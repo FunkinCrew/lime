@@ -30,7 +30,7 @@ jobs:
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
 
       - name: Rebuild Lime (Linux x86_64)
-        run: lime rebuild linux -64 -release -eval -nocolor -nocffi
+        run: haxelib run lime rebuild linux -64 -release -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
