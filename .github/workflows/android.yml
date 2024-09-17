@@ -19,6 +19,7 @@ jobs:
 
       - name: Install Haxe dependencies
         run: |
+          sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
           haxelib git hxcpp https://github.com/mcagabe19-stuff/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
@@ -38,7 +39,7 @@ jobs:
 
       - name: Rebuild Lime (Android)
         run: |
-          lime rebuild android -final -eval -nocolor -verbose -nocffi
+          lime rebuild android -D HXCPP_ARM64 -final -eval -nocolor -verbose -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
