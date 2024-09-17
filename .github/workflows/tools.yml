@@ -2,7 +2,7 @@ name: Tools
 on: workflow_dispatch
 
 jobs:
-  android-ndll:
+  tools:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +30,7 @@ jobs:
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
 
       - name: Rebuild Tools
-        run: lime rebuild tools
+        run: haxelib run lime rebuild tools
 
       - uses: actions/upload-artifact@v3
         with:
