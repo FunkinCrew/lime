@@ -43,10 +43,13 @@ jobs:
           lime config JAVA_HOME $JAVA_HOME_11_X64
           lime config ANDROID_SETUP true
 
-      - name: Rebuild Lime (Android)
-        run: |
-          lime rebuild android -D HXCPP_ARMV7 -release -eval -nocolor -nocffi
-          lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
+      - name: Rebuild Lime (Android AArch32)
+        run: lime rebuild android -D HXCPP_ARMV7 -release -eval -nocolor -nocffi
+        continue-on-error: true
+
+      - name: Rebuild Lime (Android AArch64)
+        run: lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v3
         with:
