@@ -155,6 +155,16 @@ class AndroidPlatform extends PlatformTarget
 		if (hasX86) architectures.push(Architecture.X86);
 		if (hasX64) architectures.push(Architecture.X64);
 
+		if (project.targetFlags.exists("ONLY_ARMV7"))
+			architectures = [Architecture.ARMV7];
+		else if (project.targetFlags.exists("ONLY_ARM64"))
+			architectures = [Architecture.ARM64];
+		else if (project.targetFlags.exists("ONLY_X86"))
+			architectures = [Architecture.X86];
+		else if (project.targetFlags.exists("ONLY_X86_64"))
+			architectures = [Architecture.X64];
+
+
 		if (architectures.length == 0)
 		{
 			Log.warn("No architecture selected, defaulting to ARM64.");
