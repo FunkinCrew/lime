@@ -45,8 +45,8 @@ jobs:
 
       - name: Rebuild Lime (Android)
         run: |
-          lime rebuild android -D HXCPP_ARMV7 -final -eval -nocolor -nocffi
-          lime rebuild android -D HXCPP_ARM64 -final -eval -nocolor -nocffi
+          lime rebuild android -D HXCPP_ARMV7 -release -eval -nocolor -nocffi
+          lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
