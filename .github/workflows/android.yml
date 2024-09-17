@@ -51,6 +51,10 @@ jobs:
         run: lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
         continue-on-error: true
 
+      - name: Rebuild Lime (Linux x86_64)
+        run: lime rebuild linux -64 -release -eval -nocolor -nocffi
+        continue-on-error: true
+
       - uses: actions/upload-artifact@v3
         with:
           name: Android-NDLL
