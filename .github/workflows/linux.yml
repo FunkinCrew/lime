@@ -1,19 +1,13 @@
-name: Android CI
+name: Linux CI
 on: workflow_dispatch
 
 jobs:
-  android-ndll:
+  linux-ndll:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-
-      - name: Install Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
 
       - uses: krdlab/setup-haxe@v1
         with:
@@ -35,37 +29,12 @@ jobs:
         run: |
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
 
-      - name: Configure Android support
-        run: |
-          haxelib run lime setup -alias -y
-          lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
-          lime config JAVA_HOME $JAVA_HOME_11_X64
-          lime config ANDROID_SETUP true
-
-      - name: Rebuild Lime (Android AArch32)
-        run: lime rebuild android -D HXCPP_ARMV7 -release -eval -nocolor -nocffi
-        continue-on-error: true
-
-      - name: Rebuild Lime (Android AArch64)
-        run: lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
-        continue-on-error: true
-
       - name: Rebuild Lime (Linux x86_64)
         run: lime rebuild linux -64 -release -eval -nocolor -nocffi
-        continue-on-error: true
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Android-NDLL
-          path: |
-            ndll/Android/
-            !**/.gitignore
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Linux64-NDLL
+          name: Linux-NDLL
           path: |
             ndll/Linux64/
             !**/.gitignore
