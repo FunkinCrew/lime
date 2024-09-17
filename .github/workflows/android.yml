@@ -26,7 +26,7 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
-          haxelib install hxcpp --quiet
+          haxelib install hxcpp 4.2.1 --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
@@ -56,5 +56,13 @@ jobs:
           name: Android-NDLL
           path: |
             ndll/Android/
+            !**/.gitignore
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Linux64-NDLL
+          path: |
+            ndll/Linux64/
             !**/.gitignore
           if-no-files-found: error
