@@ -8,6 +8,14 @@
 	<array>::foreach languages::
 		<string>::__current__::</string>::end::
 	</array>::end::
+        <key>UIFileSharingEnabled</key>
+	<string>true</string>
+        <key>com.apple.developer.kernel.increased-memory-limit</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<string>true</string>
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>To play with controller accept bluetooth permission.</string>
 	<key>CFBundleDisplayName</key>
 	<string>::APP_TITLE::</string>
 	<key>CFBundleExecutable</key>
