@@ -150,16 +150,6 @@ class AndroidPlatform extends PlatformTarget
 		if (hasX86) architectures.push(Architecture.X86);
 		if (hasX64) architectures.push(Architecture.X64);
 
-		if (project.targetFlags.exists("ONLY_ARMV7"))
-			architectures = [Architecture.ARMV7];
-		else if (project.targetFlags.exists("ONLY_ARM64"))
-			architectures = [Architecture.ARM64];
-		else if (project.targetFlags.exists("ONLY_X86"))
-			architectures = [Architecture.X86];
-		else if (project.targetFlags.exists("ONLY_X86_64"))
-			architectures = [Architecture.X64];
-
-
 		if (architectures.length == 0)
 		{
 			Log.warn("No architecture selected, defaulting to ARM64.");
@@ -174,6 +164,7 @@ class AndroidPlatform extends PlatformTarget
 			var minimumSDKVersion = project.config.getInt("android.minimum-sdk-version", 23);
 			var haxeParams = [hxml, "-D", "android", "-D", "PLATFORM=android-" + minimumSDKVersion, "-D", "PLATFORM_NUMBER=" + minimumSDKVersion];
 			var cppParams = ["-Dandroid", "-DPLATFORM=android-" + minimumSDKVersion, "-DPLATFORM_NUMBER=" + minimumSDKVersion];
+			var path = sourceSet + "/jniLibs/armeabi";
 			var suffix = ".so";
 
 			if (architecture == Architecture.ARMV7)
