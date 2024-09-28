@@ -9,6 +9,8 @@
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/jpeg/" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/jpeg/" />
 
+		<compilerflag value="-Wno-shift-count-overflow" unless="windows" />
+
 		<depend name="${NATIVE_TOOLKIT_PATH}/jpeg/cderror.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/jpeg/cdjpeg.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/custom/jpeg/jconfig.h" />
