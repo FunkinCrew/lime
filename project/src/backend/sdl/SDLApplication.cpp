@@ -129,12 +129,10 @@ namespace lime {
 
 				if (!inBackground) {
 
-					currentUpdate = ((double) SDL_GetPerformanceCounter () / (double) SDL_GetPerformanceFrequency ()) * 1000.0;
+					currentUpdate = SDL_GetTicks();
 					applicationEvent.type = UPDATE;
 					applicationEvent.deltaTime = currentUpdate - lastUpdate;
 					lastUpdate = currentUpdate;
-
-					nextUpdate += framePeriod;
 
 					while (nextUpdate <= currentUpdate) {
 
@@ -329,7 +327,7 @@ namespace lime {
 	void SDLApplication::Init () {
 
 		active = true;
-		lastUpdate = ((double) SDL_GetPerformanceCounter () / (double) SDL_GetPerformanceFrequency ()) * 1000.0;
+		lastUpdate = SDL_GetTicks();
 		nextUpdate = lastUpdate;
 
 	}
@@ -883,7 +881,7 @@ namespace lime {
 
 			}
 
-			currentUpdate = ((double) SDL_GetPerformanceCounter () / (double) SDL_GetPerformanceFrequency ()) * 1000.0;
+			currentUpdate = SDL_GetTicks();
 
 		#if defined (IPHONE) || defined (EMSCRIPTEN)
 
