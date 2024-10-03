@@ -129,7 +129,7 @@ namespace lime {
 
 				if (!inBackground) {
 
-					currentUpdate = SDL_GetTicks();
+					currentUpdate = SDL_GetTicks ();
 					applicationEvent.type = UPDATE;
 					applicationEvent.deltaTime = currentUpdate - lastUpdate;
 					lastUpdate = currentUpdate;
@@ -329,7 +329,7 @@ namespace lime {
 	void SDLApplication::Init () {
 
 		active = true;
-		lastUpdate = SDL_GetTicks();
+		lastUpdate = SDL_GetTicks ();
 		nextUpdate = lastUpdate;
 
 	}
@@ -883,7 +883,7 @@ namespace lime {
 
 			}
 
-			currentUpdate = SDL_GetTicks();
+			currentUpdate = SDL_GetTicks ();
 
 		#if defined (IPHONE) || defined (EMSCRIPTEN)
 
