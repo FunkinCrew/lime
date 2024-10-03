@@ -1,6 +1,8 @@
 <xml>
 
 	<set name="PLATFORM" value="android-21" if="android" />
+	<set name="PLATFORM_NUMBER" value="21" if="android" />
+
 	<set name="HXCPP_CPP11" value="1" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
