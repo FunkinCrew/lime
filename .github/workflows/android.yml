@@ -9,12 +9,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Install Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
