@@ -26,7 +26,8 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
-          haxelib install hxcpp --quiet
+          curl -LO https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.66/hxcpp-4.3.66.zip
+          haxelib install ./hxcpp-4.3.66.zip --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
@@ -39,17 +40,12 @@ jobs:
         run: |
           haxelib run lime setup -alias -y
           lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
+          lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME
           lime config JAVA_HOME $JAVA_HOME_11_X64
           lime config ANDROID_SETUP true
 
-      - name: Rebuild Lime (Android AArch32)
-        run: lime rebuild android -D HXCPP_ARMV7 -release -eval -nocolor -nocffi
-        continue-on-error: true
-
-      - name: Rebuild Lime (Android AArch64)
-        run: lime rebuild android -D HXCPP_ARM64 -release -eval -nocolor -nocffi
-        continue-on-error: true
+      - name: Rebuild Lime
+        run: lime rebuild android -release -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
