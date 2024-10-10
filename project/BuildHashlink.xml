@@ -1,8 +1,6 @@
 <xml>
-	<section if="android">
-		<set name="PLATFORM" value="android-23" />
-		<set name="PLATFORM_NUMBER" value="23" />
-	</section>
+	<set name="PLATFORM" value="android-21" if="android" />
+	<set name="PLATFORM_NUMBER" value="21" if="android" />
 
 	<set name="HXCPP_CPP11" value="1" />
 
