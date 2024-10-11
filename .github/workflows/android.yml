@@ -13,6 +13,12 @@ jobs:
         with:
           haxe-version: 4.2.5
 
+      - name: Install Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+
       - name: Set HAXEPATH
         run: |
           echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
@@ -34,7 +40,7 @@ jobs:
         run: |
           haxelib run lime setup -alias -y
           lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME
+          lime config ANDROID_NDK_ROOT $${{ steps.setup-ndk.outputs.ndk-path }}
           lime config JAVA_HOME $JAVA_HOME_11_X64
           lime config ANDROID_SETUP true
 
