@@ -40,7 +40,7 @@ jobs:
         run: |
           haxelib run lime setup -alias -y
           lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT $${{ steps.setup-ndk.outputs.ndk-path }}
+          lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
           lime config JAVA_HOME $JAVA_HOME_11_X64
           lime config ANDROID_SETUP true
 
