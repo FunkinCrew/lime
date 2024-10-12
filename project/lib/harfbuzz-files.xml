@@ -21,6 +21,8 @@
 		<compilerflag value="-D_CRT_NONSTDC_NO_WARNINGS" if="windows" />
 
 		<compilerflag value="-DHAVE_CORETEXT" if="mac || ios" />
+
+		<compilerflag value="-Wno-deprecated-builtins" if="ios" />
 		<compilerflag value="-Wno-undefined-bool-conversion" if="mac" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-aat-layout.cc" />
