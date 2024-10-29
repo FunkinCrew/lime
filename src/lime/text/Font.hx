@@ -319,29 +319,52 @@ class Font
 		#if (lime_cffi && !macro)
 		__setSize(fontSize);
 
-		var bytes = Bytes.alloc(0);
-		// bytes.endian = (System.endianness == BIG_ENDIAN ? "bigEndian" : "littleEndian");
+		// Allocate an estimated buffer size - adjust if necessary
+		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
 
-		var dataPosition = 0;
+		// Call native function to render glyph and get byte data
 		bytes = NativeCFFI.lime_font_render_glyph(src, glyph, bytes);
 
 		if (bytes != null && bytes.length > 0)
 		{
-			var index = bytes.getInt32(dataPosition);
-			dataPosition += 4;
-			var width = bytes.getInt32(dataPosition);
-			dataPosition += 4;
-			var height = bytes.getInt32(dataPosition);
-			dataPosition += 4;
-			var x = bytes.getInt32(dataPosition);
-			dataPosition += 4;
-			var y = bytes.getInt32(dataPosition);
+			var dataPosition = 0;
+
+			// Extract glyph information from the byte array
+			var index:Int = bytes.getInt32(dataPosition);
 			dataPosition += 4;
 
-			var data = bytes.sub(dataPosition, width * height);
-			dataPosition += (width * height);
+			var width:Int = bytes.getInt32(dataPosition);
+			dataPosition += 4;
 
-			var buffer = new ImageBuffer(new UInt8Array(data), width, height, 8);
+			var height:Int = bytes.getInt32(dataPosition);
+			dataPosition += 4;
+
+			var x:Int = bytes.getInt32(dataPosition);
+			dataPosition += 4;
+
+			var y:Int = bytes.getInt32(dataPosition);
+			dataPosition += 4;
+
+			// Check if width and height are valid before proceeding
+			if (width <= 0 || height <= 0)
+			{
+				return null;
+			}
+
+			// Extract pixel data from the byte array, accounting for 32-bit RGBA data
+			var pitch = width * 4; // 32-bit color data
+
+			// Create a new Bytes array to store the extracted bitmap data without padding
+			var dataBytes = Bytes.alloc(width * height * 4);
+
+			// Extract row by row to handle RGBA data
+			for (i in 0...height)
+			{
+				dataBytes.blit(i * width * 4, bytes, dataPosition + (i * pitch), width * 4);
+			}
+
+			// Create ImageBuffer and Image from the extracted data
+			var buffer = new ImageBuffer(new UInt8Array(dataBytes), width, height, 32);
 			var image = new Image(buffer, 0, 0, width, height);
 			image.x = x;
 			image.y = y;
@@ -352,7 +375,6 @@ class Font
 
 		return null;
 	}
-
 	/**
      	* Renders a set of glyphs to images.
      	*
