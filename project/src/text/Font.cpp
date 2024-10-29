@@ -988,15 +988,16 @@ namespace lime {
 						unsigned char r = bitmap.buffer[i * pitch + j * 3 + 0];
 						unsigned char g = bitmap.buffer[i * pitch + j * 3 + 1];
 						unsigned char b = bitmap.buffer[i * pitch + j * 3 + 2];
-
+						unsigned char a = (r + g + b) / 3;
+						
 						//Red
 						position[(i * width + j) * 4 + 0] = r;
 						//Green
 						position[(i * width + j) * 4 + 1] = g;
 						//Blue
 						position[(i * width + j) * 4 + 2] = b;
-						//Alpha (fully opaque)
-						position[(i * width + j) * 4 + 3] = 255;
+						//Alpha
+						position[(i * width + j) * 4 + 3] = a;
 					}
 				}
 
