@@ -1040,14 +1040,22 @@ namespace lime {
 	}
 
 
-	void Font::SetSize (size_t size) {
+	void Font::SetSize(size_t size)
+	{
+		//We changed this from 72? I think in the next version of lime we should probably
+		//change the function signature from both the native and haxe side to expect an optional
+		//dpi argument
+		size_t hdpi = 96;
+		size_t vdpi = 96;
 
-		size_t hdpi = 72;
-		size_t vdpi = 72;
-
-		FT_Set_Char_Size ((FT_Face)face, (int)(size*64), (int)(size*64), hdpi, vdpi);
+		FT_Set_Char_Size(
+			(FT_Face)face,				//Handle to the target face object
+			0,					//Char width in 1/64th of points (0 means same as height)
+			static_cast<int>(size * 64), 		//Char height in 1/64th of points
+			hdpi,					//Horizontal DPI
+			vdpi					//Vertical DPI
+		);
 		mSize = size;
-
 	}
 
 
