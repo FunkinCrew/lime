@@ -3965,7 +3965,7 @@ namespace lime {
 	DEFINE_PRIME2 (lime_font_outline_decompose);
 	DEFINE_PRIME3 (lime_font_render_glyph);
 	DEFINE_PRIME3 (lime_font_render_glyphs);
-	DEFINE_PRIME2v (lime_font_set_size);
+	DEFINE_PRIME3v (lime_font_set_size);
 	DEFINE_PRIME1v (lime_gamepad_add_mappings);
 	DEFINE_PRIME2v (lime_gamepad_event_manager_register);
 	DEFINE_PRIME1 (lime_gamepad_get_device_guid);
