@@ -410,7 +410,7 @@ class Font
 		var glyphList = _glyphList;
 		#end
 
-		NativeCFFI.lime_font_set_size(src, fontSize);
+		__setSize(fontSize, 96);
 
 		var bytes = Bytes.alloc(0);
 		bytes = NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes);
