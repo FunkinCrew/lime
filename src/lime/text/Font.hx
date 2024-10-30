@@ -317,7 +317,7 @@ class Font
 	public function renderGlyph(glyph:Glyph, fontSize:Int):Image
 	{
 		#if (lime_cffi && !macro)
-		__setSize(fontSize);
+		__setSize(fontSize, 96);
 
 		// Allocate an estimated buffer size - adjust if necessary
 		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
@@ -714,7 +714,7 @@ class Font
 	}
 	#end
 
-	@:noCompletion private function __setSize(size:Int):Void
+	@:noCompletion private function __setSize(size:Int, dpi:Int):Void
 	{
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_font_set_size(src, size);
