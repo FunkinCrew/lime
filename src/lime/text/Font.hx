@@ -717,7 +717,7 @@ class Font
 	@:noCompletion private function __setSize(size:Int, dpi:Int = 72):Void
 	{
 		#if (lime_cffi && !macro)
-		NativeCFFI.lime_font_set_size(src, size);
+		NativeCFFI.lime_font_set_size(src, size, dpi);
 		#end
 	}
 }
