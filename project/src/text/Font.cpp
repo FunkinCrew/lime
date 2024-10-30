@@ -1039,14 +1039,22 @@ namespace lime {
 		return totalOffset;
 
 	}
+	
+	void Font::SetSize(size_t size, size_t dpi)
+	{
+		//We changed the function signature to include a dpi argument which changes this from 
+		//the default value of 72 for dpi. Any public api that uses this should probably be changed
+		//to allow setting the dpi in an appropriate future release.
+		size_t hdpi = dpi;
+		size_t vdpi = dpi;
 
-
-	void Font::SetSize (size_t size) {
-
-		size_t hdpi = 72;
-		size_t vdpi = 72;
-
-		FT_Set_Char_Size ((FT_Face)face, (int)(size*64), (int)(size*64), hdpi, vdpi);
+		FT_Set_Char_Size(
+			(FT_Face)face,						//Handle to the target face object
+			0,									//Char width in 1/64th of points (0 means same as height)
+			static_cast<int>(size * 64), 		//Char height in 1/64th of points
+			hdpi,								//Horizontal DPI
+			vdpi								//Vertical DPI
+		);
 		mSize = size;
 
 	}
