@@ -22,6 +22,7 @@ class Promises {
     for (future in futures) {
       future.onComplete(function(result) {
         results.push(result);
+        promise.progress(results.length, futures.length);
         if (results.length == futures.length) {
           promise.complete(results);
         }
@@ -48,12 +49,14 @@ class Promises {
     for (future in futures) {
       future.onComplete(function(value) {
         resolved += 1;
+        promise.progress(resolved, futures.length);
         if (resolved == futures.length) {
           promise.complete(futures);
         }
       });
       future.onError(function(error) {
         resolved += 1;
+        promise.progress(resolved, futures.length);
         if (resolved == futures.length) {
           promise.complete(futures);
         }
@@ -79,6 +82,7 @@ class Promises {
       });
       future.onError(function(error) {
         errors.push(error);
+        promise.progress(errors.length, futures.length);
         if (errors.length == futures.length) {
           promise.error(errors);
         }
