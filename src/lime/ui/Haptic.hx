@@ -62,7 +62,7 @@ class Haptic
 			Log.verbose("Navigator.vibrate() threw an error (it might be Internet Explorer or Edge not supporting the feature)");
 		}
 		#elseif (lime_cffi && !macro)
-		NativeCFFI.lime_haptic_vibrate(period, duration);
+		NativeCFFI.lime_haptic_vibrate(period, duration, amplitude);
 		#end
 	}
 }
