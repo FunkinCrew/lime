@@ -1245,7 +1245,7 @@ class PlatformSetup
 			Log.println("To use the HashLink debugger on macOS, the hl executable needs to be signed.");
 			if (ConfigHelper.getConfigValue("HL_PATH") != null)
 			{
-				Log.println("When building HashLink from source, make sure to have run `make codesign_osx` before installing.");
+				Log.println("When building HashLink from source, you must run `make codesign_osx` before installing.");
 			}
 			else
 			{
