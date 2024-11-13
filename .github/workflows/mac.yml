@@ -20,7 +20,6 @@ jobs:
           haxelib install ./hxcpp-4.3.66.zip --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
-          haxelib dev lime $GITHUB_WORKSPACE
       - name: Configure Lime
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
