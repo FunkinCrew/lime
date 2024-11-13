@@ -2,7 +2,7 @@ name: Mac CI
 on: workflow_dispatch
 
 env:
-  HAXE_VERSION: 4.2.5
+  HAXE_VERSION: 4.3.5
 
 jobs:
   mac:
