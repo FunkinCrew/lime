@@ -1239,7 +1239,7 @@ class PlatformSetup
 
 	public static function setupHL():Void
 	{
-		getDefineValue("HL_PATH", "Absolute path to a custom version of HashLink. Leave empty to use lime's default version.");
+		getDefineValue("HL_PATH", "Absolute path to a custom version of HashLink. Leave empty to use Lime's default bundled version.");
 		if (System.hostPlatform == MAC)
 		{
 			Log.println("To use the HashLink debugger on macOS, the hl executable needs to be signed.");
