@@ -163,7 +163,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_gzip_decompress(data:Dynamic, bytes:Dynamic):Dynamic;
 
-	@:cffi private static function lime_haptic_vibrate(period:Int, duration:Int):Void;
+	@:cffi private static function lime_haptic_vibrate(period:Int, duration:Int, amplitude:Int):Void;
 
 	@:cffi private static function lime_image_encode(data:Dynamic, type:Int, quality:Int, bytes:Dynamic):Dynamic;
 
@@ -1024,7 +1024,7 @@ class NativeCFFI
 		return null;
 	}
 
-	@:hlNative("lime", "hl_haptic_vibrate") private static function lime_haptic_vibrate(period:Int, duration:Int):Void {}
+	@:hlNative("lime", "hl_haptic_vibrate") private static function lime_haptic_vibrate(period:Int, duration:Int, amplitude:Int):Void {}
 
 	@:hlNative("lime", "hl_image_encode") private static function lime_image_encode(data:ImageBuffer, type:Int, quality:Int, bytes:Bytes):Bytes
 	{
