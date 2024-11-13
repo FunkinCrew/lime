@@ -4,23 +4,23 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 namespace lime {
-	@available(iOS 13.0, *)
 	static CHHapticEngine* hapticEngine = nullptr;
 
-	@available(iOS 13.0, *)
 	void InitializeHapticEngine() {
-		if (!hapticEngine) {
-			NSError* error = nil;
+		if (@available(iOS 13.0, *)) {
+			if (!hapticEngine) {
+				NSError* error = nil;
 
-			hapticEngine = [[CHHapticEngine alloc] initAndReturnError:&error];
+				hapticEngine = [[CHHapticEngine alloc] initAndReturnError:&error];
 
-			if (error) {
-				NSLog(@"Error creating haptic engine: %@", error);
-				hapticEngine = nullptr;
-			} else {
-				if (![hapticEngine startAndReturnError:&error]) {
-					NSLog(@"Error starting haptic engine: %@", error);
+				if (error) {
+					NSLog(@"Error creating haptic engine: %@", error);
 					hapticEngine = nullptr;
+				} else {
+					if (![hapticEngine startAndReturnError:&error]) {
+						NSLog(@"Error starting haptic engine: %@", error);
+						hapticEngine = nullptr;
+					}
 				}
 			}
 		}
