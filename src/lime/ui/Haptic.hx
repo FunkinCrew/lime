@@ -12,7 +12,7 @@ import lime.utils.Log;
 class Haptic
 {
 	#if android
-	private static var lime_haptic_vibrate:Int->Int->Void;
+	private static var lime_haptic_vibrate:Int->Int->Float->Void;
 	#end
 
 	public static function vibrate(period:Int, duration:Int, amplitude:Int):Void
