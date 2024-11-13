@@ -1,0 +1,33 @@
+name: Windows CI
+on: workflow_dispatch
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+      - name: Install Haxe dependencies
+        run: |
+          curl -LO https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.66/hxcpp-4.3.66.zip
+          haxelib install ./hxcpp-4.3.66.zip --quiet
+          haxelib install format --quiet
+          haxelib install hxp --quiet
+          haxelib dev lime ${{ github.workspace }}
+      - name: Rebuild Lime
+        run: |
+          haxelib run lime rebuild windows -32 -release -nocolor -nocffi -eval
+          haxelib run lime rebuild windows -64 -release -nocolor -nocffi -eval
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-NDLL
+          path: |
+            ndll/Windows/
+            ndll/Windows64/
+            !**/.gitignore
+          if-no-files-found: error
