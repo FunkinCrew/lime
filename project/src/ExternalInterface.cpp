@@ -1772,19 +1772,19 @@ namespace lime {
 	}
 
 
-	void lime_haptic_vibrate (int period, int duration) {
+	void lime_haptic_vibrate (int period, int duration, double amplitude) {
 
 		#ifdef IPHONE
-		Haptic::Vibrate (period, duration);
+		Haptic::Vibrate (period, duration, amplitude);
 		#endif
 
 	}
 
 
-	HL_PRIM void HL_NAME(hl_haptic_vibrate) (int period, int duration) {
+	HL_PRIM void HL_NAME(hl_haptic_vibrate) (int period, int duration, double amplitude) {
 
 		#ifdef IPHONE
-		Haptic::Vibrate (period, duration);
+		Haptic::Vibrate (period, duration, amplitude);
 		#endif
 
 	}
