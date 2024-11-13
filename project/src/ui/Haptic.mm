@@ -16,9 +16,7 @@ namespace lime {
 				NSLog(@"Error creating haptic engine: %@", error);
 				hapticEngine = nullptr;
 			} else {
-				[hapticEngine startAndReturnError:&error];
-
-				if (error) {
+				if (![hapticEngine startAndReturnError:&error]) {
 					NSLog(@"Error starting haptic engine: %@", error);
 					hapticEngine = nullptr;
 				}
@@ -33,22 +31,39 @@ namespace lime {
 			if (hapticEngine) {
 				NSError* error = nil;
 
-				CHHapticEventParameter* intensityParam = [[CHHapticEventParameter alloc] initWithParameterID:CHHapticEventParameterIDHapticIntensity value:(float)amplitude];
-				CHHapticEventParameter* sharpnessParam = [[CHHapticEventParameter alloc] initWithParameterID:CHHapticEventParameterIDHapticSharpness value:0.5];
-				CHHapticEvent* hapticEvent = [[CHHapticEvent alloc] initWithEventType:CHHapticEventTypeHapticContinuous parameters:@[intensityParam, sharpnessParam] relativeTime:0 duration:(float)duration / 1000];
-				CHHapticPattern* pattern = [[CHHapticPattern alloc] initWithEvents:@[hapticEvent] parameterCurves:@[] error:&error];
+				CHHapticEventParameter* intensityParam = 
+					[[CHHapticEventParameter alloc] initWithParameterID:CHHapticEventParameterIDHapticIntensity value:(float)amplitude];
+				CHHapticEventParameter* sharpnessParam = 
+					[[CHHapticEventParameter alloc] initWithParameterID:CHHapticEventParameterIDHapticSharpness value:0.5];
 
-				if (error) return;
+				CHHapticEvent* hapticEvent = 
+					[[CHHapticEvent alloc] initWithEventType:CHHapticEventTypeHapticContinuous 
+												   parameters:@[intensityParam, sharpnessParam] 
+												  relativeTime:0 
+													   duration:(float)duration / 1000];
 
-				CHHapticPatternPlayer* player = [hapticEngine createPlayerWithPattern:pattern error:&error];
 
-				if (error) return;
+				CHHapticPattern* pattern = [[CHHapticPattern alloc] initWithEvents:@[hapticEvent] 
+																	 parameterCurves:@[] 
+																			 error:&error];
+				if (error) {
+					NSLog(@"Error creating haptic pattern: %@", error);
+					return;
+				}
+
+				id<CHHapticPatternPlayer> player = [hapticEngine createPlayerWithPattern:pattern error:&error];
+				if (error) {
+					NSLog(@"Error creating haptic pattern player: %@", error);
+					return;
+				}
 
 				[player startAtTime:0 error:&error];
+				if (error) {
+					NSLog(@"Error starting haptic pattern player: %@", error);
+				}
 			}
 		} else {
 			AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
 		}
 	}
-
 }
