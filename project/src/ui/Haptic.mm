@@ -4,8 +4,10 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 namespace lime {
+	@available(iOS 13.0, *)
 	static CHHapticEngine* hapticEngine = nullptr;
 
+	@available(iOS 13.0, *)
 	void InitializeHapticEngine() {
 		if (!hapticEngine) {
 			NSError* error = nil;
