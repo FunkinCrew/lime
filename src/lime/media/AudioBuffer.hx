@@ -59,6 +59,11 @@ class AudioBuffer
 	public var data:UInt8Array;
 
 	/**
+		The format the raw audio data is stored in.
+	**/
+	public var dataFormat:AudioBufferDataFormat;
+
+	/**
 		The sample rate of the audio data, in Hz.
 	**/
 	public var sampleRate:Int;
@@ -144,6 +149,7 @@ class AudioBuffer
 			audioBuffer.bitsPerSample = data.bitsPerSample;
 			audioBuffer.channels = data.channels;
 			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
+			audioBuffer.dataFormat = data.dataFormat;
 			audioBuffer.sampleRate = data.sampleRate;
 			return audioBuffer;
 		}
@@ -183,6 +189,7 @@ class AudioBuffer
 			audioBuffer.bitsPerSample = data.bitsPerSample;
 			audioBuffer.channels = data.channels;
 			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
+			audioBuffer.dataFormat = data.dataFormat;
 			audioBuffer.sampleRate = data.sampleRate;
 			return audioBuffer;
 		}
@@ -238,6 +245,7 @@ class AudioBuffer
 			audioBuffer.bitsPerSample = data.bitsPerSample;
 			audioBuffer.channels = data.channels;
 			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
+			audioBuffer.dataFormat = data.dataFormat;
 			audioBuffer.sampleRate = data.sampleRate;
 			return audioBuffer;
 		}
@@ -298,6 +306,7 @@ class AudioBuffer
 		audioBuffer.channels = info.channels;
 		audioBuffer.sampleRate = info.rate;
 		audioBuffer.bitsPerSample = 16;
+		audioBuffer.dataFormat = PCM;
 		audioBuffer.__srcVorbisFile = vorbisFile;
 
 		return audioBuffer;
