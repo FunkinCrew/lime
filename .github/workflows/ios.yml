@@ -2,7 +2,7 @@ name: iOS CI
 on: workflow_dispatch
 jobs:
   ios-ndll:
-    runs-on: macos-13
+    runs-on: macos-15
     steps:
 
       - uses: actions/checkout@v3
