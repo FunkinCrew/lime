@@ -401,7 +401,7 @@ public class GameActivity extends SDLActivity {
 
 		}
 
-		int vibrationAmplitude = amplitude < 0 ? VibrationEffect.DEFAULT_AMPLITUDE : Math.min(amplitude, 255);
+		int vibrationAmplitude = amplitude <= 0 ? VibrationEffect.DEFAULT_AMPLITUDE : Math.min(amplitude, 255);
 
 		if (period == 0) {
 
