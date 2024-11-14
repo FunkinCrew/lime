@@ -3984,7 +3984,7 @@ namespace lime {
 	DEFINE_PRIME1 (lime_gamepad_get_device_name);
 	DEFINE_PRIME2 (lime_gzip_compress);
 	DEFINE_PRIME2 (lime_gzip_decompress);
-	DEFINE_PRIME3v (lime_haptic_vibrate);
+	DEFINE_PRIME3 (lime_haptic_vibrate);
 	DEFINE_PRIME3v (lime_image_data_util_color_transform);
 	DEFINE_PRIME6v (lime_image_data_util_copy_channel);
 	DEFINE_PRIME7v (lime_image_data_util_copy_pixels);
