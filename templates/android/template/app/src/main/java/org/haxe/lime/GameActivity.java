@@ -401,10 +401,7 @@ public class GameActivity extends SDLActivity {
 
 		}
 
-		int vibrationAmplitude = amplitude;
-		if (vibrationAmplitude == 0) {
-			vibrationAmplitude = VibrationEffect.DEFAULT_AMPLITUDE;
-		}
+		int vibrationAmplitude = amplitude <= 0 ? VibrationEffect.DEFAULT_AMPLITUDE : Math.min(amplitude, 255);
 
 		if (period == 0) {
 
@@ -424,13 +421,16 @@ public class GameActivity extends SDLActivity {
 			int periodMS = (int)Math.ceil (period / 2.0);
 			int count = (int)Math.ceil (duration / (double) periodMS);
 			long[] pattern = new long[count];
-			int[] amplitudes = {vibrationAmplitude};
+			int[] amplitudes = new int[count];
 
-			// the first entry is the delay before vibration starts, so leave it as 0
-			for (int i = 1; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 
-				pattern[i] = periodMS;
+				// the first entry is the delay before vibration starts, so leave it as 0
+				if (i > 0)
+					pattern[i] = periodMS;
+
 				amplitudes[i] = vibrationAmplitude;
+
 			}
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
