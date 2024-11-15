@@ -21,6 +21,8 @@ class AssetHelper
 	private static var DEFAULT_LIBRARY_NAME = "default";
 	private static var knownExtensions:Map<String, AssetType>;
 
+	public static var EMBEDMANIFEST:Bool = false; // it can work if true, it just so happens that stuff like vlc might crash the thing cos it registers as being in the assets folder
+
 	private static function __init__():Void
 	{
 		knownExtensions = [
@@ -588,9 +590,11 @@ class AssetHelper
 
 					asset = new Asset("", "manifest/" + library.name + ".json", AssetType.MANIFEST);
 
-					if (embed)
+					if (embed || EMBEDMANIFEST)
 					{
 						asset.embed = true;
+
+
 					}
 					else
 					{
