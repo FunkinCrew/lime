@@ -2,16 +2,16 @@ name: iOS CI
 on: workflow_dispatch
 jobs:
   ios-ndll:
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
 
       - uses: actions/checkout@v3
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@v1
         with:
-          haxe-version: 4.3.5
+          haxe-version: 4.2.5
 
       - name: Set HAXEPATH
         run: |
