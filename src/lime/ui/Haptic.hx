@@ -20,7 +20,7 @@ class Haptic
 		#if android
 		if (lime_haptic_vibrate == null)
 		{
-			lime_haptic_vibrate = JNI.createStaticMethod("org/haxe/lime/GameActivity", "vibrate", "(II)V");
+			lime_haptic_vibrate = JNI.createStaticMethod("org/haxe/lime/GameActivity", "vibrate", "(III)V");
 		}
 
 		try
