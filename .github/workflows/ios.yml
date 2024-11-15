@@ -9,9 +9,9 @@ jobs:
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@v1
+      - uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.3.6
+          haxe-version: 4.3.5
 
       - name: Set HAXEPATH
         run: |
