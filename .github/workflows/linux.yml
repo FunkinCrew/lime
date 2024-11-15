@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
 
-      - name: Rebuild Lime (Linux x86_64)
+      - name: Rebuild Lime
         run: |
           haxelib run lime rebuild linux -32 -eval -nocolor -nocffi
           haxelib run lime rebuild linux -64 -eval -nocolor -nocffi
@@ -39,6 +39,7 @@ jobs:
         with:
           name: Linux-NDLL
           path: |
+            ndll/Linux/
             ndll/Linux64/
             !**/.gitignore
           if-no-files-found: error
