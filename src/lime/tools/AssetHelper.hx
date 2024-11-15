@@ -21,7 +21,7 @@ class AssetHelper
 	private static var DEFAULT_LIBRARY_NAME = "default";
 	private static var knownExtensions:Map<String, AssetType>;
 
-	public static var EMBEDMANIFEST:Bool = false; // it can work if true, it just so happens that stuff like vlc might crash the thing cos it registers as being in the assets folder
+	public static var EMBEDMANIFEST:Bool = true; // it can work if true, it just so happens that stuff like vlc might crash the thing cos it registers as being in the assets folder
 
 	private static function __init__():Void
 	{
@@ -240,7 +240,7 @@ class AssetHelper
 			{
 				assetData.path = asset.resourceName;
 
-				if (asset.embed != false || (asset.library != null && libraries.exists(asset.library) && libraries[asset.library].preload))
+				if (asset.embed != false && !EMBEDMANIFEST || (asset.library != null && libraries.exists(asset.library) && libraries[asset.library].preload))
 				{
 					assetData.preload = true;
 				}
@@ -267,13 +267,13 @@ class AssetHelper
 		else
 		{
 			if (project.target == WEB_ASSEMBLY
-				&& (asset.embed != false
+				&& (asset.embed != false && !EMBEDMANIFEST
 					|| (asset.library != null && libraries.exists(asset.library) && libraries[asset.library].preload)))
 			{
 				assetData.preload = true;
 			}
 
-			if (asset.embed == true || asset.type == FONT)
+			if (asset.embed == true && !EMBEDMANIFEST || asset.type == FONT)
 			{
 				assetData.className = "__ASSET__" + asset.flatName;
 			}
@@ -590,11 +590,13 @@ class AssetHelper
 
 					asset = new Asset("", "manifest/" + library.name + ".json", AssetType.MANIFEST);
 
-					if (embed || EMBEDMANIFEST)
+					if (embed || (EMBEDMANIFEST))
 					{
 						asset.embed = true;
 
 
+						if (!library.preload)
+							return;
 					}
 					else
 					{
