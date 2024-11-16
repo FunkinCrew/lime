@@ -45,7 +45,7 @@ jobs:
           lime config ANDROID_SETUP true
 
       - name: Rebuild Lime
-        run: lime rebuild android -release -eval -nocolor -nocffi
+        run: lime rebuild android -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
