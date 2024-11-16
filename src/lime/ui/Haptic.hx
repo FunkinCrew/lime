@@ -15,7 +15,7 @@ class Haptic
 	private static var lime_haptic_vibrate:Int->Int->Int->Void;
 	#end
 
-	public static function vibrate(period:Int, duration:Int, amplitude:Int):Void
+	public static function vibrate(period:Int, duration:Int, amplitude:Int = 1):Void
 	{
 		#if android
 		if (lime_haptic_vibrate == null)
