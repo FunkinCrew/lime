@@ -61,7 +61,7 @@ build-haxe-armv6:
 build-haxe-armv7:
 	@echo "Haxe device build: $(CONFIG)-v7"
 	haxe Build.hxml -D HXCPP_ARMV7 -cpp build/$(CONFIG)-v7 $(DEBUG)
-	cd build/$(CONFIG)-v7; ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; haxelib run ::CPP_BUILD_LIBRARY:: Build.xml $(DEBUG) -options Options.txt
+	cd build/$(CONFIG)-v7; ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1;  haxelib run ::CPP_BUILD_LIBRARY:: Build.xml $(DEBUG) -options Options.txt
 	cp build/$(CONFIG)-v7/::CPP_LIBPREFIX::ApplicationMain$(DEBUG).iphoneos-v7.a ../lib/armv7$(LIB_DEST)
 	touch ../Classes/Main.mm
 

@@ -2,7 +2,7 @@ name: iOS CI
 on: workflow_dispatch
 jobs:
   ios-ndll:
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
 
       - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
 
       - name: Rebuild Lime (iOS)
         run: |
-          lime rebuild ios -clean -release -eval -nocolor -nocffi
+          lime rebuild ios -clean -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v3
         with:
