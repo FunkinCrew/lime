@@ -477,7 +477,7 @@ class AndroidPlatform extends PlatformTarget
 			"android.permission.ACCESS_NETWORK_STATE"
 		]);
 		context.ANDROID_GRADLE_VERSION = project.config.getString("android.gradle-version", "8.9");
-		context.ANDROID_GRADLE_PLUGIN = project.config.getString("android.gradle-plugin", "8.6.0");
+		context.ANDROID_GRADLE_PLUGIN = project.config.getString("android.gradle-plugin", "8.7.1");
 		context.ANDROID_USE_ANDROIDX = project.config.getString("android.useAndroidX", "true");
 		context.ANDROID_ENABLE_JETIFIER = project.config.getString("android.enableJetifier", "false");
 
@@ -527,6 +527,7 @@ class AndroidPlatform extends PlatformTarget
 
 		context.ANDROID_SDK_ESCAPED = StringTools.replace(context.ENV_ANDROID_SDK, "\\", "\\\\");
 		context.ANDROID_NDK_ROOT_ESCAPED = StringTools.replace(context.ENV_ANDROID_NDK_ROOT, "\\", "\\\\");
+		context.ANDROID_NDK_VERSION = getNdkVer();
 
 		if (Reflect.hasField(context, "KEY_STORE")) context.KEY_STORE = StringTools.replace(context.KEY_STORE, "\\", "\\\\");
 		if (Reflect.hasField(context, "KEY_STORE_ALIAS")) context.KEY_STORE_ALIAS = StringTools.replace(context.KEY_STORE_ALIAS, "\\", "\\\\");
@@ -657,5 +658,20 @@ class AndroidPlatform extends PlatformTarget
 
 		var command = ProjectHelper.getCurrentCommand();
 		System.watch(command, dirs);
+	}
+
+	private function getNdkVer():String
+	{
+		var file:Array<String> = File.getContent(Sys.getEnv("ANDROID_NDK_ROOT") + '/source.properties').split('\n');
+		for (line in file)
+		{
+			if (StringTools.startsWith(line, "Pkg.BaseRevision"))
+			{
+				var baseRevision:Array<String> = line.split('=');
+				var version:String = baseRevision.pop();
+				return StringTools.trim(version);
+			}
+		}
+		return "00.0.0";
 	}
 }
