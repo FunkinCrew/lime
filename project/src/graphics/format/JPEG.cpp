@@ -487,7 +487,7 @@ namespace lime {
 
 		}
 
-        jpeg_destroy_compress (&cinfo);
+		jpeg_destroy_compress (&cinfo);
 
 		return true;
 
