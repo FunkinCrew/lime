@@ -258,7 +258,7 @@ namespace lime {
 		int bit_depth = 8;
 		//int color_type = (inSurface->Format () & pfHasAlpha) ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
 		int color_type = PNG_COLOR_TYPE_RGB_ALPHA;
-		png_set_IHDR (png_ptr, info_ptr, w, h, bit_depth, color_type, PNG_INTERLACE_NONE, 9, PNG_FILTER_TYPE_BASE);
+		png_set_IHDR (png_ptr, info_ptr, w, h, bit_depth, color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
 		png_write_info (png_ptr, info_ptr);
 
