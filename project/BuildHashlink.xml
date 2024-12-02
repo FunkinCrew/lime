@@ -1,18 +1,13 @@
 <xml>
 	<set name="PLATFORM" value="android-21" if="android" />
 	<set name="HXCPP_CPP11" value="1" />
-
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
-
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />
-
 	<set name="HASHLINK_PATH" value="lib/hashlink" unless="HASHLINK_PATH" />
-
 	<files id="hl">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
-
-		<file name="src/hashlink_main.c" tag="main"/>
+		<file name="src/hashlink_main.c" tag="main" />
 		<file name="${HASHLINK_PATH}/src/code.c" />
 		<file name="${HASHLINK_PATH}/src/debugger.c" />
 		<file name="${HASHLINK_PATH}/src/jit.c" />
@@ -20,15 +15,12 @@
 		<file name="${HASHLINK_PATH}/src/module.c" />
 		<file name="${HASHLINK_PATH}/src/profile.c" />
 	</files>
-
 	<files id="libhl">
 		<compilerflag value="-std=c11" unless="windows" />
 		<compilerflag value="-DLIBHL_EXPORTS" />
-
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
 		<compilerflag value="-I${HASHLINK_PATH}/include" />
 		<compilerflag value="-I${HASHLINK_PATH}/include/pcre" />
-
 		<file name="${HASHLINK_PATH}/src/gc.c" />
 		<file name="${HASHLINK_PATH}/src/std/array.c" />
 		<file name="${HASHLINK_PATH}/src/std/bytes.c" />
@@ -54,33 +46,19 @@
 		<file name="${HASHLINK_PATH}/src/std/sys_ios.m " if="ios" />
 		<file name="${HASHLINK_PATH}/src/std/track.c" />
 		<file name="${HASHLINK_PATH}/src/std/ucs2.c" />
-
 		<!-- PCRE2 -->
-		<file name="${HASHLINK_PATH}/include/pcre/pcre16_ord2utf16.c" />
 		<compilerflag value="-DHAVE_CONFIG_H" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_globals.c" />
 		<compilerflag value="-DPCRE2_CODE_UNIT_WIDTH=16" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre16_valid_utf16.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_auto_possess.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_newline.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_chartables.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_chartables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_compile.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_string_utils.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_config.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_compile.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_context.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_tables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_convert.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_dfa_exec.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_dfa_match.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_ucd.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_error.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_exec.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_extuni.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_xclass.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_find_bracket.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_fullinfo.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_jit_compile.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_maketables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_match_data.c" />
@@ -99,21 +77,16 @@
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_ucptables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_valid_utf.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_xclass.c" />
-
 		<!-- macOS debugging -->
 		<file name="${HASHLINK_PATH}/include/mdbg/mdbg.c" if="mac" />
 		<file name="${HASHLINK_PATH}/include/mdbg/mach_excServer.c" if="mac" />
 		<file name="${HASHLINK_PATH}/include/mdbg/mach_excUser.c" if="mac" />
 	</files>
-
 	<files id="ssl">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
 		<compilerflag value="-I${HASHLINK_PATH}/include/mbedtls/include" />
-
 		<file name="${HASHLINK_PATH}/libs/ssl/ssl.c" />
-
-		<compilerflag value="-I/usr/local/include" if="mac"/>
-
+		<compilerflag value="-I/usr/local/include" if="mac" />
 		<section if="windows">
 			<file name="${HASHLINK_PATH}/include/mbedtls/library/aes.c" />
 			<file name="${HASHLINK_PATH}/include/mbedtls/library/aesni.c" />
@@ -187,43 +160,35 @@
 			<file name="${HASHLINK_PATH}/include/mbedtls/library/xtea.c" />
 		</section>
 	</files>
-
 	<files id="mysql">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
-		<compilerflag value="-I/usr/local/include" if="mac"/>
-
+		<compilerflag value="-I/usr/local/include" if="mac" />
 		<file name="${HASHLINK_PATH}/libs/mysql/socket.c" />
 		<file name="${HASHLINK_PATH}/libs/mysql/sha1.c" />
 		<file name="${HASHLINK_PATH}/libs/mysql/my_proto.c" />
 		<file name="${HASHLINK_PATH}/libs/mysql/my_api.c" />
 		<file name="${HASHLINK_PATH}/libs/mysql/mysql.c" />
 	</files>
-
 	<files id="fmt">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
 		<compilerflag value="-I${HASHLINK_PATH}/include/mikktspace" />
 		<compilerflag value="-I${HASHLINK_PATH}/include/minimp3" />
-		<compilerflag value="-I/usr/local/include" if="mac"/>
-		<compilerflag value="-I/usr/local/opt/libjpeg-turbo/include" if="mac"/>
-		<compilerflag value="-I/usr/local/opt/jpeg-turbo/include" if="mac"/>
-		<compilerflag value="-I/usr/local/opt/libvorbis/include" if="mac"/>
-
-
+		<compilerflag value="-I/usr/local/include" if="mac" />
+		<compilerflag value="-I/usr/local/opt/libjpeg-turbo/include" if="mac" />
+		<compilerflag value="-I/usr/local/opt/jpeg-turbo/include" if="mac" />
+		<compilerflag value="-I/usr/local/opt/libvorbis/include" if="mac" />
 		<file name="${HASHLINK_PATH}/libs/fmt/fmt.c" />
 		<file name="${HASHLINK_PATH}/libs/fmt/sha1.c" />
 		<file name="${HASHLINK_PATH}/libs/fmt/dxt.c" />
 		<file name="${HASHLINK_PATH}/libs/fmt/mikkt.c" />
 		<file name="${HASHLINK_PATH}/include/mikktspace/mikktspace.c" />
 		<section if="windows">
-			<compilerflag value="-I${HASHLINK_PATH}/include/png"/>
-			<compilerflag value="-I${HASHLINK_PATH}/include/turbojpeg"/>
+			<compilerflag value="-I${HASHLINK_PATH}/include/png" />
+			<compilerflag value="-I${HASHLINK_PATH}/include/turbojpeg" />
 			<!-- TODO: arm64 windows -->
-			<compilerflag value="-I${HASHLINK_PATH}/include/turbojpeg/x64"/>
-
-			<compilerflag value="-I${HASHLINK_PATH}/include/zlib"/>
-			<compilerflag value="-I${HASHLINK_PATH}/include/vorbis"/>
-
-
+			<compilerflag value="-I${HASHLINK_PATH}/include/turbojpeg/x64" />
+			<compilerflag value="-I${HASHLINK_PATH}/include/zlib" />
+			<compilerflag value="-I${HASHLINK_PATH}/include/vorbis" />
 			<file name="${HASHLINK_PATH}/include/png/png.c" />
 			<file name="${HASHLINK_PATH}/include/png/pngerror.c" />
 			<file name="${HASHLINK_PATH}/include/png/pngget.c" />
@@ -327,51 +292,48 @@
 	</files>
 	<files id="ui">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
-
 		<file name="${HASHLINK_PATH}/libs/ui/ui_stub.c" unless="windows" />
 		<file name="${HASHLINK_PATH}/libs/ui/ui_win.c" if="windows" />
 	</files>
 	<files id="uv">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
-		<compilerflag value="-I/usr/local/include" if="mac"/>
-
-		<file name="${HASHLINK_PATH}/libs/uv/uv.c"/>
-
+		<compilerflag value="-I/usr/local/include" if="mac" />
+		<file name="${HASHLINK_PATH}/libs/uv/uv.c" />
 		<section if="windows">
-			<compilerflag value="-I${HASHLINK_PATH}/include/libuv/include"/>
-			<compilerflag value="-DUV_EXPORTS"/>
-			<compilerflag value="-DBUILDING_UV_SHARED"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/fs-poll.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/inet.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/threadpool.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/uv-common.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/version.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/async.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/core.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/dl.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/error.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/fs-event.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/fs.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/getaddrinfo.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/getnameinfo.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/handle.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/loop-watcher.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/pipe.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/poll.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/process-stdio.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/process.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/req.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/signal.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/snprintf.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/stream.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/tcp.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/thread.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/timer.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/tty.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/udp.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/util.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/winapi.c"/>
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/winsock.c"/>
+			<compilerflag value="-I${HASHLINK_PATH}/include/libuv/include" />
+			<compilerflag value="-DUV_EXPORTS" />
+			<compilerflag value="-DBUILDING_UV_SHARED" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/fs-poll.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/inet.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/threadpool.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/uv-common.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/version.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/async.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/core.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/dl.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/error.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/fs-event.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/fs.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/getaddrinfo.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/getnameinfo.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/handle.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/loop-watcher.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/pipe.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/poll.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/process-stdio.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/process.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/req.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/signal.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/snprintf.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/stream.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/tcp.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/thread.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/timer.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/tty.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/udp.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/util.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/winapi.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/winsock.c" />
 		</section>
 	</files>
 	<set name="LIBSUFFIX" value="dll" if="windows" />
@@ -380,159 +342,125 @@
 	<!-- <set name="BINDIR" value="linux" if="linux" />
 	<set name="BINDIR" value="mac" if="mac" />
 	<set name="BINDIR" value="windows" if="windows" /> -->
-
 	<set name="OUTPUT_DIR" value="../templates/bin/hl" unless="OUTPUT_DIR" />
-
 	<target id="libhl" output="libhl" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<files id="libhl" />
 		<ext value=".${LIBSUFFIX}" />
-
-		<vflag name="-install_name" value="@executable_path/libhl.dylib" if="mac"/>
+		<vflag name="-install_name" value="@executable_path/libhl.dylib" if="mac" />
 		<lib name="-pthread" if="linux" />
-
 		<section if="windows">
 			<lib name="user32.lib" />
 			<lib name="ws2_32.lib" />
 		</section>
 	</target>
-
 	<target id="ssl" output="ssl" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<ext value=".hdll" />
 		<files id="ssl" />
-
-		<vflag name="-install_name" value="@executable_path/ssl.hdll" if="mac"/>
-
+		<vflag name="-install_name" value="@executable_path/ssl.hdll" if="mac" />
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
 		<lib name="libhl.lib" if="windows" />
-
 		<lib name="Advapi32.lib" if="windows" />
 		<lib name="Crypt32.lib" if="windows" />
 		<lib name="ws2_32.lib" if="windows" />
-
 		<!-- Find homebrews mbedtls -->
 		<lib name="-L/usr/local/lib" if="mac" />
-
 		<lib name="-lmbedtls" unless="windows" />
 		<lib name="-lmbedx509" unless="windows" />
 		<lib name="-lmbedcrypto" unless="windows" />
-
 		<vflag name="-framework" value="Security" if="mac || ios || tvos" />
 		<vflag name="-framework" value="CoreFoundation" if="mac || ios || tvos" />
 	</target>
-
 	<target id="mysql" output="mysql" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<ext value=".hdll" />
 		<files id="mysql" />
-
-		<vflag name="-install_name" value="@executable_path/mysql.hdll" if="mac"/>
-
+		<vflag name="-install_name" value="@executable_path/mysql.hdll" if="mac" />
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
 		<lib name="libhl.lib" if="windows" />
 		<lib name="ws2_32.lib" if="windows" />
 	</target>
-
 	<target id="fmt" output="fmt" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<ext value=".hdll" />
 		<files id="fmt" />
-
-		<vflag name="-install_name" value="@executable_path/fmt.hdll" if="mac"/>
-
+		<vflag name="-install_name" value="@executable_path/fmt.hdll" if="mac" />
 		<lib name="-L/usr/local/lib" if="mac" />
 		<lib name="-L/usr/local/opt/libjpeg-turbo/lib" if="mac" />
 		<lib name="-L/usr/local/opt/jpeg-turbo/lib" if="mac" />
 		<lib name="-L/usr/local/opt/libvorbis/lib" if="mac" />
-
 		<lib name="-lz" unless="windows" />
 		<lib name="-lvorbis" unless="windows" />
 		<lib name="-lvorbisfile" unless="windows" />
 		<lib name="-lpng" unless="windows" />
-
 		<lib name="-lturbojpeg" unless="windows" />
-
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
 		<lib name="libhl.lib" if="windows" />
-		<lib name="${HASHLINK_PATH}/include/turbojpeg/x64/simd.lib" if="windows HXCPP_M64"/>
-		<lib name="${HASHLINK_PATH}/include/turbojpeg/x86/simd.lib" if="windows" unless="HXCPP_M64"/>
+		<lib name="${HASHLINK_PATH}/include/turbojpeg/x64/simd.lib" if="windows HXCPP_M64" />
+		<lib name="${HASHLINK_PATH}/include/turbojpeg/x86/simd.lib" if="windows" unless="HXCPP_M64" />
 	</target>
-
 	<target id="ui" output="ui" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<ext value=".hdll" />
 		<files id="ui" />
-
-		<vflag name="-install_name" value="@executable_path/ui.hdll" if="mac"/>
-
+		<vflag name="-install_name" value="@executable_path/ui.hdll" if="mac" />
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<section if="windows">
 			<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" />
 			<lib name="libhl.lib" />
-			<lib name="user32.lib"/>
+			<lib name="user32.lib" />
 			<lib name="gdi32.lib" />
 			<lib name="comdlg32.lib" />
 		</section>
 	</target>
-
 	<target id="uv" output="uv" tool="linker" toolid="dll">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<ext value=".hdll" />
 		<files id="uv" />
-
-		<vflag name="-install_name" value="@executable_path/uv.hdll" if="mac"/>
-
+		<vflag name="-install_name" value="@executable_path/uv.hdll" if="mac" />
 		<lib name="-L/usr/local/lib" if="mac" />
-
 		<lib name="-luv" unless="windows" />
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<section if="windows">
 			<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" />
 			<lib name="libhl.lib" />
-			<lib name="psapi.lib"/>
+			<lib name="psapi.lib" />
 			<lib name="iphlpapi.lib" />
 			<lib name="userenv.lib" />
 			<lib name="advapi32.lib" if="windows" />
 			<lib name="ws2_32.lib" if="windows" />
 		</section>
 	</target>
-
 	<target id="hl" output="hl" tool="linker" toolid="exe">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 		<files id="hl" />
-
 		<lib name="-pthread" if="linux" />
-
 		<!-- Make hashlink pick up binaries in the same directory as itself -->
 		<lib name="-Wl,-rpath=$ORIGIN" if="linux" />
-
 		<lib name="-lhl" unless="windows" />
 		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
 		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
 		<lib name="libhl.lib" if="windows" />
 	</target>
-
 	<target id="default">
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
-
 		<target id="libhl" />
 		<target id="ssl" />
 		<target id="mysql" />
 		<target id="hl" />
-		<target id="fmt"/>
-		<target id="ui"/>
-		<target id="uv"/>
+		<target id="fmt" />
+		<target id="ui" />
+		<target id="uv" />
 	</target>
-
 	<copyFile name="libhl.lib" from="obj/lib/" overwrite="true" toolId="dll" if="windows" />
 	<copyFile name="ssl.lib" from="obj/lib/" allowMissing="true" overwrite="true" toolid="dll" if="windows" />
 	<copyFile name="mysql.lib" from="obj/lib/" allowMissing="true" overwrite="true" toolId="dll" if="windows" />
