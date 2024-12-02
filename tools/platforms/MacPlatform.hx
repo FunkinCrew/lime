@@ -203,6 +203,9 @@ class MacPlatform extends PlatformTarget
 
 			if (noOutput) return;
 
+			// ensure that the shell script is replaced by the template executable
+			System.deleteFile(executablePath);
+
 			HashlinkHelper.copyHashlink(project, targetDirectory, executableDirectory, executablePath, true);
 
 			if (project.targetFlags.exists("hlc"))
