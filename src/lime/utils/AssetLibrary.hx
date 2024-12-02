@@ -607,7 +607,9 @@ class AssetLibrary
 		else
 		{
 			var request = new HTTPRequest<String>();
-			return request.load(getPath(id));
+			var path = getPath(id);
+			if (path == null) throw 'Could not build path for asset ${id}';
+			return request.load(path);
 		}
 	}
 
