@@ -82,6 +82,10 @@ android {
 			}
 		}
 	}
+
+	::if (ANDROID_PLAY_ASSETS_DELIVERY_NAMES)::
+  assetPacks = [::foreach (ANDROID_PLAY_ASSETS_DELIVERY_NAMES):: ":::__current__::" ::end::]
+	::end::
 }
 
 dependencies {

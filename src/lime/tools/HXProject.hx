@@ -61,6 +61,7 @@ class HXProject extends Script
 	@:isVar public var window(get, set):WindowData;
 	public var windows:Array<WindowData>;
 	public var projectFilePath:String;
+	public var padAssets:Map<String, {mode:String, name:String}>;
 
 	private var needRerun:Bool;
 
@@ -211,6 +212,7 @@ class HXProject extends Script
 		samplePaths = new Array<String>();
 		splashScreens = new Array<SplashScreen>();
 		targetHandlers = new Map<String, String>();
+		padAssets = new Map<String, {mode:String, name:String}>();
 
 		initializeDefines();
 	}
@@ -323,6 +325,11 @@ class HXProject extends Script
 		for (key in targetHandlers.keys())
 		{
 			project.targetHandlers.set(key, targetHandlers.get(key));
+		}
+
+		for (key in padAssets.keys())
+		{
+			project.padAssets.set(key, padAssets.get(key));
 		}
 
 		project.templatePaths = templatePaths.copy();
@@ -897,6 +904,7 @@ class HXProject extends Script
 			MapTools.copyUniqueKeys(project.libraryHandlers, libraryHandlers);
 			MapTools.copyUniqueKeys(project.targetFlags, targetFlags);
 			MapTools.copyUniqueKeys(project.targetHandlers, targetHandlers);
+			MapTools.copyUniqueKeys(project.padAssets, padAssets);
 
 			config.merge(project.config);
 
