@@ -428,7 +428,14 @@ class AndroidPlatform extends PlatformTarget
 		{
 			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
 			{
-				AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
+				if (!project.padAssets.exists(asset.id))
+				{
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
+				}
+				else
+				{
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + project.padAssets.get(asset.id).name + "/src/main" + "/assets/", asset.resourceName));
+				}
 			}
 		}
 
@@ -536,6 +543,20 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
+		var configuredPADs:Array<String> = [];
+		context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES = [];
+		context.ANDROID_PLAY_ASSETS_DELIVERY_MODES = [];
+
+		for (pad in project.padAssets)
+		{
+			if (configuredPADs.contains(pad.name)) continue;
+
+			cast(context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES, Array<Dynamic>).push(pad.name);
+			cast(context.ANDROID_PLAY_ASSETS_DELIVERY_MODES, Array<Dynamic>).push(pad.mode);
+
+			configuredPADs.push(pad.name);
+		}
+
 		for (attribute in context.ANDROID_APPLICATION)
 		{
 			if (attribute.key == "android:icon")
@@ -617,6 +638,19 @@ class AndroidPlatform extends PlatformTarget
 				var targetPath = Path.combine(destination, asset.targetPath);
 				System.mkdir(Path.directory(targetPath));
 				AssetHelper.copyAsset(asset, targetPath, context);
+			}
+		}
+
+		var names:Array<String> = [for (name in cast(context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES, Array<Dynamic>)) name];
+		if (names.length > 0)
+		{
+			for (i in 0...names.length)
+			{
+				var padContext:Dynamic = {};
+				padContext.ANDROID_PLAY_ASSETS_DELIVERY_NAME = names[i];
+				padContext.ANDROID_PLAY_ASSETS_DELIVERY_MODE = context.ANDROID_PLAY_ASSETS_DELIVERY_MODES[i];
+
+				System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + names[i] + "/build.gradle", padContext);
 			}
 		}
 	}
