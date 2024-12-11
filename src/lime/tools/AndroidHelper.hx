@@ -22,7 +22,14 @@ class AndroidHelper
 
 		if (project.keystore != null)
 		{
-			task = "assembleRelease";
+			if (project.targetFlags.exists("bundle"))
+			{
+				task = "bundleRelease";
+			}
+			else
+			{
+				task = "assembleRelease";
+			}
 		}
 
 		if (project.environment.exists("ANDROID_GRADLE_TASK"))
