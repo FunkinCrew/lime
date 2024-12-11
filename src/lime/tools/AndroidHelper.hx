@@ -277,6 +277,9 @@ class AndroidHelper
 
 		if (isBundle)
 		{
+			if (FileSystem.exists(outDir + project.app.file + '-release' + ".apks"))
+				FileSystem.delete(outDir + project.app.file + '-release' + ".apks");
+
 			args = ["build-apks"];
 
 			args.push("--bundle=" + targetPath);
