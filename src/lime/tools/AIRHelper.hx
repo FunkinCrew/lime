@@ -258,6 +258,7 @@ class AIRHelper
 			runInAdl = false;
 			AndroidHelper.initialize(project);
 			AndroidHelper.install(project,
+				FileSystem.fullPath(workingDirectory),
 				FileSystem.fullPath(workingDirectory)
 				+ "/"
 				+ (rootDirectory != null ? rootDirectory + "/" : "")

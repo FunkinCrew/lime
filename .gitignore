@@ -19,8 +19,8 @@ project/vc*.pdb
 *.swp
 .idea/
 *.iml
-tools/*.n
-tools/*.exe
+#tools/*.n
+#tools/*.exe
 tools/obj
 haxedoc.xml
 docs/*.xml
