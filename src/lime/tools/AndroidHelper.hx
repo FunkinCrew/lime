@@ -286,7 +286,7 @@ class AndroidHelper
 			args.push("--ks-key-alias=" + project.keystore.alias);
 			args.push("--key-pass=pass:" + project.keystore.password);
 
-			System.runCommand("", executableName, args);
+			System.runCommand(project.environment.get("JAVA_HOME") + 'bin/', executableName, args);
 
 			args = ["install-apks"];
 			args.push("--apks=" + outDir + project.app.file + '-release' + ".apks");
@@ -315,7 +315,7 @@ class AndroidHelper
 			}
 		}
 
-		System.runCommand((isBundle) ? "" : adbPath, executableName, args);
+		System.runCommand((isBundle) ? project.environment.get("JAVA_HOME") + 'bin/' : adbPath, executableName, args);
 
 		return deviceID;
 	}
