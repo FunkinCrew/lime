@@ -280,16 +280,16 @@ class AndroidHelper
 			args = ["build-apks"];
 
 			args.push("--bundle=" + targetPath);
-			args.push("--output=" + outDir + project.app.file + ".apks");
-			args.push("--ks=" + project.keystore);
-			args.push("--ks-pass=pass:" + /*pass goes here*/);
-			args.push("--ks-key-alias=" + /*alias goes here*/);
-			args.push("--key-pass=pass:" + /*pass goes here*/);
+			args.push("--output=" + outDir + project.app.file + '-release' + ".apks");
+			args.push("--ks=" + project.keystore.path);
+			args.push("--ks-pass=pass:" + project.keystore.password);
+			args.push("--ks-key-alias=" + project.keystore.alias);
+			args.push("--key-pass=pass:" + project.keystore.password);
 
 			System.runCommand("", executableName, args);
 
 			args = ["install-apks"];
-			args.push("--apks=" + outDir + project.app.file + ".apks");
+			args.push("--apks=" + outDir + project.app.file + '-release' + ".apks");
 
 			if (deviceID != null && deviceID != "")
 				connect(deviceID);
