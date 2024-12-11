@@ -339,13 +339,6 @@ class AndroidPlatform extends PlatformTarget
 
 	public override function install():Void
 	{
-		// AABs can't be installed from ADB as far as i know so yea (ignore the fact that i still added it's shit down in here)
-		if (targetFlags.exists("bundle") && project.keystore != null)
-		{
-			Log.warn("Android App Bundles cannot be installed through ADB.");
-			return;
-		}
-
 		var build = "debug";
 
 		if (project.keystore != null)
@@ -391,9 +384,9 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		var apkPath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}');
+		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}');
 
-		deviceID = AndroidHelper.install(project, apkPath, deviceID);
+		deviceID = AndroidHelper.install(project, outputDirectory, packagePath, deviceID, targetFlags.exists("bundle"));
 	}
 
 	public override function rebuild():Void

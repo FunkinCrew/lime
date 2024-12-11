@@ -200,7 +200,7 @@ class AndroidHelper
 		}
 	}
 
-	public static function install(project:HXProject, targetPath:String, deviceID:String = null):String
+	public static function install(project:HXProject, outDir:String, targetPath:String, deviceID:String = null, isBundle:String = false):String
 	{
 		if (!FileSystem.exists(adbPath + adbName))
 		{
@@ -272,25 +272,50 @@ class AndroidHelper
 			System.runCommand(adbPath, adbName, ["-s", deviceID, "shell", "input", "keyevent", "82"]);
 		}
 
-		var args = ["install", "-r"];
+		final executableName:String = (isBundle) ? "java -jar " + Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/android/bundletool.jar" : "adb";
+		var args:Array<String>;
 
-		// if (getDeviceSDKVersion (deviceID) > 16) {
-
-		args.push("-d");
-
-		// }
-
-		args.push(targetPath);
-
-		if (deviceID != null && deviceID != "")
+		if (isBundle)
 		{
-			args.unshift(deviceID);
-			args.unshift("-s");
+			args = ["build-apks"];
 
-			connect(deviceID);
+			args.push("--bundle=" + targetPath);
+			args.push("--output=" + outDir + project.app.file + ".apks");
+			args.push("--ks=" + project.keystore);
+			args.push("--ks-pass=pass:" + /*pass goes here*/);
+			args.push("--ks-key-alias=" + /*alias goes here*/);
+			args.push("--key-pass=pass:" + /*pass goes here*/);
+
+			System.runCommand("", executableName, args);
+
+			args = ["install-apks"];
+			args.push("--apks=" + outDir + project.app.file + ".apks");
+
+			if (deviceID != null && deviceID != "")
+				connect(deviceID);
+		}
+		else
+		{
+			args = ["install", "-r"];
+
+			// if (getDeviceSDKVersion (deviceID) > 16) {
+
+				args.push("-d");
+
+			// }
+
+			args.push(targetPath);
+
+			if (deviceID != null && deviceID != "")
+			{
+				args.unshift(deviceID);
+				args.unshift("-s");
+
+				connect(deviceID);
+			}
 		}
 
-		System.runCommand(adbPath, adbName, args);
+		System.runCommand((isBundle) ? "" : adbPath, executableName, args);
 
 		return deviceID;
 	}
