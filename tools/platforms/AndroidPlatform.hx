@@ -386,7 +386,7 @@ class AndroidPlatform extends PlatformTarget
 
 		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}');
 
-		deviceID = AndroidHelper.install(project, outputDirectory, packagePath, deviceID, targetFlags.exists("bundle"));
+		deviceID = AndroidHelper.install(project, outputDirectory + '/', packagePath, deviceID, targetFlags.exists("bundle"));
 	}
 
 	public override function rebuild():Void
