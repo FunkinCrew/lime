@@ -200,7 +200,7 @@ class AndroidHelper
 		}
 	}
 
-	public static function install(project:HXProject, outDir:String, targetPath:String, deviceID:String = null, isBundle:String = false):String
+	public static function install(project:HXProject, outDir:String, targetPath:String, deviceID:String = null, isBundle:Bool = false):String
 	{
 		if (!FileSystem.exists(adbPath + adbName))
 		{
