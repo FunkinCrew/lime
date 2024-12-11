@@ -284,14 +284,28 @@ class AndroidPlatform extends PlatformTarget
 			var outputDirectory = null;
 			if (project.config.exists("android.gradle-build-directory"))
 			{
-				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				if (targetFlags.exists("bundle") && project.keystore != null)
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				}
 			}
 			else
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				if (targetFlags.exists("bundle") && project.keystore != null)
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				}
 			}
 
-			Sys.println(Path.combine(outputDirectory, project.app.file + build + ".apk"));
+			Sys.println(Path.combine(outputDirectory, project.app.file + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}'));
 		}
 		else
 		{
@@ -325,6 +339,13 @@ class AndroidPlatform extends PlatformTarget
 
 	public override function install():Void
 	{
+		// AABs can't be installed from ADB as far as i know so yea (ignore the fact that i still added it's shit down in here)
+		if (targetFlags.exists("bundle") && project.keystore != null)
+		{
+			Log.warn("Android App Bundles cannot be installed through ADB.");
+			return;
+		}
+
 		var build = "debug";
 
 		if (project.keystore != null)
@@ -349,14 +370,28 @@ class AndroidPlatform extends PlatformTarget
 
 		if (project.config.exists("android.gradle-build-directory"))
 		{
-			outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			if (targetFlags.exists("bundle") && project.keystore != null)
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			}
 		}
 		else
 		{
-			outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			if (targetFlags.exists("bundle") && project.keystore != null)
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			}
 		}
 
-		var apkPath = Path.combine(outputDirectory, project.app.file + "-" + build + ".apk");
+		var apkPath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}');
 
 		deviceID = AndroidHelper.install(project, apkPath, deviceID);
 	}

@@ -94,6 +94,21 @@ dependencies {
 	::end::::end::
 }
 
+tasks.whenTaskAdded { task ->
+  if (task.name.startsWith("bundle")) {
+		task.doLast {
+    	def flavor = task.name.substring("bundle".length()).uncapitalize()
+    	def outputDir = "${buildDir}/outputs/bundle/${flavor}"
+      def originalFile = file("${outputDir}/app-${flavor}.aab")
+      def renamedFile = file("${outputDir}/::APP_FILE::-${flavor}.aab")
+
+      if (originalFile.exists()) {
+        originalFile.renameTo(renamedFile)
+			}
+    }
+  }
+}
+
 def getPassword(message) {
 	def password = '';
 	if (System.console() == null) {
