@@ -277,16 +277,20 @@ class AndroidHelper
 
 		if (isBundle)
 		{
+			if (FileSystem.exists(outDir + project.app.file + '-release' + ".apks"))
+				FileSystem.delete(outDir + project.app.file + '-release' + ".apks");
+
 			args = ["build-apks"];
 
 			args.push("--bundle=" + targetPath);
 			args.push("--output=" + outDir + project.app.file + '-release' + ".apks");
+			args.push("--mode=universal");
 			args.push("--ks=" + project.keystore.path);
 			args.push("--ks-pass=pass:" + project.keystore.password);
 			args.push("--ks-key-alias=" + project.keystore.alias);
 			args.push("--key-pass=pass:" + project.keystore.password);
 
-			System.runCommand("", executableName, args);
+			System.runCommand(project.environment.get("JAVA_HOME") + 'bin/', executableName, args);
 
 			args = ["install-apks"];
 			args.push("--apks=" + outDir + project.app.file + '-release' + ".apks");
@@ -315,7 +319,7 @@ class AndroidHelper
 			}
 		}
 
-		System.runCommand((isBundle) ? "" : adbPath, executableName, args);
+		System.runCommand((isBundle) ? project.environment.get("JAVA_HOME") + 'bin/' : adbPath, executableName, args);
 
 		return deviceID;
 	}
