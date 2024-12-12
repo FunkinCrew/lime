@@ -284,7 +284,7 @@ class AndroidPlatform extends PlatformTarget
 			var outputDirectory = null;
 			if (project.config.exists("android.gradle-build-directory"))
 			{
-				if (targetFlags.exists("bundle") && project.keystore != null)
+				if (targetFlags.exists("bundle"))
 				{
 					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle");
 				}
@@ -295,7 +295,7 @@ class AndroidPlatform extends PlatformTarget
 			}
 			else
 			{
-				if (targetFlags.exists("bundle") && project.keystore != null)
+				if (targetFlags.exists("bundle"))
 				{
 					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle");
 				}
@@ -305,7 +305,7 @@ class AndroidPlatform extends PlatformTarget
 				}
 			}
 
-			Sys.println(Path.combine(outputDirectory, project.app.file + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}'));
+			Sys.println(Path.combine(outputDirectory, project.app.file + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}'));
 		}
 		else
 		{
@@ -349,7 +349,7 @@ class AndroidPlatform extends PlatformTarget
 		if (project.environment.exists("ANDROID_GRADLE_TASK"))
 		{
 			var task = project.environment.get("ANDROID_GRADLE_TASK");
-			if (task == "assembleDebug")
+			if (task == "assembleDebug" || task == "bundleDebug")
 			{
 				build = "debug";
 			}
@@ -363,7 +363,7 @@ class AndroidPlatform extends PlatformTarget
 
 		if (project.config.exists("android.gradle-build-directory"))
 		{
-			if (targetFlags.exists("bundle") && project.keystore != null)
+			if (targetFlags.exists("bundle"))
 			{
 				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle/" + build);
 			}
@@ -374,7 +374,7 @@ class AndroidPlatform extends PlatformTarget
 		}
 		else
 		{
-			if (targetFlags.exists("bundle") && project.keystore != null)
+			if (targetFlags.exists("bundle"))
 			{
 				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle/" + build);
 			}
@@ -384,7 +384,7 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") && project.keystore != null ? ".aab" : ".apk"}');
+		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}');
 
 		deviceID = AndroidHelper.install(project, outputDirectory + '/', packagePath, deviceID, targetFlags.exists("bundle"));
 	}

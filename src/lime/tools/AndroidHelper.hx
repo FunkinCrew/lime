@@ -4,6 +4,8 @@ import hxp.*;
 import sys.io.File;
 import sys.FileSystem;
 
+using StringTools;
+
 class AndroidHelper
 {
 	private static var adbName:String;
@@ -18,11 +20,11 @@ class AndroidHelper
 			Sys.putEnv("ANDROID_SDK", project.environment.get("ANDROID_SDK"));
 		}
 
-		var task = "assembleDebug";
+		var task = project.targetFlags.exists("bundle") ? "bundleDebug" : "assembleDebug";
 
 		if (project.keystore != null)
 		{
-			if (project.targetFlags.exists("bundle"))
+			if (task.startsWith("bundle"))
 			{
 				task = "bundleRelease";
 			}
@@ -277,13 +279,16 @@ class AndroidHelper
 
 		if (isBundle)
 		{
-			if (FileSystem.exists(outDir + project.app.file + '-release' + ".apks"))
-				FileSystem.delete(outDir + project.app.file + '-release' + ".apks");
+			var apksPath:String = haxe.io.Path.withoutExtension(targetPath);
+			apksPath += ".apks";
+
+			if (FileSystem.exists(apksPath))
+				FileSystem.deleteFile(apksPath);
 
 			args = ["build-apks"];
 
 			args.push("--bundle=" + targetPath);
-			args.push("--output=" + outDir + project.app.file + '-release' + ".apks");
+			args.push("--output=" + apksPath);
 			args.push("--mode=universal");
 			args.push("--ks=" + project.keystore.path);
 			args.push("--ks-pass=pass:" + project.keystore.password);
@@ -293,7 +298,7 @@ class AndroidHelper
 			System.runCommand(project.environment.get("JAVA_HOME") + 'bin/', executableName, args);
 
 			args = ["install-apks"];
-			args.push("--apks=" + outDir + project.app.file + '-release' + ".apks");
+			args.push("--apks=" + apksPath);
 
 			if (deviceID != null && deviceID != "")
 				connect(deviceID);
