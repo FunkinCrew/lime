@@ -18,9 +18,8 @@ class Asset
 	public var resourceName:String;
 	public var sourcePath:String;
 	public var targetPath:String;
+	public var deliveryPackName:String;
 	public var type:AssetType;
-	public var padDelivery:Bool = false;
-	public var padPack:String;
 
 	public function new(path:String = "", rename:String = "", type:AssetType = null, embed:Null<Bool> = null, setDefaults:Bool = true)
 	{
@@ -44,6 +43,7 @@ class Asset
 		flatName = StringTools.getFlatName(targetPath);
 		format = Path.extension(path).toLowerCase();
 		glyphs = "32-255";
+		deliveryPackName = '';
 
 		if (type == null)
 		{
@@ -113,9 +113,8 @@ class Asset
 		asset.resourceName = resourceName;
 		asset.sourcePath = sourcePath;
 		asset.targetPath = targetPath;
+		asset.deliveryPackName = deliveryPackName;
 		asset.type = type;
-		asset.padDelivery = padDelivery;
-		asset.padPack = padPack;
 		return asset;
 	}
 }
