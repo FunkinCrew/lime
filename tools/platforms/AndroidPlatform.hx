@@ -452,27 +452,36 @@ class AndroidPlatform extends PlatformTarget
 		System.mkdir(sourceSet + "/res/drawable-hdpi/");
 		System.mkdir(sourceSet + "/res/drawable-xhdpi/");
 
-		for (asset in project.assets)
-		{
-			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
-			{
-				if (!project.padAssets.exists(asset.id))
-				{
-					AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
-				}
-				else
-				{
-					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + project.padAssets.get(asset.id).name + "/src/main" + "/assets/", asset.resourceName));
-				}
-			}
-		}
-
 		if (project.targetFlags.exists("xml"))
 		{
 			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
 		}
 
 		var context = project.templateContext;
+
+		context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES = [];
+
+		for (asset in project.assets)
+		{
+			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
+			{
+				if (asset.padDelivery)
+				{
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.padName + "/src/main/assets/", asset.resourceName) : Path.combine(sourceSet + "/assets/", asset.resourceName));
+
+					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES.contains(asset.padName))
+					{
+						context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES.push(asset.padName);
+
+						var padContext:Dynamic = {};
+						padContext.ANDROID_PLAY_ASSETS_DELIVERY_NAME = asset.padName;
+						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.padName + "/build.gradle", padContext);
+					}
+				}
+				else
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
+			}
+		}
 
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.OUTPUT_DIR = targetDirectory;
@@ -578,20 +587,6 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		var configuredPADs:Array<String> = [];
-		context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES = [];
-		context.ANDROID_PLAY_ASSETS_DELIVERY_MODES = [];
-
-		for (pad in project.padAssets)
-		{
-			if (configuredPADs.contains(pad.name)) continue;
-
-			cast(context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES, Array<Dynamic>).push(pad.name);
-			cast(context.ANDROID_PLAY_ASSETS_DELIVERY_MODES, Array<Dynamic>).push(pad.mode);
-
-			configuredPADs.push(pad.name);
-		}
-
 		for (attribute in context.ANDROID_APPLICATION)
 		{
 			if (attribute.key == "android:icon")
@@ -673,19 +668,6 @@ class AndroidPlatform extends PlatformTarget
 				var targetPath = Path.combine(destination, asset.targetPath);
 				System.mkdir(Path.directory(targetPath));
 				AssetHelper.copyAsset(asset, targetPath, context);
-			}
-		}
-
-		var names:Array<String> = [for (name in cast(context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES, Array<Dynamic>)) name];
-		if (names.length > 0)
-		{
-			for (i in 0...names.length)
-			{
-				var padContext:Dynamic = {};
-				padContext.ANDROID_PLAY_ASSETS_DELIVERY_NAME = names[i];
-				padContext.ANDROID_PLAY_ASSETS_DELIVERY_MODE = context.ANDROID_PLAY_ASSETS_DELIVERY_MODES[i];
-
-				System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + names[i] + "/build.gradle", padContext);
 			}
 		}
 	}
