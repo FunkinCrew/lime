@@ -200,7 +200,7 @@ class AndroidHelper
 		}
 	}
 
-	public static function install(project:HXProject, outDir:String, targetPath:String, deviceID:String = null, isBundle:Bool = false):String
+	public static function install(project:HXProject, targetPath:String, deviceID:String = null, isBundle:Bool = false):String
 	{
 		if (!FileSystem.exists(adbPath + adbName))
 		{
@@ -277,8 +277,7 @@ class AndroidHelper
 
 		if (isBundle)
 		{
-			var apksPath:String = haxe.io.Path.withoutExtension(targetPath);
-			apksPath += ".apks";
+			final apksPath:String = haxe.io.Path.withoutExtension(targetPath) + ".apks";
 
 			if (FileSystem.exists(apksPath))
 				FileSystem.deleteFile(apksPath);
