@@ -4,8 +4,6 @@ import hxp.*;
 import sys.io.File;
 import sys.FileSystem;
 
-using StringTools;
-
 class AndroidHelper
 {
 	private static var adbName:String;
@@ -24,7 +22,7 @@ class AndroidHelper
 
 		if (project.keystore != null)
 		{
-			if (task.startsWith("bundle"))
+			if (StringTools.startsWith(task, "bundle"))
 			{
 				task = "bundleRelease";
 			}
