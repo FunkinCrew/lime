@@ -399,7 +399,7 @@ class ProjectXMLParser extends HXProject
 			}
 			else if (Path.extension(path) == "bundle")
 			{
-				parseAssetsElementLibrary(path, targetPath, "*", "", type, embed, library, glyphs, deliveryPackName, true);
+				parseAssetsElementLibrary(path, targetPath, "*", "", type, embed, library, glyphs, true, deliveryPackName);
 			}
 			else
 			{
@@ -454,7 +454,7 @@ class ProjectXMLParser extends HXProject
 					}*/
 				}
 
-				parseAssetsElementDirectory(path, targetPath, include, exclude, type, embed, library, glyphs, deliveryPackName, true);
+				parseAssetsElementDirectory(path, targetPath, include, exclude, type, embed, library, glyphs, true, deliveryPackName);
 			}
 		}
 		else
@@ -548,7 +548,7 @@ class ProjectXMLParser extends HXProject
 	}
 
 	private function parseAssetsElementDirectory(path:String, targetPath:String, include:String, exclude:String, type:AssetType, embed:Null<Bool>,
-			library:String, glyphs:String, deliveryPackName:String, recursive:Bool):Void
+			library:String, glyphs:String, recursive:Bool, deliveryPackName:String):Void
 	{
 		var files = FileSystem.readDirectory(path);
 
@@ -563,13 +563,13 @@ class ProjectXMLParser extends HXProject
 			{
 				if (Path.extension(file) == "bundle")
 				{
-					parseAssetsElementLibrary(path + "/" + file, targetPath + file, include, exclude, type, embed, library, glyphs, true);
+					parseAssetsElementLibrary(path + "/" + file, targetPath + file, include, exclude, type, embed, library, glyphs, true, deliveryPackName);
 				}
 				else if (recursive)
 				{
 					if (filter(file, ["*"], exclude.split("|")))
 					{
-						parseAssetsElementDirectory(path + "/" + file, targetPath + file, include, exclude, type, embed, library, glyphs, true);
+						parseAssetsElementDirectory(path + "/" + file, targetPath + file, include, exclude, type, embed, library, glyphs, true, deliveryPackName);
 					}
 				}
 			}
@@ -593,7 +593,7 @@ class ProjectXMLParser extends HXProject
 	}
 
 	private function parseAssetsElementLibrary(path:String, targetPath:String, include:String, exclude:String, type:AssetType, embed:Null<Bool>,
-			library:String, glyphs:String, deliveryPackName:String, recursive:Bool):Void
+			library:String, glyphs:String, recursive:Bool, deliveryPackName:String,):Void
 	{
 		var includePath = findIncludeFile(path);
 
@@ -647,7 +647,7 @@ class ProjectXMLParser extends HXProject
 
 		if (!processedLibrary)
 		{
-			parseAssetsElementDirectory(path, targetPath, include, exclude, type, embed, library, glyphs, deliveryPackName, true);
+			parseAssetsElementDirectory(path, targetPath, include, exclude, type, embed, library, glyphs, true, deliveryPackName);
 		}
 	}
 
