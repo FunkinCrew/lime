@@ -3,8 +3,8 @@ plugins {
 }
 
 assetPack {
-    packName = "::ANDROID_PLAY_ASSETS_DELIVERY_NAME::"
+    packName = "::ANDROID_PLAY_ASSETS_DELIVERY_PACK::"
     dynamicDelivery {
-        deliveryType = "::ANDROID_PLAY_ASSETS_DELIVERY_MODE::"
+        deliveryType = "install-time"
     }
 }

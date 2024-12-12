@@ -19,9 +19,8 @@ class Asset
 	public var sourcePath:String;
 	public var targetPath:String;
 	public var type:AssetType;
-	public var padDelivery:Null<Bool>;
-	public var padMode:String;
-	public var padName:String;
+	public var padDelivery:Bool = false;
+	public var padPack:String;
 
 	public function new(path:String = "", rename:String = "", type:AssetType = null, embed:Null<Bool> = null, setDefaults:Bool = true)
 	{
@@ -116,8 +115,7 @@ class Asset
 		asset.targetPath = targetPath;
 		asset.type = type;
 		asset.padDelivery = padDelivery;
-		asset.padMode = padMode;
-		asset.padName = padName;
+		asset.padPack = padPack;
 		return asset;
 	}
 }
