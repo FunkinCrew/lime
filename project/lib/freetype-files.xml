@@ -16,7 +16,6 @@
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftcache.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftchapters.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftcid.h" />
-		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftdriver.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/fterrdef.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/fterrors.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftfntfmt.h" />
@@ -35,7 +34,6 @@
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftmoderr.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftotval.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftoutln.h" />
-		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftparams.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftpfr.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftrender.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/freetype/include/freetype/ftsizes.h" />
@@ -96,7 +94,6 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftoutln.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftpatent.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftpfr.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftpsprop.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftrfork.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftsnames.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftstream.c" />
@@ -110,13 +107,7 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/bdf/bdf.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/bzip2/ftbzip2.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cache/ftcache.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffcmap.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffdrivr.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffgload.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffload.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffobjs.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffparse.c" />
-		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cffpic.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cff/cff.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/cid/type1cid.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/gzip/ftgzip.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/lzw/ftlzw.c" />
