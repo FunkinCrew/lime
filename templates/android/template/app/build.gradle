@@ -20,7 +20,6 @@ android {
 	::if (ANDROID_GRADLE_PLUGIN>="4.0")::ndkVersion '::ANDROID_NDK_VERSION::'::end::
 
 	defaultConfig {
-		resConfig "en"
 		applicationId "::META_PACKAGE_NAME::"
 		minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
 		targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
