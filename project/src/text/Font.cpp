@@ -578,13 +578,21 @@ namespace lime {
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
 
-        int calculatedAscender  = hhea->Ascender;
-        int calculatedDescender = hhea->Descender;
-        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+		int calculatedAscender = 0;
+		int calculatedDescender = 0;
+		int calculatedHeight = 0;
+
+		if (hhea) {
+
+			calculatedAscender = hhea->Ascender;
+			calculatedDescender = hhea->Descender;
+			calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+		}
 
         if (!( calculatedAscender || calculatedDescender ))
         {
-			if (os2->version != 0xFFFFU)
+			if (os2 && os2->version != 0xFFFFU)
 			{
 				if (os2->sTypoAscender || os2->sTypoDescender)
 				{
@@ -597,7 +605,7 @@ namespace lime {
 				else
 				{
 
-					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedAscender = (FT_Short)os2->usWinAscent;
 					calculatedDescender = -(FT_Short)os2->usWinDescent;
 					calculatedHeight = calculatedAscender - calculatedDescender;
 
@@ -835,28 +843,31 @@ namespace lime {
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
 
-        int calculatedAscender  = hhea->Ascender;
-        int calculatedDescender = hhea->Descender;
-        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+		int calculatedAscender = 0;
+		int calculatedDescender = 0;
+
+		if (hhea) {
+
+			calculatedAscender = hhea->Ascender;
+			calculatedDescender = hhea->Descender;
+		}
 
         if (!( calculatedAscender || calculatedDescender ))
         {
-			if (os2->version != 0xFFFFU)
+			if (os2 && os2->version != 0xFFFFU)
 			{
 				if (os2->sTypoAscender || os2->sTypoDescender)
 				{
 
 					calculatedAscender = os2->sTypoAscender;
 					calculatedDescender = os2->sTypoDescender;
-					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
 
 				}
 				else
 				{
 
-					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedAscender = (FT_Short)os2->usWinAscent;
 					calculatedDescender = -(FT_Short)os2->usWinDescent;
-					calculatedHeight = calculatedAscender - calculatedDescender;
 
 				}
 			}
@@ -866,7 +877,6 @@ namespace lime {
 
 			calculatedAscender = ((FT_Face)face)->ascender;
 			calculatedDescender = ((FT_Face)face)->descender;
-			calculatedHeight = ((FT_Face)face)->height;
 
 		}
 
@@ -913,28 +923,32 @@ namespace lime {
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
 
-        int calculatedAscender  = hhea->Ascender;
-        int calculatedDescender = hhea->Descender;
-        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+		int calculatedAscender = 0;
+		int calculatedDescender = 0;
+
+		if (hhea) {
+
+			calculatedAscender = hhea->Ascender;
+			calculatedDescender = hhea->Descender;
+
+		}
 
         if (!( calculatedAscender || calculatedDescender ))
         {
-			if (os2->version != 0xFFFFU)
+			if (os2 && os2->version != 0xFFFFU)
 			{
 				if (os2->sTypoAscender || os2->sTypoDescender)
 				{
 
 					calculatedAscender = os2->sTypoAscender;
 					calculatedDescender = os2->sTypoDescender;
-					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
 
 				}
 				else
 				{
 
-					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedAscender = (FT_Short)os2->usWinAscent;
 					calculatedDescender = -(FT_Short)os2->usWinDescent;
-					calculatedHeight = calculatedAscender - calculatedDescender;
 
 				}
 			}
@@ -944,7 +958,6 @@ namespace lime {
 
 			calculatedAscender = ((FT_Face)face)->ascender;
 			calculatedDescender = ((FT_Face)face)->descender;
-			calculatedHeight = ((FT_Face)face)->height;
 
 		}
 
@@ -1170,21 +1183,28 @@ namespace lime {
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
 
-        int calculatedAscender = hhea->Ascender;
-        int calculatedDescender = hhea->Descender;
-        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+		int calculatedAscender = 0;
+		int calculatedDescender = 0;
+		int calculatedHeight = 0;
+
+		if (hhea) {
+
+			calculatedAscender = hhea->Ascender;
+			calculatedDescender = hhea->Descender;
+			calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+		}
 
         if (!( calculatedAscender || calculatedDescender ))
         {
-			if (os2->version != 0xFFFFU)
+			if (os2 && os2->version != 0xFFFFU)
 			{
 				if (os2->sTypoAscender || os2->sTypoDescender)
 				{
 
 					calculatedAscender = os2->sTypoAscender;
 					calculatedDescender = os2->sTypoDescender;
-					calculatedHeight = calculatedAscender - calculatedDescender +
-									os2->sTypoLineGap;
+					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
 
 				}
 				else
