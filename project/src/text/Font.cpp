@@ -537,7 +537,40 @@ namespace lime {
 
 		wchar_t* family_name = GetFamilyName ();
 
-		#ifdef LIME_FREETYPE_LEGACY_METRICS
+		#ifdef LIME_FREETYPE_SWF_METRICS
+
+		// this should more closely match how [Embed] works in AS3 when
+		// embedding a font in a SWF
+
+		int calculatedAscender = 0;
+		int calculatedDescender = 0;
+		int calculatedHeight = 0;
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+		if (os2 && os2->version != 0xFFFFU) {
+
+			calculatedAscender = (FT_Short)os2->usWinAscent;
+			calculatedDescender = -(FT_Short)os2->usWinDescent;
+			calculatedHeight = calculatedAscender - calculatedDescender;
+
+		} else if (hhea) {
+
+			calculatedAscender = hhea->Ascender;
+			calculatedDescender = hhea->Descender;
+			calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+		} else {
+
+			// should never happen, but let's have a fallback to be safe
+			calculatedAscender = ((FT_Face)face)->ascender;
+			calculatedDescender = ((FT_Face)face)->descender;
+			calculatedHeight = ((FT_Face)face)->height;
+
+		}
+
+		#elif defined(LIME_FREETYPE_LEGACY_METRICS)
 
 		// this is FreeType's font metrics algorithm from 2.9.1
 		// it behaves more like SWF than the new algorithm
@@ -773,7 +806,28 @@ namespace lime {
 
 	int Font::GetAscender () {
 
-		#ifdef LIME_FREETYPE_LEGACY_METRICS
+		#ifdef LIME_FREETYPE_SWF_METRICS
+
+		// this should more closely match how [Embed] works in AS3 when
+		// embedding a font in a SWF
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+		if (os2 && os2->version != 0xFFFFU) {
+
+			return (FT_Short)os2->usWinAscent;
+
+		} else if (hhea) {
+
+			return hhea->Ascender;
+
+		}
+
+		// should never happen, but let's have a fallback to be safe
+		return ((FT_Face)face)->ascender;
+
+		#elif defined(LIME_FREETYPE_LEGACY_METRICS)
 
 		// this is FreeType's font metrics algorithm from 2.9.1
 		// it behaves more like SWF than the new algorithm
@@ -829,7 +883,29 @@ namespace lime {
 
 	int Font::GetDescender () {
 
-		#ifdef LIME_FREETYPE_LEGACY_METRICS
+		#ifdef LIME_FREETYPE_SWF_METRICS
+
+		// this should more closely match how [Embed] works in AS3 when
+		// embedding a font in a SWF
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+		if (os2 && os2->version != 0xFFFFU) {
+
+			return -(FT_Short)os2->usWinDescent;
+
+		}
+		else if (hhea) {
+
+			return hhea->Descender;
+
+		}
+
+		// should never happen, but let's have a fallback to be safe
+		return ((FT_Face)face)->descender;
+
+		#elif defined(LIME_FREETYPE_LEGACY_METRICS)
 
 		// this is FreeType's font metrics algorithm from 2.9.1
 		// it behaves more like SWF than the new algorithm
@@ -1061,7 +1137,32 @@ namespace lime {
 
 	int Font::GetHeight () {
 
-		#ifdef LIME_FREETYPE_LEGACY_METRICS
+		#ifdef LIME_FREETYPE_SWF_METRICS
+
+		// this should more closely match how [Embed] works in AS3 when
+		// embedding a font in a SWF
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+		if (os2 && os2->version != 0xFFFFU) {
+
+			int calculatedAscender = (FT_Short)os2->usWinAscent;
+			int calculatedDescender = -(FT_Short)os2->usWinDescent;
+			return calculatedAscender - calculatedDescender;
+
+		} else if (hhea) {
+
+			int calculatedAscender = hhea->Ascender;
+			int calculatedDescender = hhea->Descender;
+			return calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+		}
+
+		// should never happen, but let's have a fallback to be safe
+		return ((FT_Face)face)->height;
+
+		#elif defined(LIME_FREETYPE_LEGACY_METRICS)
 
 		// this is FreeType's font metrics algorithm from 2.9.1
 		// it behaves more like SWF than the new algorithm
