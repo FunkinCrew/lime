@@ -12,6 +12,7 @@
 #include FT_BITMAP_H
 #include FT_SFNT_NAMES_H
 #include FT_TRUETYPE_IDS_H
+#include FT_TRUETYPE_TABLES_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
 #endif
@@ -536,6 +537,57 @@ namespace lime {
 
 		wchar_t* family_name = GetFamilyName ();
 
+		#ifdef LIME_FREETYPE_LEGACY_METRICS
+
+		// this is FreeType's font metrics algorithm from 2.9.1
+		// it behaves more like SWF than the new algorithm
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+        int calculatedAscender  = hhea->Ascender;
+        int calculatedDescender = hhea->Descender;
+        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+        if (!( calculatedAscender || calculatedDescender ))
+        {
+			if (os2->version != 0xFFFFU)
+			{
+				if (os2->sTypoAscender || os2->sTypoDescender)
+				{
+
+					calculatedAscender = os2->sTypoAscender;
+					calculatedDescender = os2->sTypoDescender;
+					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
+
+				}
+				else
+				{
+
+					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedDescender = -(FT_Short)os2->usWinDescent;
+					calculatedHeight = calculatedAscender - calculatedDescender;
+
+				}
+			}
+        }
+
+		if (!calculatedAscender || !calculatedDescender) {
+
+			calculatedAscender = ((FT_Face)face)->ascender;
+			calculatedDescender = ((FT_Face)face)->descender;
+			calculatedHeight = ((FT_Face)face)->height;
+
+		}
+
+		#else
+
+		int calculatedAscender = ((FT_Face)face)->ascender;
+		int calculatedDescender = ((FT_Face)face)->descender;
+		int calculatedHeight = ((FT_Face)face)->height;
+
+		#endif
+
 		if (useCFFIValue) {
 
 			value ret = alloc_empty_object ();
@@ -548,9 +600,9 @@ namespace lime {
 			alloc_field (ret, val_id ("family_name"), family_name == NULL ? alloc_string (((FT_Face)face)->family_name) : alloc_wstring (family_name));
 			alloc_field (ret, val_id ("style_name"), alloc_string (((FT_Face)face)->style_name));
 			alloc_field (ret, val_id ("em_size"), alloc_int (((FT_Face)face)->units_per_EM));
-			alloc_field (ret, val_id ("ascend"), alloc_int (((FT_Face)face)->ascender));
-			alloc_field (ret, val_id ("descend"), alloc_int (((FT_Face)face)->descender));
-			alloc_field (ret, val_id ("height"), alloc_int (((FT_Face)face)->height));
+			alloc_field (ret, val_id ("ascend"), alloc_int (calculatedAscender));
+			alloc_field (ret, val_id ("descend"), alloc_int (calculatedDescender));
+			alloc_field (ret, val_id ("height"), alloc_int (calculatedHeight));
 
 			delete family_name;
 
@@ -647,9 +699,9 @@ namespace lime {
 			hl_dyn_setp (ret, hl_hash_utf8 ("family_name"), &hlt_bytes, _family_name);
 			hl_dyn_setp (ret, hl_hash_utf8 ("style_name"), &hlt_bytes, style_name);
 			hl_dyn_seti (ret, hl_hash_utf8 ("em_size"), &hlt_i32, ((FT_Face)face)->units_per_EM);
-			hl_dyn_seti (ret, hl_hash_utf8 ("ascend"), &hlt_i32, ((FT_Face)face)->ascender);
-			hl_dyn_seti (ret, hl_hash_utf8 ("descend"), &hlt_i32, ((FT_Face)face)->descender);
-			hl_dyn_seti (ret, hl_hash_utf8 ("height"), &hlt_i32, ((FT_Face)face)->height);
+			hl_dyn_seti (ret, hl_hash_utf8 ("ascend"), &hlt_i32, calculatedAscender);
+			hl_dyn_seti (ret, hl_hash_utf8 ("descend"), &hlt_i32, calculatedDescender);
+			hl_dyn_seti (ret, hl_hash_utf8 ("height"), &hlt_i32, calculatedHeight);
 
 			// 'glyphs' field
 			hl_varray* _glyphs = (hl_varray*)hl_alloc_array (&hlt_dynobj, num_glyphs);
@@ -721,14 +773,112 @@ namespace lime {
 
 	int Font::GetAscender () {
 
+		#ifdef LIME_FREETYPE_LEGACY_METRICS
+
+		// this is FreeType's font metrics algorithm from 2.9.1
+		// it behaves more like SWF than the new algorithm
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+        int calculatedAscender  = hhea->Ascender;
+        int calculatedDescender = hhea->Descender;
+        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+        if (!( calculatedAscender || calculatedDescender ))
+        {
+			if (os2->version != 0xFFFFU)
+			{
+				if (os2->sTypoAscender || os2->sTypoDescender)
+				{
+
+					calculatedAscender = os2->sTypoAscender;
+					calculatedDescender = os2->sTypoDescender;
+					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
+
+				}
+				else
+				{
+
+					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedDescender = -(FT_Short)os2->usWinDescent;
+					calculatedHeight = calculatedAscender - calculatedDescender;
+
+				}
+			}
+        }
+
+		if (!calculatedAscender || !calculatedDescender) {
+
+			calculatedAscender = ((FT_Face)face)->ascender;
+			calculatedDescender = ((FT_Face)face)->descender;
+			calculatedHeight = ((FT_Face)face)->height;
+
+		}
+
+		return calculatedAscender;
+
+		#else
+
 		return ((FT_Face)face)->ascender;
+
+		#endif
 
 	}
 
 
 	int Font::GetDescender () {
 
+		#ifdef LIME_FREETYPE_LEGACY_METRICS
+
+		// this is FreeType's font metrics algorithm from 2.9.1
+		// it behaves more like SWF than the new algorithm
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+        int calculatedAscender  = hhea->Ascender;
+        int calculatedDescender = hhea->Descender;
+        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+        if (!( calculatedAscender || calculatedDescender ))
+        {
+			if (os2->version != 0xFFFFU)
+			{
+				if (os2->sTypoAscender || os2->sTypoDescender)
+				{
+
+					calculatedAscender = os2->sTypoAscender;
+					calculatedDescender = os2->sTypoDescender;
+					calculatedHeight = calculatedAscender - calculatedDescender + os2->sTypoLineGap;
+
+				}
+				else
+				{
+
+					calculatedAscender  =  (FT_Short)os2->usWinAscent;
+					calculatedDescender = -(FT_Short)os2->usWinDescent;
+					calculatedHeight = calculatedAscender - calculatedDescender;
+
+				}
+			}
+        }
+
+		if (!calculatedAscender || !calculatedDescender) {
+
+			calculatedAscender = ((FT_Face)face)->ascender;
+			calculatedDescender = ((FT_Face)face)->descender;
+			calculatedHeight = ((FT_Face)face)->height;
+
+		}
+
+		return calculatedDescender;
+
+		#else
+
 		return ((FT_Face)face)->descender;
+
+		#endif
 
 	}
 
@@ -911,7 +1061,55 @@ namespace lime {
 
 	int Font::GetHeight () {
 
+		#ifdef LIME_FREETYPE_LEGACY_METRICS
+
+		// this is FreeType's font metrics algorithm from 2.9.1
+		// it behaves more like SWF than the new algorithm
+
+		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_HoriHeader* hhea = (TT_HoriHeader*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_hhea);
+
+        int calculatedAscender = hhea->Ascender;
+        int calculatedDescender = hhea->Descender;
+        int calculatedHeight = calculatedAscender - calculatedDescender + hhea->Line_Gap;
+
+        if (!( calculatedAscender || calculatedDescender ))
+        {
+			if (os2->version != 0xFFFFU)
+			{
+				if (os2->sTypoAscender || os2->sTypoDescender)
+				{
+
+					calculatedAscender = os2->sTypoAscender;
+					calculatedDescender = os2->sTypoDescender;
+					calculatedHeight = calculatedAscender - calculatedDescender +
+									os2->sTypoLineGap;
+
+				}
+				else
+				{
+
+					calculatedAscender = (FT_Short)os2->usWinAscent;
+					calculatedDescender = -(FT_Short)os2->usWinDescent;
+					calculatedHeight = calculatedAscender - calculatedDescender;
+
+				}
+			}
+        }
+
+        if (!calculatedHeight) {
+
+			calculatedHeight = ((FT_Face)face)->height;
+
+		}
+
+		return calculatedHeight;
+
+		#else
+
 		return ((FT_Face)face)->height;
+
+		#endif
 
 	}
 
@@ -989,7 +1187,7 @@ namespace lime {
 						unsigned char g = bitmap.buffer[i * pitch + j * 3 + 1];
 						unsigned char b = bitmap.buffer[i * pitch + j * 3 + 2];
 						unsigned char a = (r + g + b) / 3;
-						
+
 						//Red
 						position[(i * width + j) * 4 + 0] = r;
 						//Green
@@ -1039,10 +1237,10 @@ namespace lime {
 		return totalOffset;
 
 	}
-	
+
 	void Font::SetSize(size_t size, size_t dpi)
 	{
-		//We changed the function signature to include a dpi argument which changes this from 
+		//We changed the function signature to include a dpi argument which changes this from
 		//the default value of 72 for dpi. Any public api that uses this should probably be changed
 		//to allow setting the dpi in an appropriate future release.
 		size_t hdpi = dpi;
