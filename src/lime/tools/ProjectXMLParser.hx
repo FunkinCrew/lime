@@ -593,7 +593,7 @@ class ProjectXMLParser extends HXProject
 	}
 
 	private function parseAssetsElementLibrary(path:String, targetPath:String, include:String, exclude:String, type:AssetType, embed:Null<Bool>,
-			library:String, glyphs:String, recursive:Bool, deliveryPackName:String,):Void
+			library:String, glyphs:String, recursive:Bool, deliveryPackName:String):Void
 	{
 		var includePath = findIncludeFile(path);
 
