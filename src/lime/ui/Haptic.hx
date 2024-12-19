@@ -12,20 +12,20 @@ import lime.utils.Log;
 class Haptic
 {
 	#if android
-	private static var lime_haptic_vibrate:Int->Int->Void;
+	private static var lime_haptic_vibrate:Int->Int->Int->Void;
 	#end
 
-	public static function vibrate(period:Int, duration:Int):Void
+	public static function vibrate(period:Int, duration:Int, amplitude:Int = 0):Void
 	{
 		#if android
 		if (lime_haptic_vibrate == null)
 		{
-			lime_haptic_vibrate = JNI.createStaticMethod("org/haxe/lime/GameActivity", "vibrate", "(II)V");
+			lime_haptic_vibrate = JNI.createStaticMethod("org/haxe/lime/GameActivity", "vibrate", "(III)V");
 		}
 
 		try
 		{
-			lime_haptic_vibrate(period, duration);
+			lime_haptic_vibrate(period, duration, amplitude);
 		}
 		catch (e:Dynamic)
 		{
@@ -62,7 +62,7 @@ class Haptic
 			Log.verbose("Navigator.vibrate() threw an error (it might be Internet Explorer or Edge not supporting the feature)");
 		}
 		#elseif (lime_cffi && !macro)
-		NativeCFFI.lime_haptic_vibrate(period, duration);
+		NativeCFFI.lime_haptic_vibrate(period, duration, amplitude);
 		#end
 	}
 }
