@@ -2,12 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key><true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	::if (languages != null)::<key>CFBundleLocalizations</key>
 	<array>::foreach languages::
 		<string>::__current__::</string>::end::
 	</array>::end::
+        <key>UIFileSharingEnabled</key>
+	<string>true</string>
+        <key>com.apple.developer.kernel.increased-memory-limit</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<string>true</string>
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>To play with controller accept bluetooth permission.</string>
 	<key>CFBundleDisplayName</key>
 	<string>::APP_TITLE::</string>
 	<key>CFBundleExecutable</key>
