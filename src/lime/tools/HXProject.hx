@@ -330,11 +330,6 @@ class HXProject extends Script
 			project.targetHandlers.set(key, targetHandlers.get(key));
 		}
 
-		for (key in padAssets.keys())
-		{
-			project.padAssets.set(key, padAssets.get(key));
-		}
-
 		project.templatePaths = templatePaths.copy();
 
 		for (i in 0...windows.length)
@@ -907,7 +902,6 @@ class HXProject extends Script
 			MapTools.copyUniqueKeys(project.libraryHandlers, libraryHandlers);
 			MapTools.copyUniqueKeys(project.targetFlags, targetFlags);
 			MapTools.copyUniqueKeys(project.targetHandlers, targetHandlers);
-			MapTools.copyUniqueKeys(project.padAssets, padAssets);
 
 			config.merge(project.config);
 
