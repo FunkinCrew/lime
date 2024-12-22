@@ -281,6 +281,7 @@ class AndroidHelper
 
 			args.push("--bundle=" + targetPath);
 			args.push("--output=" + outDir + project.app.file + '-release' + ".apks");
+			args.push("--mode=universal");
 			args.push("--ks=" + project.keystore.path);
 			args.push("--ks-pass=pass:" + project.keystore.password);
 			args.push("--ks-key-alias=" + project.keystore.alias);
