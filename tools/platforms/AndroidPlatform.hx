@@ -465,17 +465,17 @@ class AndroidPlatform extends PlatformTarget
 		{
 			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
 			{
-				if (asset.padDelivery)
+				if (asset.deliveryPackName != '')
 				{
-					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.padPack + "/src/main/assets/", asset.resourceName));
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.deliveryPackName + "/src/main/assets/", asset.resourceName));
 
-					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.contains(asset.padPack))
+					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.contains(asset.deliveryPackName))
 					{
 						var padContext:Dynamic = {};
-						padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.padPack;
-						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.padPack + "/build.gradle", padContext);
+						padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.deliveryPackName;
+						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.deliveryPackName + "/build.gradle", padContext);
 
-						context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.padPack);
+						context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.deliveryPackName);
 					}
 				}
 				else
