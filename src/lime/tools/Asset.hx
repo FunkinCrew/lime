@@ -15,18 +15,20 @@ class Asset
 	public var glyphs:String;
 	public var id:String;
 	public var library:String;
-	// public var path:String;
-	// public var rename:String;
 	public var resourceName:String;
 	public var sourcePath:String;
 	public var targetPath:String;
 	public var type:AssetType;
+	public var padDelivery:Null<Bool>;
+	public var padMode:String;
+	public var padName:String;
 
 	public function new(path:String = "", rename:String = "", type:AssetType = null, embed:Null<Bool> = null, setDefaults:Bool = true)
 	{
 		if (!setDefaults) return;
 
 		this.embed = embed;
+
 		sourcePath = Path.standardize(path);
 
 		if (rename == "")
@@ -47,6 +49,7 @@ class Asset
 		if (type == null)
 		{
 			var extension = Path.extension(path);
+
 			if (extension != null) extension = extension.toLowerCase();
 
 			if (AssetHelper.knownExtensions.exists(extension))
@@ -65,7 +68,6 @@ class Asset
 						{
 							var stat = FileSystem.stat(path);
 
-							// if (stat.size > 1024 * 128) {
 							if (stat.size > 1024 * 1024)
 							{
 								this.type = AssetType.MUSIC;
@@ -101,7 +103,6 @@ class Asset
 	public function clone():Asset
 	{
 		var asset = new Asset("", "", null, null, false);
-
 		asset.data = data;
 		asset.embed = embed;
 		asset.encoding = encoding;
@@ -114,9 +115,9 @@ class Asset
 		asset.sourcePath = sourcePath;
 		asset.targetPath = targetPath;
 		asset.type = type;
-
-		// ObjectTools.copyFields (this, asset);
-
+		asset.padDelivery = padDelivery;
+		asset.padMode = padMode;
+		asset.padName = padName;
 		return asset;
 	}
 }
