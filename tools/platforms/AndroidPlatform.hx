@@ -459,7 +459,7 @@ class AndroidPlatform extends PlatformTarget
 
 		var context = project.templateContext;
 
-		context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES = [];
+		context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS = [];
 
 		for (asset in project.assets)
 		{
@@ -467,15 +467,15 @@ class AndroidPlatform extends PlatformTarget
 			{
 				if (asset.padDelivery)
 				{
-					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.padName + "/src/main/assets/", asset.resourceName) : Path.combine(sourceSet + "/assets/", asset.resourceName));
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.padPack + "/src/main/assets/", asset.resourceName) : Path.combine(sourceSet + "/assets/", asset.resourceName));
 
-					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES.contains(asset.padName))
+					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.contains(asset.padPack))
 					{
-						context.ANDROID_PLAY_ASSETS_DELIVERY_NAMES.push(asset.padName);
+						context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.padPack);
 
 						var padContext:Dynamic = {};
-						padContext.ANDROID_PLAY_ASSETS_DELIVERY_NAME = asset.padName;
-						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.padName + "/build.gradle", padContext);
+						padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.padPack;
+						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.padPack + "/build.gradle", padContext);
 					}
 				}
 				else
