@@ -20,6 +20,7 @@ android {
 	::if (ANDROID_GRADLE_PLUGIN>="4.0")::ndkVersion '::ANDROID_NDK_VERSION::'::end::
 
 	defaultConfig {
+		resConfig "en"
 		applicationId "::META_PACKAGE_NAME::"
 		minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
 		targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
@@ -72,6 +73,7 @@ android {
 		release {
 			minifyEnabled false
 			signingConfig signingConfigs.release
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
 		}
 	}
 
@@ -101,6 +103,10 @@ tasks.whenTaskAdded { task ->
     	def outputDir = "${buildDir}/outputs/bundle/${flavor}"
       def originalFile = file("${outputDir}/app-${flavor}.aab")
       def renamedFile = file("${outputDir}/::APP_FILE::-${flavor}.aab")
+
+     if (renamedFile.exists()) {
+      renamedFile.delete()
+     }
 
       if (originalFile.exists()) {
         originalFile.renameTo(renamedFile)
