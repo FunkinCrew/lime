@@ -574,12 +574,6 @@ namespace lime {
 
 	}
 
-	void System::OpenURL (const char* url) {
-
-		SDL_OpenURL(url);
-
-	}
-
 
 	FILE* FILE_HANDLE::getFile () {
 
