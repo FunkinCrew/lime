@@ -3038,38 +3038,16 @@ namespace lime {
 	}
 
 
-	void lime_system_open_file (HxString path) {
+	void lime_system_open_url (HxString url) {
 
-		#ifdef IPHONE
-		System::OpenFile (path.c_str ());
-		#endif
+		System::OpenURL (url.c_str ());
 
 	}
 
 
-	HL_PRIM void HL_NAME(hl_system_open_file) (vbyte* path) {
+	HL_PRIM void HL_NAME(hl_system_open_url) (vbyte* url) {
 
-		#ifdef IPHONE
-		System::OpenFile ((char*)path);
-		#endif
-
-	}
-
-
-	void lime_system_open_url (HxString url, HxString target) {
-
-		#ifdef IPHONE
-		System::OpenURL (url.c_str (), target.c_str ());
-		#endif
-
-	}
-
-
-	HL_PRIM void HL_NAME(hl_system_open_url) (vbyte* url, vbyte* target) {
-
-		#ifdef IPHONE
-		System::OpenURL ((char*)url, (char*)target);
-		#endif
+		System::OpenURL ((char*)url);
 
 	}
 
@@ -4036,8 +4014,7 @@ namespace lime {
 	DEFINE_PRIME0 (lime_system_get_platform_version);
 	DEFINE_PRIME0 (lime_system_get_timer);
 	DEFINE_PRIME1 (lime_system_get_windows_console_mode);
-	DEFINE_PRIME1v (lime_system_open_file);
-	DEFINE_PRIME2v (lime_system_open_url);
+	DEFINE_PRIME1v (lime_system_open_url);
 	DEFINE_PRIME1 (lime_system_set_allow_screen_timeout);
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
@@ -4225,8 +4202,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_platform_version, _NO_ARG);
 	DEFINE_HL_PRIM (_F64, hl_system_get_timer, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_windows_console_mode, _I32);
-	DEFINE_HL_PRIM (_VOID, hl_system_open_file, _STRING);
-	DEFINE_HL_PRIM (_VOID, hl_system_open_url, _STRING _STRING);
+	DEFINE_HL_PRIM (_VOID, hl_system_open_url, _STRING);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_allow_screen_timeout, _BOOL);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_windows_console_mode, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
