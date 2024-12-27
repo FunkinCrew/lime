@@ -28,7 +28,7 @@ namespace lime {
 	SDL_Cursor* SDLCursor::waitCursor = 0;
 	SDL_Cursor* SDLCursor::waitArrowCursor = 0;
 
-	#if !defined (IPHONE) && !defined (APPLETV) && !defined (ANDROID)
+	#if !defined (IPHONE) && !defined (APPLETV)
 	static bool displayModeSet = false;
 	#endif
 
@@ -47,13 +47,12 @@ namespace lime {
 
 		int sdlWindowFlags = 0;
 
-		#if defined (IPHONE) || defined (APPLETV) || defined (ANDROID)
+		#if defined (IPHONE) || defined (APPLETV)
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
 		#else
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		#endif
 
-		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		if (flags & WINDOW_FLAG_RESIZABLE) sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
 		if (flags & WINDOW_FLAG_BORDERLESS) sdlWindowFlags |= SDL_WINDOW_BORDERLESS;
 		if (flags & WINDOW_FLAG_HIDDEN) sdlWindowFlags |= SDL_WINDOW_HIDDEN;
@@ -956,7 +955,7 @@ namespace lime {
 
 		SDL_DisplayMode mode = { pixelFormat, displayMode->width, displayMode->height, displayMode->refreshRate, 0 };
 
-		#if !defined (IPHONE) && !defined (APPLETV) && !defined (ANDROID)
+		#if !defined (IPHONE) && !defined (APPLETV)
 		if (SDL_SetWindowDisplayMode (sdlWindow, &mode) == 0) {
 
 			displayModeSet = true;
@@ -977,7 +976,7 @@ namespace lime {
 
 		if (fullscreen) {
 
-			#if !defined (IPHONE) && !defined (APPLETV) && !defined (ANDROID)
+			#if !defined (IPHONE) && !defined (APPLETV)
 
 			if (displayModeSet) {
 
