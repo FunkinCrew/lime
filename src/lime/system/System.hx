@@ -372,7 +372,7 @@ class System
 			var openFile = JNI.createStaticMethod("org/haxe/lime/GameActivity", "openFile", "(Ljava/lang/String;)V");
 			openFile(path);
 			#elseif (lime_cffi && !macro)
-			NativeCFFI.lime_system_open_file(path);
+			NativeCFFI.lime_system_open_url(path);
 			#end
 		}
 	}
@@ -384,17 +384,12 @@ class System
 	{
 		if (url != null)
 		{
-			#if desktop
-			openFile(url);
-			#elseif (js && html5)
+			#if (js && html5)
 			Browser.window.open(url, target);
 			#elseif flash
 			Lib.getURL(new URLRequest(url), target);
-			#elseif android
-			var openURL = JNI.createStaticMethod("org/haxe/lime/GameActivity", "openURL", "(Ljava/lang/String;Ljava/lang/String;)V");
-			openURL(url, target);
 			#elseif (lime_cffi && !macro)
-			NativeCFFI.lime_system_open_url(url, target);
+			NativeCFFI.lime_system_open_url(url);
 			#end
 		}
 	}
