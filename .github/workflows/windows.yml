@@ -34,4 +34,5 @@ jobs:
             ndll/Windows/
             ndll/Windows64/
             !**/.gitignore
+            lime.png
           if-no-files-found: error
