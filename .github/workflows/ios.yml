@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  ios-ndll:
+  ios:
     runs-on: macos-13
     steps:
 
