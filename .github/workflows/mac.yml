@@ -37,6 +37,7 @@ jobs:
           # path: |
             # ndll/Mac/
             # !**/.gitignore
+            # lime.png
           # if-no-files-found: error
       - name: Upload Artifact (x86_64)
         uses: actions/upload-artifact@v4
@@ -45,6 +46,7 @@ jobs:
           path: |
             ndll/Mac64/
             !**/.gitignore
+            lime.png
           if-no-files-found: error
   macarm64:
     runs-on: macos-14
@@ -75,4 +77,5 @@ jobs:
           path: |
             ndll/MacArm64/
             !**/.gitignore
+            lime.png
           if-no-files-found: error
