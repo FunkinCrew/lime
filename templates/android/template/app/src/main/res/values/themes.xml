@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<style name="LimeAppMainThemeFullscreen" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+	<style name="LimeAppMainThemeFullscreen" parent="@android:style/Theme.NoActionBar.Fullscreen">
 		<!-- Ensure content draws behind the system bars -->
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
@@ -15,7 +15,7 @@
 		<item name="android:navigationBarColor">@android:color/transparent</item>
 	</style>
 
-	<style name="LimeAppMainTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+	<style name="LimeAppMainTheme" parent="@android:style/Theme.NoActionBar">
 		<!-- Ensure content draws behind the system bars -->
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
