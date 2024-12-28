@@ -38,8 +38,8 @@ jobs:
           haxe svg.hxml
           haxe run.hxml
           haxe tools.hxml
-          haxe alias.hxml
-          cp obj/lime/AliasScript.exe ../templates/bin/lime.exe
+          # haxe alias.hxml
+          # cp obj/lime/AliasScript.exe ../templates/bin/lime.exe
 
       - uses: actions/upload-artifact@v4
         with:
@@ -48,5 +48,5 @@ jobs:
             tools/tools.n
             run.n
             svg.n
-            templates/bin/lime.exe
+            # templates/bin/lime.exe
           if-no-files-found: error
