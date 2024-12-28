@@ -1,5 +1,7 @@
 name: Mac CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
 
 env:
   HAXE_VERSION: 4.3.5
@@ -9,7 +11,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Setup Haxe
@@ -26,10 +28,10 @@ jobs:
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
         run: |
-          # haxelib run lime rebuild mac -32 -release -nocolor -nocffi -eval
-          haxelib run lime rebuild mac -64 -release -nocolor -nocffi -eval
+          # haxelib run lime rebuild mac -32  -nocolor -nocffi -eval
+          haxelib run lime rebuild mac -64  -nocolor -nocffi -eval
       # - name: Upload Artifact (x86)
-        # uses: actions/upload-artifact@v3
+        # uses: actions/upload-artifact@v4
         # with:
           # name: Mac-NDLL
           # path: |
@@ -37,7 +39,7 @@ jobs:
             # !**/.gitignore
           # if-no-files-found: error
       - name: Upload Artifact (x86_64)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Mac64-NDLL
           path: |
@@ -48,7 +50,7 @@ jobs:
     runs-on: macos-14
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Setup Haxe
@@ -65,9 +67,9 @@ jobs:
       - name: Configure Lime
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
-        run: haxelib run lime rebuild mac -arm64 -release -nocolor -nocffi -eval -D HXCPP_ARM64
+        run: haxelib run lime rebuild mac -arm64  -nocolor -nocffi -eval -D HXCPP_ARM64
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: MacArm64-NDLL
           path: |
