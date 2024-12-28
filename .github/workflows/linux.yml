@@ -1,11 +1,13 @@
 name: Linux CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   linux-ndll:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -35,7 +37,7 @@ jobs:
           haxelib run lime rebuild linux -32 -eval -nocolor -nocffi
           haxelib run lime rebuild linux -64 -eval -nocolor -nocffi
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Linux-NDLL
           path: |
