@@ -508,7 +508,7 @@ class AndroidPlatform extends PlatformTarget
 		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application", {
 			"android:label": project.meta.title,
 			"android:allowBackup": "true",
-			"android:theme": "@android:style/Theme.NoTitleBar" + (project.window.fullscreen ? ".Fullscreen" : ""),
+			"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
 			"android:hardwareAccelerated": "true",
 			"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
 			"android:largeHeap": "true"
@@ -521,7 +521,7 @@ class AndroidPlatform extends PlatformTarget
 			"android:label": project.meta.title,
 			"android:resizeableActivity": '${project.window.resizable}',
 			"android:configChanges": project.config.getArrayString("android.configChanges",
-				["layoutDirection", "locale", "orientation", "uiMode", "screenLayout", "screenSize", "smallestScreenSize", "keyboard", "keyboardHidden", "navigation"])
+				["layoutDirection", "locale", "grammaticalGender", "fontScale", "fontWeightAdjustment", "orientation", "uiMode", "screenLayout", "screenSize", "smallestScreenSize", "keyboard", "keyboardHidden", "navigation"])
 				.join("|"),
 			"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
 		});

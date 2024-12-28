@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<style name="LimeAppMainThemeFullscreen" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+		<!-- Ensure content draws behind the system bars -->
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+		<!-- Prevent swipe-to-dismiss behavior -->
+		<item name="android:windowSwipeToDismiss">false</item>
+
+		<!-- Enable drawing under the display cutout -->
+		<item name="android:windowLayoutInDisplayCutoutMode">always</item>
+
+		<!-- Make the status bar transparent -->
+		<item name="android:statusBarColor">@android:color/transparent</item>
+	</style>
+
+	<style name="LimeAppMainTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+		<!-- Ensure content draws behind the system bars -->
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+		<!-- Prevent swipe-to-dismiss behavior -->
+		<item name="android:windowSwipeToDismiss">false</item>
+
+		<!-- Enable drawing under the display cutout -->
+		<item name="android:windowLayoutInDisplayCutoutMode">always</item>
+
+		<!-- Make the status bar transparent -->
+		<item name="android:statusBarColor">@android:color/transparent</item>
+	</style>
+</resources>
