@@ -25,6 +25,7 @@ jobs:
           haxelib install ./hxcpp-4.3.66.zip --quiet
           haxelib install format --quiet
           haxelib install openfl --quiet
+          haxelib install svg --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
 
