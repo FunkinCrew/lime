@@ -112,16 +112,6 @@ public class GameActivity extends SDLActivity {
 
 			getWindow ().addFlags (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-			getWindow ().getAttributes ().layoutInDisplayCutoutMode =
-				WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
-
-		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-
-			getWindow ().addFlags (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-			getWindow ().getAttributes ().layoutInDisplayCutoutMode =
-				WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-
 		}
 
 		super.onCreate (state);
