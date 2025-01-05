@@ -80,10 +80,6 @@ namespace lime {
 		SDL_SetHint (SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
 		#endif
 
-		#if defined (IPHONE)
-		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "1");
-		#endif
-
 		if (flags & WINDOW_FLAG_HARDWARE) {
 
 			sdlWindowFlags |= SDL_WINDOW_OPENGL;
