@@ -81,7 +81,7 @@ namespace lime {
 		#endif
 
 		#if defined (IPHONE)
-		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
+		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "1");
 		#endif
 
 		if (flags & WINDOW_FLAG_HARDWARE) {
