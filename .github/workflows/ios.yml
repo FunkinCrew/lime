@@ -38,7 +38,7 @@ jobs:
 
       - name: Rebuild Lime (iOS)
         run: |
-          lime rebuild ios -clean -eval -nocolor -nocffi
+          lime rebuild ios -clean -eval -nocolor -nocffi -release
 
       - uses: actions/upload-artifact@v4
         with:
