@@ -166,7 +166,7 @@ namespace lime {
 		#endif
 
     #if defined (IPHONE)
-    AssignViewController(&sdlWindow);
+    [LimeUIKitViewController setViewControllerForWindow:&sdlWindow];
     #endif
 
 		if (!sdlWindow) {
@@ -1145,11 +1145,4 @@ namespace lime {
 		return new SDLWindow (application, width, height, flags, title);
 
 	}
-
-  #if defined (IPHONE)
-  void AssignViewController(SDL_Window *window) {
-   [LimeUIKitViewController setViewControllerForWindow:window];
-  }
-  #endif
-
 }
