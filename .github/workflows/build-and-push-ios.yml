@@ -1,0 +1,35 @@
+name: Build and Push iOS
+on: workflow_dispatch
+
+jobs:
+  ios:
+    uses: ./.github/workflows/ios.yml
+  miscellaneous:
+    uses: ./.github/workflows/miscellaneous.yml
+
+  publisher:
+    needs: [ios, miscellaneous]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.TOKEN }}
+
+      - name: Delete old NDLL's
+        run: rm -rf ndll
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: .
+          merge-multiple: true
+
+      - name: Push to GitHub
+        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+        with:
+          branch: ${{ github.ref_name }}
+          commit_message: "Built and Pushed New iOS NDLL's."
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
