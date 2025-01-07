@@ -262,7 +262,8 @@
 			<file name="src/backend/sdl/SDLKeyCode.cpp" />
 			<file name="src/backend/sdl/SDLMutex.cpp" />
 			<file name="src/backend/sdl/SDLSystem.cpp" />
-			<file name="src/backend/sdl/SDLWindow.cpp" />
+			<file name="src/backend/sdl/SDLWindow.cpp" unless="ios" />
+			<file name="src/backend/sdl/SDLWindow.mm" if="mac || ios" />
 
 		</section>
 
