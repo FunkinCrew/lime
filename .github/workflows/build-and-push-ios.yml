@@ -18,7 +18,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
 
       - name: Delete old NDLL's
-        run: rm -rf ndll
+        run: rm -rf ndll/iPhone
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
