@@ -166,7 +166,7 @@ namespace lime {
 		#endif
 
     #if defined (IPHONE)
-    [LimeUIKitViewController setViewControllerForWindow:&sdlWindow];
+    [LimeUIKitViewController setViewControllerForWindow:sdlWindow];
     #endif
 
 		if (!sdlWindow) {
