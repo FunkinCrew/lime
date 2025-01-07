@@ -9,7 +9,7 @@
     }
 
     SDL_WindowData *data = (__bridge SDL_WindowData *)window->driverdata;
-    data->viewcontroller = [[LimeUIKitViewController alloc] init];
+    data.viewcontroller = [[LimeUIKitViewController alloc] init];
     #endif
 }
 
