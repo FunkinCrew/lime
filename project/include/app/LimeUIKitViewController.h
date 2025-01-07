@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import "video/uikit/SDL_uikitviewcontroller.h"
+#import "../../lib/sdl/src/video/uikit/SDL_uikitviewcontroller.h"
 #include "SDL_video.h"
 
 @interface LimeUIKitViewController : SDL_uikitviewcontroller
