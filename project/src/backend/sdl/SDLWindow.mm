@@ -167,6 +167,7 @@ namespace lime {
 
     #if defined (IPHONE)
     [LimeUIKitViewController setViewControllerForWindow:sdlWindow];
+		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "3");
     #endif
 
 		if (!sdlWindow) {
