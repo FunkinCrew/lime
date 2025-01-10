@@ -28,8 +28,8 @@ jobs:
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
         run: |
-          # haxelib run lime rebuild mac -32  -nocolor -nocffi -eval
-          haxelib run lime rebuild mac -64  -nocolor -nocffi -eval
+          # haxelib run lime rebuild mac -32 -nocolor -nocffi -eval -release
+          haxelib run lime rebuild mac -64 -nocolor -nocffi -eval -release
       # - name: Upload Artifact (x86)
         # uses: actions/upload-artifact@v4
         # with:
@@ -69,7 +69,7 @@ jobs:
       - name: Configure Lime
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
-        run: haxelib run lime rebuild mac -arm64  -nocolor -nocffi -eval -release -D HXCPP_ARM64
+        run: haxelib run lime rebuild mac -arm64 -nocolor -nocffi -eval -release -D HXCPP_ARM64
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
