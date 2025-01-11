@@ -48,7 +48,7 @@ jobs:
           git add run.n
           git add svg.n
           # git add templates/bin/lime.exe
-          git commit --author="${USERNAME} <${USERID}+${USERNAME}@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
               echo "Didn't commit anything, skipping git push."
               exit 0
           }
