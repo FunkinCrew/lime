@@ -1503,6 +1503,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         // create content
 
         LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
         content.setLayoutParams(new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         content.addView(messageScroll);
