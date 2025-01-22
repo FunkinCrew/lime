@@ -239,6 +239,9 @@ class AL
 	/* AL_SOFT_direct_channels_remix extension */
 	public static inline var DROP_UNMATCHED_SOFT:Int = 0x0001;
 	public static inline var REMIX_UNMATCHED_SOFT:Int = 0x0002;
+	/* AL_SOFT_source_latency extension */
+	public static inline var SAMPLE_OFFSET_LATENCY_SOFT = 0x1200;
+	public static inline var SEC_OFFSET_LATENCY_SOFT = 0x1201;
 	#end
 
 	public static function removeDirectFilter(source:ALSource)
@@ -962,6 +965,24 @@ class AL
 	{
 		#if (lime_cffi && lime_openal && !macro)
 		var result = NativeCFFI.lime_al_get_sourcefv(source, param, count);
+		#if hl
+		if (result == null) return [];
+		var _result:Array<Float> = [];
+		for (i in 0...result.length)
+			_result[i] = result[i];
+		return _result;
+		#else
+		return result;
+		#end
+		#else
+		return null;
+		#end
+	}
+
+	public static function getSourcedvSOFT(source:ALSource, param:Int, count:Int = 1):Array<Float>
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		var result = NativeCFFI.lime_al_get_sourcedv_soft(source, param, count);
 		#if hl
 		if (result == null) return [];
 		var _result:Array<Float> = [];
