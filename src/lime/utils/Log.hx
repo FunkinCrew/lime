@@ -1,5 +1,6 @@
 package lime.utils;
 
+import lime.app.Event;
 import haxe.PosInfos;
 
 #if !lime_debug
@@ -10,6 +11,8 @@ class Log
 {
 	public static var level:LogLevel;
 	public static var throwErrors:Bool = true;
+
+	public static var onError:Event<String->Void> = new Event<String->Void>();
 
 	public static function debug(message:Dynamic, ?info:PosInfos):Void
 	{
@@ -28,6 +31,7 @@ class Log
 		if (level >= LogLevel.ERROR)
 		{
 			var message = "[" + info.className + "] ERROR: " + message;
+			onError.dispatch(message);
 
 			if (throwErrors)
 			{
