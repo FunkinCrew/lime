@@ -356,7 +356,7 @@ class AndroidPlatform extends PlatformTarget
 		var armv7 = ArrayTools.containsValue(project.architectures, Architecture.ARMV7);
 		var arm64 = (command == "rebuild" || ArrayTools.containsValue(project.architectures, Architecture.ARM64));
 		var x86 = ArrayTools.containsValue(project.architectures, Architecture.X86);
-		var x64 = ArrayTools.containsValue(project.architectures, Architecture.X64);
+		var x64 = (command == "rebuild" || ArrayTools.containsValue(project.architectures, Architecture.X64));
 		
 		var commands = [];
 		var minSDKVer = 21;
