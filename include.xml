@@ -110,8 +110,6 @@
 		<define name="MACOSX_DEPLOYMENT_TARGET" value="10.9" if="mac" unless="MACOSX_DEPLOYMENT_TARGET" />
 		<setenv name="MACOSX_DEPLOYMENT_TARGET" value="${MACOSX_DEPLOYMENT_TARGET}" if="mac" />
 
-		<architecture name="armv7" if="android" />
-
 		<section if="emscripten">
 
 			<dependency name="pthread" />
