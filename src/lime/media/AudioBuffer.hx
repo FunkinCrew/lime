@@ -9,6 +9,7 @@ import lime.app.Promise;
 import lime.media.openal.AL;
 import lime.media.openal.ALBuffer;
 import lime.media.vorbis.VorbisFile;
+import lime.media.sdlsound.SDLSoundSample;
 import lime.net.HTTPRequest;
 import lime.utils.Log;
 import lime.utils.UInt8Array;
@@ -33,10 +34,10 @@ import flash.net.URLRequest;
 #end
 
 /**
-	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`. 
+	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`.
 	It supports a variety of audio formats and platforms, providing a consistent API for loading and managing audio data.
 
-	Depending on the platform, the audio backend may differ, but the class provides a unified interface for accessing 
+	Depending on the platform, the audio backend may differ, but the class provides a unified interface for accessing
 	audio data, whether it's stored in memory, loaded from a file, or streamed.
 
 	@see lime.media.AudioSource
@@ -64,6 +65,11 @@ class AudioBuffer
 	public var sampleRate:Int;
 
 	/**
+		The format the audio uses, can be either PCM (1) or IEEE754 (3)
+	**/
+	public var dataFormat:AudioBufferDataFormat;
+
+	/**
 		The source of the audio data. This can be an `Audio`, `Sound`, `Howl`, or other platform-specific object.
 	**/
 	public var src(get, set):Dynamic;
@@ -74,6 +80,7 @@ class AudioBuffer
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
 	@:noCompletion private var __srcSound:#if flash Sound #else Dynamic #end;
 	@:noCompletion private var __srcVorbisFile:#if lime_vorbis VorbisFile #else Dynamic #end;
+	@:noCompletion private var __srcSDLSoundSample: #if lime_sdlsound SDLSoundSample #else Dynamic #end;
 
 	#if commonjs
 	private static function __init__()
@@ -145,6 +152,7 @@ class AudioBuffer
 			audioBuffer.channels = data.channels;
 			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
 			audioBuffer.sampleRate = data.sampleRate;
+			audioBuffer.dataFormat = data.dataFormat;
 			return audioBuffer;
 		}
 		#end
@@ -287,7 +295,7 @@ class AudioBuffer
 		@return An `AudioBuffer` instance with the decoded audio data.
 	**/
 	#if lime_vorbis
-		
+
 	public static function fromVorbisFile(vorbisFile:VorbisFile):AudioBuffer
 	{
 		if (vorbisFile == null) return null;
@@ -298,6 +306,7 @@ class AudioBuffer
 		audioBuffer.channels = info.channels;
 		audioBuffer.sampleRate = info.rate;
 		audioBuffer.bitsPerSample = 16;
+		audioBuffer.dataFormat = PCM;
 		audioBuffer.__srcVorbisFile = vorbisFile;
 
 		return audioBuffer;
@@ -308,6 +317,26 @@ class AudioBuffer
 		return null;
 	}
 	#end
+
+	public static function fromSDLSoundSample(soundSample: #if lime_sdlsound SDLSoundSample #else Dynamic #end):AudioBuffer
+	{
+		#if lime_sdlsound
+		if (soundSample == null) return null;
+
+		var info = soundSample.info();
+
+		var audioBuffer = new AudioBuffer();
+		audioBuffer.channels = info.channels;
+		audioBuffer.sampleRate = info.rate;
+		audioBuffer.bitsPerSample = info.format.toBits();
+		audioBuffer.dataFormat = info.format == Float32 ? IEEE754 : PCM;
+		audioBuffer.__srcSDLSoundSample = soundSample;
+
+		return audioBuffer;
+		#end
+
+		return null;
+	}
 
 	/**
 		Asynchronously loads an `AudioBuffer` from a file.
@@ -452,9 +481,13 @@ class AudioBuffer
 		#end
 		#elseif flash
 		return __srcSound;
-		#elseif lime_vorbis
-		return __srcVorbisFile;
 		#else
+		#if lime_vorbis
+		if (__srcVorbisFile != null) return __srcVorbisFile;
+		#end
+		#if lime_sdlsound
+		if (__srcSDLSoundSample != null) return __srcSDLSoundSample;
+		#end
 		return __srcCustom;
 		#end
 	}
@@ -469,9 +502,13 @@ class AudioBuffer
 		#end
 		#elseif flash
 		return __srcSound = value;
-		#elseif lime_vorbis
-		return __srcVorbisFile = value;
 		#else
+		#if lime_vorbis
+		if (Std.isOfType(value, VorbisFile)) return __srcVorbisFile = value;
+		#end
+		#if lime_sdlsound
+		if (Std.isOfType(value, SDLSoundSample)) return __srcSDLSoundSample = value;
+		#end
 		return __srcCustom = value;
 		#end
 	}

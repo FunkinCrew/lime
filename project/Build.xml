@@ -284,6 +284,7 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_sound/src/" />
 
 			<file name="src/media/decoders/SDL_sound.cpp" />
+			<file name="src/media/decoders/SDL_soundBindings.cpp" />
 
 		</section>
 

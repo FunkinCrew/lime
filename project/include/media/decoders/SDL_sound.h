@@ -4,6 +4,7 @@
 
 #include <media/AudioBuffer.h>
 #include <utils/Resource.h>
+#include <SDL_sound.h>
 
 
 namespace lime {
@@ -14,6 +15,8 @@ namespace lime {
 
 		public:
 
+			static Sound_Sample* FromBytes (Bytes* bytes);
+			static Sound_Sample* FromFile (const char* path);
 			static bool Decode (Resource *resource, AudioBuffer *audioBuffer);
 
 
