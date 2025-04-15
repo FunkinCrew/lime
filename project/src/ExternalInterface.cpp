@@ -3173,16 +3173,14 @@ namespace lime {
 	bool lime_window_set_vsync_mode (value window, int mode) {
 
 		Window* targetWindow = (Window*)val_data (window);
-		return targetWindow->SetVSyncMode (mode);
-
+		return targetWindow->SetVSyncMode((WindowVSyncMode)mode);
 	}
 
 
 	HL_PRIM bool HL_NAME(hl_window_set_vsync_mode) (HL_CFFIPointer* window, int mode) {
 
 		Window* targetWindow = (Window*)window->ptr;
-		return targetWindow->SetVSyncMode (mode);
-
+		return targetWindow->SetVSyncMode((WindowVSyncMode)mode);
 	}
 
 
