@@ -406,9 +406,23 @@ class NativeAudioSource
 	public function setCurrentTime(value:Int):Int
 	{
 		// `setCurrentTime()` has side effects and is never safe to skip.
+		/* if (value == getCurrentTime())
 		{
 			return value;
 		} */
+
+		if (handle != null)
+		{
+			if (stream)
+			{
+				AL.sourceStop(handle);
+
+				parent.buffer.__srcVorbisFile.timeSeek((value + parent.offset) / 1000);
+				AL.sourceUnqueueBuffers(handle, STREAM_NUM_BUFFERS);
+				refillBuffers(buffers);
+
+				if (playing) AL.sourcePlay(handle);
+			}
 			else if (parent.buffer != null)
 			{
 				AL.sourceRewind(handle);
