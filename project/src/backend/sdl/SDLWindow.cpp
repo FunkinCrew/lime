@@ -224,11 +224,11 @@ namespace lime {
 
 				if (flags & WINDOW_FLAG_VSYNC) {
 
-					SDL_GL_SetSwapInterval (1);
+					SetVSyncMode (WINDOW_VSYNC_ON);
 
 				} else {
 
-					SDL_GL_SetSwapInterval (0);
+					SetVSyncMode (WINDOW_VSYNC_OFF);
 
 				}
 
@@ -348,6 +348,12 @@ namespace lime {
 
 		}
 
+	}
+
+
+	bool SDLWindow::SetVSyncMode (int mode) {
+		int res = SDL_GL_SetSwapInterval (mode);
+		return res == mode || res == 0; // 0 sometimes means a success on some contexts?
 	}
 
 

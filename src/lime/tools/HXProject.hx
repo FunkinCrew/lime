@@ -770,7 +770,7 @@ class HXProject extends Script
 				defines.set("targetType", "cpp");
 				defines.set("cpp", "1");
 			}
-			else if (target == Platform.WINDOWS && targetFlags.exists("mingw"))
+			else if (target == Platform.WINDOWS && (targetFlags.exists("cpp") || targetFlags.exists("mingw")))
 			{
 				defines.set("targetType", "cpp");
 				defines.set("cpp", "1");
@@ -778,6 +778,8 @@ class HXProject extends Script
 			}
 			else
 			{
+				targetFlags.set("neko", "1");
+
 				defines.set("targetType", "neko");
 				defines.set("neko", "1");
 			}

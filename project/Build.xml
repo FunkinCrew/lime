@@ -108,6 +108,12 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/freetype/include" />
 			<compilerflag value="-DLIME_FREETYPE" />
 
+			<!--
+				prefer FreeType's font metrics algorithm from 2.9.1
+				it behaves more like SWF than the new algorithm
+			-->
+			<compilerflag value="-DLIME_FREETYPE_LEGACY_METRICS" />
+
 			<file name="src/text/Font.cpp" />
 
 			<section if="LIME_HARFBUZZ">
@@ -233,9 +239,6 @@
 
 			<section if="rpi">
 
-				<compilerflag value="-I/opt/vc/include" />
-				<compilerflag value="-I/opt/vc/include/interface/vcos/pthreads" />
-				<compilerflag value="-I/opt/vc/include/interface/vmcs_host/linux" />
 				<compilerflag value="-I/usr/include/libdrm" />
 				<compilerflag value="-I/usr/include/dbus-1.0" />
 				<compilerflag value="-I/usr/lib/arm-linux-gnueabihf/dbus-1.0/include" unless="HXCPP_ARM64" />
@@ -508,9 +511,6 @@
 				<lib name="-lm" />
 				<lib name="-lEGL" />
 				<lib name="-lGLESv2" />
-				<!-- For legacy Pi driver support -->
-				<lib name="-lbcm_host" />
-				<lib name="-L/opt/vc/lib" />
 
 			</section>
 
