@@ -147,7 +147,13 @@ class MacPlatform extends PlatformTarget
 			targetType = "cpp";
 		}
 
-		targetDirectory = Path.combine(project.app.path, project.config.getString("mac.output-directory", targetType == "cpp" ? "macos" : targetType));
+		var defaultTargetDirectory = switch (targetType)
+		{
+			case "cpp": "macos";
+			case "hl": project.targetFlags.exists("hlc") ? "hlc" : targetType;
+			default: targetType;
+		}
+		targetDirectory = Path.combine(project.app.path, project.config.getString("mac.output-directory", defaultTargetDirectory));
 		targetDirectory = StringTools.replace(targetDirectory, "arch64", dirSuffix);
 		applicationDirectory = targetDirectory + "/bin/" + project.app.file + ".app";
 		contentDirectory = applicationDirectory + "/Contents/Resources";
@@ -197,6 +203,9 @@ class MacPlatform extends PlatformTarget
 
 			if (noOutput) return;
 
+			// ensure that the shell script is replaced by the template executable
+			System.deleteFile(executablePath);
+
 			HashlinkHelper.copyHashlink(project, targetDirectory, executableDirectory, executablePath, true);
 
 			if (project.targetFlags.exists("hlc"))
@@ -208,7 +217,7 @@ class MacPlatform extends PlatformTarget
 				// compiler command with the `arch -x86_64` command.
 				// if we ever support ARM or Universal binaries, this will
 				// need to be handled differently.
-				var command = ["arch", "-x86_64", compiler, "-O3", "-o", executablePath, "-std=c11", "-I", Path.combine(targetDirectory, "obj"), Path.combine(targetDirectory, "obj/ApplicationMain.c")];
+				var command = ["arch", "-x86_64", compiler, "-O3", "-o", executablePath, "-std=c11", "-Wl,-rpath,@executable_path", "-I", Path.combine(targetDirectory, "obj"), Path.combine(targetDirectory, "obj/ApplicationMain.c")];
 				for (file in System.readDirectory(executableDirectory))
 				{
 					switch Path.extension(file)
