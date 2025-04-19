@@ -11,8 +11,6 @@
 	</array>::end::
         <key>UIFileSharingEnabled</key>
 	<string>true</string>
-        <key>com.apple.developer.kernel.increased-memory-limit</key>
-	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<string>true</string>
         <key>NSBluetoothAlwaysUsageDescription</key>
