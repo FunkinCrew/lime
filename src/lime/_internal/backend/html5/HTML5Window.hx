@@ -381,7 +381,7 @@ class HTML5Window
 
 	public function focus():Void {}
 
-	public function setVSyncMode(mode:WindowVSyncMode):Bool
+	public function setVSyncMode(mode:lime.ui.WindowVSyncMode):Bool
 	{
 		return false;
 	}
