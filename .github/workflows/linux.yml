@@ -1,11 +1,13 @@
 name: Linux CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  linux-ndll:
+  linux:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -32,14 +34,15 @@ jobs:
 
       - name: Rebuild Lime
         run: |
-          haxelib run lime rebuild linux -32 -eval -nocolor -nocffi
-          haxelib run lime rebuild linux -64 -eval -nocolor -nocffi
+          haxelib run lime rebuild linux -32 -eval -nocolor -nocffi -release
+          haxelib run lime rebuild linux -64 -eval -nocolor -nocffi -release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Linux-NDLL
           path: |
             ndll/Linux/
             ndll/Linux64/
             !**/.gitignore
+            lime.png
           if-no-files-found: error

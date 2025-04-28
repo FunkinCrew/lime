@@ -1,0 +1,43 @@
+name: Build and Push Mobile
+on: workflow_dispatch
+
+jobs:
+  android:
+    uses: ./.github/workflows/android.yml
+  ios:
+    uses: ./.github/workflows/ios.yml
+
+  publisher:
+    needs: [android, ios]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Delete old NDLL's
+        run: rm -rf ndll
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: .
+          merge-multiple: true
+
+      - name: Push to GitHub
+        run: |
+          USER_INFO=$(curl -s "https://api.github.com/users/${{ github.actor }}")
+          USERID=$(echo "$USER_INFO" | jq -r '.id')
+          USERNAME=$(echo "$USER_INFO" | jq -r '.name')
+          
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add ndll
+          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+              echo "Didn't commit anything, skipping git push."
+              exit 0
+          }
+          git push

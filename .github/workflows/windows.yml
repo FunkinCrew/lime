@@ -1,12 +1,14 @@
 name: Windows CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   windows:
     runs-on: windows-2022
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Setup Haxe
@@ -22,14 +24,15 @@ jobs:
           haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
         run: |
-          haxelib run lime rebuild windows -32 -release -nocolor -nocffi -eval
-          haxelib run lime rebuild windows -64 -release -nocolor -nocffi -eval
+          haxelib run lime rebuild windows -32 -nocolor -nocffi -eval -release
+          haxelib run lime rebuild windows -64 -nocolor -nocffi -eval -release
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows-NDLL
           path: |
             ndll/Windows/
             ndll/Windows64/
             !**/.gitignore
+            lime.png
           if-no-files-found: error

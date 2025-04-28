@@ -284,14 +284,28 @@ class AndroidPlatform extends PlatformTarget
 			var outputDirectory = null;
 			if (project.config.exists("android.gradle-build-directory"))
 			{
-				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				if (targetFlags.exists("bundle"))
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				}
 			}
 			else
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				if (targetFlags.exists("bundle"))
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				}
 			}
 
-			Sys.println(Path.combine(outputDirectory, project.app.file + build + ".apk"));
+			Sys.println(Path.combine(outputDirectory, project.app.file + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}'));
 		}
 		else
 		{
@@ -335,7 +349,7 @@ class AndroidPlatform extends PlatformTarget
 		if (project.environment.exists("ANDROID_GRADLE_TASK"))
 		{
 			var task = project.environment.get("ANDROID_GRADLE_TASK");
-			if (task == "assembleDebug")
+			if (task == "assembleDebug" || task == "bundleDebug")
 			{
 				build = "debug";
 			}
@@ -349,16 +363,30 @@ class AndroidPlatform extends PlatformTarget
 
 		if (project.config.exists("android.gradle-build-directory"))
 		{
-			outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			if (targetFlags.exists("bundle"))
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			}
 		}
 		else
 		{
-			outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			if (targetFlags.exists("bundle"))
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			}
 		}
 
-		var apkPath = Path.combine(outputDirectory, project.app.file + "-" + build + ".apk");
+		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}');
 
-		deviceID = AndroidHelper.install(project, apkPath, deviceID);
+		deviceID = AndroidHelper.install(project, packagePath, deviceID, targetFlags.exists("bundle"));
 	}
 
 	public override function rebuild():Void
@@ -424,20 +452,36 @@ class AndroidPlatform extends PlatformTarget
 		System.mkdir(sourceSet + "/res/drawable-hdpi/");
 		System.mkdir(sourceSet + "/res/drawable-xhdpi/");
 
-		for (asset in project.assets)
-		{
-			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
-			{
-				AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
-			}
-		}
-
 		if (project.targetFlags.exists("xml"))
 		{
 			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
 		}
 
 		var context = project.templateContext;
+
+		context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS = [];
+
+		for (asset in project.assets)
+		{
+			if (asset.embed != true && asset.type != AssetType.TEMPLATE)
+			{
+				if (asset.deliveryPackName != '')
+				{
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(destination + "/" + asset.deliveryPackName + "/src/main/assets/", asset.resourceName));
+
+					if (!context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.contains(asset.deliveryPackName))
+					{
+						var padContext:Dynamic = {};
+						padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.deliveryPackName;
+						System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/bin/" + asset.deliveryPackName + "/build.gradle", padContext);
+
+						context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.deliveryPackName);
+					}
+				}
+				else
+					AssetHelper.copyAssetIfNewer(asset, Path.combine(sourceSet + "/assets/", asset.resourceName));
+			}
+		}
 
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.OUTPUT_DIR = targetDirectory;
@@ -456,14 +500,21 @@ class AndroidPlatform extends PlatformTarget
 		context.ANDROID_USE_ANDROIDX = project.config.getString("android.useAndroidX", "true");
 		context.ANDROID_ENABLE_JETIFIER = project.config.getString("android.enableJetifier", "false");
 
+		context.ANDROID_MANIFEST = project.config.getKeyValueArray("android.manifest", {
+			"android:versionCode": project.meta.buildNumber,
+			"android:versionName": project.meta.version,
+			"android:installLocation": project.config.getString("android.install-location", "auto")
+		});
+		context.ANDROID_MANIFEST_CHILDREN = project.config.get("android.manifest").xmlChildren;
 		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application", {
 			"android:label": project.meta.title,
 			"android:allowBackup": "true",
-			"android:theme": "@android:style/Theme.NoTitleBar" + (project.window.fullscreen ? ".Fullscreen" : ""),
+			"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
 			"android:hardwareAccelerated": "true",
 			"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
 			"android:largeHeap": "true"
 		});
+		context.ANDROID_APPLICATION_CHILDREN = project.config.get("android.application").xmlChildren;
 		context.ANDROID_ACTIVITY = project.config.getKeyValueArray("android.activity", {
 			"android:name": "MainActivity",
 			"android:exported": "true",
@@ -471,10 +522,11 @@ class AndroidPlatform extends PlatformTarget
 			"android:label": project.meta.title,
 			"android:resizeableActivity": '${project.window.resizable}',
 			"android:configChanges": project.config.getArrayString("android.configChanges",
-				["layoutDirection", "locale", "orientation", "uiMode", "screenLayout", "screenSize", "smallestScreenSize", "keyboard", "keyboardHidden", "navigation"])
+				["layoutDirection", "locale", "grammaticalGender", "fontScale", "fontWeightAdjustment", "orientation", "uiMode", "screenLayout", "screenSize", "smallestScreenSize", "keyboard", "keyboardHidden", "navigation"])
 				.join("|"),
 			"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
 		});
+		context.ANDROID_ACTIVITY_CHILDREN = project.config.get("android.activity").xmlChildren;
 		context.ANDROID_ACCEPT_FILE_INTENT = project.config.getArrayString("android.accept-file-intent", []);
 
 		if (!project.environment.exists("ANDROID_SDK") || !project.environment.exists("ANDROID_NDK_ROOT"))
