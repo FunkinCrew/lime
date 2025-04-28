@@ -1,11 +1,13 @@
 name: Android CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  android-ndll:
+  android:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -45,12 +47,13 @@ jobs:
           lime config ANDROID_SETUP true
 
       - name: Rebuild Lime
-        run: lime rebuild android -eval -nocolor -nocffi
+        run: lime rebuild android -eval -nocolor -nocffi -release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Android-NDLL
           path: |
             ndll/Android/
             !**/.gitignore
+            lime.png
           if-no-files-found: error

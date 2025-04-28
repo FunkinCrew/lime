@@ -377,44 +377,26 @@ class NativeAudioSource
 			}
 			else
 			{
+				if (AL.isExtensionPresent("AL_SOFT_source_latency"))
+				{
+					var value = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
+					var deviceOffset:Float = value[1];
+					var realOffset:Float = value[0];
+					var time:Float = ((realOffset - deviceOffset) * 1000) - parent.offset;
 
-				#if ios
- 				var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
- 				var ratio = (offset / dataLength);
- 				var totalSeconds = samples / parent.buffer.sampleRate;
+					if (time < 0) return 0;
+					return Std.int(time);
+				}
+				else
+				{
+					var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
+					var ratio = (offset / dataLength);
+					var totalSeconds = samples / parent.buffer.sampleRate;
+					var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
 
-				// var sampleTime = AL.getSourcef(handle, AL.SAMPLE_OFFSET);
-				// var time = (sampleTime / parent.buffer.sampleRate * 1000) -
-
-				// var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
-				// var time = Std.int (AL.getSourcef (handle, AL.SEC_OFFSET) * 1000) - parent.offset;
-
-				var value = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
-				var deviceOffset:Float = value[1];
-				var realOffset:Float = value[0];
-				var time:Float = ((realOffset - deviceOffset) * 1000) - parent.offset;
-
-				if (time < 0) return 0;
-				return time;
-				#else
-				// var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
-				// var ratio = (offset / dataLength);
-				// var totalSeconds = samples / parent.buffer.sampleRate;
-
-				// var sampleTime = AL.getSourcef(handle, AL.SAMPLE_OFFSET);
-				// var time = (sampleTime / parent.buffer.sampleRate * 1000) -
-
-				// var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
-				// var time = Std.int (AL.getSourcef (handle, AL.SEC_OFFSET) * 1000) - parent.offset;
-
-				var value = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
-				var deviceOffset:Float = value[1];
-				var realOffset:Float = value[0];
-				var time:Float = ((realOffset - deviceOffset) * 1000) - parent.offset;
-
-				if (time < 0) return 0;
-				return Std.int(time);
-				#end
+					if (time < 0) return 0;
+					return time;
+				}
 			}
 		}
 

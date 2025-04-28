@@ -72,6 +72,7 @@ android {
 		release {
 			minifyEnabled false
 			signingConfig signingConfigs.release
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
 		}
 	}
 
@@ -82,12 +83,35 @@ android {
 			}
 		}
 	}
+
+	::if (ANDROID_PLAY_ASSETS_DELIVERY_PACKS)::
+  assetPacks = [::foreach (ANDROID_PLAY_ASSETS_DELIVERY_PACKS):: ":::__current__::" ::end::]
+	::end::
 }
 
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	::if (ANDROID_LIBRARY_PROJECTS)::::foreach (ANDROID_LIBRARY_PROJECTS)::implementation project(':deps:::name::')
 	::end::::end::
+}
+
+tasks.whenTaskAdded { task ->
+  if (task.name.startsWith("bundle")) {
+		task.doLast {
+    	def flavor = task.name.substring("bundle".length()).uncapitalize()
+    	def outputDir = "${buildDir}/outputs/bundle/${flavor}"
+      def originalFile = file("${outputDir}/app-${flavor}.aab")
+      def renamedFile = file("${outputDir}/::APP_FILE::-${flavor}.aab")
+
+     if (renamedFile.exists()) {
+      renamedFile.delete()
+     }
+
+      if (originalFile.exists()) {
+        originalFile.renameTo(renamedFile)
+			}
+    }
+  }
 }
 
 def getPassword(message) {

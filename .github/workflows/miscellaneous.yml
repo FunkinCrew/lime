@@ -1,0 +1,52 @@
+name: Miscellaneous CI
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+
+      - name: Set HAXEPATH
+        run: |
+          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+
+      - name: Install Haxe dependencies
+        run: |
+          haxelib install hxcpp 4.2.1 --quiet
+          haxelib install format --quiet
+          haxelib install openfl --quiet
+          haxelib install svg --quiet
+          haxelib install hxp --quiet
+          haxelib dev lime $GITHUB_WORKSPACE
+
+      - name: Enable HXCPP compile cache
+        run: |
+          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
+
+      - name: Rebuild Miscellaneous
+        run: |
+          cd tools
+          haxe svg.hxml
+          haxe run.hxml
+          haxe tools.hxml
+          # haxe alias.hxml
+          # cp obj/lime/AliasScript.exe ../templates/bin/lime.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Miscellaneous
+          path: |
+            tools/tools.n
+            run.n
+            svg.n
+            # templates/bin/lime.exe
+          if-no-files-found: error

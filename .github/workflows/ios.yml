@@ -1,11 +1,14 @@
 name: iOS CI
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  workflow_call:
+
 jobs:
-  ios-ndll:
+  ios:
     runs-on: macos-13
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -35,12 +38,13 @@ jobs:
 
       - name: Rebuild Lime (iOS)
         run: |
-          lime rebuild ios -clean -eval -nocolor -nocffi
+          lime rebuild ios -clean -eval -nocolor -nocffi -release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: iPhone-NDLL
           path: |
             ndll/iPhone/
             !**/.gitignore
+            lime.png
           if-no-files-found: error
