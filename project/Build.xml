@@ -3,7 +3,8 @@
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
-	<set name="PLATFORM_NUMBER" value="29" if="android" />
+	<set name="HXCPP_ANDROID_PLATFORM" value="28" if="android" />
+	<set name="PLATFORM_NUMBER" value="28" if="android" />
 
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />
