@@ -233,6 +233,18 @@ class System
 	#end
 
 	/**
+		Returns the display orientation with the specified ID.
+	**/
+	public static function getDisplayOrientation(id:Int):DisplayOrientation
+	{
+		#if (lime_cffi && !macro)
+		return NativeCFFI.lime_system_get_display_orientation(id);
+		#else
+		return DISPLAY_ORIENTATION_UNKNOWN;
+		#end
+	}
+
+	/**
 		Returns information about the video display with the specified ID.
 	**/
 	public static function getDisplay(id:Int):Display
@@ -867,6 +879,15 @@ class System
 
 		return __userDirectory;
 	}
+}
+
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract DisplayOrientation(Int) from Int to Int from UInt to UInt
+{
+	var DISPLAY_ORIENTATION_UNKNOWN = 0;
+	var DISPLAY_ORIENTATION_LANDSCAPE = 1;
+	var DISPLAY_ORIENTATION_LANDSCAPE_FLIPPED = 2;
+	var DISPLAY_ORIENTATION_PORTRAIT = 3;
+	var DISPLAY_ORIENTATION_PORTRAIT_FLIPPED = 4;
 }
 
 #if (haxe_ver >= 4.0) private enum #else @:enum private #end abstract SystemDirectory(Int) from Int to Int from UInt to UInt
