@@ -161,8 +161,8 @@ class AndroidPlatform extends PlatformTarget
 		for (architecture in architectures)
 		{
 			var minimumSDKVersion = project.config.getInt("android.minimum-sdk-version", 28);
-			var haxeParams = [hxml, "-D", "android", "-D", "PLATFORM=android-" + minimumSDKVersion, "-D", "PLATFORM_NUMBER=" + minimumSDKVersion];
-			var cppParams = ["-Dandroid", "-DPLATFORM=android-" + minimumSDKVersion, "-DPLATFORM_NUMBER=" + minimumSDKVersion];
+			var haxeParams = [hxml, "-D", "android", "-D", "PLATFORM=android-" + minimumSDKVersion, "-D", "PLATFORM_NUMBER=" + minimumSDKVersion, "-D", "HXCPP_ANDROID_PLATFORM=" + minimumSDKVersion];
+			var cppParams = ["-Dandroid", "-DPLATFORM=android-" + minimumSDKVersion, "-DPLATFORM_NUMBER=" + minimumSDKVersion, "-DHXCPP_ANDROID_PLATFORM=" + minimumSDKVersion];
 			var path = sourceSet + "/jniLibs/armeabi";
 			var suffix = ".so";
 
