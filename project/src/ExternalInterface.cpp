@@ -3096,6 +3096,19 @@ namespace lime {
 
 	}
 
+	int lime_system_get_display_orientation (int displayIndex) {
+
+		return System::GetDisplayOrientation (displayIndex);
+
+	}
+
+
+	HL_PRIM bool HL_NAME(hl_system_get_display_orientation) (int displayIndex) {
+
+		return System::GetDisplayOrientation (displayIndex);
+
+	}
+
 
 	bool lime_system_set_windows_console_mode (int handleType, int mode) {
 
@@ -4062,6 +4075,7 @@ namespace lime {
 	DEFINE_PRIME1v (lime_system_open_file);
 	DEFINE_PRIME2v (lime_system_open_url);
 	DEFINE_PRIME1 (lime_system_set_allow_screen_timeout);
+	DEFINE_PRIME1 (lime_system_get_display_orientation);
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
@@ -4252,6 +4266,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_system_open_file, _STRING);
 	DEFINE_HL_PRIM (_VOID, hl_system_open_url, _STRING _STRING);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_allow_screen_timeout, _BOOL);
+	DEFINE_HL_PRIM (_I32, hl_system_get_display_orientation, _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_windows_console_mode, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
