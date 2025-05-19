@@ -33,6 +33,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>::APP_BUILD_NUMBER::</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.games</string>
+	<key>GCSupportsGameMode</key>
+	<true />
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	::if (IOS_LAUNCH_STORYBOARD != null)::<key>UILaunchStoryboardName</key>
