@@ -10,7 +10,7 @@
 		<string>::__current__::</string>::end::
 	</array>::end::
         <key>UIFileSharingEnabled</key>
-	<string>true</string>
+		<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<string>true</string>
         <key>NSBluetoothAlwaysUsageDescription</key>
