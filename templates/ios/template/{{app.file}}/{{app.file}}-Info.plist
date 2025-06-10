@@ -71,7 +71,5 @@
 		<true/>::end::
 	</dict>
 	::if (IOS_NON_EXEMPT_ENCRYPTION != null)::<key>ITSAppUsesNonExemptEncryption</key><::IOS_NON_EXEMPT_ENCRYPTION:: />::end::
-	<key>LSMinimumSystemVersion</key>
-    <string>16.7.11</string>
 </dict>
 </plist>
