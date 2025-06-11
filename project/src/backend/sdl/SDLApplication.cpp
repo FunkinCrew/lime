@@ -20,12 +20,13 @@ namespace lime {
 
 	const int analogAxisDeadZone = 1000;
 	std::map<int, std::map<int, int> > gamepadsAxisMap;
+	std::map<SDL_JoystickID, SDL_Sensor *> gyroscopeSensors;
 	bool inBackground = false;
 
 
 	SDLApplication::SDLApplication () {
 
-		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK;
+		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
 		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
 		initFlags |= SDL_INIT_AUDIO;
@@ -60,8 +61,11 @@ namespace lime {
 		TouchEvent touchEvent;
 		WindowEvent windowEvent;
 
-		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
+		SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+		SDL_EventState(SDL_SENSORUPDATE, SDL_ENABLE);
 		SDLJoystick::Init ();
+
+		InitializeSensors();
 
 		#ifdef HX_MACOS
 		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL (CFBundleGetMainBundle ());
@@ -78,17 +82,49 @@ namespace lime {
 
 	}
 
+	void SDLApplication::InitializeSensors()
+	{
+		int numSensors = SDL_NumSensors();
 
-	SDLApplication::~SDLApplication () {
+		for (int i = 0; i < numSensors; i++)
+		{
 
+			SDL_SensorType sensorType = SDL_SensorGetDeviceType(i);
+			SDL_SensorID sensorID = SDL_SensorGetDeviceInstanceID(i);
 
+			printf("sensors %d initializing...\n", sensorID);
 
+			if (sensorType == SDL_SENSOR_GYRO)
+			{
+
+				SDL_Sensor *sensor = SDL_SensorOpen(i);
+				printf("Attempting to open sensor %d \n", sensorID);
+				if (sensor)
+				{
+					gyroscopeSensors[sensorID] = sensor;
+					printf("Gyroscope sensor %d initialized\n", sensorID);
+				}
+			}
+		}
 	}
 
+		SDLApplication::~SDLApplication()
+		{
+			// Clean up sensors
+			for (auto &pair : gyroscopeSensors)
+			{
+				if (pair.second)
+				{
+					SDL_SensorClose(pair.second);
+				}
+			}
+			gyroscopeSensors.clear();
+		}
 
-	int SDLApplication::Exec () {
+		int SDLApplication::Exec()
+		{
 
-		Init ();
+			Init();
 
 		#ifdef EMSCRIPTEN
 		emscripten_cancel_main_loop ();
@@ -195,7 +231,6 @@ namespace lime {
 
 				ProcessTouchEvent (event);
 				break;
-
 			case SDL_JOYAXISMOTION:
 
 				if (SDLJoystick::IsAccelerometer (event->jaxis.which)) {
@@ -246,6 +281,11 @@ namespace lime {
 				renderEvent.type = RENDER;
 				break;
 			#endif
+
+			case SDL_SENSORUPDATE:
+
+				ProcessSDLSensorEvent(event);
+				break;
 
 			case SDL_TEXTINPUT:
 			case SDL_TEXTEDITING:
@@ -677,6 +717,36 @@ namespace lime {
 
 	}
 
+	void SDLApplication::ProcessSDLSensorEvent(SDL_Event *event)
+	{
+
+
+		if (SensorEvent::callback)
+		{
+
+			SDL_SensorID sensorID = event->sensor.which;
+
+			// Check if this is a gyroscope sensor
+			if (gyroscopeSensors.find(sensorID) != gyroscopeSensors.end())
+			{
+
+				// Process gyroscope data
+				sensorEvent.type = SENSOR_GYROSCOPE;
+				sensorEvent.id = sensorID;
+
+				// SDL sensor data comes as an array of 3 floats for x, y, z
+				if (event->sensor.data)
+				{
+					sensorEvent.x = event->sensor.data[0]; // Angular velocity around X-axis (rad/s)
+					sensorEvent.y = event->sensor.data[1]; // Angular velocity around Y-axis (rad/s)
+					sensorEvent.z = event->sensor.data[2]; // Angular velocity around Z-axis (rad/s)
+				}
+
+				// sensorEvent.timestamp = event->sensor.timestamp;
+				SensorEvent::Dispatch(&sensorEvent);
+			}
+		}
+	}
 
 	void SDLApplication::ProcessTextEvent (SDL_Event* event) {
 
