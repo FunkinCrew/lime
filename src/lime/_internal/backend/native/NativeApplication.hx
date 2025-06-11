@@ -81,6 +81,7 @@ class NativeApplication
 
 		#if (ios || android || tvos)
 		Sensor.registerSensor(SensorType.ACCELEROMETER, 0);
+		Sensor.registerSensor(SensorType.GYROSCOPE, 1);
 		#end
 
 		#if (!macro && lime_cffi)
@@ -887,6 +888,7 @@ class NativeApplication
 #if (haxe_ver >= 4.0) private enum #else @:enum private #end abstract SensorEventType(Int)
 {
 	var ACCELEROMETER = 0;
+	var GYROSCOPE = 1;
 }
 
 @:keep /*private*/ class TextEventInfo
