@@ -18,7 +18,7 @@ namespace lime {
 
 	SensorEvent::SensorEvent () {
 
-		type = SENSOR_ACCELEROMETER;
+		type = SENSOR_GYROSCOPE;
 		id = 0;
 		x = 0;
 		y = 0;
