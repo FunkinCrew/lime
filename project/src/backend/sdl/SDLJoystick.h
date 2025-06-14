@@ -17,8 +17,6 @@ namespace lime {
 			static bool Connect (int id);
 			static bool Disconnect (int id);
 			static int GetInstanceID (int deviceID);
-			static void Init ();
-			static bool IsAccelerometer (int id);
 
 	};
 

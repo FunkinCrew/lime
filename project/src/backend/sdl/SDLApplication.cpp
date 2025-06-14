@@ -20,7 +20,8 @@ namespace lime {
 
 	const int analogAxisDeadZone = 1000;
 	std::map<int, std::map<int, int> > gamepadsAxisMap;
-	std::map<SDL_JoystickID, SDL_Sensor *> gyroscopeSensors;
+	std::map<SDL_SensorID, SDL_Sensor *> gyroscopeSensors;
+	std::map<SDL_SensorID, SDL_Sensor *> accelerometerSensors;
 	bool inBackground = false;
 
 
@@ -61,11 +62,10 @@ namespace lime {
 		TouchEvent touchEvent;
 		WindowEvent windowEvent;
 
-		SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
-		SDL_EventState(SDL_SENSORUPDATE, SDL_ENABLE);
-		SDLJoystick::Init ();
+		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
+		SDL_EventState (SDL_SENSORUPDATE, SDL_ENABLE);
 
-		InitializeSensors();
+		InitializeSensors ();
 
 		#ifdef HX_MACOS
 		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL (CFBundleGetMainBundle ());
@@ -82,49 +82,82 @@ namespace lime {
 
 	}
 
-	void SDLApplication::InitializeSensors()
-	{
+	void SDLApplication::InitializeSensors() {
+
 		int numSensors = SDL_NumSensors();
 
-		for (int i = 0; i < numSensors; i++)
-		{
+		for (int i = 0; i < numSensors; i++) {
 
-			SDL_SensorType sensorType = SDL_SensorGetDeviceType(i);
-			SDL_SensorID sensorID = SDL_SensorGetDeviceInstanceID(i);
+			SDL_SensorType sensorType = SDL_SensorGetDeviceType (i);
+			SDL_SensorID sensorID = SDL_SensorGetDeviceInstanceID (i);
 
-			printf("sensors %d initializing...\n", sensorID);
+			printf ("Sensors %d initializing...\n", sensorID);
 
-			if (sensorType == SDL_SENSOR_GYRO)
-			{
+			if (sensorType == SDL_SENSOR_GYRO) {
 
-				SDL_Sensor *sensor = SDL_SensorOpen(i);
-				printf("Attempting to open sensor %d \n", sensorID);
-				if (sensor)
-				{
+				SDL_Sensor *sensor = SDL_SensorOpen (i);
+
+				printf ("Attempting to open sensor %d \n", sensorID);
+
+				if (sensor) {
+
 					gyroscopeSensors[sensorID] = sensor;
-					printf("Gyroscope sensor %d initialized\n", sensorID);
+
+					printf ("Gyroscope sensor %d initialized\n", sensorID);
+
 				}
+
+			} else if (sensorType == SDL_SENSOR_ACCEL) {
+
+				SDL_Sensor *sensor = SDL_SensorOpen (i);
+
+				printf ("Attempting to open sensor %d \n", sensorID);
+
+				if (sensor) {
+
+					accelerometerSensors[sensorID] = sensor;
+
+					printf ("Accelerometer sensor %d initialized\n", sensorID);
+
+				}
+
 			}
+
 		}
+
 	}
 
-		SDLApplication::~SDLApplication()
-		{
-			// Clean up sensors
-			for (auto &pair : gyroscopeSensors)
-			{
-				if (pair.second)
-				{
-					SDL_SensorClose(pair.second);
-				}
+	SDLApplication::~SDLApplication() {
+
+		for (auto &pair : gyroscopeSensors) {
+
+			if (pair.second) {
+
+				SDL_SensorClose (pair.second);
+
 			}
-			gyroscopeSensors.clear();
+
 		}
 
-		int SDLApplication::Exec()
-		{
+		gyroscopeSensors.clear ();
 
-			Init();
+		for (auto &pair : accelerometerSensors) {
+
+			if (pair.second) {
+
+				SDL_SensorClose (pair.second);
+
+			}
+
+		}
+
+		accelerometerSensors.clear ();
+
+	}
+
+	int SDLApplication::Exec() {
+
+		Init ();
 
 		#ifdef EMSCRIPTEN
 		emscripten_cancel_main_loop ();
@@ -233,16 +266,7 @@ namespace lime {
 				break;
 			case SDL_JOYAXISMOTION:
 
-				if (SDLJoystick::IsAccelerometer (event->jaxis.which)) {
-
-					ProcessSensorEvent (event);
-
-				} else {
-
-					ProcessJoystickEvent (event);
-
-				}
-
+				ProcessJoystickEvent (event);
 				break;
 
 			case SDL_JOYBALLMOTION:
@@ -284,7 +308,7 @@ namespace lime {
 
 			case SDL_SENSORUPDATE:
 
-				ProcessSDLSensorEvent(event);
+				ProcessSensorEvent (event);
 				break;
 
 			case SDL_TEXTINPUT:
@@ -508,82 +532,57 @@ namespace lime {
 
 				case SDL_JOYAXISMOTION:
 
-					if (!SDLJoystick::IsAccelerometer (event->jaxis.which)) {
+					joystickEvent.type = JOYSTICK_AXIS_MOVE;
+					joystickEvent.index = event->jaxis.axis;
+					joystickEvent.x = event->jaxis.value / (event->jaxis.value > 0 ? 32767.0 : 32768.0);
+					joystickEvent.id = event->jaxis.which;
 
-						joystickEvent.type = JOYSTICK_AXIS_MOVE;
-						joystickEvent.index = event->jaxis.axis;
-						joystickEvent.x = event->jaxis.value / (event->jaxis.value > 0 ? 32767.0 : 32768.0);
-						joystickEvent.id = event->jaxis.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
-
 
 				case SDL_JOYBUTTONDOWN:
 
-					if (!SDLJoystick::IsAccelerometer (event->jbutton.which)) {
+					joystickEvent.type = JOYSTICK_BUTTON_DOWN;
+					joystickEvent.index = event->jbutton.button;
+					joystickEvent.id = event->jbutton.which;
 
-						joystickEvent.type = JOYSTICK_BUTTON_DOWN;
-						joystickEvent.index = event->jbutton.button;
-						joystickEvent.id = event->jbutton.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYBUTTONUP:
 
-					if (!SDLJoystick::IsAccelerometer (event->jbutton.which)) {
+					joystickEvent.type = JOYSTICK_BUTTON_UP;
+					joystickEvent.index = event->jbutton.button;
+					joystickEvent.id = event->jbutton.which;
 
-						joystickEvent.type = JOYSTICK_BUTTON_UP;
-						joystickEvent.index = event->jbutton.button;
-						joystickEvent.id = event->jbutton.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYHATMOTION:
 
-					if (!SDLJoystick::IsAccelerometer (event->jhat.which)) {
+					joystickEvent.type = JOYSTICK_HAT_MOVE;
+					joystickEvent.index = event->jhat.hat;
+					joystickEvent.eventValue = event->jhat.value;
+					joystickEvent.id = event->jhat.which;
 
-						joystickEvent.type = JOYSTICK_HAT_MOVE;
-						joystickEvent.index = event->jhat.hat;
-						joystickEvent.eventValue = event->jhat.value;
-						joystickEvent.id = event->jhat.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYDEVICEADDED:
 
-					if (SDLJoystick::Connect (event->jdevice.which)) {
+					joystickEvent.type = JOYSTICK_CONNECT;
+					joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
 
-						joystickEvent.type = JOYSTICK_CONNECT;
-						joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYDEVICEREMOVED:
 
-					if (!SDLJoystick::IsAccelerometer (event->jdevice.which)) {
+					joystickEvent.type = JOYSTICK_DISCONNECT;
+					joystickEvent.id = event->jdevice.which;
 
-						joystickEvent.type = JOYSTICK_DISCONNECT;
-						joystickEvent.id = event->jdevice.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-						SDLJoystick::Disconnect (event->jdevice.which);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
+					SDLJoystick::Disconnect (event->jdevice.which);
 					break;
 
 			}
@@ -696,57 +695,46 @@ namespace lime {
 	}
 
 
-	void SDLApplication::ProcessSensorEvent (SDL_Event* event) {
+	void SDLApplication::ProcessSensorEvent(SDL_Event* event) {
 
 		if (SensorEvent::callback) {
 
-			double value = event->jaxis.value / 32767.0f;
-
-			switch (event->jaxis.axis) {
-
-				case 0: sensorEvent.x = value; break;
-				case 1: sensorEvent.y = value; break;
-				case 2: sensorEvent.z = value; break;
-				default: break;
-
-			}
-
-			SensorEvent::Dispatch (&sensorEvent);
-
-		}
-
-	}
-
-	void SDLApplication::ProcessSDLSensorEvent(SDL_Event *event)
-	{
-
-
-		if (SensorEvent::callback)
-		{
-
 			SDL_SensorID sensorID = event->sensor.which;
 
-			// Check if this is a gyroscope sensor
-			if (gyroscopeSensors.find(sensorID) != gyroscopeSensors.end())
-			{
+			if (gyroscopeSensors.find(sensorID) != gyroscopeSensors.end()) {
 
-				// Process gyroscope data
-				sensorEvent.type = SENSOR_GYROSCOPE;
-				sensorEvent.id = sensorID;
+				if (event->sensor.data) {
 
-				// SDL sensor data comes as an array of 3 floats for x, y, z
-				if (event->sensor.data)
-				{
-					sensorEvent.x = event->sensor.data[0]; // Angular velocity around X-axis (rad/s)
-					sensorEvent.y = event->sensor.data[1]; // Angular velocity around Y-axis (rad/s)
-					sensorEvent.z = event->sensor.data[2]; // Angular velocity around Z-axis (rad/s)
+					sensorEvent.x = event->sensor.data[0];
+					sensorEvent.y = event->sensor.data[1];
+					sensorEvent.z = event->sensor.data[2];
+
 				}
 
-				// sensorEvent.timestamp = event->sensor.timestamp;
+				sensorEvent.type = SENSOR_GYROSCOPE;
+				sensorEvent.id = sensorID;
 				SensorEvent::Dispatch(&sensorEvent);
+
+			} else if (accelerometerSensors.find(sensorID) != accelerometerSensors.end()) {
+
+				if (event->sensor.data) {
+
+					sensorEvent.x = event->sensor.data[0];
+					sensorEvent.y = event->sensor.data[1];
+					sensorEvent.z = event->sensor.data[2];
+
+				}
+
+				sensorEvent.type = SENSOR_ACCELEROMETER;
+				sensorEvent.id = sensorID;
+				SensorEvent::Dispatch(&sensorEvent);
+
 			}
+
 		}
+
 	}
+
 
 	void SDLApplication::ProcessTextEvent (SDL_Event* event) {
 
