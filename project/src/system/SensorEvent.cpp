@@ -10,9 +10,9 @@ namespace lime {
 
 	static int id_id;
 	static int id_type;
-	static int id_x;
-	static int id_y;
-	static int id_z;
+	static double id_x;
+	static double id_y;
+	static double id_z;
 	static bool init = false;
 
 
