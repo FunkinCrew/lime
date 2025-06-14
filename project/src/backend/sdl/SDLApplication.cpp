@@ -703,28 +703,18 @@ namespace lime {
 
 			if (gyroscopeSensors.find(sensorID) != gyroscopeSensors.end()) {
 
-				if (event->sensor.data) {
-
-					sensorEvent.x = event->sensor.data[0];
-					sensorEvent.y = event->sensor.data[1];
-					sensorEvent.z = event->sensor.data[2];
-
-				}
-
+				sensorEvent.x = event->sensor.data[0];
+				sensorEvent.y = event->sensor.data[1];
+				sensorEvent.z = event->sensor.data[2];
 				sensorEvent.type = SENSOR_GYROSCOPE;
 				sensorEvent.id = sensorID;
 				SensorEvent::Dispatch(&sensorEvent);
 
 			} else if (accelerometerSensors.find(sensorID) != accelerometerSensors.end()) {
 
-				if (event->sensor.data) {
-
-					sensorEvent.x = event->sensor.data[0];
-					sensorEvent.y = event->sensor.data[1];
-					sensorEvent.z = event->sensor.data[2];
-
-				}
-
+				sensorEvent.x = event->sensor.data[0];
+				sensorEvent.y = event->sensor.data[1];
+				sensorEvent.z = event->sensor.data[2];
 				sensorEvent.type = SENSOR_ACCELEROMETER;
 				sensorEvent.id = sensorID;
 				SensorEvent::Dispatch(&sensorEvent);
