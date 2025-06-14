@@ -2892,39 +2892,47 @@ namespace lime {
 	}
 
 
-	int lime_system_get_first_gyroscope_sensor_id() {
+	int lime_system_get_first_gyroscope_sensor_id () {
+
 		#if defined(ANDROID) || defined (IPHONE)
-		return System::GetFirstGyroscopeSensorId();
+		return System::GetFirstGyroscopeSensorId ();
 		#else
 		return -1;
 		#endif
+
 	}
 
 
-	HL_PRIM int HL_NAME(hl_system_get_first_gyroscope_sensor_id)() {
+	HL_PRIM int HL_NAME(hl_system_get_first_gyroscope_sensor_id) () {
+
 		#if defined(ANDROID) || defined (IPHONE)
-		return System::GetFirstGyroscopeSensorId();
+		return System::GetFirstGyroscopeSensorId ();
 		#else
 		return -1;
 		#endif
+
 	}
 
 
 	int lime_system_get_first_accelerometer_sensor_id() {
+
 		#if defined(ANDROID) || defined (IPHONE)
-		return System::GetFirstAccelerometerSensorId();
+		return System::GetFirstAccelerometerSensorId ();
 		#else
 		return -1;
 		#endif
+
 	}
 
 
-	HL_PRIM int HL_NAME(hl_system_get_first_accelerometer_sensor_id)() {
+	HL_PRIM int HL_NAME(hl_system_get_first_accelerometer_sensor_id) () {
+
 		#if defined(ANDROID) || defined (IPHONE)
-		return System::GetFirstAccelerometerSensorId();
+		return System::GetFirstAccelerometerSensorId ();
 		#else
 		return -1;
 		#endif
+
 	}
 
 
