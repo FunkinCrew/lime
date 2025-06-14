@@ -35,6 +35,8 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
+		SDL_SetHint (SDL_HINT_ANDROID_ACCELEROMETER_AS_JOYSTICK, "0");
+		
 		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
 		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
@@ -97,14 +99,14 @@ namespace lime {
 
 
 	#if defined(ANDROID) || defined (IPHONE)
-	void SDLApplication::InitializeSensors() {
+	void SDLApplication::InitializeSensors () {
 
-		gyroscopeSensorID = System::GetFirstGyroscopeSensorId();
+		gyroscopeSensorID = System::GetFirstGyroscopeSensorId ();
 
 		if (gyroscopeSensorID > 0)
 			gyroscopeSensor = SDL_SensorOpen (gyroscopeSensorID);
 
-		accelerometerSensorID = System::GetFirstAccelerometerSensorId();
+		accelerometerSensorID = System::GetFirstAccelerometerSensorId ();
 
 		if (gyroscopeSensorID > 0)
 			accelerometerSensor = SDL_SensorOpen (gyroscopeSensorID);
@@ -113,12 +115,12 @@ namespace lime {
 	#endif
 
 
-	SDLApplication::~SDLApplication() {
+	SDLApplication::~SDLApplication () {
 
 		#if defined(ANDROID) || defined(IPHONE)
 		if (gyroscopeSensor) {
 
-			SDL_SensorClose(gyroscopeSensor);
+			SDL_SensorClose (gyroscopeSensor);
 			gyroscopeSensor = nullptr;
 			gyroscopeSensorID = -1;
 
@@ -126,7 +128,7 @@ namespace lime {
 
 		if (accelerometerSensor) {
 
-			SDL_SensorClose(accelerometerSensor);
+			SDL_SensorClose (accelerometerSensor);
 			accelerometerSensor = nullptr;
 			accelerometerSensorID = -1;
 
@@ -136,7 +138,7 @@ namespace lime {
 	}
 
 
-	int SDLApplication::Exec() {
+	int SDLApplication::Exec () {
 
 		Init ();
 
