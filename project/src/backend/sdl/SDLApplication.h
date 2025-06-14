@@ -47,7 +47,7 @@ namespace lime {
 			void ProcessJoystickEvent (SDL_Event* event);
 			void ProcessKeyEvent (SDL_Event* event);
 			void ProcessMouseEvent (SDL_Event* event);
-			void ProcessSensorEvent (SDL_Event *event);
+			void ProcessSensorEvent (SDL_Event* event);
 			void ProcessTextEvent (SDL_Event* event);
 			void ProcessTouchEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);

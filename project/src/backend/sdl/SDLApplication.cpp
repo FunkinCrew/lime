@@ -84,7 +84,7 @@ namespace lime {
 
 	void SDLApplication::InitializeSensors() {
 
-		int numSensors = SDL_NumSensors();
+		int numSensors = SDL_NumSensors ();
 
 		for (int i = 0; i < numSensors; i++) {
 
