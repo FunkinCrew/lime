@@ -18,14 +18,24 @@ namespace lime {
 	AutoGCRoot* Application::callback = 0;
 	SDLApplication* SDLApplication::currentApplication = 0;
 
+
 	const int analogAxisDeadZone = 1000;
 	std::map<int, std::map<int, int> > gamepadsAxisMap;
 	bool inBackground = false;
 
 
+	#if defined(ANDROID) || defined (IPHONE)
+	SDL_SensorID gyroscopeSensorID = -1;
+	SDL_Sensor* gyroscopeSensor = nullptr;
+
+	SDL_SensorID accelerometerSensorID = -1;
+	SDL_Sensor* accelerometerSensor = nullptr;
+	#endif
+
+
 	SDLApplication::SDLApplication () {
 
-		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK;
+		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
 		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
 		initFlags |= SDL_INIT_AUDIO;
@@ -60,8 +70,15 @@ namespace lime {
 		TouchEvent touchEvent;
 		WindowEvent windowEvent;
 
+		#if defined(ANDROID) || defined (IPHONE)
+		SDL_EventState (SDL_SENSORUPDATE, SDL_ENABLE);
+		#endif
+
 		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
-		SDLJoystick::Init ();
+
+		#if defined(ANDROID) || defined (IPHONE)
+		InitializeSensors ();
+		#endif
 
 		#ifdef HX_MACOS
 		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL (CFBundleGetMainBundle ());
@@ -79,9 +96,42 @@ namespace lime {
 	}
 
 
+	#if defined(ANDROID) || defined (IPHONE)
+	void SDLApplication::InitializeSensors () {
+
+		gyroscopeSensorID = System::GetFirstGyroscopeSensorId ();
+
+		if (gyroscopeSensorID > 0)
+			gyroscopeSensor = SDL_SensorOpen (gyroscopeSensorID);
+
+		accelerometerSensorID = System::GetFirstAccelerometerSensorId ();
+
+		if (gyroscopeSensorID > 0)
+			accelerometerSensor = SDL_SensorOpen (gyroscopeSensorID);
+
+	}
+	#endif
+
+
 	SDLApplication::~SDLApplication () {
 
+		#if defined(ANDROID) || defined(IPHONE)
+		if (gyroscopeSensor) {
 
+			SDL_SensorClose (gyroscopeSensor);
+			gyroscopeSensor = nullptr;
+			gyroscopeSensorID = -1;
+
+		}
+
+		if (accelerometerSensor) {
+
+			SDL_SensorClose (accelerometerSensor);
+			accelerometerSensor = nullptr;
+			accelerometerSensorID = -1;
+
+		}
+		#endif
 
 	}
 
@@ -195,19 +245,9 @@ namespace lime {
 
 				ProcessTouchEvent (event);
 				break;
-
 			case SDL_JOYAXISMOTION:
 
-				if (SDLJoystick::IsAccelerometer (event->jaxis.which)) {
-
-					ProcessSensorEvent (event);
-
-				} else {
-
-					ProcessJoystickEvent (event);
-
-				}
-
+				ProcessJoystickEvent (event);
 				break;
 
 			case SDL_JOYBALLMOTION:
@@ -244,6 +284,13 @@ namespace lime {
 				RenderEvent::Dispatch (&renderEvent);
 
 				renderEvent.type = RENDER;
+				break;
+			#endif
+
+			#if defined(ANDROID) || defined (IPHONE)
+			case SDL_SENSORUPDATE:
+
+				ProcessSensorEvent (event);
 				break;
 			#endif
 
@@ -468,82 +515,57 @@ namespace lime {
 
 				case SDL_JOYAXISMOTION:
 
-					if (!SDLJoystick::IsAccelerometer (event->jaxis.which)) {
+					joystickEvent.type = JOYSTICK_AXIS_MOVE;
+					joystickEvent.index = event->jaxis.axis;
+					joystickEvent.x = event->jaxis.value / (event->jaxis.value > 0 ? 32767.0 : 32768.0);
+					joystickEvent.id = event->jaxis.which;
 
-						joystickEvent.type = JOYSTICK_AXIS_MOVE;
-						joystickEvent.index = event->jaxis.axis;
-						joystickEvent.x = event->jaxis.value / (event->jaxis.value > 0 ? 32767.0 : 32768.0);
-						joystickEvent.id = event->jaxis.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
-
 
 				case SDL_JOYBUTTONDOWN:
 
-					if (!SDLJoystick::IsAccelerometer (event->jbutton.which)) {
+					joystickEvent.type = JOYSTICK_BUTTON_DOWN;
+					joystickEvent.index = event->jbutton.button;
+					joystickEvent.id = event->jbutton.which;
 
-						joystickEvent.type = JOYSTICK_BUTTON_DOWN;
-						joystickEvent.index = event->jbutton.button;
-						joystickEvent.id = event->jbutton.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYBUTTONUP:
 
-					if (!SDLJoystick::IsAccelerometer (event->jbutton.which)) {
+					joystickEvent.type = JOYSTICK_BUTTON_UP;
+					joystickEvent.index = event->jbutton.button;
+					joystickEvent.id = event->jbutton.which;
 
-						joystickEvent.type = JOYSTICK_BUTTON_UP;
-						joystickEvent.index = event->jbutton.button;
-						joystickEvent.id = event->jbutton.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYHATMOTION:
 
-					if (!SDLJoystick::IsAccelerometer (event->jhat.which)) {
+					joystickEvent.type = JOYSTICK_HAT_MOVE;
+					joystickEvent.index = event->jhat.hat;
+					joystickEvent.eventValue = event->jhat.value;
+					joystickEvent.id = event->jhat.which;
 
-						joystickEvent.type = JOYSTICK_HAT_MOVE;
-						joystickEvent.index = event->jhat.hat;
-						joystickEvent.eventValue = event->jhat.value;
-						joystickEvent.id = event->jhat.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYDEVICEADDED:
 
-					if (SDLJoystick::Connect (event->jdevice.which)) {
+					joystickEvent.type = JOYSTICK_CONNECT;
+					joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
 
-						joystickEvent.type = JOYSTICK_CONNECT;
-						joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
-
-						JoystickEvent::Dispatch (&joystickEvent);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
 				case SDL_JOYDEVICEREMOVED:
 
-					if (!SDLJoystick::IsAccelerometer (event->jdevice.which)) {
+					joystickEvent.type = JOYSTICK_DISCONNECT;
+					joystickEvent.id = event->jdevice.which;
 
-						joystickEvent.type = JOYSTICK_DISCONNECT;
-						joystickEvent.id = event->jdevice.which;
-
-						JoystickEvent::Dispatch (&joystickEvent);
-						SDLJoystick::Disconnect (event->jdevice.which);
-
-					}
+					JoystickEvent::Dispatch (&joystickEvent);
+					SDLJoystick::Disconnect (event->jdevice.which);
 					break;
 
 			}
@@ -656,26 +678,35 @@ namespace lime {
 	}
 
 
-	void SDLApplication::ProcessSensorEvent (SDL_Event* event) {
+	#if defined(ANDROID) || defined (IPHONE)
+	void SDLApplication::ProcessSensorEvent(SDL_Event* event) {
 
 		if (SensorEvent::callback) {
 
-			double value = event->jaxis.value / 32767.0f;
+			if (event->sensor.which == gyroscopeSensorID) {
 
-			switch (event->jaxis.axis) {
+				sensorEvent.type = SENSOR_GYROSCOPE;
+				sensorEvent.id = event->sensor.which;
+				sensorEvent.x = event->sensor.data[0];
+				sensorEvent.y = event->sensor.data[1];
+				sensorEvent.z = event->sensor.data[2];
+				SensorEvent::Dispatch(&sensorEvent);
 
-				case 0: sensorEvent.x = value; break;
-				case 1: sensorEvent.y = value; break;
-				case 2: sensorEvent.z = value; break;
-				default: break;
+			} else if (event->sensor.which == accelerometerSensorID) {
+
+				sensorEvent.type = SENSOR_ACCELEROMETER;
+				sensorEvent.id = event->sensor.which;
+				sensorEvent.x = event->sensor.data[0];
+				sensorEvent.y = event->sensor.data[1];
+				sensorEvent.z = event->sensor.data[2];
+				SensorEvent::Dispatch(&sensorEvent);
 
 			}
-
-			SensorEvent::Dispatch (&sensorEvent);
 
 		}
 
 	}
+	#endif
 
 
 	void SDLApplication::ProcessTextEvent (SDL_Event* event) {
