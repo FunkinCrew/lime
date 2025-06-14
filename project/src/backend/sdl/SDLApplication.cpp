@@ -35,8 +35,6 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
-		SDL_SetHint (SDL_HINT_ANDROID_ACCELEROMETER_AS_JOYSTICK, "0");
-		
 		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
 		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
