@@ -18,11 +18,19 @@ namespace lime {
 	AutoGCRoot* Application::callback = 0;
 	SDLApplication* SDLApplication::currentApplication = 0;
 
+
 	const int analogAxisDeadZone = 1000;
 	std::map<int, std::map<int, int> > gamepadsAxisMap;
-	std::map<SDL_SensorID, SDL_Sensor *> gyroscopeSensors;
-	std::map<SDL_SensorID, SDL_Sensor *> accelerometerSensors;
 	bool inBackground = false;
+
+
+	#if defined(ANDROID) || defined (IPHONE)
+	SDL_SensorID gyroscopeSensorID = -1;
+	SDL_Sensor* gyroscopeSensor = nullptr;
+
+	SDL_SensorID accelerometerSensorID = -1;
+	SDL_Sensor* accelerometerSensor = nullptr;
+	#endif
 
 
 	SDLApplication::SDLApplication () {
@@ -62,10 +70,15 @@ namespace lime {
 		TouchEvent touchEvent;
 		WindowEvent windowEvent;
 
-		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
+		#if defined(ANDROID) || defined (IPHONE)
 		SDL_EventState (SDL_SENSORUPDATE, SDL_ENABLE);
+		#endif
 
+		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
+
+		#if defined(ANDROID) || defined (IPHONE)
 		InitializeSensors ();
+		#endif
 
 		#ifdef HX_MACOS
 		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL (CFBundleGetMainBundle ());
@@ -82,78 +95,46 @@ namespace lime {
 
 	}
 
+
+	#if defined(ANDROID) || defined (IPHONE)
 	void SDLApplication::InitializeSensors() {
 
-		int numSensors = SDL_NumSensors ();
+		gyroscopeSensorID = System::GetFirstGyroscopeSensorId();
 
-		for (int i = 0; i < numSensors; i++) {
+		if (gyroscopeSensorID > 0)
+			gyroscopeSensor = SDL_SensorOpen (gyroscopeSensorID);
 
-			SDL_SensorType sensorType = SDL_SensorGetDeviceType (i);
-			SDL_SensorID sensorID = SDL_SensorGetDeviceInstanceID (i);
+		accelerometerSensorID = System::GetFirstAccelerometerSensorId();
 
-			printf ("Sensors %d initializing...\n", sensorID);
-
-			if (sensorType == SDL_SENSOR_GYRO) {
-
-				SDL_Sensor *sensor = SDL_SensorOpen (i);
-
-				printf ("Attempting to open sensor %d \n", sensorID);
-
-				if (sensor) {
-
-					gyroscopeSensors[sensorID] = sensor;
-
-					printf ("Gyroscope sensor %d initialized\n", sensorID);
-
-				}
-
-			} else if (sensorType == SDL_SENSOR_ACCEL) {
-
-				SDL_Sensor *sensor = SDL_SensorOpen (i);
-
-				printf ("Attempting to open sensor %d \n", sensorID);
-
-				if (sensor) {
-
-					accelerometerSensors[sensorID] = sensor;
-
-					printf ("Accelerometer sensor %d initialized\n", sensorID);
-
-				}
-
-			}
-
-		}
+		if (gyroscopeSensorID > 0)
+			accelerometerSensor = SDL_SensorOpen (gyroscopeSensorID);
 
 	}
+	#endif
+
 
 	SDLApplication::~SDLApplication() {
 
-		for (auto &pair : gyroscopeSensors) {
+		#if defined(ANDROID) || defined(IPHONE)
+		if (gyroscopeSensor) {
 
-			if (pair.second) {
-
-				SDL_SensorClose (pair.second);
-
-			}
-
-		}
-
-		gyroscopeSensors.clear ();
-
-		for (auto &pair : accelerometerSensors) {
-
-			if (pair.second) {
-
-				SDL_SensorClose (pair.second);
-
-			}
+			SDL_SensorClose(gyroscopeSensor);
+			gyroscopeSensor = nullptr;
+			gyroscopeSensorID = -1;
 
 		}
 
-		accelerometerSensors.clear ();
+		if (accelerometerSensor) {
+
+			SDL_SensorClose(accelerometerSensor);
+			accelerometerSensor = nullptr;
+			accelerometerSensorID = -1;
+
+		}
+		#endif
 
 	}
+
 
 	int SDLApplication::Exec() {
 
@@ -306,10 +287,12 @@ namespace lime {
 				break;
 			#endif
 
+			#if defined(ANDROID) || defined (IPHONE)
 			case SDL_SENSORUPDATE:
 
 				ProcessSensorEvent (event);
 				break;
+			#endif
 
 			case SDL_TEXTINPUT:
 			case SDL_TEXTEDITING:
@@ -695,28 +678,27 @@ namespace lime {
 	}
 
 
+	#if defined(ANDROID) || defined (IPHONE)
 	void SDLApplication::ProcessSensorEvent(SDL_Event* event) {
 
 		if (SensorEvent::callback) {
 
-			SDL_SensorID sensorID = event->sensor.which;
+			if (event->sensor.which == gyroscopeSensorID) {
 
-			if (gyroscopeSensors.find(sensorID) != gyroscopeSensors.end()) {
-
+				sensorEvent.type = SENSOR_GYROSCOPE;
+				sensorEvent.id = event->sensor.which;
 				sensorEvent.x = event->sensor.data[0];
 				sensorEvent.y = event->sensor.data[1];
 				sensorEvent.z = event->sensor.data[2];
-				sensorEvent.type = SENSOR_GYROSCOPE;
-				sensorEvent.id = sensorID;
 				SensorEvent::Dispatch(&sensorEvent);
 
-			} else if (accelerometerSensors.find(sensorID) != accelerometerSensors.end()) {
+			} else if (event->sensor.which == accelerometerSensorID) {
 
+				sensorEvent.type = SENSOR_ACCELEROMETER;
+				sensorEvent.id = event->sensor.which;
 				sensorEvent.x = event->sensor.data[0];
 				sensorEvent.y = event->sensor.data[1];
 				sensorEvent.z = event->sensor.data[2];
-				sensorEvent.type = SENSOR_ACCELEROMETER;
-				sensorEvent.id = sensorID;
 				SensorEvent::Dispatch(&sensorEvent);
 
 			}
@@ -724,6 +706,7 @@ namespace lime {
 		}
 
 	}
+	#endif
 
 
 	void SDLApplication::ProcessTextEvent (SDL_Event* event) {

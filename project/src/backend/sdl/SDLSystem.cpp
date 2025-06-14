@@ -544,6 +544,45 @@ namespace lime {
 	}
 
 
+	#if defined(ANDROID) || defined (IPHONE)
+	int System::GetFirstGyroscopeSensorId () {
+
+		int numSensors = SDL_NumSensors ();
+
+		for (int i = 0; i < numSensors; i++) {
+
+			if (SDL_SensorGetDeviceType (i) == SDL_SENSOR_GYRO) {
+
+				return SDL_SensorGetDeviceInstanceID(i);
+
+			}
+
+		}
+
+		return -1;
+
+	}
+
+	int System::GetFirstAccelerometerSensorId () {
+
+		int numSensors = SDL_NumSensors ();
+
+		for (int i = 0; i < numSensors; i++) {
+
+			if (SDL_SensorGetDeviceType (i) == SDL_SENSOR_ACCEL) {
+
+				return SDL_SensorGetDeviceInstanceID(i);
+
+			}
+
+		}
+
+		return -1;
+
+	}
+	#endif
+
+
 	int System::GetNumDisplays () {
 
 		return SDL_GetNumVideoDisplays ();

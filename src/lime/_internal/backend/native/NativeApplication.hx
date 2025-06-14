@@ -79,13 +79,20 @@ class NativeApplication
 
 		AudioManager.init();
 
-		#if (ios || android || tvos)
-		Sensor.registerSensor(SensorType.ACCELEROMETER, 0);
-		Sensor.registerSensor(SensorType.GYROSCOPE, 1);
-		#end
-
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_application_create();
+		#end
+
+		#if (ios || android)
+		final accelerometerID:Int = NativeCFFI.lime_system_get_first_accelerometer_sensor_id();
+
+		if (accelerometerID > 0)
+			Sensor.registerSensor(SensorType.ACCELEROMETER, accelerometerID);
+
+		final gyroscopeID:Int = NativeCFFI.lime_system_get_first_gyroscope_sensor_id();
+
+		if (gyroscopeID > 0)
+			Sensor.registerSensor(SensorType.GYROSCOPE, gyroscopeID);
 		#end
 	}
 
@@ -119,7 +126,7 @@ class NativeApplication
 		NativeCFFI.lime_text_event_manager_register(handleTextEvent, textEventInfo);
 		NativeCFFI.lime_touch_event_manager_register(handleTouchEvent, touchEventInfo);
 		NativeCFFI.lime_window_event_manager_register(handleWindowEvent, windowEventInfo);
-		#if (ios || android || tvos)
+		#if (ios || android)
 		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
 		#end
 		#end
@@ -423,7 +430,7 @@ class NativeApplication
 
 	private function handleSensorEvent():Void
 	{
-		var sensor = Sensor.sensorByID.get(sensorEventInfo.id);
+		var sensor = Sensor.__sensorByID.get(sensorEventInfo.id);
 
 		if (sensor != null)
 		{
