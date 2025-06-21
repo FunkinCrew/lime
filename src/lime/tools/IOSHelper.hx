@@ -135,10 +135,15 @@ class IOSHelper
 				commands.push("-arch");
 				commands.push("i386");
 			}
-			else
+			else if(project.targetFlags.exists("x64") || project.targetFlags.exists("64") || project.targetFlags.exists("x86_64"))
 			{
 				commands.push("-arch");
 				commands.push("x86_64");
+			}
+			else
+			{
+				commands.push("-arch");
+				commands.push("arm64");
 			}
 		}
 		else if (project.targetFlags.exists("armv7"))
