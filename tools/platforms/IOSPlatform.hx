@@ -504,10 +504,9 @@ class IOSPlatform extends PlatformTarget
 		var armv6 = (project.architectures.indexOf(Architecture.ARMV6) > -1 && !project.targetFlags.exists("simulator"));
 		var armv7 = (project.architectures.indexOf(Architecture.ARMV7) > -1 && !project.targetFlags.exists("simulator"));
 		var armv7s = (project.architectures.indexOf(Architecture.ARMV7S) > -1 && !project.targetFlags.exists("simulator"));
-		var arm64 = (command == "rebuild"
-			|| (project.architectures.indexOf(Architecture.ARM64) > -1 && !project.targetFlags.exists("simulator")));
+		var arm64 = (command == "rebuild" || (project.architectures.indexOf(Architecture.ARM64) > -1));
 		var i386 = (project.architectures.indexOf(Architecture.X86) > -1 && project.targetFlags.exists("simulator"));
-		var x86_64 = (command == "rebuild" || project.targetFlags.exists("simulator"));
+		var x86_64 = (command == "rebuild" || project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator"));
 
 		var arc = (project.targetFlags.exists("arc"));
 
@@ -517,6 +516,7 @@ class IOSPlatform extends PlatformTarget
 		if (armv7) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARMV7"]);
 		if (armv7s) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARMV7S"]);
 		if (arm64) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARM64"]);
+		if (arm64 && project.targetFlags.exists("simulator")) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_CPP11", "-DHXCPP_ARM64"]);
 		if (i386) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M32", "-DHXCPP_CPP11"]);
 		if (x86_64) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M64", "-DHXCPP_CPP11"]);
 
@@ -814,9 +814,11 @@ class IOSPlatform extends PlatformTarget
 
 		System.mkdir(projectDirectory + "/lib");
 
-		for (archID in 0...6)
+		for (archID in 0...7)
 		{
-			var arch = ["armv6", "armv7", "armv7s", "arm64", "i386", "x86_64"][archID];
+			var arch = ["armv6", "armv7", "armv7s", "arm64", "i386", "x86_64", "arm64-sim"][archID];
+			var arm64Device:Bool = context.ARM64 && !project.targetFlags.exists("simulator");
+			var arm64Sim:Bool = context.ARM64 && project.targetFlags.exists("simulator");
 
 			if (arch == "armv6" && !context.ARMV6) continue;
 
@@ -824,9 +826,13 @@ class IOSPlatform extends PlatformTarget
 
 			if (arch == "armv7s" && !context.ARMV7S) continue;
 
-			if (arch == "arm64" && !context.ARM64) continue;
+			if (arch == "arm64" && !arm64Device) continue;
 
 			if (arch == "i386" && !context.I386) continue;
+
+			if (arch == "x86_64" && context.ARM64 && !context.X86_64) continue;
+
+			if (arch == "arm64-sim" && !arm64Sim) continue;
 
 			var libExt = [
 				".iphoneos.a",
@@ -834,8 +840,11 @@ class IOSPlatform extends PlatformTarget
 				".iphoneos-v7s.a",
 				".iphoneos-64.a",
 				".iphonesim.a",
-				".iphonesim-64.a"
+				".iphonesim-64.a",
+				".iphonesim-arm64.a",
 			][archID];
+
+			if (arch == 'arm64-sim') arch = 'arm64';
 
 			System.mkdir(projectDirectory + "/lib/" + arch);
 			System.mkdir(projectDirectory + "/lib/" + arch + "-debug");

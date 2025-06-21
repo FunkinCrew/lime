@@ -66,11 +66,19 @@ build-haxe-armv7:
 	touch ../Classes/Main.mm
 
 build-haxe-arm64:
+ifeq ($(HAXE_OS), iphonesim)
+	@echo "Haxe simulator build: $(CONFIG)-arm64"
+	haxe Build.hxml -D simulator -D HXCPP_ARM64 -cpp build/$(CONFIG)-arm64 $(DEBUG)
+	cd build/$(CONFIG)-arm64; ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; haxelib run ::CPP_BUILD_LIBRARY:: Build.xml $(DEBUG) -options Options.txt
+	cp build/$(CONFIG)-arm64/::CPP_LIBPREFIX::ApplicationMain$(DEBUG).iphonesim-arm64.a ../lib/arm64$(LIB_DEST)
+	touch ../Classes/Main.mm
+else
 	@echo "Haxe device build: $(CONFIG)-64"
 	haxe Build.hxml -D HXCPP_ARM64 -cpp build/$(CONFIG)-64 $(DEBUG)
 	cd build/$(CONFIG)-64; ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; haxelib run ::CPP_BUILD_LIBRARY:: Build.xml $(DEBUG) -options Options.txt
 	cp build/$(CONFIG)-64/::CPP_LIBPREFIX::ApplicationMain$(DEBUG).iphoneos-64.a ../lib/arm64$(LIB_DEST)
 	touch ../Classes/Main.mm
+endif
 
 clean:
 	rm -rf build
