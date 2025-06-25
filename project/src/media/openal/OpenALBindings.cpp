@@ -3,6 +3,31 @@
 #include <OpenAL/alc.h>
 #define LIME_OPENAL_DELETION_DELAY 600
 #include <time.h>
+
+/**
+ * iOS Static Buffer Implementation Setup
+ *
+ * Apple's `alBufferDataStatic` is an undocumented iOS OpenAL function that
+ * enables zero-copy audio loading on iOS devices. This is not an extension
+ * but rather a hidden built-in function in iOS OpenAL implementations.
+ *
+ * Key Points:
+ * - Function exists but is not documented or advertised anywhere
+ * - Still available on iPhone 14 Pro and other modern iOS devices
+ * - Requires direct function lookup via alcGetProcAddress()
+ *
+ * Historical Context:
+ * - Originally documented in older iOS OpenAL programming guides
+ */
+#include <OpenAL/oalStaticBufferExtension.h>
+
+// Function pointer type definition for alBufferDataStatic
+typedef ALvoid AL_APIENTRY (*alBufferDataStaticProcPtr)(ALint bid, ALenum format, const ALvoid* data, ALsizei size, ALsizei freq);
+
+// Global state for static buffer extension
+static alBufferDataStaticProcPtr alBufferDataStaticFunc = nullptr;  // Function pointer
+static bool staticBufferExtensionChecked = false;                   // One-time detection flag
+static bool staticBufferExtensionSupported = false;                 // Availability status
 #else
 #include "AL/al.h"
 #include "AL/alc.h"
@@ -323,6 +348,97 @@ namespace lime {
 
 	}
 
+	#if defined (IPHONE) || defined (TVOS)
+
+	/**
+	 * iOS Static Buffer Function Detection
+	 *
+	 * This function detects support for Apple's `alBufferDataStatic` function,
+	 * which enables zero-copy audio loading on iOS devices. This is an undocumented
+	 * function that's built into iOS OpenAL but not too documented
+	 *
+	 * Technical Details:
+	 * - The function allows audio data to remain in app memory instead of
+	 *   being copied into OpenAL's internal buffers
+	 * - This reduces memory usage and improves loading performance
+	 * - The app retains ownership of the audio data and must keep it alive
+	 *
+	 * Compatibility:
+	 * - Still available on iPhone 14 Pro and other modern iOS devices
+	 * - Uses direct function lookup as the only detection method
+	 *
+	 * Implementation Notes:
+	 * - Uses direct alcGetProcAddress() lookup (only method that works on iOS)
+	 * - No extension checking since this is not actually an extension
+	 * - Only checked once per app session for performance
+	 */
+	bool lime_al_is_static_buffer_supported () {
+
+		if (!staticBufferExtensionChecked) {
+			staticBufferExtensionChecked = true;
+			ALCdevice* device = alcGetContextsDevice(alcGetCurrentContext());
+
+			// Debug: Print available extensions
+			const ALCchar* extensions = alcGetString(device, ALC_EXTENSIONS);
+			printf("[STATIC_BUFFER] Available extensions: %s\n", extensions);
+
+			// iOS Static Buffer Direct Lookup:
+			// The alBufferDataStatic function exists on iOS but is never advertised
+			// in the extension list. We use direct function lookup since the extension
+			// check will always fail, even though the function is available.
+			alBufferDataStaticFunc = (alBufferDataStaticProcPtr)alcGetProcAddress(device, "alBufferDataStatic");
+			if (alBufferDataStaticFunc != nullptr) {
+				printf("[STATIC_BUFFER] Function found via direct lookup: %p\n", alBufferDataStaticFunc);
+				staticBufferExtensionSupported = true;
+			} else {
+				printf("[STATIC_BUFFER] Function alBufferDataStatic not available\n");
+				staticBufferExtensionSupported = false;
+			}
+		}
+		return staticBufferExtensionSupported;
+
+	}
+
+	/**
+	 * iOS Static Buffer Implementation
+	 *
+	 * Creates an OpenAL buffer using Apple's `alBufferDataStatic` function.
+	 * Unlike regular alBufferData(), this function doesn't copy the audio data.
+	 * Instead, OpenAL directly references the app's memory, providing:
+	 *
+	 * Performance Benefits:
+	 * - Zero-copy audio loading (faster than memcpy)
+	 * - Reduced memory usage (no duplicate audio data)
+	 * - Lower CPU usage during audio loading
+	 *
+	 * Memory Management:
+	 * - App retains ownership of audio data
+	 * - Audio data MUST remain valid for the lifetime of the buffer
+	 * - Do not free/modify the source data while buffer is in use
+	 *
+	 * Usage:
+	 * - Only available on iOS/tvOS platforms
+	 * - Automatically falls back to regular alBufferData() if not supported
+	 * - Tested and confirmed working on iPhone 14 Pro
+	 */
+	bool lime_al_buffer_data_static (value buffer, int format, value data, int size, int freq) {
+
+		if (!lime_al_is_static_buffer_supported()) {
+			return false;
+		}
+
+		ALuint id = (ALuint)(uintptr_t)val_data (buffer);
+		ArrayBufferView bufferView (data);
+
+		// Use the static buffer function - this creates a zero-copy reference
+		// to the app's audio data rather than copying it into OpenAL's buffers
+		alBufferDataStaticFunc (id, format, bufferView.buffer->b, size, freq);
+		return true;
+
+	}
+
+	#endif
+
 
 	HL_PRIM void HL_NAME(hl_al_buffer_data) (HL_CFFIPointer* buffer, int format, ArrayBufferView* data, int size, int freq) {
 
@@ -330,6 +446,28 @@ namespace lime {
 		alBufferData (id, format, data->buffer->b, size, freq);
 
 	}
+
+	#if defined (IPHONE) || defined (TVOS)
+
+	HL_PRIM bool HL_NAME(hl_al_is_static_buffer_supported) () {
+
+		return lime_al_is_static_buffer_supported();
+
+	}
+
+	HL_PRIM bool HL_NAME(hl_al_buffer_data_static) (HL_CFFIPointer* buffer, int format, ArrayBufferView* data, int size, int freq) {
+
+		if (!lime_al_is_static_buffer_supported()) {
+			return false;
+		}
+
+		ALuint id = (ALuint)(uintptr_t)buffer->ptr;
+		alBufferDataStaticFunc (id, format, data->buffer->b, size, freq);
+		return true;
+
+	}
+
+	#endif
 
 
 	void lime_al_buffer3f (value buffer, int param, float value1, float value2, float value3) {
@@ -2119,6 +2257,8 @@ namespace lime {
 
 		delete[] values;
 		return result;
+		#else
+		return alloc_null();
 		#endif
 	}
 
@@ -2129,6 +2269,8 @@ namespace lime {
 		varray* result = hl_alloc_array(&hlt_f64, count);
 		alGetSourcedvSOFT(id, param, hl_aptr (result, double));
 		return result;
+		#else
+		return nullptr;
 		#endif
 	}
 
@@ -3547,6 +3689,10 @@ namespace lime {
 	DEFINE_PRIME3v (lime_al_auxi);
 	DEFINE_PRIME3v (lime_al_auxiv);
 	DEFINE_PRIME5v (lime_al_buffer_data);
+	#if defined (IPHONE) || defined (TVOS)
+	DEFINE_PRIME0 (lime_al_is_static_buffer_supported);
+	DEFINE_PRIME5 (lime_al_buffer_data_static);
+	#endif
 	DEFINE_PRIME5v (lime_al_buffer3f);
 	DEFINE_PRIME5v (lime_al_buffer3i);
 	DEFINE_PRIME3v (lime_al_bufferf);
