@@ -26,8 +26,6 @@ class NativeAudioSource
 	#end
 	private static var STREAM_TIMER_FREQUENCY = 100;
 
-	private static var supportsSourceLatency:Null<Bool> = null;
-
 	private var buffers:Array<ALBuffer>;
 	private var bufferTimeBlocks:Array<Float>;
 	private var completed:Bool;
@@ -392,29 +390,13 @@ class NativeAudioSource
 			}
 			else
 			{
-				if (supportsSourceLatency == null)
-					supportsSourceLatency = AL.isExtensionPresent("AL_SOFT_source_latency");
+				var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
+				var ratio = (offset / dataLength);
+				var totalSeconds = samples / parent.buffer.sampleRate;
+				var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
 
-				if (supportsSourceLatency)
-				{
-					var value = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
-					var deviceOffset:Float = value[1];
-					var realOffset:Float = value[0];
-					var time:Float = ((realOffset - deviceOffset) * 1000) - parent.offset;
-
-					if (time < 0) return 0;
-					return Std.int(time);
-				}
-				else
-				{
-					var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
-					var ratio = (offset / dataLength);
-					var totalSeconds = samples / parent.buffer.sampleRate;
-					var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
-
-					if (time < 0) return 0;
-					return time;
-				}
+				if (time < 0) return 0;
+				return time;
 			}
 		}
 
