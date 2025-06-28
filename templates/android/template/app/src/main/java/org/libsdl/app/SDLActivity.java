@@ -1532,7 +1532,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         // create text
 
         TextView message = new TextView(this);
-        message.setGravity(Gravity.CENTER);
+        message.setGravity(Gravity.START);
         message.setText(args.getString("message"));
         if (textColor != Color.TRANSPARENT) {
             message.setTextColor(textColor);
