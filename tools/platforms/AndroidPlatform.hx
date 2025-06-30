@@ -131,7 +131,7 @@ class AndroidPlatform extends PlatformTarget
 
 	public override function build():Void
 	{
-		var destination = targetDirectory + "/bin";
+		var destination = Path.combine(targetDirectory, project.config.getString("android.gradle-project-directory", "bin"));
 		var hxml = targetDirectory + "/haxe/" + buildType + ".hxml";
 		var sourceSet = destination + "/app/src/main";
 
@@ -279,11 +279,11 @@ class AndroidPlatform extends PlatformTarget
 			{
 				if (targetFlags.exists("bundle"))
 				{
-					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle");
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle"));
 				}
 				else
 				{
-					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk"));
 				}
 			}
 
@@ -358,11 +358,11 @@ class AndroidPlatform extends PlatformTarget
 		{
 			if (targetFlags.exists("bundle"))
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle/" + build);
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle/" + build));
 			}
 			else
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk/" + build));
 			}
 		}
 
@@ -415,7 +415,7 @@ class AndroidPlatform extends PlatformTarget
 
 		// initialize (project);
 
-		var destination = targetDirectory + "/bin";
+		var destination = Path.combine(targetDirectory, project.config.getString("android.gradle-project-directory", "bin"));
 		var sourceSet = destination + "/app/src/main";
 		System.mkdir(sourceSet);
 		System.mkdir(sourceSet + "/res/drawable-ldpi/");
