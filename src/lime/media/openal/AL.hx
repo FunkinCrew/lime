@@ -301,6 +301,26 @@ class AL
 		#end
 	}
 
+	#if (ios || tvos)
+	public static function isStaticBufferSupported():Bool
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		return NativeCFFI.lime_al_is_static_buffer_supported();
+		#else
+		return false;
+		#end
+	}
+
+	public static function bufferDataStatic(buffer:ALBuffer, format:Int, data:ArrayBufferView, size:Int, freq:Int):Bool
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		return NativeCFFI.lime_al_buffer_data_static(buffer, format, data, size, freq);
+		#else
+		return false;
+		#end
+	}
+	#end
+
 	public static function buffer3f(buffer:ALBuffer, param:Int, value1:Float, value2:Float, value3:Float):Void
 	{
 		#if (lime_cffi && lime_openal && !macro)
@@ -961,24 +981,6 @@ class AL
 	{
 		#if (lime_cffi && lime_openal && !macro)
 		var result = NativeCFFI.lime_al_get_sourcefv(source, param, count);
-		#if hl
-		if (result == null) return [];
-		var _result:Array<Float> = [];
-		for (i in 0...result.length)
-			_result[i] = result[i];
-		return _result;
-		#else
-		return result;
-		#end
-		#else
-		return null;
-		#end
-	}
-
-	public static function getSourcedvSOFT(source:ALSource, param:Int, count:Int = 2):Array<Float>
-	{
-		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_al_get_sourcedv_soft(source, param, count);
 		#if hl
 		if (result == null) return [];
 		var _result:Array<Float> = [];

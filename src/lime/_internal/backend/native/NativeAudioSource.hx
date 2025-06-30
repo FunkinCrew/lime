@@ -122,7 +122,20 @@ class NativeAudioSource
 
 				if (parent.buffer.__srcBuffer != null)
 				{
-					AL.bufferData(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate);
+					#if (ios || tvos)
+					if (AL.isStaticBufferSupported() && AL.bufferDataStatic(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate))
+					{
+						// Success: static buffer created using zero-copy approach
+						// App retains ownership of audio data - must keep it alive
+						// trace('[AUDIO] Using static buffer for audio: ${parent.buffer.data.length} bytes');
+					}
+					else
+					#end
+					{
+						// Fallback: use standard OpenAL buffer loading (copies data)
+						// trace('[AUDIO] Using regular buffer for audio: ${parent.buffer.data.length} bytes');
+						AL.bufferData(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate);
+					}
 				}
 			}
 
@@ -377,26 +390,13 @@ class NativeAudioSource
 			}
 			else
 			{
-				if (AL.isExtensionPresent("AL_SOFT_source_latency"))
-				{
-					var value = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
-					var deviceOffset:Float = value[1];
-					var realOffset:Float = value[0];
-					var time:Float = ((realOffset - deviceOffset) * 1000) - parent.offset;
+				var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
+				var ratio = (offset / dataLength);
+				var totalSeconds = samples / parent.buffer.sampleRate;
+				var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
 
-					if (time < 0) return 0;
-					return Std.int(time);
-				}
-				else
-				{
-					var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
-					var ratio = (offset / dataLength);
-					var totalSeconds = samples / parent.buffer.sampleRate;
-					var time = Std.int(totalSeconds * ratio * 1000) - parent.offset;
-
-					if (time < 0) return 0;
-					return time;
-				}
+				if (time < 0) return 0;
+				return time;
 			}
 		}
 
@@ -599,4 +599,5 @@ class NativeAudioSource
 
 		return position;
 	}
+
 }

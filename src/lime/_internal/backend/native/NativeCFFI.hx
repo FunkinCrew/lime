@@ -1512,6 +1512,12 @@ class NativeCFFI
 	#if (disable_cffi || haxe_ver < "3.4.0")
 	@:cffi private static function lime_al_buffer_data(buffer:CFFIPointer, format:Int, data:Dynamic, size:Int, freq:Int):Void;
 
+	#if (ios || tvos)
+	@:cffi private static function lime_al_is_static_buffer_supported():Bool;
+
+	@:cffi private static function lime_al_buffer_data_static(buffer:CFFIPointer, format:Int, data:Dynamic, size:Int, freq:Int):Bool;
+	#end
+
 	@:cffi private static function lime_al_buffer3f(buffer:CFFIPointer, param:Int, value1:Float32, value2:Float32, value3:Float32):Void;
 
 	@:cffi private static function lime_al_buffer3i(buffer:CFFIPointer, param:Int, value1:Int, value2:Int, value3:Int):Void;
@@ -1734,6 +1740,12 @@ class NativeCFFI
 	#else
 	private static var lime_al_buffer_data = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_al_buffer_data", "oioiiv", false));
+	#if (ios || tvos)
+	private static var lime_al_is_static_buffer_supported = new cpp.Callable<Void->Bool>(cpp.Prime._loadPrime("lime",
+		"lime_al_is_static_buffer_supported", "b", false));
+	private static var lime_al_buffer_data_static = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->Int->Bool>(cpp.Prime._loadPrime("lime",
+		"lime_al_buffer_data_static", "oioiib", false));
+	#end
 	private static var lime_al_buffer3f = new cpp.Callable<cpp.Object->Int->cpp.Float32->cpp.Float32->cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_al_buffer3f", "oifffv", false));
 	private static var lime_al_buffer3i = new cpp.Callable<cpp.Object->Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_buffer3i",
@@ -1796,8 +1808,6 @@ class NativeCFFI
 	private static var lime_al_get_sourcef = new cpp.Callable<cpp.Object->Int->cpp.Float32>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcef", "oif", false));
 	private static var lime_al_get_sourcefv = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcefv", "oiio",
 		false));
-	private static var lime_al_get_sourcedv_soft = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcedv_soft",
-		"oiio", false));
 	private static var lime_al_get_sourcei = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcei", "oio", false));
 	private static var lime_al_get_sourceiv = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourceiv", "oiio",
 		false));
@@ -1892,6 +1902,10 @@ class NativeCFFI
 	#end
 	#if (neko || cppia)
 	private static var lime_al_buffer_data = CFFI.load("lime", "lime_al_buffer_data", 5);
+	#if (ios || tvos)
+	private static var lime_al_is_static_buffer_supported = CFFI.load("lime", "lime_al_is_static_buffer_supported", 0);
+	private static var lime_al_buffer_data_static = CFFI.load("lime", "lime_al_buffer_data_static", 5);
+	#end
 	private static var lime_al_buffer3f = CFFI.load("lime", "lime_al_buffer3f", 5);
 	private static var lime_al_buffer3i = CFFI.load("lime", "lime_al_buffer3i", 5);
 	private static var lime_al_bufferf = CFFI.load("lime", "lime_al_bufferf", 3);
@@ -1939,7 +1953,6 @@ class NativeCFFI
 	private static var lime_al_get_source3i = CFFI.load("lime", "lime_al_get_source3i", 2);
 	private static var lime_al_get_sourcef = CFFI.load("lime", "lime_al_get_sourcef", 2);
 	private static var lime_al_get_sourcefv = CFFI.load("lime", "lime_al_get_sourcefv", 3);
-	private static var lime_al_get_sourcedv_soft = CFFI.load("lime", "lime_al_get_sourcedv_soft", 3);
 	private static var lime_al_get_sourcei = CFFI.load("lime", "lime_al_get_sourcei", 2);
 	private static var lime_al_get_sourceiv = CFFI.load("lime", "lime_al_get_sourceiv", 3);
 	private static var lime_al_get_string = CFFI.load("lime", "lime_al_get_string", 1);
@@ -2008,6 +2021,13 @@ class NativeCFFI
 	#if hl
 	@:hlNative("lime", "hl_al_buffer_data") private static function lime_al_buffer_data(buffer:CFFIPointer, format:Int, data:ArrayBufferView, size:Int,
 		freq:Int):Void {}
+
+	#if (ios || tvos)
+	@:hlNative("lime", "hl_al_is_static_buffer_supported") private static function lime_al_is_static_buffer_supported():Bool { return false; }
+
+	@:hlNative("lime", "hl_al_buffer_data_static") private static function lime_al_buffer_data_static(buffer:CFFIPointer, format:Int, data:ArrayBufferView, size:Int,
+		freq:Int):Bool { return false; }
+	#end
 
 	@:hlNative("lime", "hl_al_buffer3f") private static function lime_al_buffer3f(buffer:CFFIPointer, param:Int, value1:hl.F32, value2:hl.F32,
 		value3:hl.F32):Void {}
@@ -2193,11 +2213,6 @@ class NativeCFFI
 	}
 
 	@:hlNative("lime", "hl_al_get_sourcefv") private static function lime_al_get_sourcefv(source:CFFIPointer, param:Int, count:Int):hl.NativeArray<hl.F32>
-	{
-		return null;
-	}
-
-	@:hlNative("lime", "hl_al_get_sourcedv_soft") private static function lime_al_get_sourcedv_soft(source:CFFIPointer, param:Int, count:Int):hl.NativeArray<hl.F64>
 	{
 		return null;
 	}

@@ -1435,7 +1435,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         ScrollView messageScroll = new ScrollView(this);
         TextView message = new TextView(this);
-        message.setGravity(Gravity.CENTER);
+        message.setGravity(Gravity.START);
         message.setText(args.getString("message"));
         if (textColor != Color.TRANSPARENT) {
             message.setTextColor(textColor);
