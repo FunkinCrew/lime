@@ -122,20 +122,7 @@ class NativeAudioSource
 
 				if (parent.buffer.__srcBuffer != null)
 				{
-					#if (ios || tvos)
-					if (AL.isStaticBufferSupported() && AL.bufferDataStatic(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate))
-					{
-						// Success: static buffer created using zero-copy approach
-						// App retains ownership of audio data - must keep it alive
-						// trace('[AUDIO] Using static buffer for audio: ${parent.buffer.data.length} bytes');
-					}
-					else
-					#end
-					{
-						// Fallback: use standard OpenAL buffer loading (copies data)
-						// trace('[AUDIO] Using regular buffer for audio: ${parent.buffer.data.length} bytes');
-						AL.bufferData(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate);
-					}
+					AL.bufferData(parent.buffer.__srcBuffer, format, parent.buffer.data, parent.buffer.data.length, parent.buffer.sampleRate);
 				}
 			}
 
@@ -599,5 +586,4 @@ class NativeAudioSource
 
 		return position;
 	}
-
 }
