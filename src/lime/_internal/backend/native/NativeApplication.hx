@@ -83,8 +83,6 @@ class NativeApplication
 		pauseTimer = -1;
 		toggleFullscreen = true;
 
-		AudioManager.init();
-
 		#if android
 		var setDeviceOrientationListener = JNI.createStaticMethod("org/haxe/lime/GameActivity", "setDeviceOrientationListener",
 			"(Lorg/haxe/lime/HaxeObject;)V");
@@ -95,6 +93,8 @@ class NativeApplication
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_application_create();
 		#end
+
+		AudioManager.init();
 
 		#if (ios || android)
 		final gyroscopeID:Int = NativeCFFI.lime_system_get_first_gyroscope_sensor_id();
