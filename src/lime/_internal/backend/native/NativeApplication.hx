@@ -77,11 +77,11 @@ class NativeApplication
 		pauseTimer = -1;
 		toggleFullscreen = true;
 
-		AudioManager.init();
-
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_application_create();
 		#end
+
+		AudioManager.init();
 
 		#if (ios || android)
 		final accelerometerID:Int = NativeCFFI.lime_system_get_first_accelerometer_sensor_id();
