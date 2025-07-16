@@ -170,8 +170,6 @@ class AudioManager
 			if (!FileSystem.exists(path))
 				File.saveContent(path, configContent.join('\n'));
 
-			Sys.println(path);
-
 			Sys.putEnv('ALSOFT_CONF', path);
 		}
 		catch (e:Dynamic) {}
