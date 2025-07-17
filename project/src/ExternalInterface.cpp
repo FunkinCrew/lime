@@ -3093,36 +3093,28 @@ namespace lime {
 
 	void lime_system_open_file (HxString path) {
 
-		#ifdef IPHONE
 		System::OpenFile (path.c_str ());
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_system_open_file) (vbyte* path) {
 
-		#ifdef IPHONE
 		System::OpenFile ((char*)path);
-		#endif
 
 	}
 
 
 	void lime_system_open_url (HxString url, HxString target) {
 
-		#ifdef IPHONE
 		System::OpenURL (url.c_str (), target.c_str ());
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_system_open_url) (vbyte* url, vbyte* target) {
 
-		#ifdef IPHONE
 		System::OpenURL ((char*)url, (char*)target);
-		#endif
 
 	}
 
