@@ -391,9 +391,6 @@ class System
 			Browser.window.open(path, "_blank");
 			#elseif flash
 			Lib.getURL(new URLRequest(path), "_blank");
-			#elseif android
-			var openFile = JNI.createStaticMethod("org/haxe/lime/GameActivity", "openFile", "(Ljava/lang/String;)V");
-			openFile(path);
 			#elseif (lime_cffi && !macro)
 			NativeCFFI.lime_system_open_file(path);
 			#end
@@ -413,9 +410,6 @@ class System
 			Browser.window.open(url, target);
 			#elseif flash
 			Lib.getURL(new URLRequest(url), target);
-			#elseif android
-			var openURL = JNI.createStaticMethod("org/haxe/lime/GameActivity", "openURL", "(Ljava/lang/String;Ljava/lang/String;)V");
-			openURL(url, target);
 			#elseif (lime_cffi && !macro)
 			NativeCFFI.lime_system_open_url(url, target);
 			#end

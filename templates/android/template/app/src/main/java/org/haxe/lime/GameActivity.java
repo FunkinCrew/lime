@@ -318,56 +318,6 @@ public class GameActivity extends SDLActivity {
 	::end::
 
 
-	public static void openFile (String path) {
-
-		try {
-
-			String extension = path;
-			int index = path.lastIndexOf ('.');
-
-			if (index > 0) {
-
-				extension = path.substring (index + 1);
-
-			}
-
-			String mimeType = MimeTypeMap.getSingleton ().getMimeTypeFromExtension (extension);
-			File file = new File (path);
-
-			Intent intent = new Intent ();
-			intent.setAction (Intent.ACTION_VIEW);
-			intent.setDataAndType (Uri.fromFile (file), mimeType);
-
-			Extension.mainActivity.startActivity (intent);
-
-		} catch (Exception e) {
-
-			Log.e ("GameActivity", e.toString ());
-			return;
-
-		}
-
-	}
-
-
-	public static void openURL (String url, String target) {
-
-		Intent browserIntent = new Intent (Intent.ACTION_VIEW).setData (Uri.parse (url));
-
-		try {
-
-			Extension.mainActivity.startActivity (browserIntent);
-
-		} catch (Exception e) {
-
-			Log.e ("GameActivity", e.toString ());
-			return;
-
-		}
-
-	}
-
-
 	public static void postUICallback (final long handle) {
 
 		Extension.callbackHandler.post (new Runnable () {
