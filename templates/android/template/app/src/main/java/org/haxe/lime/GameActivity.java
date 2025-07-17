@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.DisplayCutout;
+import android.os.VibratorManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyCharacterMap;
@@ -157,6 +158,7 @@ public class GameActivity extends SDLActivity {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate (Bundle state) {
 
 		super.onCreate (state);
@@ -199,7 +201,18 @@ public class GameActivity extends SDLActivity {
 
 		if (checkSelfPermission(Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
 
-			vibrator = (Vibrator)mSingleton.getSystemService (Context.VIBRATOR_SERVICE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+				VibratorManager vibratorManager = (VibratorManager)mSingleton.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+
+				if (vibratorManager != null)
+					vibrator = vibratorManager.getDefaultVibrator();
+
+			} else {
+
+				vibrator = (Vibrator)mSingleton.getSystemService(Context.VIBRATOR_SERVICE);
+
+			}
 
 		}
 
@@ -450,6 +463,7 @@ public class GameActivity extends SDLActivity {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public static void vibrate (int period, int duration) {
 
 		if (vibrator == null || !vibrator.hasVibrator () || period < 0 || duration <= 0) {
