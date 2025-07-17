@@ -620,6 +620,22 @@ namespace lime {
 	}
 
 
+	#if !defined(IPHONE)
+	void System::OpenFile (const char* path) {
+
+		OpenURL (path, NULL);
+
+	}
+
+
+	void System::OpenURL (const char* url, const char* target) {
+
+		SDL_OpenURL(url);
+
+	}
+	#endif
+
+
 	FILE* FILE_HANDLE::getFile () {
 
 		#ifndef HX_WINDOWS
