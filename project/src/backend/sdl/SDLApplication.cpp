@@ -147,6 +147,10 @@ namespace lime {
 		Sound_Init();
 		#endif
 
+		#if defined(ANDROID) || defined (IPHONE)
+		SDL_SetEventFilter (HandleAppLifecycleEvent, NULL);
+		#endif
+
 		SDL_LogSetPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
 
 		currentApplication = this;
@@ -300,26 +304,6 @@ namespace lime {
 
 				}
 
-				break;
-
-			case SDL_APP_WILLENTERBACKGROUND:
-
-				inBackground = true;
-
-				windowEvent.type = WINDOW_DEACTIVATE;
-				WindowEvent::Dispatch (&windowEvent);
-				break;
-
-			case SDL_APP_WILLENTERFOREGROUND:
-
-				break;
-
-			case SDL_APP_DIDENTERFOREGROUND:
-
-				windowEvent.type = WINDOW_ACTIVATE;
-				WindowEvent::Dispatch (&windowEvent);
-
-				inBackground = false;
 				break;
 
 			case SDL_CLIPBOARDUPDATE:
@@ -1098,6 +1082,59 @@ namespace lime {
 		return active;
 
 	}
+
+
+	#if defined(ANDROID) || defined (IPHONE)
+	int SDLApplication::HandleAppLifecycleEvent (void* userdata, SDL_Event* event) {
+
+		#if defined(IPHONE)
+
+		int top = 0;
+
+		gc_set_top_of_stack (&top, false);
+
+		#endif
+
+		switch (event->type) {
+
+			case SDL_APP_TERMINATING:
+
+				return 0;
+
+			case SDL_APP_LOWMEMORY:
+
+				return 0;
+
+			case SDL_APP_WILLENTERBACKGROUND:
+
+				inBackground = true;
+				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
+				WindowEvent::Dispatch (&currentApplication->windowEvent);
+				return 0;
+
+			case SDL_APP_DIDENTERBACKGROUND:
+
+				return 0;
+
+			case SDL_APP_WILLENTERFOREGROUND:
+
+				return 0;
+
+			case SDL_APP_DIDENTERFOREGROUND:
+
+				currentApplication->windowEvent.type = WINDOW_ACTIVATE;
+				WindowEvent::Dispatch (&currentApplication->windowEvent);
+				inBackground = false;
+				return 0;
+
+			default:
+
+				return 1;
+
+		}
+
+	}
+	#endif
 
 
 	void SDLApplication::UpdateFrame () {
