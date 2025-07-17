@@ -1107,13 +1107,13 @@ namespace lime {
 
 			case SDL_APP_WILLENTERBACKGROUND:
 
-				inBackground = true;
-				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
-				WindowEvent::Dispatch (&currentApplication->windowEvent);
 				return 0;
 
 			case SDL_APP_DIDENTERBACKGROUND:
 
+				inBackground = true;
+				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
+				WindowEvent::Dispatch (&currentApplication->windowEvent);
 				return 0;
 
 			case SDL_APP_WILLENTERFOREGROUND:
