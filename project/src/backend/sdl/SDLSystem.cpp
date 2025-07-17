@@ -648,7 +648,7 @@ namespace lime {
 
 	void System::OpenURL (const char* url, const char* target) {
 
-		SDL_OpenURL(url);
+		SDL_OpenURL (url);
 
 	}
 	#endif
