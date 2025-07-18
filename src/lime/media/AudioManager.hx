@@ -1,5 +1,11 @@
 package lime.media;
 
+#if (windows || mac || linux || android)
+import haxe.io.Path;
+import lime.system.System;
+import sys.FileSystem;
+import sys.io.File;
+#end
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.media.openal.AL;
@@ -26,15 +32,20 @@ class AudioManager
 			if (context == null)
 			{
 				AudioManager.context = new AudioContext();
+
 				context = AudioManager.context;
 
 				#if !lime_doc_gen
 				if (context.type == OPENAL)
 				{
-					var alc = context.openal;
+					#if (windows || mac || linux || android)
+					setupConfig();
+					#end
 
+					var alc = context.openal;
 					var device = alc.openDevice();
 					var ctx = alc.createContext(device);
+
 					alc.makeContextCurrent(ctx);
 					alc.processContext(ctx);
 				}
@@ -115,6 +126,53 @@ class AudioManager
 				}
 			}
 		}
+		#end
+	}
+
+	@:noCompletion
+	private static function setupConfig():Void
+	{
+		#if (lime_openal && (windows || mac || linux || android))
+		final configContent:Array<String> = [];
+
+		configContent.push('[general]');
+
+		configContent.push('channels=stereo');
+		configContent.push('sample-type=float32');
+		configContent.push('stereo-mode=speakers');
+		configContent.push('stereo-encoding=panpot');
+		configContent.push('hrtf=false');
+		configContent.push('cf_level=0');
+		configContent.push('resampler=fast_bsinc24');
+		configContent.push('front-stablizer=false');
+		configContent.push('output-limiter=false');
+		configContent.push('volume-adjust=0');
+
+		configContent.push('[decoder]');
+
+		configContent.push('hq-mode=false');
+		configContent.push('distance-comp=false');
+		configContent.push('nfc=false');
+
+		try
+		{
+			#if (windows || mac || linux)
+			final directory:String = Path.directory(Path.withoutExtension(Sys.programPath()));
+			#elseif android
+			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
+			#end
+
+			if (!FileSystem.exists(directory))
+				FileSystem.createDirectory(directory);
+
+			final path:String = Path.join([directory, #if windows 'audio-config.ini' #else 'audio-config.conf' #end]);
+
+			if (!FileSystem.exists(path))
+				File.saveContent(path, configContent.join('\n'));
+
+			Sys.putEnv('ALSOFT_CONF', path);
+		}
+		catch (e:Dynamic) {}
 		#end
 	}
 }
