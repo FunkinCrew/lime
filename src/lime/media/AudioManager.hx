@@ -156,11 +156,7 @@ class AudioManager
 
 		try
 		{
-			#if (windows || mac || linux)
-			final directory:String = Path.directory(Path.withoutExtension(Sys.programPath()));
-			#elseif android
 			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
-			#end
 
 			if (!FileSystem.exists(directory))
 				FileSystem.createDirectory(directory);
