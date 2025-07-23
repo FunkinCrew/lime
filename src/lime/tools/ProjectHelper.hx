@@ -96,6 +96,33 @@ class ProjectHelper
 		}
 	}
 
+	public static function recursiveSmartCopyDirectory(project:HXProject, source:String, destination:String, context:Dynamic = null, process:Bool = true,
+			warnIfNotFound:Bool = true, itemPath:String = '')
+	{
+		if (!FileSystem.exists(source))
+		{
+			if (warnIfNotFound)	Log.warn("Could not find directory: " + source);
+			return;
+		}
+
+		for (item in FileSystem.readDirectory(source))
+		{
+      var nextItemPath = Path.combine(itemPath, item);
+      var itemSource = Path.combine(source, item);
+      var itemDestination = Path.combine(destination, item);
+
+			if (FileSystem.isDirectory(itemSource))
+			{
+				recursiveSmartCopyDirectory(project, itemSource, itemDestination, context, process, warnIfNotFound, nextItemPath);
+			}
+			else
+			{
+		    FileSystem.createDirectory(Path.directory(itemDestination));
+				System.copyFile(itemSource, itemDestination, context, process);
+			}
+		}
+	}
+
 	public static function replaceVariable(project:HXProject, string:String):String
 	{
 		if (string.substr(0, 8) == "haxelib:")
