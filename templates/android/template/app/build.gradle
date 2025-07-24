@@ -93,6 +93,8 @@ dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	::if (ANDROID_LIBRARY_PROJECTS)::::foreach (ANDROID_LIBRARY_PROJECTS)::implementation project(':deps:::name::')
 	::end::::end::
+	::if (ANDROID_LIBRARY_DEPENDENCIES)::::foreach (ANDROID_LIBRARY_DEPENDENCIES)::implementation('::__current__::')
+	::end::::end::
 }
 
 tasks.whenTaskAdded { task ->
