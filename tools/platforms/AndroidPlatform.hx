@@ -569,8 +569,8 @@ class AndroidPlatform extends PlatformTarget
 		if (Reflect.hasField(context,
 			"KEY_STORE_ALIAS_PASSWORD")) context.KEY_STORE_ALIAS_PASSWORD = StringTools.replace(context.KEY_STORE_ALIAS_PASSWORD, "\\", "\\\\");
 
-		var index = 1;
 		context.ANDROID_LIBRARY_PROJECTS = [];
+		context.ANDROID_LIBRARY_DEPENDENCIES = [];
 
 		for (dependency in project.dependencies)
 		{
@@ -580,17 +580,16 @@ class AndroidPlatform extends PlatformTarget
 				&& (FileSystem.exists(Path.combine(dependency.path, "project.properties"))
 					|| FileSystem.exists(Path.combine(dependency.path, "build.gradle"))))
 			{
-				var name = dependency.name;
-				if (name == "") name = "project" + index;
-
 				context.ANDROID_LIBRARY_PROJECTS.push(
 					{
-						name: name,
-						index: index,
-						path: "deps/" + name,
+						name: dependency.name,
+						path: "deps/" + dependency.name,
 						source: dependency.path
 					});
-				index++;
+			}
+			else if (dependency.name != "")
+			{
+				context.ANDROID_LIBRARY_DEPENDENCIES.push(dependency.name);
 			}
 		}
 
