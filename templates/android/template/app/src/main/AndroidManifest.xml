@@ -19,6 +19,12 @@
 		::foreach ANDROID_APPLICATION_CHILDREN::::__current__::
 		::end::
 
+		<meta-data android:name="android.game_mode_config" android:resource="@xml/game_mode_config" />
+
+		<meta-data android:name="com.android.app.gamemode.performance.enabled" android:value="true"/>
+
+		<meta-data android:name="com.android.app.gamemode.battery.enabled" android:value="true"/>
+
 		<activity ::foreach ANDROID_ACTIVITY::::if ((value != null) && (value != ""))::::key::="::value::" ::end::::end::>
 
 			<intent-filter>
