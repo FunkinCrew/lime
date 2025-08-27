@@ -208,66 +208,51 @@ namespace lime {
 	}
 
 
-	std::wstring* hxstring_to_wstring (HxString val) {
+	#ifdef HX_WINDOWS
+	#define hxs_to_fd_str(str) hxs_wchar(str, nullptr)
+	#define alloc_from_fd_str(str) alloc_wstring(str)
+	#define alloc_from_fd_str_len(str, len) alloc_wstring_len(str, len)
 
-		if (val.c_str ()) {
-
-			#ifdef HX_WINDOWS
-			return new std::wstring (hxs_wchar (val, nullptr));
-			#else
-			const std::string _val (hxs_utf8 (val, nullptr));
-			return new std::wstring (_val.begin (), _val.end ());
-			#endif
-
-		} else {
-
-			return 0;
-
-		}
-
-	}
-
-
-	std::wstring* hxstring_to_wstring (hl_vstring* val) {
-
+	static const FileDialog::char_t* hl_vstring_to_fd_str (hl_vstring* val) {
 		if (val) {
-
-			std::string _val = std::string (hl_to_utf8 (val->bytes));
-			#ifdef HX_WINDOWS
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			return new std::wstring (converter.from_bytes (_val));
-			#else
-			return new std::wstring (_val.begin (), _val.end ());
-			#endif
-
-		} else {
-
-			return 0;
-
+			return val->bytes;
 		}
-
+		return nullptr;
 	}
 
+	static vbyte* hl_fd_str_to_utf8_bytes(const FileDialog::char_t* src, size_t length) {
+		// copy first, since hl_to_utf8 has no length parameter, and hl_utf16_to_utf8 is not exposed
+		FileDialog::char_t* utf16 = (FileDialog::char_t*)hl_copy_bytes((vbyte*)src, (length + 1) * sizeof(FileDialog::char_t));
+		utf16[length] = L'\0';
+		return (vbyte*)hl_to_utf8(utf16);
+	}
 
-	value wstring_to_value (std::wstring* val) {
+	static vbyte* hl_fd_str_to_utf8_bytes(const FileDialog::char_t* src) {
+		return (vbyte*)hl_to_utf8((uchar*)src);
+	}
 
+	#else
+	#define hxs_to_fd_str(str) hxs_utf8(str, nullptr)
+	#define alloc_from_fd_str(str) alloc_string(str)
+	#define alloc_from_fd_str_len(str, len) alloc_string_len(str, len)
+
+	static const FileDialog::char_t* hl_vstring_to_fd_str (hl_vstring* val) {
 		if (val) {
-
-			#ifdef HX_WINDOWS
-			return alloc_wstring (val->c_str ());
-			#else
-			std::string _val = std::string (val->begin (), val->end ());
-			return alloc_string (_val.c_str ());
-			#endif
-
-		} else {
-
-			return 0;
-
+			return hl_to_utf8 (val->bytes);
 		}
-
+		return nullptr;
 	}
 
+	static vbyte* hl_fd_str_to_utf8_bytes(const FileDialog::char_t* src, size_t length) {
+		vbyte* result = hl_copy_bytes((vbyte*)src, length + 1);
+		result[length] = '\0';
+		return result;
+	}
+
+	static vbyte* hl_fd_str_to_utf8_bytes(const FileDialog::char_t* src) {
+		return hl_fd_str_to_utf8_bytes(src, std::strlen(src));
+	}
+	#endif
 
 	value lime_application_create () {
 
@@ -802,25 +787,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::OpenDirectory (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::OpenDirectory (hxs_to_fd_str (title), hxs_to_fd_str (filter), hxs_to_fd_str (defaultPath));
 
 		if (path) {
 
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
-
-		} else {
-
-			return alloc_null ();
+			return alloc_from_fd_str (path);
 
 		}
 
@@ -835,25 +806,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::OpenDirectory (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::OpenDirectory (hl_vstring_to_fd_str (title), hl_vstring_to_fd_str (filter), hl_vstring_to_fd_str (defaultPath));
 
 		if (path) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
-
-		} else {
-
-			return NULL;
+			return hl_fd_str_to_utf8_bytes(path);
 
 		}
 
@@ -868,25 +825,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::OpenFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::OpenFile (hxs_to_fd_str (title), hxs_to_fd_str (filter), hxs_to_fd_str (defaultPath));
 
 		if (path) {
 
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
-
-		} else {
-
-			return alloc_null ();
+			return alloc_from_fd_str (path);
 
 		}
 
@@ -901,25 +844,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::OpenFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::OpenFile (hl_vstring_to_fd_str (title), hl_vstring_to_fd_str (filter), hl_vstring_to_fd_str (defaultPath));
 
 		if (path) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
-
-		} else {
-
-			return NULL;
+			return hl_fd_str_to_utf8_bytes (path);
 
 		}
 
@@ -934,24 +863,15 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::vector<std::wstring*> files;
-
-		FileDialog::OpenFiles (&files, _title, _filter, _defaultPath);
+		auto files = FileDialog::OpenFiles (hxs_to_fd_str (title), hxs_to_fd_str (filter), hxs_to_fd_str (defaultPath));
 		value result = alloc_array (files.size ());
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
 
 		for (int i = 0; i < files.size (); i++) {
 
-			value _file = wstring_to_value (files[i]);
-			val_array_set_i (result, i, _file);
-			delete files[i];
+			auto file_str = files[i];
+
+			value file = alloc_from_fd_str_len (file_str.data(), file_str.size());
+			val_array_set_i (result, i, file);
 
 		}
 
@@ -968,24 +888,14 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::vector<std::wstring*> files;
-
-		FileDialog::OpenFiles (&files, _title, _filter, _defaultPath);
+		auto files = FileDialog::OpenFiles (hl_vstring_to_fd_str (title), hl_vstring_to_fd_str (filter), hl_vstring_to_fd_str (defaultPath));
 		hl_varray* result = (hl_varray*)hl_alloc_array (&hlt_bytes, files.size ());
 		vbyte** resultData = hl_aptr (result, vbyte*);
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
-
 		for (int i = 0; i < files.size (); i++) {
 
-			*resultData++ = hl_wstring_to_utf8_bytes (*files[i]);
-			delete files[i];
+			auto file_str = files[i];
+			*resultData++ = hl_fd_str_to_utf8_bytes (file_str.data(), file_str.size());
 
 		}
 
@@ -1002,25 +912,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::SaveFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::SaveFile (hxs_to_fd_str (title), hxs_to_fd_str (filter), hxs_to_fd_str (defaultPath));
 
 		if (path) {
 
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
-
-		} else {
-
-			return alloc_null ();
+			return alloc_from_fd_str (path);
 
 		}
 
@@ -1035,25 +931,11 @@ namespace lime {
 
 		#ifdef LIME_TINYFILEDIALOGS
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::SaveFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		const FileDialog::char_t* path = FileDialog::SaveFile (hl_vstring_to_fd_str (title), hl_vstring_to_fd_str (filter), hl_vstring_to_fd_str (defaultPath));
 
 		if (path) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
-
-		} else {
-
-			return NULL;
+			return hl_fd_str_to_utf8_bytes (path);
 
 		}
 
