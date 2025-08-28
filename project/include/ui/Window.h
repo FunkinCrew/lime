@@ -39,6 +39,7 @@ namespace lime {
 			virtual void ContextMakeCurrent () = 0;
 			virtual void ContextUnlock () = 0;
 			virtual void Focus () = 0;
+			virtual void* GetHandle () = 0;
 			virtual void* GetContext () = 0;
 			virtual const char* GetContextType () = 0;
 			// virtual Cursor GetCursor () = 0;

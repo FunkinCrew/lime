@@ -305,6 +305,11 @@ class FlashWindow
 		return System.getDisplay(0);
 	}
 
+	public function getNativeHandle():Float
+	{
+		return 0;
+	}
+
 	public function getDisplayMode():DisplayMode
 	{
 		return System.getDisplay(0).currentMode;
