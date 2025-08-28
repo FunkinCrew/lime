@@ -516,6 +516,33 @@ namespace lime {
 
 	}
 
+	void* SDLWindow::GetHandle () {
+
+		SDL_SysWMinfo info;
+		SDL_VERSION (&info.version);
+		SDL_GetWindowWMInfo (sdlWindow, &info);
+
+		#if defined (SDL_VIDEO_DRIVER_WINDOWS)
+			return info.info.win.window;
+		#elif defined (SDL_VIDEO_DRIVER_WINRT)
+			return info.info.winrt.window;
+		#elif defined (SDL_VIDEO_DRIVER_X11)
+			return (void*)info.info.x11.window;
+		#elif defined (SDL_VIDEO_DRIVER_DIRECTFB)
+			return info.info.dfb.window;
+		#elif defined (SDL_VIDEO_DRIVER_COCOA)
+			return info.info.cocoa.window;
+		#elif defined (SDL_VIDEO_DRIVER_UIKIT)
+			return info.info.uikit.window;
+		#elif defined (SDL_VIDEO_DRIVER_WAYLAND)
+			return info.info.wl.surface;
+		#elif defined (SDL_VIDEO_DRIVER_ANDROID)
+			return info.info.android.window;
+		#else
+			return nullptr;
+		#endif
+
+	}
 
 	void* SDLWindow::GetContext () {
 
