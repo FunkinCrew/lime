@@ -2,6 +2,7 @@
 #define LIME_SDL_WINDOW_H
 
 
+#include <SDL_syswm.h>
 #include <SDL.h>
 #include <graphics/ImageBuffer.h>
 #include <ui/Cursor.h>
@@ -26,6 +27,7 @@ namespace lime {
 			virtual void ContextMakeCurrent ();
 			virtual void ContextUnlock ();
 			virtual void Focus ();
+			virtual void* GetHandle ();
 			virtual void* GetContext ();
 			virtual const char* GetContextType ();
 			// virtual Cursor GetCursor ();
