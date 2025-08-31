@@ -279,14 +279,16 @@ class NativeWindow
 		return null;
 	}
 
-	public function getNativeHandle():Float
+	public function getNativeHandle():Dynamic
 	{
 		if (handle != null)
 		{
+			#if (!macro && lime_cffi)
 			return NativeCFFI.lime_window_get_handle(handle);
+			#end
 		}
 
-		return 0;
+		return null;
 	}
 
 	public function getDisplayMode():DisplayMode

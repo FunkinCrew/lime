@@ -37,7 +37,7 @@ class Window
 	#if (!lime_doc_gen || (js && html5))
 	public var element(default, null):#if (js && html5) Element #else Dynamic #end;
 	#end
-	public var nativeHandle(get, null):Float;
+	public var nativeHandle(get, null):Dynamic;
 
 	/**
 	 * The current frame rate (measured in frames-per-second) of the window.
@@ -513,7 +513,7 @@ class Window
 		return __backend.setDisplayMode(value);
 	}
 
-	@:noCompletion private function get_nativeHandle():Float
+	@:noCompletion private function get_nativeHandle():Dynamic
 	{
 		return __backend.getNativeHandle();
 	}
