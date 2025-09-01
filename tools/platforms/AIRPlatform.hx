@@ -392,4 +392,6 @@ class AIRPlatform extends FlashPlatform
 	}
 
 	@ignore public override function rebuild():Void {}
+
+	@ignore public override function watch():Void {}
 }

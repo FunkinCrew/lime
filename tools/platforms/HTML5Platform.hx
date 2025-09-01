@@ -209,7 +209,7 @@ class HTML5Platform extends PlatformTarget
 		}
 	}
 
-	private function getDisplayHXML():HXML
+	private override function getDisplayHXML():HXML
 	{
 		var path = targetDirectory + "/haxe/" + buildType + ".hxml";
 
@@ -583,17 +583,7 @@ class HTML5Platform extends PlatformTarget
 	{
 		// TODO: Use a custom live reload HTTP server for test/run instead
 
-		var hxml = getDisplayHXML();
-		var dirs = hxml.getClassPaths(true);
-
-		var outputPath = Path.combine(Sys.getCwd(), project.app.path);
-		dirs = dirs.filter(function(dir)
-		{
-			return (!Path.startsWith(dir, outputPath));
-		});
-
-		var command = ProjectHelper.getCurrentCommand();
-		System.watch(command, dirs);
+		super.watch();
 	}
 
 	@ignore public override function install():Void {}

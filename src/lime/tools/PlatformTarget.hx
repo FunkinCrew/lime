@@ -173,7 +173,25 @@ class PlatformTarget
 
 	@ignore public function update():Void {}
 
-	@ignore public function watch():Void {}
+	public function watch():Void
+	{
+		var hxml = getDisplayHXML();
+		if (hxml == null)
+		{
+			return;
+		}
+
+		var dirs = hxml.getClassPaths(true);
+
+		var outputPath = Path.combine(Sys.getCwd(), project.app.path);
+		dirs = dirs.filter(function(dir)
+		{
+			return (!Path.startsWith(dir, outputPath));
+		});
+
+		var command = ProjectHelper.getCurrentCommand();
+		System.watch(command, dirs);
+	}
 
 	// Common functionality used by subclasses
 
@@ -216,6 +234,8 @@ class PlatformTarget
 			}
 		}
 	}
+
+	private function getDisplayHXML():HXML { return null; }
 
 	// Functions to track and delete stale files
 
