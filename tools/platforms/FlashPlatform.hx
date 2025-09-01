@@ -103,16 +103,6 @@ class FlashPlatform extends PlatformTarget
 		System.runCommand("", "haxe", [targetDirectory + "/haxe/" + buildType + ".hxml"]);
 	}
 
-	public override function clean():Void
-	{
-		var targetPath = targetDirectory + "";
-
-		if (FileSystem.exists(targetPath))
-		{
-			System.removeDirectory(targetPath);
-		}
-	}
-
 	public override function deploy():Void
 	{
 		DeploymentHelper.deploy(project, targetFlags, targetDirectory, "Flash");

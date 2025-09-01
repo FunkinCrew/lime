@@ -155,7 +155,13 @@ class PlatformTarget
 
 	@ignore public function build():Void {}
 
-	@ignore public function clean():Void {}
+	public function clean():Void
+	{
+		if (FileSystem.exists(targetDirectory))
+		{
+			System.removeDirectory(targetDirectory);
+		}
+	}
 
 	@ignore public function deploy():Void {}
 

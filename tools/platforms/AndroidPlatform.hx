@@ -259,14 +259,6 @@ class AndroidPlatform extends PlatformTarget
 		AndroidHelper.build(project, destination);
 	}
 
-	public override function clean():Void
-	{
-		if (FileSystem.exists(targetDirectory))
-		{
-			System.removeDirectory(targetDirectory);
-		}
-	}
-
 	public override function deploy():Void
 	{
 		DeploymentHelper.deploy(project, targetFlags, targetDirectory, "Android");

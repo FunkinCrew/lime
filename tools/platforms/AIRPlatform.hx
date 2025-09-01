@@ -168,14 +168,6 @@ class AIRPlatform extends FlashPlatform
 		}
 	}
 
-	public override function clean():Void
-	{
-		if (FileSystem.exists(targetDirectory))
-		{
-			System.removeDirectory(targetDirectory);
-		}
-	}
-
 	public override function deploy():Void
 	{
 		if (targetFlags.exists("gdrive") || targetFlags.exists("zip"))
