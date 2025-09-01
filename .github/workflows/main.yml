@@ -117,6 +117,7 @@ jobs:
           rm /usr/local/bin/idle3*
           rm /usr/local/bin/pydoc3*
           rm /usr/local/bin/python3*
+          rm /usr/local/bin/pip3*
           brew bundle
           popd
 
@@ -276,7 +277,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        ndk-version: [r21e, stable]
+        ndk-version: [r28c, stable]
       fail-fast: false
     steps:
 
