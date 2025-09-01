@@ -406,17 +406,6 @@ class AndroidPlatform extends PlatformTarget
 
 		// project = project.clone ();
 
-		for (asset in project.assets)
-		{
-			if (asset.embed && asset.sourcePath == "")
-			{
-				var path = Path.combine(targetDirectory + "/obj/tmp", asset.targetPath);
-				System.mkdir(Path.directory(path));
-				AssetHelper.copyAsset(asset, path);
-				asset.sourcePath = path;
-			}
-		}
-
 		// initialize (project);
 
 		var destination = targetDirectory + "/bin";
@@ -426,36 +415,6 @@ class AndroidPlatform extends PlatformTarget
 		System.mkdir(sourceSet + "/res/drawable-mdpi/");
 		System.mkdir(sourceSet + "/res/drawable-hdpi/");
 		System.mkdir(sourceSet + "/res/drawable-xhdpi/");
-
-		for (asset in project.assets)
-		{
-			if (asset.type != AssetType.TEMPLATE)
-			{
-				var targetPath = "";
-
-				switch (asset.type)
-				{
-					default:
-						// case SOUND, MUSIC:
-
-						// var extension = Path.extension (asset.sourcePath);
-						// asset.flatName += ((extension != "") ? "." + extension : "");
-
-						// asset.resourceName = asset.flatName;
-						targetPath = Path.combine(sourceSet + "/assets/", asset.resourceName);
-
-						// asset.resourceName = asset.id;
-						// targetPath = sourceSet + "/res/raw/" + asset.flatName + "." + Path.extension (asset.targetPath);
-
-						// default:
-
-						// asset.resourceName = asset.flatName;
-						// targetPath = sourceSet + "/assets/" + asset.resourceName;
-				}
-
-				AssetHelper.copyAssetIfNewer(asset, targetPath);
-			}
-		}
 
 		if (project.targetFlags.exists("xml"))
 		{
@@ -663,13 +622,13 @@ class AndroidPlatform extends PlatformTarget
 
 		for (asset in project.assets)
 		{
-			if (asset.type == AssetType.TEMPLATE)
+			if (asset.type != AssetType.TEMPLATE)
 			{
-				var targetPath = Path.combine(destination, asset.targetPath);
-				System.mkdir(Path.directory(targetPath));
-				AssetHelper.copyAsset(asset, targetPath, context);
+				asset.targetPath = asset.resourceName;
 			}
 		}
+
+		copyProjectAssets(destination, sourceSet + "/assets/");
 	}
 
 	public override function watch():Void

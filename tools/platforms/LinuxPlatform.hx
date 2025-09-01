@@ -553,17 +553,6 @@ class LinuxPlatform extends PlatformTarget
 		// project = project.clone ();
 		// initialize (project);
 
-		for (asset in project.assets)
-		{
-			if (asset.embed && asset.sourcePath == "")
-			{
-				var path = Path.combine(targetDirectory + "/obj/tmp", asset.targetPath);
-				System.mkdir(Path.directory(path));
-				AssetHelper.copyAsset(asset, path);
-				asset.sourcePath = path;
-			}
-		}
-
 		if (project.targetFlags.exists("xml"))
 		{
 			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
@@ -606,24 +595,7 @@ class LinuxPlatform extends PlatformTarget
 		}
 
 		// context.HAS_ICON = IconHelper.createIcon (project.icons, 256, 256, Path.combine (applicationDirectory, "icon.png"));
-		for (asset in project.assets)
-		{
-			var path = Path.combine(applicationDirectory, asset.targetPath);
-
-			if (asset.embed != true)
-			{
-				if (asset.type != AssetType.TEMPLATE)
-				{
-					System.mkdir(Path.directory(path));
-					AssetHelper.copyAssetIfNewer(asset, path);
-				}
-				else
-				{
-					System.mkdir(Path.directory(path));
-					AssetHelper.copyAsset(asset, path, context);
-				}
-			}
-		}
+		copyProjectAssets(applicationDirectory);
 	}
 
 	public override function watch():Void

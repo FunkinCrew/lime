@@ -151,6 +151,8 @@ class PlatformTarget
 		}
 	}
 
+	// Command implementations
+
 	@ignore public function build():Void {}
 
 	@ignore public function clean():Void {}
@@ -172,6 +174,48 @@ class PlatformTarget
 	@ignore public function update():Void {}
 
 	@ignore public function watch():Void {}
+
+	// Common functionality used by subclasses
+
+	private function copyProjectAssets(outputDirectory:String, assetDirectory:String = null)
+	{
+		if (assetDirectory == null)
+		{
+			assetDirectory = outputDirectory;
+		}
+		else if (!StringTools.startsWith(assetDirectory, targetDirectory))
+		{
+			assetDirectory = Path.combine(outputDirectory, assetDirectory);
+		}
+
+		var embedDirectory = Path.combine(targetDirectory, "obj/tmp");
+
+		for (asset in project.assets)
+		{
+			if (asset.type == AssetType.TEMPLATE)
+			{
+				var path = Path.combine(outputDirectory, asset.targetPath);
+				System.mkdir(Path.directory(path));
+				AssetHelper.copyAsset(asset, path, project.templateContext);
+			}
+			else if (asset.embed == true)
+			{
+				if (asset.sourcePath == "")
+				{
+					var path = Path.combine(embedDirectory, asset.targetPath);
+					System.mkdir(Path.directory(path));
+					AssetHelper.copyAsset(asset, path);
+					asset.sourcePath = path;
+				}
+			}
+			else
+			{
+				var path = Path.combine(assetDirectory, asset.targetPath);
+				System.mkdir(Path.directory(path));
+				AssetHelper.copyAssetIfNewer(asset, path);
+			}
+		}
+	}
 
 	// Functions to track and delete stale files
 

@@ -962,17 +962,6 @@ class WindowsPlatform extends PlatformTarget
 			project.haxeflags.push("--json " + targetDirectory + "/types.json");
 		}
 
-		for (asset in project.assets)
-		{
-			if (asset.embed && asset.sourcePath == "")
-			{
-				var path = Path.combine(targetDirectory + "/obj/tmp", asset.targetPath);
-				System.mkdir(Path.directory(path));
-				AssetHelper.copyAsset(asset, path);
-				asset.sourcePath = path;
-			}
-		}
-
 		var context = generateContext();
 		context.OUTPUT_DIR = targetDirectory;
 
@@ -1040,24 +1029,7 @@ class WindowsPlatform extends PlatformTarget
 
 		}*/
 
-		for (asset in project.assets)
-		{
-			if (asset.embed != true)
-			{
-				var path = Path.combine(applicationDirectory, asset.targetPath);
-
-				if (asset.type != AssetType.TEMPLATE)
-				{
-					System.mkdir(Path.directory(path));
-					AssetHelper.copyAssetIfNewer(asset, path);
-				}
-				else
-				{
-					System.mkdir(Path.directory(path));
-					AssetHelper.copyAsset(asset, path, context);
-				}
-			}
-		}
+		copyProjectAssets(applicationDirectory);
 	}
 
 	private function updateUWP():Void
