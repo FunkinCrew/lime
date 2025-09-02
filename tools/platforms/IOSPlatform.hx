@@ -462,6 +462,8 @@ class IOSPlatform extends PlatformTarget
 			context.HAXELIB_PATH = '';
 		}
 
+		context.IOS_INFO_PLIST_CHILDREN = project.config.get("ios.info-plist-children");
+
 		return context;
 	}
 
