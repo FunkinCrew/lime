@@ -5,11 +5,9 @@
 #include "../../graphics/opengl/OpenGLBindings.h"
 
 #ifdef HX_WINDOWS
-#include <SDL_syswm.h>
 #include <Windows.h>
 #undef CreateWindow
 #endif
-
 
 namespace lime {
 
