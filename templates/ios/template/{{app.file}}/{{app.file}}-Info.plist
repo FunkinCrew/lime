@@ -71,5 +71,9 @@
 		<true/>::end::
 	</dict>
 	::if (IOS_NON_EXEMPT_ENCRYPTION != null)::<key>ITSAppUsesNonExemptEncryption</key><::IOS_NON_EXEMPT_ENCRYPTION:: />::end::
+	::if (IOS_INFO_PLIST_CHILDREN != null)::
+	::foreach IOS_INFO_PLIST_CHILDREN::::__current__::
+	::end::
+	::end::
 </dict>
 </plist>
