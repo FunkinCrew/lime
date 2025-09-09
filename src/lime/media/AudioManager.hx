@@ -162,7 +162,7 @@ class AudioManager
 			if (!FileSystem.exists(directory))
 				FileSystem.createDirectory(directory);
 
-			if (!FileSystem.exists(path) || File.getContent(path) != content)
+			if (!FileSystem.exists(path))
 				File.saveContent(path, content);
 
 			Sys.putEnv('ALSOFT_CONF', path);
