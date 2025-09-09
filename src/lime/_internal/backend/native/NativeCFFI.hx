@@ -249,6 +249,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_system_get_display_orientation(value:Bool):Bool;
 
+	@:cffi private static function lime_system_get_hint(value:String):String;
+
 	@:cffi private static function lime_system_get_device_model():Dynamic;
 
 	@:cffi private static function lime_system_get_device_vendor():Dynamic;
@@ -537,8 +539,10 @@ class NativeCFFI
 		"lime_system_get_allow_screen_timeout", "b", false));
 	private static var lime_system_set_allow_screen_timeout = new cpp.Callable<Bool->Bool>(cpp.Prime._loadPrime("lime",
 		"lime_system_set_allow_screen_timeout", "bb", false));
-		private static var lime_system_get_display_orientation = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime",
+	private static var lime_system_get_display_orientation = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime",
 		"lime_system_get_display_orientation", "ii", false));
+	private static var lime_system_get_hint = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_system_get_hint", "so", false));
 	private static var lime_system_get_device_model = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_device_model", "o",
 		false));
 	private static var lime_system_get_device_vendor = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_device_vendor", "o",
@@ -740,6 +744,7 @@ class NativeCFFI
 	private static var lime_system_get_allow_screen_timeout = CFFI.load("lime", "lime_system_get_allow_screen_timeout", 0);
 	private static var lime_system_set_allow_screen_timeout = CFFI.load("lime", "lime_system_set_allow_screen_timeout", 1);
 	private static var lime_system_get_display_orientation = CFFI.load("lime", "lime_system_get_display_orientation", 1);
+	private static var lime_system_get_hint = CFFI.load("lime", "lime_system_get_hint", 1);
 	private static var lime_system_get_device_model = CFFI.load("lime", "lime_system_get_device_model", 0);
 	private static var lime_system_get_device_vendor = CFFI.load("lime", "lime_system_get_device_vendor", 0);
 	private static var lime_system_get_directory = CFFI.load("lime", "lime_system_get_directory", 3);
@@ -1208,6 +1213,11 @@ class NativeCFFI
 	@:hlNative("lime", "hl_system_get_display_orientation") private static function lime_system_get_display_orientation(value:Int):Int
 	{
 		return 0;
+	}
+
+	@:hlNative("lime", "hl_system_get_hint") private static function lime_system_get_hint(value:String):hl.Bytes
+	{
+		return null;
 	}
 
 	@:hlNative("lime", "hl_system_get_device_model") private static function lime_system_get_device_model():hl.Bytes

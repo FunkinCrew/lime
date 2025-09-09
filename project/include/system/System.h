@@ -56,6 +56,7 @@ namespace lime {
 			static void OpenURL (const char* url, const char* target);
 			static bool SetAllowScreenTimeout (bool allow);
 			static int GetDisplayOrientation (int displayIndex);
+			static std::wstring* GetHint (const char* key);
 			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif

@@ -3145,6 +3145,43 @@ namespace lime {
 
 	}
 
+	value lime_system_get_hint (HxString hintKey) {
+
+		std::wstring* hint = System::GetHint (hxs_utf8 (hintKey, nullptr));
+
+		if (hint) {
+
+			value result = alloc_wstring (hint->c_str ());
+			delete hint;
+			return result;
+
+		} else {
+
+			return alloc_null ();
+
+		}
+
+	}
+
+	HL_PRIM vbyte* HL_NAME(hl_system_get_hint) (vbyte* key) {
+
+		#ifndef EMSCRIPTEN
+
+		std::wstring* hint = System::GetHint ((char*)key);
+
+		if (hint) {
+
+			vbyte* const result = hl_wstring_to_utf8_bytes (*hint);
+			delete hint;
+			return result;
+		}
+
+		#endif
+
+		return 0;
+
+	}
+
 
 	bool lime_system_set_windows_console_mode (int handleType, int mode) {
 
@@ -4130,6 +4167,7 @@ namespace lime {
 	DEFINE_PRIME2v (lime_system_open_url);
 	DEFINE_PRIME1 (lime_system_set_allow_screen_timeout);
 	DEFINE_PRIME1 (lime_system_get_display_orientation);
+	DEFINE_PRIME1 (lime_system_get_hint);
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
@@ -4324,6 +4362,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_system_open_url, _STRING _STRING);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_allow_screen_timeout, _BOOL);
 	DEFINE_HL_PRIM (_I32, hl_system_get_display_orientation, _I32);
+	DEFINE_HL_PRIM (_VOID, hl_system_get_hint, _STRING);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_windows_console_mode, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);

@@ -637,6 +637,26 @@ namespace lime {
 		return orientation;
 	}
 
+	std::wstring* System::GetHint (const char* key) {
+		std::string hintKey(key);
+
+    if (hintKey.rfind("SDL_", 0) != 0) {
+			hintKey = "SDL_" + hintKey;
+    }
+
+    SDL_GetHint(hintKey.c_str());
+
+		const char* raw = SDL_GetHint(hintKey.c_str());
+		if (!raw) {
+			return nullptr;
+		}
+
+		std::string hint = std::string (raw);
+		std::wstring* _hint = new std::wstring (hint.begin (), hint.end ());
+		return _hint;
+	}
+
+
 
 	#if !defined(IPHONE)
 	void System::OpenFile (const char* path) {
