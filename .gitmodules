@@ -4,7 +4,7 @@
 	shallow = true
 [submodule "project/lib/sdl"]
 	path = project/lib/sdl
-	url = https://github.com/FunkinDroidTeam/SDL
+	url = https://github.com/FunkinCrew/SDL
 	shallow = true
 [submodule "project/lib/openal"]
 	path = project/lib/openal
