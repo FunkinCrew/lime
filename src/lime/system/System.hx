@@ -416,6 +416,22 @@ class System
 		}
 	}
 
+	public static function getHint(key:String):String
+	{
+		if (key != null)
+		{
+			#if (lime_cffi && !macro)
+			#if (ios || tvos)
+			return NativeCFFI.lime_system_get_hint(key);
+			#else
+			return CFFI.stringValue(NativeCFFI.lime_system_get_hint(key));
+			#end
+			#end
+		}
+
+		return null;
+	}
+
 	@:noCompletion private static function __copyMissingFields(target:Dynamic, source:Dynamic):Void
 	{
 		if (source == null || target == null) return;
