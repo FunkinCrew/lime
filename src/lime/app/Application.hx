@@ -93,8 +93,9 @@ class Application extends Module
 
 	/**
 		Creates a new Application instance
+		@param	appMeta	The metadata for the application.
 	**/
-	public function new()
+	public function new(?appMeta:Map<String, String>)
 	{
 		super();
 
@@ -103,11 +104,12 @@ class Application extends Module
 			Application.current = this;
 		}
 
-		meta = new Map();
+		meta = appMeta != null ? appMeta : new Map();
+
 		modules = new Array();
+
 		__windowByID = new Map();
 		__windows = new Array();
-
 		__backend = new ApplicationBackend(this);
 
 		__registerLimeModule(this);
