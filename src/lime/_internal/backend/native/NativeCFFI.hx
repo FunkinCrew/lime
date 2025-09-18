@@ -225,9 +225,9 @@ class NativeCFFI
 
 	@:cffi private static function lime_jpeg_decode_file(path:String, decodeData:Bool, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_key_code_from_scan_code(scanCode:Float32):Float32;
+	@:cffi private static function lime_key_code_from_scan_code(scanCode:Int):Int;
 
-	@:cffi private static function lime_key_code_to_scan_code(keyCode:Float32):Float32;
+	@:cffi private static function lime_key_code_to_scan_code(keyCode:Int):Int;
 
 	@:cffi private static function lime_key_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
@@ -515,10 +515,10 @@ class NativeCFFI
 		"lime_jpeg_decode_bytes", "oboo", false));
 	private static var lime_jpeg_decode_file = new cpp.Callable<String->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_jpeg_decode_file",
 		"sboo", false));
-	private static var lime_key_code_from_scan_code = new cpp.Callable<cpp.Float32->cpp.Float32>(cpp.Prime._loadPrime("lime", "lime_key_code_from_scan_code",
-		"ff", false));
-	private static var lime_key_code_to_scan_code = new cpp.Callable<cpp.Float32->cpp.Float32>(cpp.Prime._loadPrime("lime", "lime_key_code_to_scan_code",
-		"ff", false));
+	private static var lime_key_code_from_scan_code = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_key_code_from_scan_code",
+		"ii", false));
+	private static var lime_key_code_to_scan_code = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_key_code_to_scan_code",
+		"ii", false));
 	private static var lime_key_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_key_event_manager_register", "oov", false));
 	private static var lime_lzma_compress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_lzma_compress", "ooo",
@@ -1157,12 +1157,12 @@ class NativeCFFI
 		return null;
 	}
 
-	@:hlNative("lime", "hl_key_code_from_scan_code") private static function lime_key_code_from_scan_code(scanCode:hl.F32):hl.F32
+	@:hlNative("lime", "hl_key_code_from_scan_code") private static function lime_key_code_from_scan_code(scanCode:Int):Int
 	{
 		return 0;
 	}
 
-	@:hlNative("lime", "hl_key_code_to_scan_code") private static function lime_key_code_to_scan_code(keyCode:hl.F32):hl.F32
+	@:hlNative("lime", "hl_key_code_to_scan_code") private static function lime_key_code_to_scan_code(keyCode:Int):Int
 	{
 		return 0;
 	}
