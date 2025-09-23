@@ -95,30 +95,17 @@ public class SDLControllerManager
     // Check if a given device is considered a possible SDL joystick
     public static boolean isDeviceSDLJoystick(int deviceId) {
         InputDevice device = InputDevice.getDevice(deviceId);
-        // We cannot use InputDevice.isVirtual before API 16, so let's accept
-        // only nonnegative device ids (VIRTUAL_KEYBOARD equals -1)
-        if ((device == null) || (deviceId < 0)) {
+
+        if (device == null || device.isVirtual()) {
             return false;
         }
+
         int sources = device.getSources();
 
-        /* This is called for every button press, so let's not spam the logs */
-        /*
-        if ((sources & InputDevice.SOURCE_CLASS_JOYSTICK) != 0) {
-            Log.v(TAG, "Input device " + device.getName() + " has class joystick.");
-        }
-        if ((sources & InputDevice.SOURCE_DPAD) == InputDevice.SOURCE_DPAD) {
-            Log.v(TAG, "Input device " + device.getName() + " is a dpad.");
-        }
-        if ((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
-            Log.v(TAG, "Input device " + device.getName() + " is a gamepad.");
-        }
-        */
-
         return ((sources & InputDevice.SOURCE_CLASS_JOYSTICK) != 0 ||
-                ((sources & InputDevice.SOURCE_DPAD) == InputDevice.SOURCE_DPAD) ||
-                ((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
-        );
+                (sources & InputDevice.SOURCE_DPAD) == InputDevice.SOURCE_DPAD ||
+                (sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) &&
+            (sources & InputDevice.SOURCE_KEYBOARD) == 0;
     }
 
 }
