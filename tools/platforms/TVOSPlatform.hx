@@ -299,7 +299,7 @@ class TVOSPlatform extends PlatformTarget
 		context.ADDL_PBX_BUILD_FILE = "";
 		context.ADDL_PBX_FILE_REFERENCE = "";
 		context.ADDL_PBX_RESOURCES_BUILD_PHASE = "";
-		context.ADDL_PBX_RESOURCES_GROUP = "";
+		context.ADDL_PBX_RESOURCE_GROUP = "";
 		context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE = "";
 		context.ADDL_PBX_FRAMEWORK_GROUP = "";
 
@@ -344,24 +344,24 @@ class TVOSPlatform extends PlatformTarget
 
 			if (name != null)
 			{
-				var frameworkID = "11C0000000000018" + StringTools.getUniqueID();
+				var buildFileID = "11C0000000000018" + StringTools.getUniqueID();
 				var fileID = "11C0000000000018" + StringTools.getUniqueID();
 
 				switch (fileType)
 				{
 					case "wrapper.plug-in":
-						context.ADDL_PBX_BUILD_FILE += "        " + frameworkID + " /* " + name + " in Resources" + " */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Resources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
 						context.ADDL_PBX_RESOURCES_BUILD_PHASE += "                " + fileID + " /* " + name + " in Resources */,\n";
-						context.ADDL_PBX_RESOURCES_GROUP += "                " + fileID + " /* " + name + " */,\n";
+						context.ADDL_PBX_RESOURCE_GROUP += "                " + fileID + " /* " + name + " */,\n";
+						context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = \"/\"; };\n";
 					case "wrapper.framework", "wrapper.xcframework", "sourcecode.text-based-dylib-definition":
-						context.ADDL_PBX_BUILD_FILE += "        " + frameworkID + " /* " + name + " in Frameworks" + " */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
-						context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "                " + frameworkID + " /* " + name + " in Frameworks */,\n";
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Frameworks */,\n";
 						context.ADDL_PBX_FRAMEWORK_GROUP += "                " + fileID + " /* " + name + " */,\n";
+						context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
 
 						ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
 				}
-
-				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
 			}
 		}
 
