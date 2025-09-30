@@ -545,6 +545,8 @@ class AndroidPlatform extends PlatformTarget
 			Sys.exit(1);
 		}
 
+		context.ANDROID_GRADLE_MAVEN_REPOSITORIES = project.config.getArrayString("android.gradle-maven-repositories", []);
+
 		if (project.config.exists("android.gradle-build-directory"))
 		{
 			context.ANDROID_GRADLE_BUILD_DIRECTORY = project.config.getString("android.gradle-build-directory");

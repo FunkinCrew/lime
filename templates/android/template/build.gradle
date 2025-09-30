@@ -16,7 +16,8 @@ buildscript {
 allprojects {
 	repositories {
 		mavenCentral()
-		google()
+		google()::if ANDROID_GRADLE_MAVEN_REPOSITORIES::::foreach ANDROID_GRADLE_MAVEN_REPOSITORIES::
+		maven { url = uri("::__current__::") }::end::::end::
 	}::if ANDROID_GRADLE_BUILD_DIRECTORY::
 	buildDir = "::ANDROID_GRADLE_BUILD_DIRECTORY::/::APP_FILE::/${project.name}"::end::
 }
