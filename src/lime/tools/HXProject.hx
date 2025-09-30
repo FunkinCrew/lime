@@ -782,13 +782,6 @@ class HXProject extends Script
 				defines.set("cpp", "1");
 				defines.set("mingw", "1");
 			}
-			else
-			{
-				targetFlags.set("neko", "1");
-
-				defines.set("targetType", "neko");
-				defines.set("neko", "1");
-			}
 		}
 		else if (target == Platform.WEB_ASSEMBLY)
 		{
