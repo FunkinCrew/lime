@@ -192,7 +192,8 @@ class TVOSPlatform extends PlatformTarget
 			if (!StringTools.endsWith(dependency.name, ".framework")
 				&& !StringTools.endsWith(dependency.name, ".tbd")
 				&& !StringTools.endsWith(dependency.path, ".framework")
-				&& !StringTools.endsWith(dependency.path, ".xcframework"))
+				&& !StringTools.endsWith(dependency.path, ".xcframework")
+				&& !StringTools.endsWith(dependency.path, ".bundle"))
 			{
 				if (dependency.path != "")
 				{
