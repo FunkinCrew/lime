@@ -2426,28 +2426,28 @@ namespace lime {
 	}
 
 
-	float lime_key_code_from_scan_code (float scanCode) {
+	int lime_key_code_from_scan_code (int scanCode) {
 
 		return KeyCode::FromScanCode (scanCode);
 
 	}
 
 
-	HL_PRIM float HL_NAME(hl_key_code_from_scan_code) (float scanCode) {
+	HL_PRIM int HL_NAME(hl_key_code_from_scan_code) (int scanCode) {
 
 		return KeyCode::FromScanCode (scanCode);
 
 	}
 
 
-	float lime_key_code_to_scan_code (float keyCode) {
+	int lime_key_code_to_scan_code (int keyCode) {
 
 		return KeyCode::ToScanCode (keyCode);
 
 	}
 
 
-	HL_PRIM float HL_NAME(hl_key_code_to_scan_code) (float keyCode) {
+	HL_PRIM int HL_NAME(hl_key_code_to_scan_code) (int keyCode) {
 
 		return KeyCode::ToScanCode (keyCode);
 
@@ -4276,8 +4276,8 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_joystick_get_num_hats, _I32);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_file, _STRING _BOOL _TIMAGEBUFFER);
-	DEFINE_HL_PRIM (_F32, hl_key_code_from_scan_code, _F32);
-	DEFINE_HL_PRIM (_F32, hl_key_code_to_scan_code, _F32);
+	DEFINE_HL_PRIM (_I32, hl_key_code_from_scan_code, _I32);
+	DEFINE_HL_PRIM (_I32, hl_key_code_to_scan_code, _I32);
 	DEFINE_HL_PRIM (_VOID, hl_key_event_manager_register, _FUN (_VOID, _NO_ARG) _TKEY_EVENT);
 	DEFINE_HL_PRIM (_BYTES, hl_locale_get_system_locale, _NO_ARG);
 	DEFINE_HL_PRIM (_TBYTES, hl_lzma_compress, _TBYTES _TBYTES);

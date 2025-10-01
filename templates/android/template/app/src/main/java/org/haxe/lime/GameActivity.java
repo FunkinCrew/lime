@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
+import android.Manifest;
 import org.haxe.extension.Extension;
 import org.libsdl.app.SDLActivity;
 

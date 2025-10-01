@@ -5,17 +5,9 @@ endif
 
 HAXE_BUILDS := $(ARCHS:%=build-haxe-%)
 
-ifeq ("$(ACTION)","clean")
-default: clean
-else
-default: $(HAXE_BUILDS)
-endif
-
 ifeq ("$(CONFIGURATION)","Debug")
    BUILD_STYLE := Debug
 endif
-
-default: debug_print
 
 ifeq ("$(BUILD_STYLE)","Debug")
    DEBUG := -debug
@@ -31,17 +23,40 @@ ifeq ("$(HAXE_OS)","iphonesimulator")
 endif
 CONFIG := $(CONFIG)-$(HAXE_OS)
 
+LIB_DEST := $(DEBUG)/libApplicationMain.a
+LIB_MBEDTLS_DEST := $(DEBUG)/libmbedtls_hxcpp.a
+
+SIMULATOR_ARCH = i386 x86_64
+
+SUFFIX_i386 =
+SUFFIX_x86_64 = -64
+SUFFIX_armv6 =
+SUFFIX_armv7 = -v7
+SUFFIX_arm64 = -64
+
+HXCPP_FLAGS_i386 = -D simulator
+HXCPP_FLAGS_x86_64 = -D simulator -D HXCPP_M64
+HXCPP_FLAGS_armv6 = -D HXCPP_ARMV6
+HXCPP_FLAGS_armv7 = -D HXCPP_ARMV7
+HXCPP_FLAGS_arm64 = -D HXCPP_ARM64
+
+ifeq ("$(ACTION)","clean")
+default: clean
+else
+default: $(HAXE_BUILDS)
+endif
+
+default: debug_print
+
 debug_print:
 	@echo "Make $(HAXE_BUILDS)"
 
-LIB_BASE := build/$(CONFIG)/::CPP_LIBPREFIX::ApplicationMain$(DEBUG)
-LIB_DEST := $(DEBUG)/libApplicationMain.a
-
-build-haxe-i386:
-	@echo "Haxe simulator build: $(CONFIG)"
-	haxe Build.hxml -D simulator -cpp build/$(CONFIG) $(DEBUG)
-	cd build/$(CONFIG); ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; haxelib run ::CPP_BUILD_LIBRARY:: Build.xml $(DEBUG) -options Options.txt
-	cp build/$(CONFIG)/::CPP_LIBPREFIX::ApplicationMain$(DEBUG).iphonesim.a ../lib/i386$(LIB_DEST)
+$(HAXE_BUILDS): build-haxe-%:
+	@echo "Haxe $(if $(filter $*,$(SIMULATOR_ARCH)),simulator,device) build: $(CONFIG)$(SUFFIX_$*)"
+	haxe Build.hxml $(HXCPP_FLAGS_$*) -cpp build/$(CONFIG)$(SUFFIX_$*) $(DEBUG)
+	cd build/$(CONFIG)$(SUFFIX_$*); ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; \
+		haxelib run ::CPP_BUILD_LIBRARY:: Build.xml haxe -Ddestination=$(CURDIR)/../lib/$*$(LIB_DEST) \
+		-options Options.txt $(DEBUG)
 	touch ../Classes/Main.mm
 
 build-haxe-x86_64:
@@ -74,3 +89,6 @@ build-haxe-arm64:
 
 clean:
 	rm -rf build
+
+.PHONY: default debug_print clean $(HAXE_BUILDS)
+.SUFFIXES:

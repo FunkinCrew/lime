@@ -342,6 +342,7 @@ class IOSHelper
 				System.runCommand("", "open", ["-a", "Simulator", "--args", "-CurrentDeviceUDID", currentDeviceID]);
 			}
 
+			waitForDeviceState("xcrun", ["simctl", "boot", currentDeviceID]);
 			waitForDeviceState("xcrun", ["simctl", "uninstall", currentDeviceID, project.meta.packageName]);
 			waitForDeviceState("xcrun", ["simctl", "install", currentDeviceID, applicationPath]);
 			waitForDeviceState("xcrun", ["simctl", "launch", currentDeviceID, project.meta.packageName]);
@@ -360,6 +361,9 @@ class IOSHelper
 			{
 				applicationPath = workingDirectory + "/build/" + configuration + "-iphoneos/" + project.app.file + ".app";
 			}
+
+			var requireIPad = project.config.getString("ios.device", "universal") == "ipad";
+			var requireIPhone = project.config.getString("ios.device", "universal") == "iphone";
 
 			var xcodeVersion = Std.parseFloat(getXcodeVersion());
 			if (!Math.isNaN(xcodeVersion) && xcodeVersion >= 16) {
@@ -390,9 +394,19 @@ class IOSHelper
 					}
 					break;
 				}
+
 				if (deviceUUID == null || deviceUUID.length == 0) {
-					Log.error("No device connected");
+					// devices running iOS 16 and older don't support
+					// xcrun devicectl, so if no device was found, try falling
+					// back to ios-deploy
+					fallbackLaunch(project, applicationPath);
+					// Log.error("No device connected");
 					return;
+				}
+
+				if (Log.verbose)
+				{
+					Log.info("Detected iOS device UUID: " + deviceUUID);
 				}
 
 				System.runCommand("", "xcrun", ["devicectl", "device", "install", "app", "--device", deviceUUID, FileSystem.fullPath(applicationPath)]);
@@ -402,21 +416,48 @@ class IOSHelper
 
 				System.runCommand("", "xcrun", ["devicectl", "device", "process", "launch", "--console", "--device", deviceUUID, project.meta.packageName]);
 			} else {
-				var templatePaths = [
-					Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
-				].concat(project.templatePaths);
-				var launcher = System.findTemplate(templatePaths, "bin/ios-deploy");
-				Sys.command("chmod", ["+x", launcher]);
-
-				System.runCommand("", launcher, [
-					"install",
-					"--noninteractive",
-					"--debug",
-					"--bundle",
-					FileSystem.fullPath(applicationPath)
-				]);
+				// continue using ios-deploy if Xcode version is 15 or older
+				fallbackLaunch(project, applicationPath);
 			}
 		}
+	}
+
+	private static function findDeviceUUIDWithFilters(filters:Array<String>):String
+	{
+		var listDevicesOutput = System.runProcess("", "xcrun",
+			[
+				"devicectl", "list", "devices",
+				"--hide-default-columns", "--columns", "Identifier",
+				"--filter", filters.join(" AND ")
+			]);
+		var ready = false;
+		for (line in listDevicesOutput.split("\n"))
+		{
+			if (!ready)
+			{
+				ready = StringTools.startsWith(line, "----");
+				continue;
+			}
+			return line;
+		}
+		return null;
+	}
+
+	private static function fallbackLaunch(project:HXProject, applicationPath:String):Void
+	{
+		var templatePaths = [
+			Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
+		].concat(project.templatePaths);
+		var launcher = System.findTemplate(templatePaths, "bin/ios-deploy");
+		Sys.command("chmod", ["+x", launcher]);
+
+		System.runCommand("", launcher, [
+			"install",
+			"--noninteractive",
+			"--debug",
+			"--bundle",
+			FileSystem.fullPath(applicationPath)
+		]);
 	}
 
 	public static function sign(project:HXProject, workingDirectory:String):Void
