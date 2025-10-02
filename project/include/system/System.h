@@ -44,6 +44,9 @@ namespace lime {
 			static int GetFirstGyroscopeSensorId ();
 			static int GetFirstAccelerometerSensorId ();
 			#endif
+			#if defined (IPHONE)
+			static void showIOSAlert (const char* message, const char* title);
+			#endif
 			static int GetNumDisplays ();
 			static int GetDeviceOrientation ();
 			static std::wstring* GetPlatformLabel ();
