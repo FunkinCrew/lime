@@ -1,6 +1,7 @@
 #include "SDLWindow.h"
 #include "SDLCursor.h"
 #include "SDLApplication.h"
+#include "system/System.h"
 #include "../../graphics/opengl/OpenGL.h"
 #include "../../graphics/opengl/OpenGLBindings.h"
 
@@ -342,7 +343,11 @@ namespace lime {
 
 		if (message) {
 
+			#if !defined(IPHONE)
 			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_INFORMATION, title, message, sdlWindow);
+			#else
+			System::showIOSAlert(message, title);
+			#endif
 
 		}
 
