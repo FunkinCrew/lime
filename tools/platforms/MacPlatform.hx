@@ -648,6 +648,16 @@ class MacPlatform extends PlatformTarget
 		var limeDirectory = Haxelib.getPath(new Haxelib("lime"), true);
 		var bindir = "Mac64";
 		var bundledHLDirectory = Path.combine(limeDirectory, 'templates/bin/hl/$bindir');
+		if (!FileSystem.exists(bundledHLDirectory))
+		{
+			Log.error('Directory does not exist: $bundledHLDirectory');
+			return;
+		}
+		if (!FileSystem.isDirectory(bundledHLDirectory))
+		{
+			Log.error('Not a directory: $bundledHLDirectory');
+			return;
+		}
 
 		// these are the known directories where Homebrew installs its dependencies
 		// we may need to add more in the future, but this seems to be enough for now
