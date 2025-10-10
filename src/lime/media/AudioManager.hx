@@ -12,6 +12,7 @@ import lime.media.openal.AL;
 import lime.media.openal.ALC;
 import lime.media.openal.ALContext;
 import lime.media.openal.ALDevice;
+import lime.app.Application;
 #if (js && html5)
 import js.Browser;
 #end
@@ -24,6 +25,9 @@ import js.Browser;
 class AudioManager
 {
 	public static var context:AudioContext;
+
+	@:noCompletion
+	private static var alDeviceName:String = "";
 
 	public static function init(context:AudioContext = null)
 	{
@@ -48,6 +52,14 @@ class AudioManager
 
 					alc.makeContextCurrent(ctx);
 					alc.processContext(ctx);
+
+					if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_EXT_disconnect'))
+					{
+						if (!Application.current.onUpdate.has(checkDevice))
+						{
+							Application.current.onUpdate.add(checkDevice);
+						}
+					}
 				}
 				#end
 			}
@@ -77,6 +89,14 @@ class AudioManager
 				var device = alc.getContextsDevice(currentContext);
 				alc.resumeDevice(device);
 				alc.processContext(currentContext);
+
+				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_EXT_disconnect'))
+				{
+					if (!Application.current.onUpdate.has(checkDevice))
+					{
+						Application.current.onUpdate.add(checkDevice);
+					}
+				}
 			}
 		}
 		#end
@@ -89,10 +109,18 @@ class AudioManager
 		{
 			var alc = context.openal;
 			var currentContext = alc.getCurrentContext();
+			var device = alc.getContextsDevice(currentContext);
 
 			if (currentContext != null)
 			{
-				var device = alc.getContextsDevice(currentContext);
+				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_EXT_disconnect'))
+				{
+					if (Application.current.onUpdate.has(checkDevice))
+					{
+						Application.current.onUpdate.remove(checkDevice);
+					}
+				}
+
 				alc.makeContextCurrent(null);
 				alc.destroyContext(currentContext);
 
@@ -114,11 +142,19 @@ class AudioManager
 		{
 			var alc = context.openal;
 			var currentContext = alc.getCurrentContext();
+			var device = alc.getContextsDevice(currentContext);
 
 			if (currentContext != null)
 			{
+				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_EXT_disconnect'))
+				{
+					if (Application.current.onUpdate.has(checkDevice))
+					{
+						Application.current.onUpdate.remove(checkDevice);
+					}
+				}
+
 				alc.suspendContext(currentContext);
-				var device = alc.getContextsDevice(currentContext);
 
 				if (device != null)
 				{
@@ -127,6 +163,24 @@ class AudioManager
 			}
 		}
 		#end
+	}
+
+	private static function checkDevice(_):Void
+	{
+		var alc = context.openal;
+		var currentContext = alc.getCurrentContext();
+		var alDevice = alc.getContextsDevice(currentContext);
+
+		var curDeviceName = ALC.getString(null, ALC.ALL_DEVICES_SPECIFIER);
+    if (curDeviceName != null && curDeviceName != alDeviceName)
+    {
+    	trace('[OPENAL] Lost audio device "$alDeviceName", reopening...');
+      if (ALC.reOpenDevice(alDevice, null, null))
+      {
+      	alDeviceName = curDeviceName;
+      	trace('[OPENAL] Audio device reopened on "$alDeviceName"!');
+      }
+    }
 	}
 
 	@:noCompletion
