@@ -18,6 +18,8 @@
 		<compilerflag value="-DNDEBUG" unless="debug" />
 		<compilerflag value="-DHAVE_CONFIG_H" />
 		<compilerflag value="-DCAIRO_WIN32_STATIC_BUILD" if="windows" />
+		<compilerflag value="/wd5286" if="windows" />
+		<compilerflag value="/wd5287" if="windows" />
 
 		<compilerflag value="-Wno-attributes" unless="windows" />
 		<compilerflag value="-Wno-enum-conversion" unless="windows" />
