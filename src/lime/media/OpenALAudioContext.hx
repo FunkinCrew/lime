@@ -594,5 +594,20 @@ class OpenALAudioContext
 	{
 		ALC.suspendContext(context);
 	}
+
+	public function eventControlSOFT(events:Array<Int>, enable:Bool):Void
+	{
+		ALC.eventControlSOFT(events, enable);
+	}
+
+	public function eventCallbackSOFT(callback:Dynamic):Void
+	{
+		ALC.eventCallbackSOFT(callback);
+	}
+
+	public function reopenDeviceSOFT(device:ALDevice, newDeviceName:String, attributes:Array<Int>):Bool
+	{
+		return ALC.reopenDeviceSOFT(device, newDeviceName, attributes);
+	}
 }
 #end

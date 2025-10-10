@@ -1,5 +1,7 @@
 package lime.media;
 
+import lime.system.CFFIPointer;
+import haxe.MainLoop;
 #if (windows || mac || linux || android)
 import haxe.io.Path;
 import lime.system.System;
@@ -22,12 +24,10 @@ import js.Browser;
 @:noDebug
 #end
 @:access(lime._internal.backend.native.NativeCFFI)
+@:access(lime.media.openal.ALDevice)
 class AudioManager
 {
 	public static var context:AudioContext;
-
-	@:noCompletion
-	private static var alDeviceName:String = "";
 
 	public static function init(context:AudioContext = null)
 	{
@@ -53,11 +53,17 @@ class AudioManager
 					alc.makeContextCurrent(ctx);
 					alc.processContext(ctx);
 
-					if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_SOFT_reopen_device'))
+					#if (!neko || !mobile)
+					if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
 					{
-						if (!Application.current.onUpdate.has(checkDevice))
-							Application.current.onUpdate.add(checkDevice);
+						if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
+							alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
+
+						alc.eventControlSOFT([ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT, ALC.EVENT_TYPE_DEVICE_ADDED_SOFT, ALC.EVENT_TYPE_DEVICE_REMOVED_SOFT], true);
+
+						alc.eventCallbackSOFT(deviceEventCallback);
 					}
+					#end
 				}
 				#end
 			}
@@ -87,12 +93,6 @@ class AudioManager
 				var device = alc.getContextsDevice(currentContext);
 				alc.resumeDevice(device);
 				alc.processContext(currentContext);
-
-				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_SOFT_reopen_device'))
-				{
-					if (!Application.current.onUpdate.has(checkDevice))
-						Application.current.onUpdate.add(checkDevice);
-				}
 			}
 		}
 		#end
@@ -109,12 +109,6 @@ class AudioManager
 
 			if (currentContext != null)
 			{
-				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_SOFT_reopen_device'))
-				{
-					if (Application.current.onUpdate.has(checkDevice))
-						Application.current.onUpdate.remove(checkDevice);
-				}
-
 				alc.makeContextCurrent(null);
 				alc.destroyContext(currentContext);
 
@@ -140,12 +134,6 @@ class AudioManager
 
 			if (currentContext != null)
 			{
-				if (Application.current != null && ALC.isExtensionPresent(device, 'ALC_SOFT_reopen_device'))
-				{
-					if (Application.current.onUpdate.has(checkDevice))
-						Application.current.onUpdate.remove(checkDevice);
-				}
-
 				alc.suspendContext(currentContext);
 
 				if (device != null)
@@ -157,24 +145,39 @@ class AudioManager
 		#end
 	}
 
-	private static function checkDevice(_):Void
+	@:noCompletion
+	#if hl
+	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:hl.Bytes):Void
+	#else
+	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:String):Void
+	#end
 	{
-		var alc = context.openal;
-		var currentContext = alc.getCurrentContext();
-		var alDevice = alc.getContextsDevice(currentContext);
-		var curDeviceName = ALC.getString(null, ALC.ALL_DEVICES_SPECIFIER);
-
-		if (curDeviceName != null && curDeviceName != alDeviceName)
+		#if !lime_doc_gen
+		if (eventType == ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT && deviceType == ALC.PLAYBACK_DEVICE_SOFT)
 		{
-			trace('[OPENAL] Lost audio device "$alDeviceName", reopening...');
+			var device = new ALDevice(handle);
 
-			if (ALC.reOpenDevice(alDevice, null, null))
+			MainLoop.runInMainThread(function():Void
 			{
-				alDeviceName = curDeviceName;
+				var alc = context.openal;
 
-				trace('[OPENAL] Audio device reopened on "$alDeviceName"!');
-			}
+				if (device == null)
+				{
+					var currentContext = alc.getCurrentContext();
+
+					var device = alc.getContextsDevice(currentContext);
+
+					if (device != null)
+						alc.reopenDeviceSOFT(device, null, null);
+				}
+				else
+				{
+					alc.reopenDeviceSOFT(device, null, null);
+				}
+
+			});
 		}
+		#end
 	}
 
 	@:noCompletion
@@ -207,11 +210,9 @@ class AudioManager
 			final path:String = Path.join([directory, #if windows 'audio-config.ini' #else 'audio-config.conf' #end]);
 			final content:String = alConfig.join('\n');
 
-			if (!FileSystem.exists(directory))
-				FileSystem.createDirectory(directory);
+			if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
 
-			if (!FileSystem.exists(path))
-				File.saveContent(path, content);
+			if (!FileSystem.exists(path)) File.saveContent(path, content);
 
 			Sys.putEnv('ALSOFT_CONF', path);
 		}
