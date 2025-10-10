@@ -3472,6 +3472,31 @@ namespace lime {
 
 	}
 
+	bool lime_alc_reopen_device (value device, HxString devicename, value attrlist) {
+
+		#ifdef LIME_OPENALSOFT
+		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCint* list = NULL;
+
+		if (!val_is_null (attrlist)) {
+
+			int size = val_array_size (attrlist);
+			list = new ALCint[size];
+
+			for (int i = 0; i < size; ++i) {
+
+				list[i] = (ALCint)val_int (val_array_i (attrlist, i));
+
+			}
+
+		}
+		return alcReopenDeviceSOFT (alcDevice, devicename.__s, list);
+		#else
+		return false;
+		#endif
+
+	}
+
 
 	HL_PRIM void HL_NAME(hl_alc_pause_device) (HL_CFFIPointer* device) {
 
@@ -3649,6 +3674,7 @@ namespace lime {
 	DEFINE_PRIME1 (lime_alc_make_context_current);
 	DEFINE_PRIME1 (lime_alc_open_device);
 	DEFINE_PRIME1v (lime_alc_pause_device);
+	DEFINE_PRIME3 (lime_alc_reopen_device);
 	DEFINE_PRIME1v (lime_alc_process_context);
 	DEFINE_PRIME1v (lime_alc_resume_device);
 	DEFINE_PRIME1v (lime_alc_suspend_context);

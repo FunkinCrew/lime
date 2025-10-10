@@ -1709,6 +1709,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_alc_pause_device(device:CFFIPointer):Void;
 
+	@:cffi private static function lime_alc_reopen_device(device:CFFIPointer, devicename:String, attrlist:Dynamic):Bool;
+
 	@:cffi private static function lime_alc_process_context(context:CFFIPointer):Void;
 
 	@:cffi private static function lime_alc_resume_device(device:CFFIPointer):Void;
@@ -1879,6 +1881,7 @@ class NativeCFFI
 		false));
 	private static var lime_alc_open_device = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_alc_open_device", "so", false));
 	private static var lime_alc_pause_device = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_pause_device", "ov", false));
+	private static var lime_alc_reopen_device = new cpp.Callable<cpp.Object->String->cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_alc_reopen_device", "osob", false));
 	private static var lime_alc_process_context = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_process_context", "ov",
 		false));
 	private static var lime_alc_resume_device = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_resume_device", "ov", false));
@@ -2002,6 +2005,7 @@ class NativeCFFI
 	private static var lime_alc_make_context_current = CFFI.load("lime", "lime_alc_make_context_current", 1);
 	private static var lime_alc_open_device = CFFI.load("lime", "lime_alc_open_device", 1);
 	private static var lime_alc_pause_device = CFFI.load("lime", "lime_alc_pause_device", 1);
+	private static var lime_alc_reopen_device = CFFI.load("lime", "lime_alc_reopen_device", 3);
 	private static var lime_alc_process_context = CFFI.load("lime", "lime_alc_process_context", 1);
 	private static var lime_alc_resume_device = CFFI.load("lime", "lime_alc_resume_device", 1);
 	private static var lime_alc_suspend_context = CFFI.load("lime", "lime_alc_suspend_context", 1);

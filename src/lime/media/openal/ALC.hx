@@ -33,6 +33,7 @@ class ALC
 	public static inline var ENUMERATE_ALL_EXT:Int = 1;
 	public static inline var DEFAULT_ALL_DEVICES_SPECIFIER:Int = 0x1012;
 	public static inline var ALL_DEVICES_SPECIFIER:Int = 0x1013;
+	public static inline var CONNECTED:Int = 0x313;
 
 	public static function closeDevice(device:ALDevice):Bool
 	{
@@ -173,6 +174,15 @@ class ALC
 		#end
 
 		return null;
+	}
+
+	public static function reOpenDevice(device:ALDevice, deviceName:String = null, attrlist:Array<Int> = null):Bool
+	{
+		#if (lime_cffi && lime_openal && !hl && !macro)
+		return NativeCFFI.lime_alc_reopen_device(device, deviceName, attrlist);
+		#end
+
+		return false;
 	}
 
 	public static function pauseDevice(device:ALDevice):Void
