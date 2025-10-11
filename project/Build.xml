@@ -5,7 +5,7 @@
 
 	<set name="HXCPP_ANDROID_PLATFORM" value="28" if="android" />
 	<set name="PLATFORM_NUMBER" value="28" if="android" />
-	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.15" if="mac" />
+	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.13" if="mac" />
 
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />

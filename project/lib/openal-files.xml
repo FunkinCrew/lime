@@ -106,6 +106,7 @@
         <file name="${NATIVE_TOOLKIT_PATH}/openal/common/althrd_setname.cpp" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alassert.cpp" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/common/pffft.cpp" />
+        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/filesystem.cpp" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/core/cubic_tables.cpp" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/core/storage_formats.cpp" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/events.cpp" />
