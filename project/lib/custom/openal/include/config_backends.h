@@ -22,4 +22,8 @@
 
 #include "config/backends/config_backends-android.h"
 
+#elif defined(IPHONE)
+
+#include "config/backends/config_backends-iphoneos.h"
+
 #endif
