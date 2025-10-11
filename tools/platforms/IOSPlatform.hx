@@ -181,9 +181,8 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		IOSHelper.getIOSVersion(project);
-		project.haxedefs.set("IPHONE_VER", project.environment.get("IPHONE_VER"));
 
-		project.haxedefs.set("HXCPP_CPP11", "1");
+		project.haxedefs.set("IPHONE_VER", project.environment.get("IPHONE_VER"));
 
 		if (project.config.getString("ios.compiler") == "llvm" || project.config.getString("ios.compiler", "clang") == "clang")
 		{
@@ -528,13 +527,13 @@ class IOSPlatform extends PlatformTarget
 
 		var commands = [];
 
-		if (armv6) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARMV6"]);
-		if (armv7) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARMV7"]);
-		if (armv7s) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARMV7S"]);
-		if (arm64) commands.push(["-Dios", "-DHXCPP_CPP11", "-DHXCPP_ARM64"]);
-		if (arm64 && project.targetFlags.exists("simulator")) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_CPP11", "-DHXCPP_ARM64"]);
-		if (i386) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M32", "-DHXCPP_CPP11"]);
-		if (x86_64) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M64", "-DHXCPP_CPP11"]);
+		if (armv6) commands.push(["-Dios", "-DHXCPP_ARMV6"]);
+		if (armv7) commands.push(["-Dios", "-DHXCPP_ARMV7"]);
+		if (armv7s) commands.push(["-Dios", "-DHXCPP_ARMV7S"]);
+		if (arm64) commands.push(["-Dios", "-DHXCPP_ARM64"]);
+		if (arm64 && project.targetFlags.exists("simulator")) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_ARM64"]);
+		if (i386) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M32"]);
+		if (x86_64) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M64"]);
 
 		if (arc)
 		{
