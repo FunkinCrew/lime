@@ -56,8 +56,7 @@ class AudioManager
 					#if (!neko || !mobile)
 					if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
 					{
-						if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
-							alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
+						alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
 
 						alc.eventControlSOFT([ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT, ALC.EVENT_TYPE_DEVICE_ADDED_SOFT, ALC.EVENT_TYPE_DEVICE_REMOVED_SOFT], true);
 
