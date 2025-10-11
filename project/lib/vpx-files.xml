@@ -1,7 +1,5 @@
 <xml>
 
-	<!-- <set name="HXCPP_CPP11" value="1" /> -->
-
 	<files id="native-toolkit-vpx">
 
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
