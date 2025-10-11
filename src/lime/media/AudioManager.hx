@@ -53,7 +53,7 @@ class AudioManager
 					alc.makeContextCurrent(ctx);
 					alc.processContext(ctx);
 
-					#if (!neko || !mobile)
+					#if !(neko || mobile)
 					if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
 					{
 						alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
