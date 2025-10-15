@@ -53,10 +53,6 @@ class AudioManager
 					alc.makeContextCurrent(ctx);
 					alc.processContext(ctx);
 
-					trace('[OpenAL] ' + AL.getString(AL.RENDERER));
-					trace('[OpenAL] ' + AL.getString(AL.VENDOR));
-					trace('[OpenAL] ' + AL.getString(AL.VERSION));
-
 					#if !(neko || mobile)
 					if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
 					{
