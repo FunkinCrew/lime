@@ -10,9 +10,6 @@
 
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />
-	<set name ="STATIC_OPENALSOFT" value="1" if="ios || tvos" unless="NO_IOS_OPENALSOFT" />
-	<set name ="NO_STATIC_OPENALSOFT" value="1" unless="STATIC_OPENALSOFT" />
-
 	<set name="LIME_CAIRO" value="1" />
 	<set name="LIME_CURL" value="1" unless="winrt" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" unless="winrt" />
@@ -26,9 +23,9 @@
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten || winrt" />
 	<!-- <set name="LIME_NEKO" value="1" if="linux" /> -->
 	<set name="LIME_OGG" value="1" />
-	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || STATIC_OPENALSOFT" unless="NO_STATIC_OPENALSOFT static_link" />
-	<set name="LIME_OPENAL" value="1" if="iphone || webassembly || tvos" unless="LIME_OPENALSOFT" />
-	<set name="LIME_MOJOAL" value="1" if="switch || static_link || winrt || mojoal" unless="LIME_OPENAL || STATIC_OPENALSOFT" />
+	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone" unless="tvos" />
+	<set name="LIME_OPENAL" value="1" if="webassembly || tvos" />
+	<set name="LIME_MOJOAL" value="1" if="switch || static_link || winrt || mojoal" unless="LIME_OPENAL || iphone LIME_OPENALSOFT" />
 	<unset name="LIME_OPENALSOFT" if="LIME_MOJOAL" />
 	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT" />
 	<set name="LIME_OPENAL" value="1" if="LIME_MOJOAL" />
@@ -194,8 +191,7 @@
 			<compilerflag value="-DLIME_OPENAL" />
 			<compilerflag value="-DLIME_OPENALSOFT" if="LIME_OPENALSOFT" />
 			<compilerflag value="-DLIME_MOJOAL" if="LIME_MOJOAL" />
-			<compilerflag value="-DAL_LIBTYPE_STATIC=1" if="LIME_OPENALSOFT || LIME_MOJOAL || STATIC_OPENALSOFT" />
-			<compilerflag value="-Dnative_toolkit_openal_static" if="STATIC_OPENALSOFT" />
+			<compilerflag value="-DAL_LIBTYPE_STATIC=1" if="LIME_OPENALSOFT || LIME_MOJOAL" />
 			<compilerflag value="-DAL_ALEXT_PROTOTYPES" if="LIME_OPENALSOFT" />
 
 			<file name="src/media/openal/OpenALBindings.cpp" />
