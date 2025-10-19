@@ -393,7 +393,11 @@ class OpenALAudioContext
 
 	public function getSourcedvSOFT(source:ALSource, param:Int, count:Int = 1):Array<Float>
 	{
+		#if lime_openalsoft
 		return AL.getSourcedvSOFT(source, param, count);
+		#else
+		return null;
+		#end
 	}
 
 	public function getSourcei(source:ALSource, param:Int):Dynamic
