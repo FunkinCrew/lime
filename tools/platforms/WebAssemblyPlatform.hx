@@ -477,5 +477,6 @@ class WebAssemblyPlatform extends PlatformTarget
 
 	@ignore public override function uninstall():Void {}
 
+	// TODO: remove this line to enable watching?
 	@ignore public override function watch():Void {}
 }
