@@ -237,14 +237,6 @@ class TizenPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "tizen/hxml", targetDirectory + "/haxe", context);
 
-		for (asset in project.assets)
-		{
-			if (asset.targetPath == "/appinfo.json" || asset.targetPath == "appinfo.json")
-			{
-				asset.type = AssetType.TEMPLATE;
-			}
-		}
-
 		// going to root directory now, but should it be a forced "assets" folder later?
 		copyProjectAssets(destination + "res/", "");
 		// copyProjectAssets(destination + "res/", "assets");
