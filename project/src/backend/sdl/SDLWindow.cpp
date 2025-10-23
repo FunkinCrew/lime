@@ -2,7 +2,6 @@
 #include "SDLCursor.h"
 #include "SDLApplication.h"
 #include "system/System.h"
-#include "../../graphics/opengl/OpenGL.h"
 #include "../../graphics/opengl/OpenGLBindings.h"
 
 #ifdef HX_WINDOWS
@@ -89,18 +88,10 @@ namespace lime {
 
 			}
 
-			#if defined (HX_WINDOWS) && defined (NATIVE_TOOLKIT_SDL_ANGLE)
+			#if defined (RASPBERRYPI) || (defined (HX_WINDOWS) && defined (NATIVE_TOOLKIT_SDL_ANGLE))
 			SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
-			SDL_SetHint (SDL_HINT_VIDEO_WIN_D3DCOMPILER, "d3dcompiler_47.dll");
-			#endif
-
-			#if defined (RASPBERRYPI)
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
-			SDL_SetHint (SDL_HINT_RENDER_DRIVER, "opengles2");
 			#endif
 
 			#if defined (IPHONE) || defined (APPLETV)

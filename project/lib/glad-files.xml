@@ -1,0 +1,21 @@
+<xml>
+
+	<files id="native-toolkit-glad">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/glad/include/" if="NATIVE_TOOLKIT_HAVE_GLAD" />
+
+		<section if="NATIVE_TOOLKIT_GLAD_GL">
+			<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gl.c" />
+		</section>
+
+		<section if="NATIVE_TOOLKIT_GLAD_GLES2">
+			<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gles2.c" />
+		</section>
+
+		<section if="NATIVE_TOOLKIT_GLAD_EGL">
+			<file name="${NATIVE_TOOLKIT_PATH}/glad/src/egl.c" />
+		</section>
+
+	</files>
+
+</xml>

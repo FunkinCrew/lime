@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" ::foreach ANDROID_MANIFEST::::if ((value != null) && (value != ""))::::key::="::value::" ::end::::end::>
 
-	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
+	<uses-feature android:glEsVersion="0x00030000" android:required="true" />
 	<uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
 	::foreach ANDROID_PERMISSIONS::<uses-permission android:name="::__current__::" />
