@@ -59,18 +59,6 @@ abstract WebGL2RenderContext(HTML5WebGL2RenderContext) from HTML5WebGL2RenderCon
 		}
 	}
 
-	public inline function getBufferSubData(target:Int, srcByteOffset:DataPointer, dstData:Dynamic, ?srcOffset:Dynamic, ?length:Int):Void
-	{
-		if (srcOffset != null)
-		{
-			this.getBufferSubData(target, srcByteOffset, dstData, srcOffset, length);
-		}
-		else
-		{
-			this.getBufferSubData(target, srcByteOffset, dstData);
-		}
-	}
-
 	public inline function readPixels(x:Int, y:Int, width:Int, height:Int, format:Int, type:Int, pixels:Dynamic, ?dstOffset:Int):Void
 	{
 		if (dstOffset != null)
@@ -4190,19 +4178,6 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public inline function getBufferParameter(target:Int, pname:Int):Dynamic
 	{
 		return this.getBufferParameter(target, pname);
-	}
-
-	#if !lime_webgl
-	public inline function getBufferSubData(target:Int, srcByteOffset:DataPointer, dstData:ArrayBuffer, srcOffset:Int = 0, ?length:Int):Void
-	#else
-	public inline function getBufferSubData(target:Int, srcByteOffset:DataPointer, dstData:Dynamic, ?srcOffset:Dynamic, ?length:Int):Void
-	#end
-	{
-		#if !js
-		var size = (length != null) ? length : (dstData != null) ? dstData.length : 0;
-
-		this.getBufferSubData(target, srcByteOffset + srcOffset, size, dstData);
-		#end
 	}
 
 	public inline function getContextAttributes():GLContextAttributes

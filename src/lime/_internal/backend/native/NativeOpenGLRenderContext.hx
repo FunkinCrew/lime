@@ -1576,13 +1576,6 @@ class NativeOpenGLRenderContext
 		#end
 	}
 
-	public function getBufferSubData(target:Int, offset:DataPointer, size:Int, data:DataPointer):Void
-	{
-		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		NativeCFFI.lime_gl_get_buffer_sub_data(target, offset, size, data);
-		#end
-	}
-
 	public function getContextAttributes():GLContextAttributes
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
