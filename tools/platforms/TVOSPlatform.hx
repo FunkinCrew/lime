@@ -238,7 +238,7 @@ class TVOSPlatform extends PlatformTarget
 		context.VALID_ARCHS = valid_archs.join(" ");
 		context.THUMB_SUPPORT = "";
 
-		var requiredCapabilities = [];
+		var requiredCapabilities:Array<{name:String, value:Bool}> = [];
 
 		requiredCapabilities.push({name: "arm64", value: true});
 
@@ -287,9 +287,9 @@ class TVOSPlatform extends PlatformTarget
 
 		for (dependency in project.dependencies)
 		{
-			var name = null;
-			var path = null;
-			var fileType = null;
+			var name:String = null;
+			var path:String = null;
+			var fileType:String = null;
 
 			if (Path.extension(dependency.name) == "framework")
 			{
@@ -382,7 +382,7 @@ class TVOSPlatform extends PlatformTarget
 		var i386 = (command == "rebuild" || project.targetFlags.exists("simulator"));
 		var x86_64 = (command == "rebuild" || project.targetFlags.exists("simulator"));
 
-		var commands = [];
+		var commands:Array<Array<String>> = [];
 
 		if (arm64) commands.push([
 			"-Dtvos",

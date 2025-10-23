@@ -178,7 +178,7 @@ class AIRPlatform extends FlashPlatform
 		{
 			var rootDirectory = targetDirectory + "/bin";
 			var paths = System.readDirectory(rootDirectory, [project.app.file + ".apk", project.app.file + ".ipa", project.app.file + ".air"]);
-			var files = [];
+			var files:Array<String> = [];
 
 			for (path in paths)
 			{
@@ -260,7 +260,7 @@ class AIRPlatform extends FlashPlatform
 		}
 		else
 		{
-			var major = null;
+			var major:String = null;
 
 			var patch = buildNumber.substr(-3);
 			buildNumber = buildNumber.substr(0, -3);
@@ -286,7 +286,7 @@ class AIRPlatform extends FlashPlatform
 		}
 
 		var targetDevice = project.config.getString("ios.device", "universal");
-		var targetDevices = [];
+		var targetDevices:Array<Int> = [];
 
 		if (targetDevice != "ipad") targetDevices.push(1); // iphone
 		if (targetDevice != "iphone") targetDevices.push(2); // ipad
@@ -333,7 +333,10 @@ class AIRPlatform extends FlashPlatform
 		if (embedded)
 		{
 			var files = ["debug.hxml", "release.hxml", "final.hxml"];
-			var path, hxml, lines, output;
+			var path:String;
+			var hxml:String;
+			var lines:Array<String>;
+			var output:Array<String>;
 
 			for (file in files)
 			{
