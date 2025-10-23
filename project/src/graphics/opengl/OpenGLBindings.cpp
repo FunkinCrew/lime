@@ -4847,14 +4847,16 @@ namespace lime {
 
 		if (!initialized) {
 
-			#ifdef LIME_GLES2
-			gladLoadGLES2 ((GLADloadfunc) SDL_GL_GetProcAddress);
-			#else
-			gladLoadGL ((GLADloadfunc) SDL_GL_GetProcAddress);
+			#ifdef LIME_EGL
+			gladLoaderLoadEGL(EGL_NO_DISPLAY);
 			#endif
 
-			#ifdef NATIVE_TOOLKIT_SDL_ANGLE
-			gladLoaderLoadEGL (EGL_NO_DISPLAY);
+			#ifdef LIME_GLES2
+			gladLoaderLoadGLES2 ();
+			#endif
+
+			#ifdef LIME_GL
+			gladLoaderLoadGL ();
 			#endif
 
 			initialized = true;

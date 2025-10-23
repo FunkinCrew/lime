@@ -61,7 +61,7 @@
 
 	<set name="NATIVE_TOOLKIT_GLAD_GL" value="1" if="windows || mac || linux" unless="LIME_SDL_ANGLE" />
 	<set name="NATIVE_TOOLKIT_GLAD_GLES2" value="1" if="android || rpi || emscripten || tizen || ios || tvos || LIME_SDL_ANGLE" />
-	<set name="NATIVE_TOOLKIT_GLAD_EGL" value="1" if="android || rpi || LIME_SDL_ANGLE" />
+	<set name="NATIVE_TOOLKIT_GLAD_EGL" value="1" if="android || rpi || LIME_SDL_ANGLE" unless="winrt" />
 
 	<files id="lime">
 
@@ -283,7 +283,9 @@
 		<section if="LIME_GLAD">
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/glad/include/" />
 
+			<compilerflag value="-DLIME_GL" if="NATIVE_TOOLKIT_GLAD_GL" />
 			<compilerflag value="-DLIME_GLES2" if="NATIVE_TOOLKIT_GLAD_GLES2" />
+			<compilerflag value="-DLIME_EGL" if="NATIVE_TOOLKIT_GLAD_EGL" />
 		</section>
 
 		<section if="LIME_TINYFILEDIALOGS">

@@ -1,13 +1,15 @@
 #ifndef LIME_GRAPHICS_OPENGL_OPENGL_BINDINGS_H
 #define LIME_GRAPHICS_OPENGL_OPENGL_BINDINGS_H
 
-#ifdef LIME_GLES2
-#include <glad/gles2.h>
-#else
+#ifdef LIME_GL
 #include <glad/gl.h>
 #endif
 
-#if NATIVE_TOOLKIT_SDL_ANGLE
+#ifdef LIME_GLES2
+#include <glad/gles2.h>
+#endif
+
+#ifdef LIME_EGL
 #include <glad/egl.h>
 #endif
 
