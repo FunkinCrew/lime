@@ -97,9 +97,19 @@
 		<dependency path="dependencies/webgl-debug.js" if="html5 webgl-debug" embed="true" />
 		<dependency path="dependencies/stats.min.js" if="html5 stats" embed="true" />
 
-		<dependency path="dependencies/angle/d3dcompiler_47.dll" if="windows angle" unless="static_link" />
-		<dependency path="dependencies/angle/libegl.dll" if="windows angle" unless="static_link" />
-		<dependency path="dependencies/angle/libglesv2.dll" if="windows angle" unless="static_link" />
+		<dependency path="dependencies/angle/Windows/d3dcompiler_47.dll" if="windows" />
+		<dependency path="dependencies/angle/Windows/libEGL.dll" if="windows" />
+		<dependency path="dependencies/angle/Windows/libGLESv2.dll" if="windows" />
+
+		<dependency path="dependencies/angle/MacOS/libEGL.dylib" if="mac" />
+		<dependency path="dependencies/angle/MacOS/libGLESv2.dylib" if="mac" />
+
+		<dependency path="dependencies/angle/Linux/libEGL.so" if="linux" />
+		<dependency path="dependencies/angle/Linux/libGLESv2.so" if="linux" />
+
+		<dependency path="dependencies/angle/iPhone/libEGL.xcframework" embed="true" if="ios" />
+		<dependency path="dependencies/angle/iPhone/libGLESv2.xcframework" embed="true" if="ios" />
+
 
 		<!-- TODO: Move to template or move all template dependencies to XML? -->
 		<!-- <dependency name="CoreBluetooth.framework" if="ios" /> -->

@@ -410,7 +410,7 @@ class IOSPlatform extends PlatformTarget
 				name = Path.withoutDirectory(dependency.path);
 				path = Path.tryFullPath(dependency.path);
 				fileType = "wrapper.xcframework";
-				embed = false;
+				embed = dependency.embed;
 			}
 			else if (Path.extension(dependency.path) == "bundle")
 			{

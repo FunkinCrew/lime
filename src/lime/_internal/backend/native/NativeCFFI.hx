@@ -3885,8 +3885,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_gl_get_buffer_pointerv(target:Int, pname:Int):DataPointer;
 
-	@:cffi private static function lime_gl_get_buffer_sub_data(target:Int, offset:DataPointer, size:Int, data:DataPointer):Void;
-
 	@:cffi private static function lime_gl_get_context_attributes():Dynamic;
 
 	@:cffi private static function lime_gl_get_error():Int;
@@ -4380,8 +4378,6 @@ class NativeCFFI
 		"lime_gl_get_buffer_parameteriv", "iidv", false));
 	private static var lime_gl_get_buffer_pointerv = new cpp.Callable<Int->Int->lime.utils.DataPointer>(cpp.Prime._loadPrime("lime",
 		"lime_gl_get_buffer_pointerv", "iid", false));
-	private static var lime_gl_get_buffer_sub_data = new cpp.Callable<Int->lime.utils.DataPointer->Int->lime.utils.DataPointer->
-		cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gl_get_buffer_sub_data", "ididv", false));
 	private static var lime_gl_get_context_attributes = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_gl_get_context_attributes", "o",
 		false));
 	private static var lime_gl_get_error = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_gl_get_error", "i", false));
@@ -4770,7 +4766,6 @@ class NativeCFFI
 	private static var lime_gl_get_buffer_parameteri64v = CFFI.load("lime", "lime_gl_get_buffer_parameteri64v", 3);
 	private static var lime_gl_get_buffer_parameteriv = CFFI.load("lime", "lime_gl_get_buffer_parameteriv", 3);
 	private static var lime_gl_get_buffer_pointerv = CFFI.load("lime", "lime_gl_get_buffer_pointerv", 2);
-	private static var lime_gl_get_buffer_sub_data = CFFI.load("lime", "lime_gl_get_buffer_sub_data", 4);
 	private static var lime_gl_get_context_attributes = CFFI.load("lime", "lime_gl_get_context_attributes", 0);
 	private static var lime_gl_get_error = CFFI.load("lime", "lime_gl_get_error", 0);
 	private static var lime_gl_get_extension = CFFI.load("lime", "lime_gl_get_extension", 1);
@@ -5236,9 +5231,6 @@ class NativeCFFI
 	{
 		return 0;
 	}
-
-	@:hlNative("lime", "hl_gl_get_buffer_sub_data") private static function lime_gl_get_buffer_sub_data(target:Int, offset:DataPointer, size:Int,
-		data:DataPointer):Void {}
 
 	@:hlNative("lime", "hl_gl_get_context_attributes") private static function lime_gl_get_context_attributes():Dynamic
 	{

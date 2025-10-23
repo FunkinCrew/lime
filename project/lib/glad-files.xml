@@ -1,0 +1,11 @@
+<xml>
+
+	<files id="native-toolkit-glad">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/glad/include/" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gles2.c" />
+
+	</files>
+
+</xml>

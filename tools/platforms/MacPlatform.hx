@@ -167,6 +167,15 @@ class MacPlatform extends PlatformTarget
 
 		System.mkdir(targetDirectory);
 
+		for (dependency in project.dependencies)
+		{
+			if (StringTools.endsWith(dependency.path, ".dylib"))
+			{
+				var fileName = Path.withoutDirectory(dependency.path);
+				copyIfNewer(dependency.path, executableDirectory + "/" + fileName);
+			}
+		}
+
 		if (!project.targetFlags.exists("static") || targetType != "cpp")
 		{
 			var targetSuffix = (targetType == "hl") ? ".hdll" : null;
