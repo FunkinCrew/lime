@@ -370,18 +370,14 @@ namespace lime {
 
 	void lime_gl_bind_transform_feedback (int target, int transformFeedback) {
 
-		#ifdef LIME_GLES2
 		glBindTransformFeedback (target, transformFeedback);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_bind_transform_feedback) (int target, int transformFeedback) {
 
-		#ifdef LIME_GLES2
 		glBindTransformFeedback (target, transformFeedback);
-		#endif
 
 	}
 
@@ -614,22 +610,14 @@ namespace lime {
 
 	void lime_gl_clear_depthf (float depth) {
 
-		#ifdef LIME_GLES2
 		glClearDepthf (depth);
-		#else
-		glClearDepth (depth);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_clear_depthf) (float depth) {
 
-		#ifdef LIME_GLES2
 		glClearDepthf (depth);
-		#else
-		glClearDepth (depth);
-		#endif
 
 	}
 
@@ -943,9 +931,7 @@ namespace lime {
 	int lime_gl_create_transform_feedback () {
 
 		GLuint id = 0;
-		#ifdef LIME_GLES2
 		glGenTransformFeedbacks (1, &id);
-		#endif
 		return id;
 
 	}
@@ -954,9 +940,7 @@ namespace lime {
 	HL_PRIM int HL_NAME(hl_gl_create_transform_feedback) () {
 
 		GLuint id = 0;
-		#ifdef LIME_GLES2
 		glGenTransformFeedbacks (1, &id);
-		#endif
 		return id;
 
 	}
@@ -1124,18 +1108,14 @@ namespace lime {
 
 	void lime_gl_delete_transform_feedback (int transformFeedback) {
 
-		#ifdef LIME_GLES2
 		glDeleteTransformFeedbacks (1, (GLuint*)&transformFeedback);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_delete_transform_feedback) (int transformFeedback) {
 
-		#ifdef LIME_GLES2
 		glDeleteTransformFeedbacks (1, (GLuint*)&transformFeedback);
-		#endif
 
 	}
 
@@ -1184,22 +1164,14 @@ namespace lime {
 
 	void lime_gl_depth_rangef (float zNear, float zFar) {
 
-		#ifdef LIME_GLES2
 		glDepthRangef (zNear, zFar);
-		#else
-		glDepthRange (zNear, zFar);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_depth_rangef) (float zNear, float zFar) {
 
-		#ifdef LIME_GLES2
 		glDepthRangef (zNear, zFar);
-		#else
-		glDepthRange (zNear, zFar);
-		#endif
 
 	}
 
@@ -1384,18 +1356,14 @@ namespace lime {
 
 	void lime_gl_end_transform_feedback () {
 
-		#ifdef LIME_GLES2
 		glEndTransformFeedback ();
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_end_transform_feedback) () {
 
-		#ifdef LIME_GLES2
 		glEndTransformFeedback ();
-		#endif
 
 	}
 
@@ -2199,7 +2167,6 @@ namespace lime {
 
 	void lime_gl_get_program_binary (int program, int binaryFormat, value bytes) {
 
-		#ifdef LIME_GLES2
 		GLint size = 0;
 		glGetProgramiv (program, GL_PROGRAM_BINARY_LENGTH, &size);
 
@@ -2211,14 +2178,12 @@ namespace lime {
 			glGetProgramBinary (program, size, &size, (GLenum*)&binaryFormat, _bytes.b);
 
 		}
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_get_program_binary) (int program, int binaryFormat, Bytes* bytes) {
 
-		#ifdef LIME_GLES2
 		GLint size = 0;
 		glGetProgramiv (program, GL_PROGRAM_BINARY_LENGTH, &size);
 
@@ -2229,7 +2194,6 @@ namespace lime {
 			glGetProgramBinary (program, size, &size, (GLenum*)&binaryFormat, bytes->b);
 
 		}
-		#endif
 
 	}
 
@@ -2550,8 +2514,6 @@ namespace lime {
 
 	value lime_gl_get_shader_precision_format (int shadertype, int precisiontype) {
 
-		#ifdef LIME_GLES2
-
 		GLint range[2];
 		GLint precision;
 
@@ -2563,18 +2525,10 @@ namespace lime {
 		alloc_field (result, val_id ("precision"), alloc_int (precision));
 		return result;
 
-		#else
-
-		return alloc_null ();
-
-		#endif
-
 	}
 
 
 	HL_PRIM vdynamic* HL_NAME(hl_gl_get_shader_precision_format) (int shadertype, int precisiontype) {
-
-		#ifdef LIME_GLES2
 
 		GLint range[2];
 		GLint precision;
@@ -2590,12 +2544,6 @@ namespace lime {
 		hl_dyn_seti (result, id_rangeMax, &hlt_i32, range[1]);
 		hl_dyn_seti (result, id_precision, &hlt_i32, precision);
 		return result;
-
-		#else
-
-		return NULL;
-
-		#endif
 
 	}
 
@@ -3363,22 +3311,14 @@ namespace lime {
 
 	bool lime_gl_is_transform_feedback (int handle) {
 
-		#ifdef LIME_GLES2
 		return glIsTransformFeedback (handle);
-		#else
-		return false;
-		#endif
 
 	}
 
 
 	HL_PRIM bool HL_NAME(hl_gl_is_transform_feedback) (int handle) {
 
-		#ifdef LIME_GLES2
 		return glIsTransformFeedback (handle);
-		#else
-		return false;
-		#endif
 
 	}
 
@@ -3580,18 +3520,14 @@ namespace lime {
 
 	void lime_gl_pause_transform_feedback () {
 
-		#ifdef LIME_GLES2
 		glPauseTransformFeedback ();
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_pause_transform_feedback) () {
 
-		#ifdef LIME_GLES2
 		glPauseTransformFeedback ();
-		#endif
 
 	}
 
@@ -3626,36 +3562,28 @@ namespace lime {
 
 	void lime_gl_program_binary (int program, int binaryFormat, double binary, int length) {
 
-		#ifdef LIME_GLES2
 		glProgramBinary (program, binaryFormat, (void*)(uintptr_t)binary, length);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_program_binary) (int program, int binaryFormat, double binary, int length) {
 
-		#ifdef LIME_GLES2
 		glProgramBinary (program, binaryFormat, (void*)(uintptr_t)binary, length);
-		#endif
 
 	}
 
 
 	void lime_gl_program_parameteri (int program, int pname, int value) {
 
-		#ifdef LIME_GLES2
 		glProgramParameteri (program, pname, value);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_program_parameteri) (int program, int pname, int value) {
 
-		#ifdef LIME_GLES2
 		glProgramParameteri (program, pname, value);
-		#endif
 
 	}
 
@@ -3690,18 +3618,14 @@ namespace lime {
 
 	void lime_gl_release_shader_compiler () {
 
-		#ifdef LIME_GLES2
 		glReleaseShaderCompiler ();
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_release_shader_compiler) () {
 
-		#ifdef LIME_GLES2
 		glReleaseShaderCompiler ();
-		#endif
 
 	}
 
@@ -3736,18 +3660,14 @@ namespace lime {
 
 	void lime_gl_resume_transform_feedback () {
 
-		#ifdef LIME_GLES2
 		glResumeTransformFeedback ();
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_resume_transform_feedback) () {
 
-		#ifdef LIME_GLES2
 		glResumeTransformFeedback ();
-		#endif
 
 	}
 
@@ -3810,7 +3730,6 @@ namespace lime {
 
 	void lime_gl_shader_binary (value shaders, int binaryformat, double binary, int length) {
 
-		#ifdef LIME_GLES2
 		GLsizei size = val_array_size (shaders);
 		GLenum *_shaders = (GLenum*)alloca (size * sizeof(GLenum));
 
@@ -3821,17 +3740,14 @@ namespace lime {
 		}
 
 		glShaderBinary (size, _shaders, binaryformat, (void*)(uintptr_t)binary, length);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_shader_binary) (varray* shaders, int binaryformat, double binary, int length) {
 
-		#ifdef LIME_GLES2
 		GLsizei size = shaders->size;
 		glShaderBinary (size, (GLenum*)hl_aptr (shaders, int), binaryformat, (void*)(uintptr_t)binary, length);
-		#endif
 
 	}
 
