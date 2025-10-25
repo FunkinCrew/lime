@@ -11,7 +11,7 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glReadBufferIndexedEXT (GLenum src, GLint index);
-	// GL_APICALL void GL_APIENTRY glDrawBuffersIndexedEXT (GLint n, const GLenum *location, const GLint *indices);
-	// GL_APICALL void GL_APIENTRY glGetIntegeri_vEXT (GLenum target, GLuint index, GLint *data);
+	// void glReadBufferIndexedEXT (GLenum src, GLint index)
+	// void glDrawBuffersIndexedEXT (GLint n, const GLenum *location, const GLint *indices)
+	// void glGetIntegeri_vEXT (GLenum target, GLuint index, GLint *data)
 }

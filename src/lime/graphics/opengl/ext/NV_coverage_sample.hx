@@ -11,10 +11,10 @@ package lime.graphics.opengl.ext;
 	public var COVERAGE_ALL_FRAGMENTS_NV = 0x8ED5;
 	public var COVERAGE_EDGE_FRAGMENTS_NV = 0x8ED6;
 	public var COVERAGE_AUTOMATIC_NV = 0x8ED7;
-	public var COVERAGE_BUFFER_BIT_NV = 0x8000;
+	public var COVERAGE_BUFFER_BIT_NV = 0x00008000;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glCoverageMaskNV (GLboolean mask);
-	// GL_APICALL void GL_APIENTRY glCoverageOperationNV (GLenum operation);
+	// void glCoverageMaskNV (GLboolean mask)
+	// void glCoverageOperationNV (GLenum operation)
 }

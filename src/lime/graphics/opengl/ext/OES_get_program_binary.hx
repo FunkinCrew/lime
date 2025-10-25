@@ -9,6 +9,6 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// public function getProgramBinaryOES (program:GLProgram, bufSize:Int, length:Int, binaryFormat:Int, binary:BytesPointer):Void {}
-	// public function programBinaryOES (program:GLProgram, binaryFormat:Int, binary:BytesPointer, length:Int):Void {}
+	// void glGetProgramBinaryOES (GLuint program, GLsizei bufSize, GLsizei *length, GLenum *binaryFormat, void *binary)
+	// void glProgramBinaryOES (GLuint program, GLenum binaryFormat, const void *binary, GLint length)
 }

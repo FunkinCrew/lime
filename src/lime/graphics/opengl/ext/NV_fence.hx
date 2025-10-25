@@ -9,11 +9,11 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glDeleteFencesNV (GLsizei, const GLuint *);
-	// GL_APICALL void GL_APIENTRY glGenFencesNV (GLsizei, GLuint *);
-	// GL_APICALL GLboolean GL_APIENTRY glIsFenceNV (GLuint);
-	// GL_APICALL GLboolean GL_APIENTRY glTestFenceNV (GLuint);
-	// GL_APICALL void GL_APIENTRY glGetFenceivNV (GLuint, GLenum, GLint *);
-	// GL_APICALL void GL_APIENTRY glFinishFenceNV (GLuint);
-	// GL_APICALL void GL_APIENTRY glSetFenceNV (GLuint, GLenum);
+	// void glDeleteFencesNV (GLsizei n, const GLuint *fences)
+	// void glGenFencesNV (GLsizei n, GLuint *fences)
+	// GLboolean glIsFenceNV (GLuint fence)
+	// GLboolean glTestFenceNV (GLuint fence)
+	// void glGetFenceivNV (GLuint fence, GLenum pname, GLint *params)
+	// void glFinishFenceNV (GLuint fence)
+	// void glSetFenceNV (GLuint fence, GLenum condition)
 }

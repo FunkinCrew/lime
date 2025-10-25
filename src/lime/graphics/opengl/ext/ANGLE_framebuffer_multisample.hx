@@ -9,5 +9,5 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+	// void glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
 }

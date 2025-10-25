@@ -12,6 +12,6 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glLabelObjectEXT (GLenum type, GLuint object, GLsizei length, const GLchar *label);
-	// GL_APICALL void GL_APIENTRY glGetObjectLabelEXT (GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label);
+	// void glLabelObjectEXT (GLenum type, GLuint object, GLsizei length, const GLchar *label)
+	// void glGetObjectLabelEXT (GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label)
 }

@@ -18,16 +18,15 @@ package lime.graphics.opengl.ext;
 	public var CONDITION_SATISFIED_APPLE = 0x911C;
 	public var WAIT_FAILED_APPLE = 0x911D;
 	public var SYNC_FLUSH_COMMANDS_BIT_APPLE = 0x00000001;
-	public var TIMEOUT_IGNORED_APPLE = 0xFFFFFFFF;
+	public var TIMEOUT_IGNORED_APPLE = 0xFFFFFFFF; // 0xFFFFFFFFFFFFFFFF
 
-	// public var TIMEOUT_IGNORED_APPLE = 0xFFFFFFFFFFFFFFFFull;
 	@:noCompletion private function new() {}
 
-	// GL_APICALL GLsync GL_APIENTRY glFenceSyncAPPLE (GLenum condition, GLbitfield flags);
-	// GL_APICALL GLboolean GL_APIENTRY glIsSyncAPPLE (GLsync sync);
-	// GL_APICALL void GL_APIENTRY glDeleteSyncAPPLE (GLsync sync);
-	// GL_APICALL GLenum GL_APIENTRY glClientWaitSyncAPPLE (GLsync sync, GLbitfield flags, GLuint64 timeout);
-	// GL_APICALL void GL_APIENTRY glWaitSyncAPPLE (GLsync sync, GLbitfield flags, GLuint64 timeout);
-	// GL_APICALL void GL_APIENTRY glGetInteger64vAPPLE (GLenum pname, GLint64 *params);
-	// GL_APICALL void GL_APIENTRY glGetSyncivAPPLE (GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values);
+	// GLsync glFenceSyncAPPLE (GLenum condition, GLbitfield flags)
+	// GLboolean glIsSyncAPPLE (GLsync sync)
+	// void glDeleteSyncAPPLE (GLsync sync)
+	// GLenum glClientWaitSyncAPPLE (GLsync sync, GLbitfield flags, GLuint64 timeout)
+	// void glWaitSyncAPPLE (GLsync sync, GLbitfield flags, GLuint64 timeout)
+	// void glGetInteger64vAPPLE (GLenum pname, GLint64 *params)
+	// void glGetSyncivAPPLE (GLsync sync, GLenum pname, GLsizei count, GLsizei *length, GLint *values)
 }

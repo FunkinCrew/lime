@@ -1,8 +1,10 @@
 package lime.graphics.opengl.ext;
 
+@:keep
 @:noCompletion class EXT_multi_draw_arrays
 {
 	@:noCompletion private function new() {}
-	// GL_APICALL void GL_APIENTRY glMultiDrawArraysEXT (GLenum, GLint *, GLsizei *, GLsizei);
-	// GL_APICALL void GL_APIENTRY glMultiDrawElementsEXT (GLenum, const GLsizei *, GLenum, const GLvoid* *, GLsizei);
+
+	// void glMultiDrawArraysEXT (GLenum mode, const GLint *first, const GLsizei *count, GLsizei primcount)
+	// void glMultiDrawElementsEXT (GLenum mode, const GLsizei *count, GLenum type, const void *const*indices, GLsizei primcount)
 }

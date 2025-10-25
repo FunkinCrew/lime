@@ -39,5 +39,5 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glDrawBuffersNV (GLsizei n, const GLenum *bufs);
+	// void glDrawBuffersNV (GLsizei n, const GLenum *bufs)
 }

@@ -28,7 +28,9 @@ package lime.graphics.opengl.ext;
 	public var BUFFER = 0x82E0;
 	public var SHADER = 0x82E1;
 	public var PROGRAM = 0x82E2;
+	public var VERTEX_ARRAY = 0x8074;
 	public var QUERY = 0x82E3;
+	public var PROGRAM_PIPELINE = 0x82E4;
 	public var SAMPLER = 0x82E6;
 	public var MAX_LABEL_LENGTH = 0x82E8;
 	public var MAX_DEBUG_MESSAGE_LENGTH = 0x9143;
@@ -44,15 +46,15 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// public function debugMessageControl (source:Int, type:Int, severity:Int, count:Int, ids:Array<Int>, enabled:Bool):Void {}
-	// public function debugMessageInsert (source:Int, type:Int, id:Int, severity:Int, message:String):Void {}
-	// public function debugMessageCallback (callback:Dynamic, userParam:Dynamic):Void;
-	// public function getDebugMessageLog (count:Int, sources:Array<Int>, types:Array<Int>, ids:Array<Int>, severities:Array<Int>, lengths:Array<Int>):String {}
-	// public function pushDebugGroup (source:Int, id:Int, message:String):Void {}
-	// public function popDebugGroup ():Void {}
-	// public function objectLabel (identifier:Int, name:Int, label:String):Void {}
-	// public function getObjectLabel (identifier:Int, name:Int):String {}
-	// public function objectPtrLabel (ptr:Dynamic, label:String):Void {}
-	// public function getObjectPtrLabel (ptr:Dynamic):String {}
-	// public function getPointerv (pname:Int, params:Array<Dynamic>):Void {}
+	// void glDebugMessageControl (GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint *ids, GLboolean enabled)
+	// void glDebugMessageInsert (GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *buf)
+	// void glDebugMessageCallback (GLDEBUGPROC callback, const void *userParam)
+	// GLuint glGetDebugMessageLog (GLuint count, GLsizei bufSize, GLenum *sources, GLenum *types, GLuint *ids, GLenum *severities, GLsizei *lengths, GLchar *messageLog)
+	// void glPushDebugGroup (GLenum source, GLuint id, GLsizei length, const GLchar *message)
+	// void glPopDebugGroup ()
+	// void glObjectLabel (GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
+	// void glGetObjectLabel (GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label)
+	// void glObjectPtrLabel (const void *ptr, GLsizei length, const GLchar *label)
+	// void glGetObjectPtrLabel (const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label)
+	// void glGetPointerv (GLenum pname, void **params)
 }

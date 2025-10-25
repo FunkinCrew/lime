@@ -38,6 +38,6 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glStartTilingQCOM (GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask);
-	// GL_APICALL void GL_APIENTRY glEndTilingQCOM (GLbitfield preserveMask);
+	// void glStartTilingQCOM (GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask)
+	// void glEndTilingQCOM (GLbitfield preserveMask)
 }

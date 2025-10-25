@@ -13,6 +13,6 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glRenderbufferStorageMultisampleAPPLE (GLenum, GLsizei, GLenum, GLsizei, GLsizei);
-	// GL_APICALL void GL_APIENTRY glResolveMultisampleFramebufferAPPLE (void);
+	// void glRenderbufferStorageMultisampleAPPLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+	// void glResolveMultisampleFramebufferAPPLE ()
 }

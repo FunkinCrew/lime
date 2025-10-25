@@ -10,7 +10,7 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// public function mapBufferOES (target:Int, access:Int):Dynamic {}
-	// public function unmapBufferOES (target:Int):Bool {}
-	// public function getBufferPointervOES (target:Int, pname:Int):Dynamic {}
+	// void * glMapBufferOES (GLenum target, GLenum access)
+	// GLboolean glUnmapBufferOES (GLenum target)
+	// void glGetBufferPointervOES (GLenum target, GLenum pname, void **params)
 }

@@ -13,15 +13,15 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// public function getPerfMonitorGroupsAMD (GLint *numGroups, GLsizei groupsSize, GLuint *groups);
-	// public function getPerfMonitorCountersAMD (GLuint group, GLint *numCounters, GLint *maxActiveCounters, GLsizei counterSize, GLuint *counters);
-	// public function getPerfMonitorGroupStringAMD (GLuint group, GLsizei bufSize, GLsizei *length, GLchar *groupString);
-	// public function getPerfMonitorCounterStringAMD (GLuint group, GLuint counter, GLsizei bufSize, GLsizei *length, GLchar *counterString);
-	// public function getPerfMonitorCounterInfoAMD (GLuint group, GLuint counter, GLenum pname, GLvoid *data);
-	// public function genPerfMonitorsAMD (GLsizei n, GLuint *monitors);
-	// public function deletePerfMonitorsAMD (GLsizei n, GLuint *monitors);
-	// public function selectPerfMonitorCountersAMD (GLuint monitor, GLboolean enable, GLuint group, GLint numCounters, GLuint *countersList);
-	// public function beginPerfMonitorAMD (GLuint monitor);
-	// public function endPerfMonitorAMD (GLuint monitor);
-	// public function getPerfMonitorCounterDataAMD (GLuint monitor, GLenum pname, GLsizei dataSize, GLuint *data, GLint *bytesWritten);
+	// void glGetPerfMonitorGroupsAMD (GLint *numGroups, GLsizei groupsSize, GLuint *groups)
+	// void glGetPerfMonitorCountersAMD (GLuint group, GLint *numCounters, GLint *maxActiveCounters, GLsizei counterSize, GLuint *counters)
+	// void glGetPerfMonitorGroupStringAMD (GLuint group, GLsizei bufSize, GLsizei *length, GLchar *groupString)
+	// void glGetPerfMonitorCounterStringAMD (GLuint group, GLuint counter, GLsizei bufSize, GLsizei *length, GLchar *counterString)
+	// void glGetPerfMonitorCounterInfoAMD (GLuint group, GLuint counter, GLenum pname, void *data)
+	// void glGenPerfMonitorsAMD (GLsizei n, GLuint *monitors)
+	// void glDeletePerfMonitorsAMD (GLsizei n, GLuint *monitors)
+	// void glSelectPerfMonitorCountersAMD (GLuint monitor, GLboolean enable, GLuint group, GLint numCounters, GLuint *counterList)
+	// void glBeginPerfMonitorAMD (GLuint monitor)
+	// void glEndPerfMonitorAMD (GLuint monitor)
+	// void glGetPerfMonitorCounterDataAMD (GLuint monitor, GLenum pname, GLsizei dataSize, GLuint *data, GLint *bytesWritten)
 }

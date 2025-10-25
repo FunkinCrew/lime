@@ -1,11 +1,9 @@
 package lime.graphics.opengl.ext;
 
-#if (!js || !html5 || display)
+@:keep
 @:noCompletion class OES_texture_float
 {
+	public var FLOAT = 0x1406;
+
 	@:noCompletion private function new() {}
 }
-#else
-@:native("OES_texture_float")
-@:noCompletion extern class OES_texture_float {}
-#end

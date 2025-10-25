@@ -9,5 +9,5 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glDiscardFramebufferEXT (GLenum target, GLsizei numAttachments, const GLenum *attachments);
+	// void glDiscardFramebufferEXT (GLenum target, GLsizei numAttachments, const GLenum *attachments)
 }

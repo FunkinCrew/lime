@@ -7,5 +7,5 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glReadBufferNV (GLenum mode);
+	// void glReadBufferNV (GLenum mode)
 }

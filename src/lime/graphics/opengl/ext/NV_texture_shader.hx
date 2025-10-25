@@ -1,0 +1,81 @@
+package lime.graphics.opengl.ext;
+
+@:keep
+@:noCompletion class NV_texture_shader
+{
+	public var OFFSET_TEXTURE_RECTANGLE_NV = 0x864C;
+	public var OFFSET_TEXTURE_RECTANGLE_SCALE_NV = 0x864D;
+	public var DOT_PRODUCT_TEXTURE_RECTANGLE_NV = 0x864E;
+	public var RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV = 0x86D9;
+	public var UNSIGNED_INT_S8_S8_8_8_NV = 0x86DA;
+	public var UNSIGNED_INT_8_8_S8_S8_REV_NV = 0x86DB;
+	public var DSDT_MAG_INTENSITY_NV = 0x86DC;
+	public var SHADER_CONSISTENT_NV = 0x86DD;
+	public var TEXTURE_SHADER_NV = 0x86DE;
+	public var SHADER_OPERATION_NV = 0x86DF;
+	public var CULL_MODES_NV = 0x86E0;
+	public var OFFSET_TEXTURE_MATRIX_NV = 0x86E1;
+	public var OFFSET_TEXTURE_SCALE_NV = 0x86E2;
+	public var OFFSET_TEXTURE_BIAS_NV = 0x86E3;
+	public var OFFSET_TEXTURE_2D_MATRIX_NV = 0x86E1;
+	public var OFFSET_TEXTURE_2D_SCALE_NV = 0x86E2;
+	public var OFFSET_TEXTURE_2D_BIAS_NV = 0x86E3;
+	public var PREVIOUS_TEXTURE_INPUT_NV = 0x86E4;
+	public var CONST_EYE_NV = 0x86E5;
+	public var PASS_THROUGH_NV = 0x86E6;
+	public var CULL_FRAGMENT_NV = 0x86E7;
+	public var OFFSET_TEXTURE_2D_NV = 0x86E8;
+	public var DEPENDENT_AR_TEXTURE_2D_NV = 0x86E9;
+	public var DEPENDENT_GB_TEXTURE_2D_NV = 0x86EA;
+	public var DOT_PRODUCT_NV = 0x86EC;
+	public var DOT_PRODUCT_DEPTH_REPLACE_NV = 0x86ED;
+	public var DOT_PRODUCT_TEXTURE_2D_NV = 0x86EE;
+	public var DOT_PRODUCT_TEXTURE_CUBE_MAP_NV = 0x86F0;
+	public var DOT_PRODUCT_DIFFUSE_CUBE_MAP_NV = 0x86F1;
+	public var DOT_PRODUCT_REFLECT_CUBE_MAP_NV = 0x86F2;
+	public var DOT_PRODUCT_CONST_EYE_REFLECT_CUBE_MAP_NV = 0x86F3;
+	public var HILO_NV = 0x86F4;
+	public var DSDT_NV = 0x86F5;
+	public var DSDT_MAG_NV = 0x86F6;
+	public var DSDT_MAG_VIB_NV = 0x86F7;
+	public var HILO16_NV = 0x86F8;
+	public var SIGNED_HILO_NV = 0x86F9;
+	public var SIGNED_HILO16_NV = 0x86FA;
+	public var SIGNED_RGBA_NV = 0x86FB;
+	public var SIGNED_RGBA8_NV = 0x86FC;
+	public var SIGNED_RGB_NV = 0x86FE;
+	public var SIGNED_RGB8_NV = 0x86FF;
+	public var SIGNED_LUMINANCE_NV = 0x8701;
+	public var SIGNED_LUMINANCE8_NV = 0x8702;
+	public var SIGNED_LUMINANCE_ALPHA_NV = 0x8703;
+	public var SIGNED_LUMINANCE8_ALPHA8_NV = 0x8704;
+	public var SIGNED_ALPHA_NV = 0x8705;
+	public var SIGNED_ALPHA8_NV = 0x8706;
+	public var SIGNED_INTENSITY_NV = 0x8707;
+	public var SIGNED_INTENSITY8_NV = 0x8708;
+	public var DSDT8_NV = 0x8709;
+	public var DSDT8_MAG8_NV = 0x870A;
+	public var DSDT8_MAG8_INTENSITY8_NV = 0x870B;
+	public var SIGNED_RGB_UNSIGNED_ALPHA_NV = 0x870C;
+	public var SIGNED_RGB8_UNSIGNED_ALPHA8_NV = 0x870D;
+	public var HI_SCALE_NV = 0x870E;
+	public var LO_SCALE_NV = 0x870F;
+	public var DS_SCALE_NV = 0x8710;
+	public var DT_SCALE_NV = 0x8711;
+	public var MAGNITUDE_SCALE_NV = 0x8712;
+	public var VIBRANCE_SCALE_NV = 0x8713;
+	public var HI_BIAS_NV = 0x8714;
+	public var LO_BIAS_NV = 0x8715;
+	public var DS_BIAS_NV = 0x8716;
+	public var DT_BIAS_NV = 0x8717;
+	public var MAGNITUDE_BIAS_NV = 0x8718;
+	public var VIBRANCE_BIAS_NV = 0x8719;
+	public var TEXTURE_BORDER_VALUES_NV = 0x871A;
+	public var TEXTURE_HI_SIZE_NV = 0x871B;
+	public var TEXTURE_LO_SIZE_NV = 0x871C;
+	public var TEXTURE_DS_SIZE_NV = 0x871D;
+	public var TEXTURE_DT_SIZE_NV = 0x871E;
+	public var TEXTURE_MAG_SIZE_NV = 0x871F;
+
+	@:noCompletion private function new() {}
+}

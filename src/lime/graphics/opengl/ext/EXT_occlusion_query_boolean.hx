@@ -11,11 +11,11 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glGenQueriesEXT (GLsizei n, GLuint *ids);
-	// GL_APICALL void GL_APIENTRY glDeleteQueriesEXT (GLsizei n, const GLuint *ids);
-	// GL_APICALL GLboolean GL_APIENTRY glIsQueryEXT (GLuint id);
-	// GL_APICALL void GL_APIENTRY glBeginQueryEXT (GLenum target, GLuint id);
-	// GL_APICALL void GL_APIENTRY glEndQueryEXT (GLenum target);
-	// GL_APICALL void GL_APIENTRY glGetQueryivEXT (GLenum target, GLenum pname, GLint *params);
-	// GL_APICALL void GL_APIENTRY glGetQueryObjectuivEXT (GLuint id, GLenum pname, GLuint *params);
+	// void glGenQueriesEXT (GLsizei n, GLuint *ids)
+	// void glDeleteQueriesEXT (GLsizei n, const GLuint *ids)
+	// GLboolean glIsQueryEXT (GLuint id)
+	// void glBeginQueryEXT (GLenum target, GLuint id)
+	// void glEndQueryEXT (GLenum target)
+	// void glGetQueryivEXT (GLenum target, GLenum pname, GLint *params)
+	// void glGetQueryObjectuivEXT (GLuint id, GLenum pname, GLuint *params)
 }

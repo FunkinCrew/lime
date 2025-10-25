@@ -9,5 +9,5 @@ package lime.graphics.opengl.ext;
 
 	@:noCompletion private function new() {}
 
-	// GL_APICALL void GL_APIENTRY glAlphaFuncQCOM (GLenum func, GLclampf ref);
+	// void glAlphaFuncQCOM (GLenum func, GLclampf ref)
 }
