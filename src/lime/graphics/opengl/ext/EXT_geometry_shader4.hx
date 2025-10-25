@@ -1,0 +1,30 @@
+package lime.graphics.opengl.ext;
+
+@:keep
+@:noCompletion class EXT_geometry_shader4
+{
+	public var GEOMETRY_SHADER_EXT = 0x8DD9;
+	public var GEOMETRY_VERTICES_OUT_EXT = 0x8DDA;
+	public var GEOMETRY_INPUT_TYPE_EXT = 0x8DDB;
+	public var GEOMETRY_OUTPUT_TYPE_EXT = 0x8DDC;
+	public var MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT = 0x8C29;
+	public var MAX_GEOMETRY_VARYING_COMPONENTS_EXT = 0x8DDD;
+	public var MAX_VERTEX_VARYING_COMPONENTS_EXT = 0x8DDE;
+	public var MAX_VARYING_COMPONENTS_EXT = 0x8B4B;
+	public var MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT = 0x8DDF;
+	public var MAX_GEOMETRY_OUTPUT_VERTICES_EXT = 0x8DE0;
+	public var MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_EXT = 0x8DE1;
+	public var LINES_ADJACENCY_EXT = 0x000A;
+	public var LINE_STRIP_ADJACENCY_EXT = 0x000B;
+	public var TRIANGLES_ADJACENCY_EXT = 0x000C;
+	public var TRIANGLE_STRIP_ADJACENCY_EXT = 0x000D;
+	public var FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT = 0x8DA8;
+	public var FRAMEBUFFER_INCOMPLETE_LAYER_COUNT_EXT = 0x8DA9;
+	public var FRAMEBUFFER_ATTACHMENT_LAYERED_EXT = 0x8DA7;
+	public var FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER_EXT = 0x8CD4;
+	public var PROGRAM_POINT_SIZE_EXT = 0x8642;
+
+	@:noCompletion private function new() {}
+
+	// void glProgramParameteriEXT (GLuint program, GLenum pname, GLint value)
+}

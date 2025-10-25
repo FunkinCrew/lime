@@ -1,0 +1,48 @@
+package lime.graphics.opengl.ext;
+
+@:keep
+@:noCompletion class ARB_tessellation_shader
+{
+	public var PATCHES = 0x000E;
+	public var PATCH_VERTICES = 0x8E72;
+	public var PATCH_DEFAULT_INNER_LEVEL = 0x8E73;
+	public var PATCH_DEFAULT_OUTER_LEVEL = 0x8E74;
+	public var TESS_CONTROL_OUTPUT_VERTICES = 0x8E75;
+	public var TESS_GEN_MODE = 0x8E76;
+	public var TESS_GEN_SPACING = 0x8E77;
+	public var TESS_GEN_VERTEX_ORDER = 0x8E78;
+	public var TESS_GEN_POINT_MODE = 0x8E79;
+	public var TRIANGLES = 0x0004;
+	public var ISOLINES = 0x8E7A;
+	public var QUADS = 0x0007;
+	public var EQUAL = 0x0202;
+	public var FRACTIONAL_ODD = 0x8E7B;
+	public var FRACTIONAL_EVEN = 0x8E7C;
+	public var CCW = 0x0901;
+	public var CW = 0x0900;
+	public var MAX_PATCH_VERTICES = 0x8E7D;
+	public var MAX_TESS_GEN_LEVEL = 0x8E7E;
+	public var MAX_TESS_CONTROL_UNIFORM_COMPONENTS = 0x8E7F;
+	public var MAX_TESS_EVALUATION_UNIFORM_COMPONENTS = 0x8E80;
+	public var MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS = 0x8E81;
+	public var MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS = 0x8E82;
+	public var MAX_TESS_CONTROL_OUTPUT_COMPONENTS = 0x8E83;
+	public var MAX_TESS_PATCH_COMPONENTS = 0x8E84;
+	public var MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS = 0x8E85;
+	public var MAX_TESS_EVALUATION_OUTPUT_COMPONENTS = 0x8E86;
+	public var MAX_TESS_CONTROL_UNIFORM_BLOCKS = 0x8E89;
+	public var MAX_TESS_EVALUATION_UNIFORM_BLOCKS = 0x8E8A;
+	public var MAX_TESS_CONTROL_INPUT_COMPONENTS = 0x886C;
+	public var MAX_TESS_EVALUATION_INPUT_COMPONENTS = 0x886D;
+	public var MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 0x8E1E;
+	public var MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 0x8E1F;
+	public var UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER = 0x84F0;
+	public var UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER = 0x84F1;
+	public var TESS_EVALUATION_SHADER = 0x8E87;
+	public var TESS_CONTROL_SHADER = 0x8E88;
+
+	@:noCompletion private function new() {}
+
+	// void glPatchParameteri (GLenum pname, GLint value)
+	// void glPatchParameterfv (GLenum pname, const GLfloat *values)
+}
