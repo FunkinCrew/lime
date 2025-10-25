@@ -520,7 +520,6 @@
 				<lib name="-lm" />
 				<lib name="-lEGL" />
 				<lib name="-lGLESv2" />
-				<lib name="-lGLESv1_CM" />
 				<lib name="-lOpenSLES" />
 
 			</section>
@@ -549,8 +548,6 @@
 				<!-- <vflag name="-framework" value="CoreBluetooth" /> -->
 
 				<lib name="-ldl" />
-				<lib name="-lEGL" />
-				<lib name="-lGLESv3" />
 
 			</section>
 
@@ -569,8 +566,6 @@
 				<!-- <vflag name="-framework" value="CoreBluetooth" /> -->
 
 				<lib name="-ldl" />
-				<lib name="-lEGL" />
-				<lib name="-lGLESv3" />
 
 			</section>
 

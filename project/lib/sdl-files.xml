@@ -291,7 +291,6 @@
 
         <section if="android || ios || linux || windows || mac || tvos">
 
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/opengles/SDL_render_gles.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/opengles2/SDL_render_gles2.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/opengles2/SDL_shaders_gles2.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/SDL_egl.c" />
