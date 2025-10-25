@@ -88,15 +88,14 @@ namespace lime {
 
 			}
 
-			#if defined (RASPBERRYPI) || (defined (HX_WINDOWS) && defined (NATIVE_TOOLKIT_SDL_ANGLE))
+			#ifdef LIME_GLES
 			SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
 			#endif
 
-			#if defined (IPHONE) || defined (APPLETV)
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-			SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+			#if LIME_GL
+			SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 			#endif
 
 			if (flags & WINDOW_FLAG_DEPTH_BUFFER) {
