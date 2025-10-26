@@ -2046,18 +2046,14 @@ namespace lime {
 
 	void lime_gl_get_internalformativ (int target, int internalformat, int pname, int bufSize, double params) {
 
-		#ifdef LIME_GLES2
 		glGetInternalformativ (target, internalformat, pname, (GLsizei)bufSize, (GLint*)(uintptr_t)params);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_get_internalformativ) (int target, int internalformat, int pname, int bufSize, double params) {
 
-		#ifdef LIME_GLES2
 		glGetInternalformativ (target, internalformat, pname, (GLsizei)bufSize, (GLint*)(uintptr_t)params);
-		#endif
 
 	}
 
@@ -3010,7 +3006,6 @@ namespace lime {
 
 	void lime_gl_invalidate_framebuffer (int target, value attachments) {
 
-		#ifdef LIME_GLES2
 		GLint size = val_array_size (attachments);
 		GLenum *_attachments = (GLenum*)alloca (size * sizeof(GLenum));
 
@@ -3021,24 +3016,20 @@ namespace lime {
 		}
 
 		glInvalidateFramebuffer (target, size, _attachments);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_invalidate_framebuffer) (int target, varray* attachments) {
 
-		#ifdef LIME_GLES2
 		GLint size = attachments->size;
 		glInvalidateFramebuffer (target, size, (GLenum*)hl_aptr (attachments, int));
-		#endif
 
 	}
 
 
 	void lime_gl_invalidate_sub_framebuffer (int target, value attachments, int x, int y, int width, int height) {
 
-		#ifdef LIME_GLES2
 		GLint size = val_array_size (attachments);
 		GLenum *_attachments = (GLenum*)alloca (size * sizeof(GLenum));
 
@@ -3049,17 +3040,14 @@ namespace lime {
 		}
 
 		glInvalidateSubFramebuffer (target, size, _attachments, x, y, width, height);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_invalidate_sub_framebuffer) (int target, varray* attachments, int x, int y, int width, int height) {
 
-		#ifdef LIME_GLES2
 		GLint size = attachments->size;
 		glInvalidateSubFramebuffer (target, size, (GLenum*)hl_aptr (attachments, int), x, y, width, height);
-		#endif
 
 	}
 
@@ -3806,36 +3794,28 @@ namespace lime {
 
 	void lime_gl_tex_storage_2d (int target, int level, int internalformat, int width, int height) {
 
-		#ifdef LIME_GLES2
 		glTexStorage2D (target, level, internalformat, width, height);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_tex_storage_2d) (int target, int level, int internalformat, int width, int height) {
 
-		#ifdef LIME_GLES2
 		glTexStorage2D (target, level, internalformat, width, height);
-		#endif
 
 	}
 
 
 	void lime_gl_tex_storage_3d (int target, int level, int internalformat, int width, int height, int depth) {
 
-		#ifdef LIME_GLES2
 		glTexStorage3D (target, level, internalformat, width, height, depth);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_tex_storage_3d) (int target, int level, int internalformat, int width, int height, int depth) {
 
-		#ifdef LIME_GLES2
 		glTexStorage3D (target, level, internalformat, width, height, depth);
-		#endif
 
 	}
 
@@ -3856,18 +3836,14 @@ namespace lime {
 
 	void lime_gl_tex_sub_image_3d (int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, double data) {
 
-		#ifdef LIME_GLES2
 		glTexSubImage3D (target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, (void*)(uintptr_t)data);
-		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_gl_tex_sub_image_3d) (int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, double data) {
 
-		#ifdef LIME_GLES2
 		glTexSubImage3D (target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, (void*)(uintptr_t)data);
-		#endif
 
 	}
 
