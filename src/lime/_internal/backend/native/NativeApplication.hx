@@ -1,5 +1,7 @@
 package lime._internal.backend.native;
 
+import sys.thread.Mutex;
+import sys.thread.Thread;
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
@@ -373,8 +375,10 @@ class NativeApplication
 		}
 	}
 
+	var mutex:sys.thread.Mutex = new Mutex();
 	private function handleRenderEvent():Void
 	{
+		mutex.acquire();
 		// TODO: Allow windows to render independently
 
 		for (window in parent.__windows)
@@ -426,6 +430,9 @@ class NativeApplication
 					}
 			}
 		}
+
+
+		mutex.release();
 	}
 
 	private function handleSensorEvent():Void

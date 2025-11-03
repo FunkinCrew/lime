@@ -3244,6 +3244,20 @@ namespace lime {
 
 	}
 
+	void lime_window_startRenderThread (value window) {
+
+		Window* targetWindow = (Window*)val_data (window);
+		targetWindow->startRenderThread ();
+
+	}
+
+	void lime_window_stopRenderThread (value window) {
+
+		Window* targetWindow = (Window*)val_data (window);
+		targetWindow->stopRenderThread ();
+
+	}
+
 
 	HL_PRIM void HL_NAME(hl_window_alert) (HL_CFFIPointer* window, hl_vstring* message, hl_vstring* title) {
 
@@ -4172,6 +4186,8 @@ namespace lime {
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
 	DEFINE_PRIME3v (lime_window_alert);
+	DEFINE_PRIME1v (lime_window_startRenderThread);
+	DEFINE_PRIME1v (lime_window_stopRenderThread);
 	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
 	DEFINE_PRIME1v (lime_window_context_flip);

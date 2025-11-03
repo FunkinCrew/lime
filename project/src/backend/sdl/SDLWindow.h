@@ -5,8 +5,11 @@
 #include <SDL_syswm.h>
 #include <SDL.h>
 #include <graphics/ImageBuffer.h>
+#include <graphics/RenderEvent.h>
 #include <ui/Cursor.h>
 #include <ui/Window.h>
+#include <atomic>
+#include <thread>
 
 
 namespace lime {
@@ -62,12 +65,19 @@ namespace lime {
 			virtual const char* SetTitle (const char* title);
 			virtual bool SetVisible (bool visible);
 			virtual void WarpMouse (int x, int y);
+
+		    virtual void startRenderThread();
+		    virtual void stopRenderThread();
+
 			SDL_Renderer* sdlRenderer;
 			SDL_Texture* sdlTexture;
 			SDL_Window* sdlWindow;
+			RenderEvent renderEvent;
 
 		private:
+			virtual void renderLoop ();
 
+		    std::thread renderThread;
 			SDL_GLContext context;
 			int contextHeight;
 			int contextWidth;

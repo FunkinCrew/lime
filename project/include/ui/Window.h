@@ -75,6 +75,10 @@ namespace lime {
 			virtual bool SetVisible (bool visible) = 0;
 			virtual void WarpMouse (int x, int y) = 0;
 
+		    virtual void startRenderThread() = 0;
+		    virtual void stopRenderThread() = 0;
+		    virtual void renderLoop() = 0;
+
 			Application* currentApplication;
 			int flags;
 

@@ -218,82 +218,76 @@ namespace lime {
 			// }
 
 			context = SDL_GL_CreateContext (sdlWindow);
-
-			if (context && SDL_GL_MakeCurrent (sdlWindow, context) == 0) {
-
-				if (flags & WINDOW_FLAG_VSYNC) {
-
-					SetVSyncMode (WINDOW_VSYNC_ON);
-
-				} else {
-
-					SetVSyncMode (WINDOW_VSYNC_OFF);
-
-				}
-
-				OpenGLBindings::Init ();
-
-				#ifndef LIME_GLES
-
-				int version = 0;
-				glGetIntegerv (GL_MAJOR_VERSION, &version);
-
-				if (version == 0) {
-
-					float versionScan = 0;
-					sscanf ((const char*)glGetString (GL_VERSION), "%f", &versionScan);
-					version = versionScan;
-
-				}
-
-				if (version < 2 && !strstr ((const char*)glGetString (GL_VERSION), "OpenGL ES")) {
-
-					SDL_GL_DeleteContext (context);
-					context = 0;
-
-				}
-
-				#elif defined(IPHONE) || defined(APPLETV)
-
-				// SDL_SysWMinfo windowInfo;
-				// SDL_GetWindowWMInfo (sdlWindow, &windowInfo);
-				// OpenGLBindings::defaultFramebuffer = windowInfo.info.uikit.framebuffer;
-				// OpenGLBindings::defaultRenderbuffer = windowInfo.info.uikit.colorbuffer;
-				glGetIntegerv (GL_FRAMEBUFFER_BINDING, &OpenGLBindings::defaultFramebuffer);
-				glGetIntegerv (GL_RENDERBUFFER_BINDING, &OpenGLBindings::defaultRenderbuffer);
-
-				#endif
-
-			} else {
-
-				SDL_GL_DeleteContext (context);
-				context = NULL;
-
-			}
-
-		}
-
-		if (!context) {
-
-			sdlRendererFlags &= ~SDL_RENDERER_ACCELERATED;
-			sdlRendererFlags &= ~SDL_RENDERER_PRESENTVSYNC;
-
-			sdlRendererFlags |= SDL_RENDERER_SOFTWARE;
-
-			sdlRenderer = SDL_CreateRenderer (sdlWindow, -1, sdlRendererFlags);
-
-		}
-
-		if (context || sdlRenderer) {
-
 			((SDLApplication*)currentApplication)->RegisterWindow (this);
 
+		}
+	}
+
+    std::atomic<bool> running;
+	void SDLWindow::startRenderThread() {
+	    running = true;
+    	renderThread = std::thread(&SDLWindow::renderLoop, this);
+	}
+
+	void SDLWindow::stopRenderThread() {
+    	running = false;
+    	if (renderThread.joinable())
+        	renderThread.join();
+	}
+
+	void SDLWindow::renderLoop() {
+    	// Make this thread own the GL context
+
+	    if (context && SDL_GL_MakeCurrent (sdlWindow, context) == 0) {
+		
+			if (flags & WINDOW_FLAG_VSYNC) {
+				SetVSyncMode (WINDOW_VSYNC_ON);
+			} else {
+				SetVSyncMode (WINDOW_VSYNC_OFF);
+			}
+			OpenGLBindings::Init ();
+			#ifndef LIME_GLES
+			int version = 0;
+			glGetIntegerv (GL_MAJOR_VERSION, &version);
+			if (version == 0) {
+				float versionScan = 0;
+				sscanf ((const char*)glGetString (GL_VERSION), "%f", &versionScan);
+				version = versionScan;
+			}
+			if (version < 2 && !strstr ((const char*)glGetString (GL_VERSION), "OpenGL ES")) {
+				SDL_GL_DeleteContext (context);
+				context = 0;
+			}
+			#elif defined(IPHONE) || defined(APPLETV)
+			// SDL_SysWMinfo windowInfo;
+			// SDL_GetWindowWMInfo (sdlWindow, &windowInfo);
+			// OpenGLBindings::defaultFramebuffer = windowInfo.info.uikit.framebuffer;
+			// OpenGLBindings::defaultRenderbuffer = windowInfo.info.uikit.colorbuffer;
+			glGetIntegerv (GL_FRAMEBUFFER_BINDING, &OpenGLBindings::defaultFramebuffer);
+			glGetIntegerv (GL_RENDERBUFFER_BINDING, &OpenGLBindings::defaultRenderbuffer);
+			#endif
 		} else {
-
-			printf ("Could not create SDL renderer: %s.\n", SDL_GetError ());
-
+		
+			SDL_GL_DeleteContext (context);
+			context = NULL;
+			return;
 		}
 
+		printf("starting render loop...\n");
+    	while (running) {
+	        // glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+        	// glClear(GL_COLOR_BUFFER_BIT);
+
+        	// Example rendering calls...
+			SDL_Delay(16);
+			int top = 0;
+			gc_set_top_of_stack (&top, false);
+			RenderEvent::Dispatch (&renderEvent);
+
+    	}
+
+    	// Cleanup
+		SDL_GL_DeleteContext (context);
 	}
 
 

@@ -122,9 +122,10 @@ import ::APP_MAIN::;
 	public static function start(app:lime.app.Application = null):Void
 	{
 		#if !munit
-
 		var result = app.exec();
 
+		@:privateAccess
+		app.window.__backend.stopRenderThread();
 		#if (sys && !ios && !nodejs && !webassembly)
 		lime.system.System.exit(result);
 		#end

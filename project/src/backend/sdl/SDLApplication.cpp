@@ -185,7 +185,7 @@ namespace lime {
 					}
 
 					ApplicationEvent::Dispatch (&applicationEvent);
-					RenderEvent::Dispatch (&renderEvent);
+					// RenderEvent::Dispatch (&renderEvent);
 
 				}
 
@@ -248,13 +248,13 @@ namespace lime {
 			#ifndef EMSCRIPTEN
 			case SDL_RENDER_DEVICE_RESET:
 
-				renderEvent.type = RENDER_CONTEXT_LOST;
-				RenderEvent::Dispatch (&renderEvent);
+				// renderEvent.type = RENDER_CONTEXT_LOST;
+				// RenderEvent::Dispatch (&renderEvent);
 
-				renderEvent.type = RENDER_CONTEXT_RESTORED;
-				RenderEvent::Dispatch (&renderEvent);
+				// renderEvent.type = RENDER_CONTEXT_RESTORED;
+				// RenderEvent::Dispatch (&renderEvent);
 
-				renderEvent.type = RENDER;
+				// renderEvent.type = RENDER;
 				break;
 			#endif
 
@@ -295,7 +295,7 @@ namespace lime {
 
 						if (!inBackground) {
 
-							RenderEvent::Dispatch (&renderEvent);
+							// RenderEvent::Dispatch (&renderEvent);
 
 						}
 
@@ -307,7 +307,7 @@ namespace lime {
 
 						if (!inBackground) {
 
-							RenderEvent::Dispatch (&renderEvent);
+							// RenderEvent::Dispatch (&renderEvent);
 
 						}
 

@@ -285,6 +285,10 @@ class NativeCFFI
 
 	@:cffi private static function lime_window_alert(handle:Dynamic, message:String, title:String):Void;
 
+	@:cffi private static function lime_window_startRenderThread(handle:Dynamic):Void;
+
+	@:cffi private static function lime_window_stopRenderThread(handle:Dynamic):Void;
+
 	@:cffi private static function lime_window_set_vsync_mode(handle:Dynamic, mode:Int):Bool;
 
 	@:cffi private static function lime_window_close(handle:Dynamic):Void;
@@ -569,6 +573,10 @@ class NativeCFFI
 		"lime_touch_event_manager_register", "oov", false));
 	private static var lime_window_alert = new cpp.Callable<cpp.Object->String->String->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_alert", "ossv",
 		false));
+	private static var lime_window_startRenderThread = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_startRenderThread", "ov",
+		false));
+	private static var lime_window_stopRenderThread = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_stopRenderThread", "ov",
+		false));
 	private static var lime_window_set_vsync_mode = new cpp.Callable<cpp.Object->Int->Bool>(cpp.Prime._loadPrime("lime", "lime_window_set_vsync_mode", "oib",
 		false));
 	private static var lime_window_close = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_close", "ov", false));
@@ -762,6 +770,8 @@ class NativeCFFI
 	private static var lime_text_event_manager_register = CFFI.load("lime", "lime_text_event_manager_register", 2);
 	private static var lime_touch_event_manager_register = CFFI.load("lime", "lime_touch_event_manager_register", 2);
 	private static var lime_window_alert = CFFI.load("lime", "lime_window_alert", 3);
+	private static var lime_window_startRenderThread = CFFI.load("lime", "lime_window_alert", 1);
+	private static var lime_window_stopRenderThread = CFFI.load("lime", "lime_window_alert", 1);
 	private static var lime_window_set_vsync_mode = CFFI.load("lime", "lime_window_set_vsync_mode", 2);
 	private static var lime_window_close = CFFI.load("lime", "lime_window_close", 1);
 	private static var lime_window_context_flip = CFFI.load("lime", "lime_window_context_flip", 1);

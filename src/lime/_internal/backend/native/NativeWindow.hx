@@ -130,6 +130,8 @@ class NativeWindow
 		switch (contextType)
 		{
 			case "opengl":
+				startRenderThread();
+				Sys.sleep(0.1);
 				var gl = new NativeOpenGLRenderContext();
 
 				useHardware = true;
@@ -255,6 +257,27 @@ class NativeWindow
 		}
 
 		return false;
+	}
+
+
+	public function startRenderThread():Void
+	{
+		if (handle != null)
+		{
+			#if (!macro && lime_cffi)
+			NativeCFFI.lime_window_startRenderThread(handle);
+			#end
+		}
+	}
+
+	public function stopRenderThread():Void
+	{
+		if (handle != null)
+		{
+			#if (!macro && lime_cffi)
+			NativeCFFI.lime_window_stopRenderThread(handle);
+			#end
+		}
 	}
 
 	public function getCursor():MouseCursor
