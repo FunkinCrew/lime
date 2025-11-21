@@ -139,6 +139,7 @@ class Window
 	public var textInputEnabled(get, set):Bool;
 	public var title(get, set):String;
 	public var visible(get, set):Bool;
+	public var alwaysOnTop(get, set):Bool;
 	public var width(get, set):Int;
 	public var x(get, set):Int;
 	public var y(get, set):Int;
@@ -159,6 +160,7 @@ class Window
 	@:noCompletion private var __resizable:Bool;
 	@:noCompletion private var __scale:Float;
 	@:noCompletion private var __title:String;
+	@:noCompletion private var __alwaysOnTop:Bool;
 	@:noCompletion private var __width:Int;
 	@:noCompletion private var __x:Int;
 	@:noCompletion private var __y:Int;
@@ -192,6 +194,7 @@ class Window
 				"textInputEnabled": {get: p.get_textInputEnabled, set: p.set_textInputEnabled},
 				"title": {get: p.get_title, set: p.set_title},
 				"visible": {get: p.get_visible, set: p.set_visible},
+				"alwaysOnTop": {get: p.get_alwaysOnTop, set: p.set_alwaysOnTop},
 				"width": {get: p.get_width, set: p.set_width},
 				"x": {get: p.get_x, set: p.set_y},
 				"y": {get: p.get_x, set: p.set_y}
@@ -733,6 +736,16 @@ class Window
 	{
 		__hidden = !__backend.setVisible(value);
 		return !__hidden;
+	}
+
+	@:noCompletion private inline function get_alwaysOnTop():Bool
+	{
+		return __alwaysOnTop;
+	}
+
+	@:noCompletion private function set_alwaysOnTop(value:Bool):Bool
+	{
+		return __alwaysOnTop = __backend.setAlwaysOnTop(value);
 	}
 
 	@:noCompletion private inline function get_width():Int
