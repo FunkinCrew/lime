@@ -1,5 +1,5 @@
 <xml>
-	<set name="HXCPP_CPP11" value="1" />
+	<set name="HXCPP_CPP20" value="1" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
@@ -21,7 +21,6 @@
 	</files>
 
 	<files id="libhl">
-		<compilerflag value="-std=c11" unless="windows" />
 		<compilerflag value="-DLIBHL_EXPORTS" />
 
 		<compilerflag value="-I${HASHLINK_PATH}/src" />

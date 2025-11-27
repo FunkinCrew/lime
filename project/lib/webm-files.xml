@@ -1,7 +1,5 @@
 <xml>
 
-	<!-- <set name="HXCPP_CPP11" value="1" /> -->
-
 	<files id="native-toolkit-webm">
 
 		<file name="${NATIVE_TOOLKIT_PATH}/webm/mkvmuxer.cpp" />
