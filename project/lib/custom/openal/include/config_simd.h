@@ -22,4 +22,8 @@
 
 #include "config/simd/config_simd-android.h"
 
+#elif defined(IPHONE)
+
+#include "config/simd/config_simd-iphoneos.h"
+
 #endif

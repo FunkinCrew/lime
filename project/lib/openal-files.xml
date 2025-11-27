@@ -158,6 +158,12 @@
 
         </section>
 
+        <section if="ios">
+
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" />
+
+        </section>
+
         <section if="windows">
 
             <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />

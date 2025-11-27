@@ -942,7 +942,6 @@ namespace lime {
 
 				return 0;
 
-			#if defined(ANDROID)
 			case SDL_APP_WILLENTERBACKGROUND:
 
 				return 0;
@@ -964,30 +963,6 @@ namespace lime {
 				WindowEvent::Dispatch (&currentApplication->windowEvent);
 				inBackground = false;
 				return 0;
-			#else
-			case SDL_APP_WILLENTERBACKGROUND:
-
-				inBackground = true;
-				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
-				WindowEvent::Dispatch (&currentApplication->windowEvent);
-				return 0;
-
-			case SDL_APP_DIDENTERBACKGROUND:
-
-				return 0;
-
-			case SDL_APP_WILLENTERFOREGROUND:
-
-				currentApplication->windowEvent.type = WINDOW_ACTIVATE;
-				WindowEvent::Dispatch (&currentApplication->windowEvent);
-				inBackground = false;
-				return 0;
-
-			case SDL_APP_DIDENTERFOREGROUND:
-
-				return 0;
-
-			#endif
 
 			default:
 
