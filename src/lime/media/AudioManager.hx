@@ -2,7 +2,7 @@ package lime.media;
 
 import lime.system.CFFIPointer;
 import haxe.MainLoop;
-#if (windows || mac || linux || android)
+#if (windows || mac || linux || android || ios)
 import haxe.io.Path;
 import lime.system.System;
 import sys.FileSystem;
@@ -42,7 +42,7 @@ class AudioManager
 				#if !lime_doc_gen
 				if (context.type == OPENAL)
 				{
-					#if (windows || mac || linux || android)
+					#if (windows || mac || linux || android || ios)
 					setupConfig();
 					#end
 
@@ -182,7 +182,7 @@ class AudioManager
 	@:noCompletion
 	private static function setupConfig():Void
 	{
-		#if (lime_openal && (windows || mac || linux || android))
+		#if (lime_openal && (windows || mac || linux || android || ios))
 		final alConfig:Array<String> = [];
 
 		alConfig.push('[general]');
