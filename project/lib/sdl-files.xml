@@ -421,6 +421,7 @@
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_evdev.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ibus.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ime.c" />
+            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_sandbox.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_threadprio.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_udev.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/unix/SDL_poll.c" />

@@ -527,6 +527,11 @@ jobs:
           name: Linux64-Hashlink
           path: templates/bin/hl/Linux64
 
+      - name: Rebuild Lime run.n
+        working-directory: tools
+        run: |
+          haxe run.hxml
+
       - name: Rebuild Lime svg.n
         working-directory: tools
         run: |

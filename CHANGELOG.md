@@ -1,6 +1,46 @@
 Changelog
 =========
 
+8.3.0 (11/11/2025)
+------------------
+
+* Added `onDisplayOrientation` and `onDeviceOrientation` events to `Application` to detect mobile device orientation changes.
+* Added `safeArea` property to `Display` to detect region safe from cutouts and rounded corners.
+* Added `rumble()` method to `Gamepad`.
+* Added `-json` flag, which works similarly to the `-xml` flag, but outputs types in JSON format.
+* Added `layoutInDisplayCutoutMode` to `<config:android>`, which may be set to `default`, `always`, `never`, or `shortEdges`.
+* Added support for Windows resource file to set metadata in executable.
+* Added `pannerAttr()` method to `Howler` to configure panner node's attributes for a sound or group of sounds.
+* Added `addString()` method to `HBBuffer` to properly handle encoding conversions in native code.
+* Added `screensize` and `screenDPI` to `<config:air>` to customize the mobile simulator.
+* Added `onUncaughtError` event to `ThreadPool` to allow main thread to handle exceptions in `doWork`.
+* Added `strikethroughPosition` and `strikethroughThickness` to `Font`.
+* Added separate `lime-openalsoft` and `lime-mojoal` defines to help detect which library is used.
+* Added `gradle-properties` to `<config:android>` to customize properties for Android Gradle builds.
+* Fixed missing `hl-ver` define to configure the Haxe compiler to target Lime's bundled HashLink (unless a custom `HL_PATH` is set).
+* Fixed display of preload progress for packed asset libraries.
+* Fixed mouse move and mouse up event failing to dispatch outside window bounds when mouse button is down.
+* Fixed `hardware` attribute not being set on context creation.
+* Fixed some window properties not getting set properly from attributes on window creation.
+* Fixed performance issues in `ThreadPool` by overhauling job scheduling.
+* Fixed exception on Windows when exiting program by using `SDL_QuitSubSystem` in native code.
+* Fixed separate private variables for `visible` and `hidden` that got out of sync.
+* Fixed crash on HashLink when passing `NULL` device to OpenAL bindings.
+* Fixed many variables that defaulted to `Dynamic` because they did not declare a type and were not initialized.
+* Fixed `ThreadPool` throwing an exception when `Application.current` is `null`.
+* Fixed old _run.n_ in Haxelib because the CI server did not build it.
+* Changed Android rebuild to use NDK r28c for Haxelib to support new 16KB native library aligment requirement.
+* Changed Android target SDK version to 35. May require updating to JDK 17 or newer.
+* Changed default Android architecture for x86 from x86_32 to x86_64 (can still rebuild x86_32 manually).
+* Changed default Android emulator architectures to include ARM64 to better support ARM64 on macOS.
+* Changed default Adobe AIR SDK version from 28.0 to 32.0 because 28.0 is no longer available for download from Adobe.
+* Changed `minimum-sdk-version` in `<config:android>` to customize the `PLATFORM` or `PLATFORM_NUMBER` values used by Android builds.
+* Changed _index.html_ template to use `mobile-web-app-capable` instead of deprecated `apple-mobile-web-app-capable`.
+* Removed Linux x86_32 binaries from Haxelib (but can still rebuild them manually).
+* Removed custom implementation of `haxe.io.Bytes`.
+* Updated bundled HashLink executable version to 1.14.
+* Updated SDL submodule to version 2.30.12.
+
 8.2.3 (10/01/2025)
 ------------------
 

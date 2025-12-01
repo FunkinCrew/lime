@@ -5,7 +5,7 @@
 	"tags": [],
 	"description": "A foundational Haxe framework for cross-platform development",
 	"version": "8.3.0",
-	"releasenote": "Various bug fixes",
+	"releasenote": "Orientation events, gamepad rumble, display safe area, HashLink update",
 	"contributors": [
 		"singmajesty",
 		"bowlerhat",
