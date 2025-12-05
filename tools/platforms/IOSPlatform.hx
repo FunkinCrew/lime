@@ -621,6 +621,11 @@ class IOSPlatform extends PlatformTarget
 
 		context.HAS_ICON = true;
 
+		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile) {
+			context.IOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
+			ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, Path.combine(projectDirectory, "AppIcon.icon"), context);
+		}
+
 		var iconPath = Path.combine(projectDirectory, "Images.xcassets/AppIcon.appiconset");
 		System.mkdir(iconPath);
 

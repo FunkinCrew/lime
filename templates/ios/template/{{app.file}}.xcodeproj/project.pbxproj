@@ -27,6 +27,7 @@
 		792E75C91C6C876900D01DE1 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 792E75C81C6C876900D01DE1 /* CoreText.framework */; };
 		7C1D3D2F27403D7800CFEBE5 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C1D3D2E27403D7800CFEBE5 /* CoreHaptics.framework */; };
 		::if (IOS_LAUNCH_STORYBOARD != null)::D099CA9021A64C87003837AD /* ::IOS_LAUNCH_STORYBOARD::.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D099CA8F21A64C86003837AD /* ::IOS_LAUNCH_STORYBOARD::.storyboard */; };::end::
+		::if (IOS_ADAPTIVE_ICON != null)::D4E8A1F09C3B47E2F6A5D0BC /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = A7F3C9201B8E4D6FA1C2B7D9 /* AppIcon.icon */; };::end::
 		::ADDL_PBX_BUILD_FILE::
 
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		792E75C81C6C876900D01DE1 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		7C1D3D2E27403D7800CFEBE5 /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
 		::if (IOS_LAUNCH_STORYBOARD != null)::D099CA8F21A64C86003837AD /* ::IOS_LAUNCH_STORYBOARD::.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "::APP_FILE::/::IOS_LAUNCH_STORYBOARD::.storyboard"; sourceTree = "<group>"; };::end::
+		::if (IOS_ADAPTIVE_ICON != null)::A7F3C9201B8E4D6FA1C2B7D9 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = file; path = "::APP_FILE::/AppIcon.icon"; sourceTree = "<group>"; };::end::
 		::ADDL_PBX_FILE_REFERENCE::
 
 		8D1107310486CEB800E47090 /* ::APP_FILE::-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "::APP_FILE::/::APP_FILE::-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 			children = (
 				4257533E1A5EFD8C004AA45B /* Images.xcassets */,
 				::if (IOS_LAUNCH_STORYBOARD != null)::D099CA8F21A64C86003837AD /* ::IOS_LAUNCH_STORYBOARD::.storyboard */,::end::
+				::if (IOS_ADAPTIVE_ICON != null)::A7F3C9201B8E4D6FA1C2B7D9 /* AppIcon.icon */,::end::
 				8D1107310486CEB800E47090 /* ::APP_FILE::/::APP_FILE::-Info.plist */,
 				1E2E17A5131E8B5D0048F3C7 /* ::APP_FILE::/assets */,
 				::ADDL_PBX_RESOURCE_GROUP::
@@ -257,6 +260,7 @@
 			files = (
 				1E2E17AD131E8B5D0048F3C7 /* ::APP_FILE::/assets in Resources */,
 				::if (IOS_LAUNCH_STORYBOARD != null)::D099CA9021A64C87003837AD /* ::IOS_LAUNCH_STORYBOARD::.storyboard in Resources */,::end::
+				::if (IOS_ADAPTIVE_ICON != null)::D4E8A1F09C3B47E2F6A5D0BC /* AppIcon.icon in Ressources */,::end::
 				4257533F1A5EFD8C004AA45B /* Images.xcassets in Resources */,
 				::ADDL_PBX_RESOURCES_BUILD_PHASE::
 			);
@@ -393,6 +397,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				::if (IOS_ADAPTIVE_ICON != null)::ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;::end::
 				::if (IOS_LAUNCH_STORYBOARD == null)::ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;::end::
 				CODE_SIGN_ENTITLEMENTS = "::APP_FILE::/::APP_FILE::.entitlements";
 				::if DEVELOPMENT_TEAM_ID::DEVELOPMENT_TEAM = ::DEVELOPMENT_TEAM_ID::;::end::
@@ -458,6 +463,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				::if (IOS_ADAPTIVE_ICON != null)::ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;::end::
 				::if (IOS_LAUNCH_STORYBOARD == null)::ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;::end::
 				CODE_SIGN_ENTITLEMENTS = "::APP_FILE::/::APP_FILE::.entitlements";
 				::if DEVELOPMENT_TEAM_ID::DEVELOPMENT_TEAM = ::DEVELOPMENT_TEAM_ID::;::end::
