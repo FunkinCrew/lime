@@ -60,6 +60,7 @@ namespace lime {
 				eventObject->modifier = event->modifier;
 				eventObject->type = event->type;
 				eventObject->windowID = event->windowID;
+				eventObject->timestamp = event->timestamp;
 
 			}
 
