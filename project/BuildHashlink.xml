@@ -54,31 +54,20 @@
 		<file name="${HASHLINK_PATH}/src/std/ucs2.c" />
 
 		<!-- PCRE2 -->
-		<file name="${HASHLINK_PATH}/include/pcre/pcre16_ord2utf16.c" />
+		<file name="${HASHLINK_PATH}/include/pcre/pcre2_ord2utf.c" />
 		<compilerflag value="-DHAVE_CONFIG_H" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_globals.c" />
 		<compilerflag value="-DPCRE2_CODE_UNIT_WIDTH=16" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre16_valid_utf16.c" />
+		<file name="${HASHLINK_PATH}/include/pcre/pcre2_valid_utf.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_auto_possess.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_newline.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_chartables.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_chartables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_compile.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_string_utils.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_config.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_compile.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_context.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_tables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_convert.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_dfa_exec.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_dfa_match.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_ucd.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_error.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_exec.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_extuni.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_xclass.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_find_bracket.c" />
-		<file name="${HASHLINK_PATH}/include/pcre/pcre_fullinfo.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_jit_compile.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_maketables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_match_data.c" />

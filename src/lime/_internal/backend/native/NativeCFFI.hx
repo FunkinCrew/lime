@@ -1292,7 +1292,7 @@ class NativeCFFI
 
 	@:hlNative("lime", "hl_window_alert") private static function lime_window_alert(handle:CFFIPointer, message:String, title:String):Void {}
 
-	@:hlNative("lime", "hl_window_set_vsync_mode") private static function lime_window_set_vsync_mode(handle:CFFIPointer, mode:Int):Bool {}
+	@:hlNative("lime", "hl_window_set_vsync_mode") private static function lime_window_set_vsync_mode(handle:CFFIPointer, mode:Int):Bool { return false; }
 
 	@:hlNative("lime", "hl_window_close") private static function lime_window_close(handle:CFFIPointer):Void {}
 
