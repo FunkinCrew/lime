@@ -519,6 +519,31 @@ class AndroidPlatform extends PlatformTarget
 			Log.error("You must define ANDROID_SDK and ANDROID_NDK_ROOT to target Android, please run '" + command + " setup android' first");
 			Sys.exit(1);
 		}
+		else
+		{
+			var sdkPath = project.environment.get("ANDROID_SDK");
+			if (!FileSystem.exists(sdkPath))
+			{
+				Log.error("The path specified for ANDROID_SDK does not exist: " + sdkPath);
+				Sys.exit(1);
+			}
+			if (!FileSystem.isDirectory(sdkPath))
+			{
+				Log.error("The path specified for ANDROID_SDK must be a directory: " + sdkPath);
+				Sys.exit(1);
+			}
+			var ndkPath = project.environment.get("ANDROID_NDK_ROOT");
+			if (!FileSystem.exists(ndkPath))
+			{
+				Log.error("The path specified for ANDROID_NDK_ROOT does not exist: " + ndkPath);
+				Sys.exit(1);
+			}
+			if (!FileSystem.isDirectory(ndkPath))
+			{
+				Log.error("The path specified for ANDROID_NDK_ROOT must be a directory: " + ndkPath);
+				Sys.exit(1);
+			}
+		}
 
 		if (project.config.exists("android.gradle-build-directory"))
 		{
