@@ -133,6 +133,20 @@ class AIRPlatform extends FlashPlatform
 		{
 			Log.error("You must define AIR_SDK with the path to your AIR SDK");
 		}
+		else
+		{
+			var airSdk = project.environment.get("AIR_SDK");
+			if (!FileSystem.exists(airSdk))
+			{
+				Log.error("The path specified for AIR_SDK does not exist: " + airSdk);
+				Sys.exit(1);
+			}
+			if (!FileSystem.isDirectory(airSdk))
+			{
+				Log.error("The path specified for AIR_SDK must be a directory: " + airSdk);
+				Sys.exit(1);
+			}
+		}
 
 		// TODO: Should we package on desktop in "deploy" command instead?
 
