@@ -12,6 +12,20 @@ class AIRHelper
 
 		switch(targetPlatform)
 		{
+			case WINDOWS:
+
+				if (project.targetFlags.exists("shared"))
+				{
+					airTarget = "air";
+				}
+
+			case MAC:
+
+				if (project.targetFlags.exists("shared"))
+				{
+					airTarget = "air";
+				}
+
 			case IOS:
 				if (project.targetFlags.exists("simulator"))
 				{
