@@ -9,6 +9,8 @@
 namespace lime {
 
 
+	// Functions in this class return pointers to externally owned memory, which will be reused automatically
+	// for future dialogs and should not be freed.
 	class FileDialog {
 
 		public:
