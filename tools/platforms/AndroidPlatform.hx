@@ -135,8 +135,6 @@ class AndroidPlatform extends PlatformTarget
 		var hxml = targetDirectory + "/haxe/" + buildType + ".hxml";
 		var sourceSet = destination + "/app/src/main";
 
-		var hasARMV5 = (ArrayTools.containsValue(project.architectures, Architecture.ARMV5)
-			|| ArrayTools.containsValue(project.architectures, Architecture.ARMV6));
 		var hasARMV7 = ArrayTools.containsValue(project.architectures, Architecture.ARMV7);
 		var hasARM64 = ArrayTools.containsValue(project.architectures, Architecture.ARM64);
 		var hasX86 = ArrayTools.containsValue(project.architectures, Architecture.X86);
@@ -144,7 +142,6 @@ class AndroidPlatform extends PlatformTarget
 
 		var architectures = [];
 
-		if (hasARMV5) architectures.push(Architecture.ARMV5);
 		if (hasARMV7) architectures.push(Architecture.ARMV7);
 		if (hasARM64) architectures.push(Architecture.ARM64);
 		if (hasX86) architectures.push(Architecture.X86);
@@ -164,7 +161,7 @@ class AndroidPlatform extends PlatformTarget
 			var minSDKVer = project.config.getInt("android.minimum-sdk-version", 21);
 			var haxeParams = [hxml, "-D", "android", "-D", 'PLATFORM_NUMBER=$minSDKVer'];
 			var cppParams = ["-Dandroid", '-DPLATFORM_NUMBER=$minSDKVer'];
-			var path = sourceSet + "/jniLibs/armeabi";
+			var path = sourceSet + "/jniLibs/";
 			var suffix = ".so";
 
 			if (architecture == Architecture.ARMV7)
@@ -212,14 +209,6 @@ class AndroidPlatform extends PlatformTarget
 			CPPHelper.compile(project, targetDirectory + "/obj", cppParams);
 
 			System.copyIfNewer(targetDirectory + "/obj/libApplicationMain" + (project.debug ? "-debug" : "") + suffix, path + "/libApplicationMain.so");
-		}
-
-		if (!hasARMV5)
-		{
-			if (FileSystem.exists(sourceSet + "/jniLibs/armeabi"))
-			{
-				System.removeDirectory(sourceSet + "/jniLibs/armeabi");
-			}
 		}
 
 		if (!hasARMV7)
@@ -364,19 +353,15 @@ class AndroidPlatform extends PlatformTarget
 
 	public override function rebuild():Void
 	{
-		var armv5 = (/*command == "rebuild" ||*/
-			ArrayTools.containsValue(project.architectures, Architecture.ARMV5)
-			|| ArrayTools.containsValue(project.architectures, Architecture.ARMV6));
-		var armv7 = (command == "rebuild" || ArrayTools.containsValue(project.architectures, Architecture.ARMV7));
+		var armv7 = ArrayTools.containsValue(project.architectures, Architecture.ARMV7);
 		var arm64 = (command == "rebuild" || ArrayTools.containsValue(project.architectures, Architecture.ARM64));
-		var x86 = (ArrayTools.containsValue(project.architectures, Architecture.X86));
+		var x86 = ArrayTools.containsValue(project.architectures, Architecture.X86);
 		var x64 = (command == "rebuild" || ArrayTools.containsValue(project.architectures, Architecture.X64));
 
 		var commands = [];
 		var minSDKVer = 21;
 		var platformDefine = '-DPLATFORM_NUMBER=$minSDKVer';
 
-		if (armv5) commands.push(["-Dandroid", platformDefine]);
 		if (armv7) commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine]);
 		if (arm64) commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine]);
 		if (x86) commands.push(["-Dandroid", "-DHXCPP_X86", platformDefine]);
