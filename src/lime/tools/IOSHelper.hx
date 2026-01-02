@@ -67,7 +67,7 @@ class IOSHelper
 		System.runCommand(workingDirectory, "xcodebuild", archiveCommands);
 
 		var supportedExportMethods = ["adhoc", "development", "enterprise", "appstore"];
-		var exportMethods = [];
+		var exportMethods:Array<String> = [];
 		for (m in supportedExportMethods)
 		{
 			if (project.targetFlags.exists(m))
@@ -420,6 +420,10 @@ class IOSHelper
 							break;
 						}
 					}
+					if (deviceUUID != null && deviceUUID.length > 0)
+					{
+						break;
+					}
 				}
 
 				if (deviceUUID == null || deviceUUID.length == 0) {
@@ -511,7 +515,7 @@ class IOSHelper
 
 	private static function waitForDeviceState(command:String, args:Array<String>):Void
 	{
-		var output;
+		var output:String;
 
 		while (true)
 		{

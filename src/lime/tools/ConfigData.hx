@@ -107,7 +107,7 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 
 		if (array.length > 0)
 		{
-			var value = [];
+			var value:Array<String> = [];
 
 			if (childField == null)
 			{
@@ -192,7 +192,7 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 			}
 		}
 
-		var pairs = [];
+		var pairs:Array<{ key:String, value:Dynamic }> = [];
 		for (key in Reflect.fields(values))
 		{
 			pairs.push({ key: key, value: Reflect.field(values, key) });

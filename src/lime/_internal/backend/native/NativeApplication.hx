@@ -1056,6 +1056,7 @@ private enum abstract OrientationEventType(Int)
 }
 
 #if android
+@:keep
 private class OrientationChangeListener implements JNISafety
 {
 	private var callback:Int->Void;

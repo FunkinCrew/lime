@@ -1124,6 +1124,22 @@ namespace lime {
 	}
 
 
+	bool SDLWindow::SetAlwaysOnTop (bool alwaysOnTop) {
+
+		if (alwaysOnTop) {
+
+			SDL_SetWindowAlwaysOnTop (sdlWindow, SDL_TRUE);
+
+		} else {
+
+			SDL_SetWindowAlwaysOnTop (sdlWindow, SDL_FALSE);
+
+		}
+
+		return alwaysOnTop;
+
+	}
+
 	void SDLWindow::WarpMouse (int x, int y) {
 
 		SDL_WarpMouseInWindow (sdlWindow, x, y);

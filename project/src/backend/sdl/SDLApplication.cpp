@@ -11,6 +11,12 @@
 #include "emscripten.h"
 #endif
 
+#ifdef LIME_SDL_SOUND
+#include "media/SDLSound.h"
+#include "SDL_sound.h"
+#endif
+
+
 
 namespace lime {
 
@@ -25,7 +31,7 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
-		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK;
+		initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK;
 		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
 		initFlags |= SDL_INIT_AUDIO;
 		#endif
@@ -35,6 +41,10 @@ namespace lime {
 			printf ("Could not initialize SDL: %s.\n", SDL_GetError ());
 
 		}
+
+		#ifdef LIME_SDL_SOUND
+		Sound_Init();
+		#endif
 
 		SDL_LogSetPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
 
@@ -838,6 +848,12 @@ namespace lime {
 
 		applicationEvent.type = EXIT;
 		ApplicationEvent::Dispatch (&applicationEvent);
+
+		#ifdef LIME_SDL_SOUND
+		Sound_Quit ();
+		#endif
+
+		SDL_QuitSubSystem (initFlags);
 
 		SDL_Quit ();
 
