@@ -163,8 +163,8 @@ class AndroidPlatform extends PlatformTarget
 		{
 			var minSDKVer = project.config.getInt("android.minimum-sdk-version", 21);
 			//PLATFORM define needed for older ndk and gcc toolchain
-			var haxeParams = [hxml, "-D", "android", "-D", 'PLATFORM_NUMBER=$minSDKVer', "-D", 'PLATFORM=$minSDKVer'];
-			var cppParams = ["-Dandroid", '-DPLATFORM_NUMBER=$minSDKVer', '-DPLATFORM=$minSDKVer'];
+			var haxeParams = [hxml, "-D", "android", "-D", 'PLATFORM_NUMBER=$minSDKVer', "-D", 'PLATFORM=android-$minSDKVer'];
+			var cppParams = ["-Dandroid", '-DPLATFORM_NUMBER=$minSDKVer', '-DPLATFORM=android-$minSDKVer'];
 			var path = sourceSet + "/jniLibs/armeabi";
 			var suffix = ".so";
 
@@ -369,7 +369,7 @@ class AndroidPlatform extends PlatformTarget
 		var minSDKVer = 21;
 		var platformNumberDefine = '-DPLATFORM_NUMBER=$minSDKVer';
 		// Required for older ndk and gcc toolchain
-		var platformDefine = '-DPLATFORM=$minSDKVer';
+		var platformDefine = '-DPLATFORM=android-$minSDKVer';
 
 		if (armv5) commands.push(["-Dandroid", platformDefine]);
 		if (armv7) commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine, platformNumberDefine]);
@@ -469,6 +469,31 @@ class AndroidPlatform extends PlatformTarget
 
 			Log.error("You must define ANDROID_SDK and ANDROID_NDK_ROOT to target Android, please run '" + command + " setup android' first");
 			Sys.exit(1);
+		}
+		else
+		{
+			var sdkPath = project.environment.get("ANDROID_SDK");
+			if (!FileSystem.exists(sdkPath))
+			{
+				Log.error("The path specified for ANDROID_SDK does not exist: " + sdkPath);
+				Sys.exit(1);
+			}
+			if (!FileSystem.isDirectory(sdkPath))
+			{
+				Log.error("The path specified for ANDROID_SDK must be a directory: " + sdkPath);
+				Sys.exit(1);
+			}
+			var ndkPath = project.environment.get("ANDROID_NDK_ROOT");
+			if (!FileSystem.exists(ndkPath))
+			{
+				Log.error("The path specified for ANDROID_NDK_ROOT does not exist: " + ndkPath);
+				Sys.exit(1);
+			}
+			if (!FileSystem.isDirectory(ndkPath))
+			{
+				Log.error("The path specified for ANDROID_NDK_ROOT must be a directory: " + ndkPath);
+				Sys.exit(1);
+			}
 		}
 
 		if (project.config.exists("android.gradle-build-directory"))
