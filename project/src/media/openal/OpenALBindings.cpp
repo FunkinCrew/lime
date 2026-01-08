@@ -3518,6 +3518,7 @@ namespace lime {
 			listData++;
 
 			result += length;
+			free(_result);
 
 		}
 
