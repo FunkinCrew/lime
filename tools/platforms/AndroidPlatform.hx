@@ -205,7 +205,7 @@ class AndroidPlatform extends PlatformTarget
 
 			System.runCommand("", "haxe", haxeParams);
 
-			if (noOutput) return;
+			if (noOutput) continue;
 
 			CPPHelper.compile(project, targetDirectory + "/obj", cppParams);
 
