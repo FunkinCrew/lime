@@ -228,8 +228,8 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 
 			var valueSource = Reflect.field(source, field);
 			var valueDest = Reflect.field(destination, field);
-			var typeSource = Type.typeof(valueSource).getName();
-			var typeDest = Type.typeof(valueDest).getName();
+			var typeSource:String = Type.typeof(valueSource).getName();
+			var typeDest:String = Type.typeof(valueDest).getName();
 
 			// if trying to copy a non object over an object, don't
 			if (typeSource != "TObject" && typeDest == "TObject")
