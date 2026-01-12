@@ -111,6 +111,7 @@ OGL_EXT(glIsRenderbuffer,GLboolean,(GLuint));
 OGL_EXT(glBlendColor,void,(GLclampf, GLclampf, GLclampf, GLclampf));
 OGL_EXT(glBlendEquation,void,(GLenum));
 OGL_EXT(glBlendFuncSeparate,void,(GLenum, GLenum, GLenum, GLenum));
+OGL_EXT(glBlendBarrierKHR,void,(void));
 OGL_EXT(glBufferSubData,void,(GLenum, GLintptr, GLsizeiptr, const GLvoid *));
 OGL_EXT(glGetBufferParameteriv,void,(GLenum, GLenum, GLint *));
 OGL_EXT(glBindFramebuffer,void,(GLenum, GLuint));

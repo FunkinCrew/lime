@@ -60,7 +60,7 @@ import lime.utils.Float32Array;
 	FRAMEBUFFER_UNSUPPORTED, FRAMEBUFFER_BINDING, RENDERBUFFER_BINDING, MAX_RENDERBUFFER_SIZE, INVALID_FRAMEBUFFER_OPERATION, UNPACK_FLIP_Y_WEBGL,
 	UNPACK_PREMULTIPLY_ALPHA_WEBGL, CONTEXT_LOST_WEBGL, UNPACK_COLORSPACE_CONVERSION_WEBGL, BROWSER_DEFAULT_WEBGL, type, version, activeTexture, attachShader,
 	bindAttribLocation, bindBuffer, bindFramebuffer, bindRenderbuffer, bindTexture, blendColor, blendEquation, blendEquationSeparate, blendFunc,
-	blendFuncSeparate, checkFramebufferStatus, clear, clearColor, clearDepth, clearStencil, colorMask, compileShader, copyTexImage2D, copyTexSubImage2D,
+	blendFuncSeparate, blendBarrier, checkFramebufferStatus, clear, clearColor, clearDepth, clearStencil, colorMask, compileShader, copyTexImage2D, copyTexSubImage2D,
 	createBuffer, createFramebuffer, createProgram, createRenderbuffer, createShader, createTexture, cullFace, cullFace, deleteBuffer, deleteFramebuffer,
 	deleteProgram, deleteRenderbuffer, deleteShader, deleteTexture, depthFunc, depthMask, depthRange, detachShader, disable, disableVertexAttribArray,
 	drawArrays, drawElements, enable, enableVertexAttribArray, finish, flush, framebufferRenderbuffer, framebufferTexture2D, frontFace, generateMipmap,
