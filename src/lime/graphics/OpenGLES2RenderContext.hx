@@ -62,7 +62,7 @@ import lime.graphics.opengl.*;
 	UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_SHORT_4_4_4_4, UNSIGNED_SHORT_5_5_5_1, UNSIGNED_SHORT_5_6_5, VALIDATE_STATUS, VENDOR, VERSION,
 	VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, VERTEX_ATTRIB_ARRAY_ENABLED, VERTEX_ATTRIB_ARRAY_NORMALIZED, VERTEX_ATTRIB_ARRAY_POINTER, VERTEX_ATTRIB_ARRAY_SIZE,
 	VERTEX_ATTRIB_ARRAY_STRIDE, VERTEX_ATTRIB_ARRAY_TYPE, VERTEX_SHADER, VIEWPORT, ZERO, activeTexture, attachShader, bindAttribLocation, bindBuffer,
-	bindFramebuffer, bindTexture, blendColor, blendEquation, blendEquationSeparate, blendFunc, blendFuncSeparate, bufferData, bufferSubData,
+	bindFramebuffer, bindTexture, blendColor, blendEquation, blendEquationSeparate, blendFunc, blendFuncSeparate, blendBarrier, bufferData, bufferSubData,
 	checkFramebufferStatus, clear, clearColor, clearDepthf, clearStencil, colorMask, compileShader, compressedTexImage2D, compressedTexSubImage2D,
 	copyTexImage2D, copyTexSubImage2D, createBuffer, createFramebuffer, createProgram, createRenderbuffer, createShader, createTexture, cullFace,
 	deleteBuffer, deleteFramebuffer, deleteProgram, deleteRenderbuffer, deleteShader, deleteTexture, depthFunc, depthMask, depthRangef, detachShader, disable,
