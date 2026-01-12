@@ -30,7 +30,7 @@ namespace lime {
 				string_view(const char_t* c_str, size_t length) : c_str(c_str), length(length) {}
 
 				const char_t* data() const { return c_str; }
-				const size_t size() const { return length; }
+				size_t size() const { return length; }
 
 			private:
 				const char_t* c_str;
