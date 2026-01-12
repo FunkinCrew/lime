@@ -813,6 +813,13 @@ class NativeOpenGLRenderContext
 		#end
 	}
 
+	public function blendBarrier():Void
+	{
+		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
+		NativeCFFI.lime_gl_blend_barrier();
+		#end
+	}
+
 	public function blitFramebuffer(srcX0:Int, srcY0:Int, srcX1:Int, srcY1:Int, dstX0:Int, dstY0:Int, dstX1:Int, dstY1:Int, mask:Int, filter:Int):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)

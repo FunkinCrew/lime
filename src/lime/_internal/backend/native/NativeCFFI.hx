@@ -3710,6 +3710,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_gl_blend_func_separate(srcRGB:Int, dstRGB:Int, srcAlpha:Int, dstAlpha:Int):Void;
 
+	@:cffi private static function lime_gl_blend_barrier():Void;
+
 	@:cffi private static function lime_gl_blit_framebuffer(srcX0:Int, srcY0:Int, srcX1:Int, srcY1:Int, dstX0:Int, dstY0:Int, dstX1:Int, dstY1:Int, mask:Int,
 		filter:Int):Void;
 
@@ -4248,7 +4250,8 @@ class NativeCFFI
 		"iiv", false));
 	private static var lime_gl_blend_func = new cpp.Callable<Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gl_blend_func", "iiv", false));
 	private static var lime_gl_blend_func_separate = new cpp.Callable<Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime",
-		"lime_gl_blend_func_separate", "iiiiv", false));
+	"lime_gl_blend_func_separate", "iiiiv", false));
+	private static var lime_gl_blend_barrier = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gl_blend_barrier", "v", false));
 	private static var lime_gl_blit_framebuffer = new cpp.Callable<Int->Int->Int->Int->Int->Int->Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_gl_blit_framebuffer", "iiiiiiiiiiv", false));
 	private static var lime_gl_buffer_data = new cpp.Callable<Int->Int->lime.utils.DataPointer->Int->cpp.Void>(cpp.Prime._loadPrime("lime",
@@ -4683,6 +4686,7 @@ class NativeCFFI
 	private static var lime_gl_blend_equation_separate = CFFI.load("lime", "lime_gl_blend_equation_separate", 2);
 	private static var lime_gl_blend_func = CFFI.load("lime", "lime_gl_blend_func", 2);
 	private static var lime_gl_blend_func_separate = CFFI.load("lime", "lime_gl_blend_func_separate", 4);
+	private static var lime_gl_blend_barrier = CFFI.load("lime", "lime_gl_blend_barrier", 0);
 	private static var lime_gl_blit_framebuffer = CFFI.load("lime", "lime_gl_blit_framebuffer", -1);
 	private static var lime_gl_buffer_data = CFFI.load("lime", "lime_gl_buffer_data", 4);
 	private static var lime_gl_buffer_sub_data = CFFI.load("lime", "lime_gl_buffer_sub_data", 4);
@@ -4975,6 +4979,8 @@ class NativeCFFI
 
 	@:hlNative("lime", "hl_gl_blend_func_separate") private static function lime_gl_blend_func_separate(srcRGB:Int, dstRGB:Int, srcAlpha:Int,
 		dstAlpha:Int):Void {}
+
+	@:hlNative("lime", "hl_gl_blend_barrier") private static function lime_gl_blend_barrier():Void {}
 
 	@:hlNative("lime", "hl_gl_blit_framebuffer") private static function lime_gl_blit_framebuffer(srcX0:Int, srcY0:Int, srcX1:Int, srcY1:Int, dstX0:Int,
 		dstY0:Int, dstX1:Int, dstY1:Int, mask:Int, filter:Int):Void {}

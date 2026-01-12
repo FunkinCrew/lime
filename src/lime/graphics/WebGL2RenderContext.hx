@@ -3754,6 +3754,11 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 		this.blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 	}
 
+	public inline function blendBarrier():Void
+	{
+		this.blendBarrier();
+	}
+
 	public inline function blitFramebuffer(srcX0:Int, srcY0:Int, srcX1:Int, srcY1:Int, dstX0:Int, dstY0:Int, dstX1:Int, dstY1:Int, mask:Int, filter:Int):Void
 	{
 		this.blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);

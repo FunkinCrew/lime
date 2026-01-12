@@ -521,6 +521,18 @@ namespace lime {
 
 	}
 
+	HL_PRIM void HL_NAME(hl_gl_blend_barrier) () {
+
+		glBlendBarrierKHR ();
+
+	}
+
+	void lime_gl_blend_barrier () {
+
+		glBlendBarrierKHR ();
+
+	}
+
 
 	void lime_gl_blit_framebuffer (int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, int mask, int filter) {
 
@@ -5365,6 +5377,7 @@ namespace lime {
 	DEFINE_PRIME2v (lime_gl_blend_equation_separate);
 	DEFINE_PRIME2v (lime_gl_blend_func);
 	DEFINE_PRIME4v (lime_gl_blend_func_separate);
+	DEFINE_PRIME0v (lime_gl_blend_barrier);
 	DEFINE_PRIME10v (lime_gl_blit_framebuffer);
 	DEFINE_PRIME4v (lime_gl_buffer_data);
 	DEFINE_PRIME4v (lime_gl_buffer_sub_data);
@@ -5642,6 +5655,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_gl_blend_equation_separate, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_gl_blend_func, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_gl_blend_func_separate, _I32 _I32 _I32 _I32);
+	DEFINE_HL_PRIM (_VOID, hl_gl_blend_barrier, _NO_ARG);
 	DEFINE_HL_PRIM (_VOID, hl_gl_blit_framebuffer, _I32 _I32 _I32 _I32 _I32 _I32 _I32 _I32 _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_gl_buffer_data, _I32 _I32 _F64 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_gl_buffer_sub_data, _I32 _I32 _I32 _F64);
