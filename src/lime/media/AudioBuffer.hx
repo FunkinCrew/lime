@@ -419,7 +419,12 @@ class AudioBuffer
 
 	private static function __getCodec(bytes:Bytes):String
 	{
-		var signature = bytes.getString(0, 4);
+		var signature:String = null;
+		try
+		{
+			signature = bytes.getString(0, 4);
+		}
+		catch (e:Dynamic) {}
 
 		switch (signature)
 		{
