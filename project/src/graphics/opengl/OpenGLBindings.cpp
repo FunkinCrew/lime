@@ -576,14 +576,15 @@ namespace lime {
 
 	HL_PRIM void HL_NAME(hl_gl_blend_barrier) () {
 
+		#ifdef GL_GLEXT_PROTOTYPES
 		glBlendBarrierKHR ();
-
+		#endif
 	}
 
 	void lime_gl_blend_barrier () {
-
+		#ifdef GL_GLEXT_PROTOTYPES
 		glBlendBarrierKHR ();
-
+		#endif
 	}
 
 
