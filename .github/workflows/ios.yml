@@ -38,13 +38,12 @@ jobs:
 
       - name: Rebuild Lime (iOS)
         run: |
+          rm -rf ./ndll
+          mkdir ./ndll
           lime rebuild ios -clean -eval -nocolor -nocffi -release
 
       - uses: actions/upload-artifact@v4
         with:
           name: iPhone-NDLL
-          path: |
-            ndll/iPhone/
-            !**/.gitignore
-            lime.png
+          path: ndll
           if-no-files-found: error

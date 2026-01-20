@@ -24,15 +24,13 @@ jobs:
           haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
         run: |
+          rm -rf ./ndll
+          mkdir ./ndll
           haxelib run lime rebuild windows -32 -nocolor -nocffi -eval -release
           haxelib run lime rebuild windows -64 -nocolor -nocffi -eval -release
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Windows-NDLL
-          path: |
-            ndll/Windows/
-            ndll/Windows64/
-            !**/.gitignore
-            lime.png
+          path: ndll
           if-no-files-found: error
