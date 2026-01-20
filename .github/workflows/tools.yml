@@ -9,9 +9,9 @@ jobs:
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@v1
+      - uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.7
 
       - name: Set HAXEPATH
         run: |
@@ -20,14 +20,10 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
-          haxelib git hxcpp https://github.com/mcagabe19-stuff/hxcpp --quiet
+          haxelib git https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
-
-      - name: Enable HXCPP compile cache
-        run: |
-          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
 
       - name: Rebuild Tools
         run: haxelib run lime rebuild tools
