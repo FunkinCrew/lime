@@ -20,7 +20,7 @@ jobs:
           haxe-version: ${{ env.HAXE_VERSION }}
       - name: Install Haxe dependencies
         run: |
-          haxelib git https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
       - name: Configure Lime
