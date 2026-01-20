@@ -22,7 +22,7 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
-          haxelib git https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
