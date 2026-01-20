@@ -47,13 +47,13 @@ jobs:
           lime config ANDROID_SETUP true
 
       - name: Rebuild Lime
-        run: lime rebuild android -eval -nocolor -nocffi -release
+        run: |
+          rm -rf ./ndll
+          mkdir ./ndll
+          lime rebuild android -eval -nocolor -nocffi -release
 
       - uses: actions/upload-artifact@v4
         with:
           name: Android-NDLL
-          path: |
-            ndll/Android/
-            !**/.gitignore
-            lime.png
+          path: ndll
           if-no-files-found: error

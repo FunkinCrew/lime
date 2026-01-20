@@ -69,13 +69,13 @@ jobs:
       - name: Configure Lime
         run: haxelib dev lime ${{ github.workspace }}
       - name: Rebuild Lime
-        run: haxelib run lime rebuild mac -arm64 -nocolor -nocffi -eval -release -D HXCPP_ARM64
+        run: |
+          rm -rf ./ndll
+          mkdir ./ndll
+          haxelib run lime rebuild mac -arm64 -nocolor -nocffi -eval -release -D HXCPP_ARM64
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MacArm64-NDLL
-          path: |
-            ndll/MacArm64/
-            !**/.gitignore
-            lime.png
+          path: ndll
           if-no-files-found: error

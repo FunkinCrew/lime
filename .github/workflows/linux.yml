@@ -34,15 +34,13 @@ jobs:
 
       - name: Rebuild Lime
         run: |
+          rm -rf ./ndll
+          mkdir ./ndll
           haxelib run lime rebuild linux -32 -eval -nocolor -nocffi -release
           haxelib run lime rebuild linux -64 -eval -nocolor -nocffi -release
 
       - uses: actions/upload-artifact@v4
         with:
           name: Linux-NDLL
-          path: |
-            ndll/Linux/
-            ndll/Linux64/
-            !**/.gitignore
-            lime.png
+          path: ndll
           if-no-files-found: error
