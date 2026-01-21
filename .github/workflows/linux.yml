@@ -31,8 +31,9 @@ jobs:
         run: |
           rm -rf ./ndll
           mkdir ./ndll
-          haxelib run lime rebuild linux -32 -eval -nocolor -nocffi -release
-          haxelib run lime rebuild linux -64 -eval -nocolor -nocffi -release
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild linux -32 -eval -nocolor -nocffi
+          haxelib run lime rebuild linux -64 -eval -nocolor -nocffi
 
       - uses: actions/upload-artifact@v4
         with:

@@ -26,7 +26,9 @@ jobs:
           haxelib dev lime $GITHUB_WORKSPACE
 
       - name: Rebuild Tools
-        run: haxelib run lime rebuild tools
+        run: |
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild tools
 
       - uses: actions/upload-artifact@v3
         with:
