@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  HAXE_VERSION: 4.3.5
+  HAXE_VERSION: 4.3.7
 
 jobs:
   mac:
@@ -78,3 +78,4 @@ jobs:
           name: MacArm64-NDLL
           path: ndll
           if-no-files-found: error
+
