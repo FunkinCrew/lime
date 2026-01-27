@@ -246,6 +246,7 @@
 			<file name="src/events/TextEvent.cpp" />
 			<file name="src/events/TouchEvent.cpp" />
 			<file name="src/events/WindowEvent.cpp" />
+			<file name="src/events/GestureEvent.cpp" />
 
 		</section>
 
@@ -276,6 +277,7 @@
 		<file name="src/ui/Haptic.mm" if="iphone" />
 		<file name="src/ui/Joystick.cpp" />
 		<file name="src/ui/KeyCode.cpp" />
+		<file name="src/ui/Gesture.mm" if="mac" />
 		<file name="src/utils/ArrayBufferView.cpp" />
 		<file name="src/utils/Bytes.cpp" />
 		<file name="src/utils/File.cpp" />

@@ -287,6 +287,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_touch_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
+	@:cffi private static function lime_gesture_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
+
 	@:cffi private static function lime_window_alert(handle:Dynamic, type:Int, message:String, title:String, buttons:Dynamic):Int;
 
 	@:cffi private static function lime_window_set_vsync_mode(handle:Dynamic, mode:Int):Bool;
@@ -576,6 +578,8 @@ class NativeCFFI
 		"lime_text_event_manager_register", "oov", false));
 	private static var lime_touch_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_touch_event_manager_register", "oov", false));
+	private static var lime_gesture_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
+		"lime_gesture_event_manager_register", "oov", false));
 	private static var lime_window_alert = new cpp.Callable<cpp.Object->Int->String->String->cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_window_alert", "oissoi",
 		false));
 	private static var lime_window_set_vsync_mode = new cpp.Callable<cpp.Object->Int->Bool>(cpp.Prime._loadPrime("lime", "lime_window_set_vsync_mode", "oib",
@@ -768,6 +772,7 @@ class NativeCFFI
 	private static var lime_system_open_url = CFFI.load("lime", "lime_system_open_url", 2);
 	private static var lime_text_event_manager_register = CFFI.load("lime", "lime_text_event_manager_register", 2);
 	private static var lime_touch_event_manager_register = CFFI.load("lime", "lime_touch_event_manager_register", 2);
+	private static var lime_gesture_event_manager_register = CFFI.load("lime", "lime_gesture_event_manager_register", 2);
 	private static var lime_window_alert = CFFI.load("lime", "lime_window_alert", 5);
 	private static var lime_window_set_vsync_mode = CFFI.load("lime", "lime_window_set_vsync_mode", 2);
 	private static var lime_window_close = CFFI.load("lime", "lime_window_close", 1);
@@ -1287,6 +1292,9 @@ class NativeCFFI
 
 	@:hlNative("lime", "hl_touch_event_manager_register") private static function lime_touch_event_manager_register(callback:Void->Void,
 		eventObject:TouchEventInfo):Void {}
+
+	@:hlNative("lime", "hl_gesture_event_manager_register") private static function lime_gesture_event_manager_register(callback:Void->Void,
+		eventObject:GestureEventInfo):Void {}
 
 	@:hlNative("lime", "hl_window_alert") private static function lime_window_alert(handle:CFFIPointer, type:Int, message:String, title:String, buttons:hl.NativeArray<String>):Int
 	{

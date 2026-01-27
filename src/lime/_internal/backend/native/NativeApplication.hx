@@ -20,6 +20,7 @@ import lime.system.Sensor;
 import lime.system.SensorType;
 import lime.system.System;
 import lime.ui.Gamepad;
+import lime.ui.Gesture;
 import lime.ui.Joystick;
 import lime.ui.JoystickHatPosition;
 import lime.ui.KeyCode;
@@ -59,6 +60,8 @@ class NativeApplication
 	private var sensorEventInfo = new SensorEventInfo();
 	private var textEventInfo = new TextEventInfo();
 	private var touchEventInfo = new TouchEventInfo();
+	private var gestureEventInfo = new GestureEventInfo();
+	private var currentGesture = new Gesture();
 	private var unusedTouchesPool = new List<Touch>();
 	private var windowEventInfo = new WindowEventInfo();
 
@@ -130,6 +133,7 @@ class NativeApplication
 		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
 		NativeCFFI.lime_text_event_manager_register(handleTextEvent, textEventInfo);
 		NativeCFFI.lime_touch_event_manager_register(handleTouchEvent, touchEventInfo);
+		NativeCFFI.lime_gesture_event_manager_register(handleGestureEvent, gestureEventInfo);
 		NativeCFFI.lime_window_event_manager_register(handleWindowEvent, windowEventInfo);
 		#if (ios || android)
 		NativeCFFI.lime_orientation_event_manager_register(handleOrientationEvent, orientationEventInfo);
@@ -536,6 +540,81 @@ class NativeApplication
 		}
 	}
 
+	private function handleGestureEvent():Void
+	{
+		currentGesture.x = gestureEventInfo.x;
+		currentGesture.y = gestureEventInfo.y;
+		currentGesture.magnification = gestureEventInfo.magnification;
+		currentGesture.rotation = gestureEventInfo.rotation;
+		currentGesture.panTranslationX = gestureEventInfo.panTranslationX;
+		currentGesture.panTranslationY = gestureEventInfo.panTranslationY;
+		currentGesture.panVelocityX = gestureEventInfo.panVelocityX;
+		currentGesture.panVelocityY = gestureEventInfo.panVelocityY;
+		currentGesture.scrollX = gestureEventInfo.scrollX;
+		currentGesture.scrollY = gestureEventInfo.scrollY;
+		currentGesture.momentumScrollX = gestureEventInfo.momentumScrollX;
+		currentGesture.momentumScrollY = gestureEventInfo.momentumScrollY;
+
+		switch (gestureEventInfo.state)
+		{
+			case GESTURE_START:
+				currentGesture.clear();
+
+			case GESTURE_MOVE:
+				if (currentGesture.type == UNSPECIFIED)
+				{
+					if (Math.abs(gestureEventInfo.magnification) > 0.1)
+					{
+						currentGesture.type = GestureType.MAGNIFICATION;
+					}
+
+					if (Math.abs(gestureEventInfo.rotation) > 0.01)
+					{
+						currentGesture.type = GestureType.ROTATION;
+					}
+
+					if (Math.abs(gestureEventInfo.panTranslationX) > 0.1 || Math.abs(gestureEventInfo.panTranslationY) > 0.1)
+					{
+						currentGesture.type = GestureType.PAN;
+					}
+
+					if (gestureEventInfo.scrollX != 0 || gestureEventInfo.scrollY != 0)
+					{
+						currentGesture.type = GestureType.SCROLL;
+					}
+
+					if (gestureEventInfo.momentumScrollX != 0 || gestureEventInfo.momentumScrollY != 0)
+					{
+						currentGesture.type = GestureType.MOMENTUMSCROLL;
+					}
+
+					if (currentGesture.type != UNSPECIFIED)
+					{
+						Gesture.onStart.dispatch(currentGesture);
+					}
+				}
+				else
+				{
+					Gesture.onMove.dispatch(currentGesture);
+				}
+			case GESTURE_END:
+				if (currentGesture.type != UNSPECIFIED)
+				{
+					Gesture.onEnd.dispatch(currentGesture);
+				}
+
+				currentGesture.clear();
+
+			case GESTURE_CANCEL:
+				if (currentGesture.type != UNSPECIFIED)
+				{
+					Gesture.onCancel.dispatch(currentGesture);
+				}
+
+				currentGesture.clear();
+		}
+	}
+
 	private function handleWindowEvent():Void
 	{
 		var window = parent.__windowByID.get(windowEventInfo.windowID);
@@ -809,7 +888,7 @@ private enum abstract JoystickEventType(Int)
 	public var windowID:Int;
 	public var timestamp:Float;
 
-	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode: Float = 0, modifier:Int = 0, timestamp:Float = 0)
+	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode:Float = 0, modifier:Int = 0, timestamp:Float = 0)
 	{
 		this.type = type;
 		this.windowID = windowID;
@@ -983,6 +1062,55 @@ private enum abstract TouchEventType(Int)
 	var TOUCH_START = 0;
 	var TOUCH_END = 1;
 	var TOUCH_MOVE = 2;
+}
+
+@:keep /*private*/ class GestureEventInfo
+{
+	public var x:Float;
+	public var y:Float;
+	public var state:GestureEventType;
+	public var magnification:Float;
+	public var rotation:Float;
+	public var panTranslationX:Float;
+	public var panTranslationY:Float;
+	public var panVelocityX:Float;
+	public var panVelocityY:Float;
+	public var scrollX:Float;
+	public var scrollY:Float;
+	public var momentumScrollX:Float;
+	public var momentumScrollY:Float;
+
+	public function new(x:Float = 0.0, y:Float = 0.0, state:GestureEventType = GESTURE_END, magnification:Float = 0.0, rotation:Float = 0.0,
+			panTranslationX:Float = 0.0, panTranslationY:Float = 0.0, panVelocityX:Float = 0.0, panVelocityY:Float = 0.0,
+			scrollX:Float = 0.0, scrollY:Float = 0.0, momentumScrollX:Float = 0.0, momentumScrollY:Float = 0.0)
+	{
+		this.x = 0.0;
+		this.y = 0.0;
+		this.state = GESTURE_END;
+		this.magnification = 0.0;
+		this.rotation = 0.0;
+		this.panTranslationX = 0.0;
+		this.panTranslationY = 0.0;
+		this.panVelocityX = 0.0;
+		this.panVelocityY = 0.0;
+		this.scrollX = 0.0;
+		this.scrollY = 0.0;
+		this.momentumScrollX = 0.0;
+		this.momentumScrollY = 0.0;
+	}
+
+	public function clone():GestureEventInfo
+	{
+		return new GestureEventInfo(x, y, state, magnification, rotation, panTranslationX, panTranslationY, panVelocityX, panVelocityY);
+	}
+}
+
+private enum abstract GestureEventType(Int)
+{
+	var GESTURE_START = 0;
+	var GESTURE_MOVE = 1;
+	var GESTURE_END = 2;
+	var GESTURE_CANCEL = 3;
 }
 
 @:keep /*private*/ class WindowEventInfo

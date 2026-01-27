@@ -11,6 +11,7 @@
 #include <events/ClipboardEvent.h>
 #include <events/DropEvent.h>
 #include <events/GamepadEvent.h>
+#include <events/GestureEvent.h>
 #include <events/JoystickEvent.h>
 #include <events/KeyEvent.h>
 #include <events/MouseEvent.h>
@@ -3261,6 +3262,22 @@ namespace lime {
 	}
 
 
+	void lime_gesture_event_manager_register (value callback, value eventObject) {
+
+		GestureEvent::callback = new ValuePointer (callback);
+		GestureEvent::eventObject = new ValuePointer (eventObject);
+
+	}
+
+
+	HL_PRIM void HL_NAME(hl_gesture_event_manager_register) (vclosure* callback, GestureEvent* eventObject) {
+
+		GestureEvent::callback = new ValuePointer (callback);
+		GestureEvent::eventObject = new ValuePointer ((vobj*)eventObject);
+
+	}
+
+
 	int lime_window_alert (value window, int type, HxString message, HxString title, value buttons) {
 
 		Window* targetWindow = (Window*)val_data (window);
@@ -4205,6 +4222,7 @@ namespace lime {
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
 	DEFINE_PRIME5 (lime_window_alert);
+	DEFINE_PRIME2v (lime_gesture_event_manager_register);
 	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
 	DEFINE_PRIME1v (lime_window_context_flip);
@@ -4259,6 +4277,7 @@ namespace lime {
 	#define _TDISPLAYMODE _OBJ (_I32 _I32 _I32 _I32)
 	#define _TDROP_EVENT _OBJ (_BYTES _BYTES _I32 _F64 _F64 _I32)
 	#define _TGAMEPAD_EVENT _OBJ (_I32 _I32 _I32 _I32 _F64 _F64)
+	#define _TGESTURE_EVENT _OBJ (_F64 _F64 _I32 _F64 _F64 _F64 _F64 _F64 _F64 _F64 _F64 _F64 _F64)
 	#define _TJOYSTICK_EVENT _OBJ (_I32 _I32 _I32 _I32 _F64 _F64)
 	#define _TKEY_EVENT _OBJ (_F64 _I32 _I32 _I32 _F64)
 	#define _TMOUSE_EVENT _OBJ (_I32 _F64 _F64 _I32 _I32 _F64 _F64 _I32)
@@ -4402,6 +4421,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
 	DEFINE_HL_PRIM (_I32, hl_window_alert, _TCFFIPOINTER _I32 _STRING _STRING _ARR);
+	DEFINE_HL_PRIM (_VOID, hl_gesture_event_manager_register, _FUN (_VOID, _NO_ARG) _TGESTURE_EVENT);
 	DEFINE_HL_PRIM (_BOOL, hl_window_set_vsync_mode, _TCFFIPOINTER _I32);
 	DEFINE_HL_PRIM (_VOID, hl_window_close, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_flip, _TCFFIPOINTER);

@@ -16,6 +16,7 @@
 #include <events/TextEvent.h>
 #include <events/TouchEvent.h>
 #include <events/WindowEvent.h>
+#include <ui/Gesture.h>
 #include "SDLWindow.h"
 
 
