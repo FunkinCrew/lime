@@ -45,5 +45,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: "${{ github.ref_name }}/${{ env.SHORT_SHA }}"
-          tag_name: "${{ github.ref_name }}"
+          tag_name: "${{ github.ref_name }}${{'-'}}${{ env.SHORT_SHA }}"
           files: ../release.zip
