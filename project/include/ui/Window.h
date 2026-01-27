@@ -74,6 +74,9 @@ namespace lime {
 			virtual const char* SetTitle (const char* title) = 0;
 			virtual bool SetVisible (bool visible) = 0;
 			virtual void WarpMouse (int x, int y) = 0;
+			virtual double GetDrawScale () = 0;
+			virtual int GetNativeWidth () = 0;
+			virtual int GetNativeHeight () = 0;
 
 			Application* currentApplication;
 			int flags;

@@ -1386,4 +1386,19 @@ class HTML5Window
 	}
 
 	public function warpMouse(x:Int, y:Int):Void {}
+
+	public function getDrawScale():Float
+	{
+		return 1;
+	}
+
+	public function getNativeWidth():Int
+	{
+		return 0;
+	}
+
+	public function getNativeHeight():Int
+	{
+		return 0;
+	}
 }

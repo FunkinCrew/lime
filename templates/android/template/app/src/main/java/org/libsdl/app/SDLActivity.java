@@ -1098,6 +1098,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         return mSingleton.sendCommand(command, param);
     }
 
+    public static boolean isInMultiWindowModeJNI() {
+        if (mSingleton == null || !mHasMultiWindow) {
+            return false;
+        }
+
+        return mSingleton.isInMultiWindowMode();
+    }
+
     /**
      * This method is called by SDL using JNI.
      */

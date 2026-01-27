@@ -296,4 +296,19 @@ class AIRWindow extends FlashWindow
 
 		return value;
 	}
+
+	public function getDrawScale():Float
+	{
+		return 1;
+	}
+
+	public function getNativeWidth():Int
+	{
+		return 0;
+	}
+
+	public function getNativeHeight():Int
+	{
+		return 0;
+	}
 }

@@ -638,24 +638,42 @@ namespace lime {
 	}
 
 	std::wstring* System::GetHint (const char* key) {
+
 		std::string hintKey(key);
 
-    if (hintKey.rfind("SDL_", 0) != 0) {
+		if (hintKey.rfind("SDL_", 0) != 0) {
+
 			hintKey = "SDL_" + hintKey;
-    }
 
-    SDL_GetHint(hintKey.c_str());
+		}
 
-		const char* raw = SDL_GetHint(hintKey.c_str());
+		const char* raw = SDL_GetHint (hintKey.c_str ());
+
 		if (!raw) {
+
 			return nullptr;
+
 		}
 
 		std::string hint = std::string (raw);
 		std::wstring* _hint = new std::wstring (hint.begin (), hint.end ());
 		return _hint;
+
 	}
 
+	void System::SetHint (const char* key, const char* value) {
+
+		std::string hintKey (key);
+
+		if (hintKey.rfind ("SDL_", 0) != 0) {
+
+			hintKey = "SDL_" + hintKey;
+
+		}
+
+		SDL_SetHint (hintKey.c_str (), value);
+
+	}
 
 
 	#if !defined(IPHONE)

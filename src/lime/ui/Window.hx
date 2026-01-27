@@ -49,6 +49,7 @@ class Window
 
 	public var fullscreen(get, set):Bool;
 	public var height(get, set):Int;
+	public var nativeHeight(get, never):Int;
 	public var hidden(get, null):Bool;
 	public var id(default, null):Int;
 	public var maxHeight(get, set):Int;
@@ -93,6 +94,7 @@ class Window
 	public var parameters:Dynamic;
 	public var resizable(get, set):Bool;
 	public var scale(get, null):Float;
+	public var drawScale(get, never):Float;
 	#if (!lime_doc_gen || flash || openfl)
 	public var stage(default, null):Stage;
 	#end
@@ -100,6 +102,7 @@ class Window
 	public var title(get, set):String;
 	public var visible(get, set):Bool;
 	public var width(get, set):Int;
+	public var nativeWidth(get, never):Int;
 	public var x(get, set):Int;
 	public var y(get, set):Int;
 
@@ -118,6 +121,7 @@ class Window
 	@:noCompletion private var __minimized:Bool;
 	@:noCompletion private var __resizable:Bool;
 	@:noCompletion private var __scale:Float;
+	@:noCompletion private var __drawSale:Float;
 	@:noCompletion private var __title:String;
 	@:noCompletion private var __visible:Bool;
 	@:noCompletion private var __width:Int;
@@ -141,6 +145,7 @@ class Window
 				"frameRate": {get: p.get_frameRate, set: p.set_frameRate},
 				"fullscreen": {get: p.get_fullscreen, set: p.set_fullscreen},
 				"height": {get: p.get_height, set: p.set_height},
+				"nativeHeight": {get: p.get_nativeHeight},
 				"maxHeight": {get: p.get_maxHeight, set: p.set_maxHeight},
 				"maximized": {get: p.get_maximized, set: p.set_maximized},
 				"maxWidth": {get: p.get_maxWidth, set: p.set_maxWidth},
@@ -150,10 +155,12 @@ class Window
 				"mouseLock": {get: p.get_mouseLock, set: p.set_mouseLock},
 				"resizable": {get: p.get_resizable, set: p.set_resizable},
 				"scale": {get: p.get_scale},
+				"drawScale": {get: p.get_drawScale},
 				"textInputEnabled": {get: p.get_textInputEnabled, set: p.set_textInputEnabled},
 				"title": {get: p.get_title, set: p.set_title},
 				"visible": {get: p.get_visible, set: p.set_visible},
 				"width": {get: p.get_width, set: p.set_width},
+				"nativeWidth": {get: p.get_nativeWidth},
 				"x": {get: p.get_x, set: p.set_y},
 				"y": {get: p.get_x, set: p.set_y}
 			});
@@ -553,6 +560,11 @@ class Window
 		return __height;
 	}
 
+	@:noCompletion private inline function get_nativeHeight():Int
+	{
+		return __backend.getNativeHeight();
+	}
+
 	@:noCompletion private function set_height(value:Int):Int
 	{
 		resize(__width, value);
@@ -668,6 +680,11 @@ class Window
 		return __scale;
 	}
 
+	@:noCompletion private inline function get_drawScale():Float
+	{
+		return __backend.getDrawScale();
+	}
+
 	@:noCompletion private inline function get_textInputEnabled():Bool
 	{
 		return __backend.getTextInputEnabled();
@@ -707,6 +724,11 @@ class Window
 	@:noCompletion private inline function get_width():Int
 	{
 		return __width;
+	}
+
+	@:noCompletion private inline function get_nativeWidth():Int
+	{
+		return __backend.getNativeWidth();
 	}
 
 	@:noCompletion private function set_width(value:Int):Int

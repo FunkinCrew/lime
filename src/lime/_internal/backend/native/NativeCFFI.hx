@@ -249,7 +249,9 @@ class NativeCFFI
 
 	@:cffi private static function lime_system_get_display_orientation(value:Bool):Bool;
 
-	@:cffi private static function lime_system_get_hint(value:String):String;
+	@:cffi private static function lime_system_get_hint(key:String):String;
+
+	@:cffi private static function lime_system_set_hint(key:String, value:String):Void;
 
 	@:cffi private static function lime_system_get_device_model():Dynamic;
 
@@ -368,6 +370,12 @@ class NativeCFFI
 	@:cffi private static function lime_window_set_visible(handle:Dynamic, visible:Bool):Bool;
 
 	@:cffi private static function lime_window_warp_mouse(handle:Dynamic, x:Int, y:Int):Void;
+
+	@:cffi private static function lime_window_get_draw_scale(handle:Dynamic):Float;
+
+	@:cffi private static function lime_window_get_native_width(handle:Dynamic):Int;
+
+	@:cffi private static function lime_window_get_native_height(handle:Dynamic):Int;
 
 	@:cffi private static function lime_window_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
@@ -543,6 +551,8 @@ class NativeCFFI
 		"lime_system_get_display_orientation", "ii", false));
 	private static var lime_system_get_hint = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_system_get_hint", "so", false));
+	private static var lime_system_set_hint = new cpp.Callable<String->String->Void>(cpp.Prime._loadPrime("lime",
+		"lime_system_set_hint", "ssv", false));
 	private static var lime_system_get_device_model = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_device_model", "o",
 		false));
 	private static var lime_system_get_device_vendor = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_device_vendor", "o",
@@ -640,6 +650,12 @@ class NativeCFFI
 		false));
 	private static var lime_window_warp_mouse = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_window_warp_mouse",
 		"oiiv", false));
+	private static var lime_window_get_draw_scale = new cpp.Callable<cpp.Object->Float>(cpp.Prime._loadPrime("lime", "lime_window_get_draw_scale", "od",
+		false));
+	private static var lime_window_get_native_width = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_window_get_native_width", "oi",
+		false));
+	private static var lime_window_get_native_height = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_window_get_native_height", "oi",
+		false));
 	private static var lime_window_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_window_event_manager_register", "oov", false));
 	private static var lime_zlib_compress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_compress", "ooo",
@@ -745,6 +761,7 @@ class NativeCFFI
 	private static var lime_system_set_allow_screen_timeout = CFFI.load("lime", "lime_system_set_allow_screen_timeout", 1);
 	private static var lime_system_get_display_orientation = CFFI.load("lime", "lime_system_get_display_orientation", 1);
 	private static var lime_system_get_hint = CFFI.load("lime", "lime_system_get_hint", 1);
+	private static var lime_system_set_hint = CFFI.load("lime", "lime_system_set_hint", 2);
 	private static var lime_system_get_device_model = CFFI.load("lime", "lime_system_get_device_model", 0);
 	private static var lime_system_get_device_vendor = CFFI.load("lime", "lime_system_get_device_vendor", 0);
 	private static var lime_system_get_directory = CFFI.load("lime", "lime_system_get_directory", 3);
@@ -804,6 +821,9 @@ class NativeCFFI
 	private static var lime_window_set_title = CFFI.load("lime", "lime_window_set_title", 2);
 	private static var lime_window_set_visible = CFFI.load("lime", "lime_window_set_visible", 2);
 	private static var lime_window_warp_mouse = CFFI.load("lime", "lime_window_warp_mouse", 3);
+	private static var lime_window_get_draw_scale = CFFI.load("lime", "lime_window_get_draw_scale", 1);
+	private static var lime_window_get_native_width = CFFI.load("lime", "lime_window_get_native_width", 1);
+	private static var lime_window_get_native_height = CFFI.load("lime", "lime_window_get_native_height", 1);
 	private static var lime_window_event_manager_register = CFFI.load("lime", "lime_window_event_manager_register", 2);
 	private static var lime_zlib_compress = CFFI.load("lime", "lime_zlib_compress", 2);
 	private static var lime_zlib_decompress = CFFI.load("lime", "lime_zlib_decompress", 2);
@@ -1215,7 +1235,12 @@ class NativeCFFI
 		return 0;
 	}
 
-	@:hlNative("lime", "hl_system_get_hint") private static function lime_system_get_hint(value:String):hl.Bytes
+	@:hlNative("lime", "hl_system_get_hint") private static function lime_system_get_hint(key:String):hl.Bytes
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_system_set_hint") private static function lime_system_set_hint(key:String, value:String):Void
 	{
 		return null;
 	}
@@ -1442,6 +1467,21 @@ class NativeCFFI
 	}
 
 	@:hlNative("lime", "hl_window_warp_mouse") private static function lime_window_warp_mouse(handle:CFFIPointer, x:Int, y:Int):Void {}
+
+	@:hlNative("lime", "hl_window_get_draw_scale") private static function lime_window_get_draw_scale(handle:CFFIPointer):Float
+	{
+		return 1;
+	}
+
+	@:hlNative("lime", "hl_window_get_native_width") private static function lime_window_get_native_width(handle:CFFIPointer):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_window_get_native_height") private static function lime_window_get_native_height(handle:CFFIPointer):Int
+	{
+		return 0;
+	}
 
 	@:hlNative("lime", "hl_window_get_opacity") private static function lime_window_get_opacity(handle:CFFIPointer):Float { return 0.0; }
 

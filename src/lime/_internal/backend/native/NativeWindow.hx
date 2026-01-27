@@ -746,6 +746,27 @@ class NativeWindow
 		NativeCFFI.lime_window_warp_mouse(handle, x, y);
 		#end
 	}
+
+	public function getDrawScale():Float
+	{
+		#if (!macro && lime_cffi)
+		return NativeCFFI.lime_window_get_draw_scale(handle);
+		#end
+	}
+
+	public function getNativeWidth():Int
+	{
+		#if (!macro && lime_cffi)
+		return NativeCFFI.lime_window_get_native_width(handle);
+		#end
+	}
+
+	public function getNativeHeight():Int
+	{
+		#if (!macro && lime_cffi)
+		return NativeCFFI.lime_window_get_native_height(handle);
+		#end
+	}
 }
 
 #if (haxe_ver >= 4.0) private enum #else @:enum private #end abstract MouseCursorType(Int) from Int to Int

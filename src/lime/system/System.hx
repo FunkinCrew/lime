@@ -432,6 +432,16 @@ class System
 		return null;
 	}
 
+	public static function setHint(key:String, value:String):Void
+	{
+		if (key != null && value != null)
+		{
+			#if (lime_cffi && !macro)
+			return NativeCFFI.lime_system_set_hint(key, value);
+			#end
+		}
+	}
+
 	@:noCompletion private static function __copyMissingFields(target:Dynamic, source:Dynamic):Void
 	{
 		if (source == null || target == null) return;

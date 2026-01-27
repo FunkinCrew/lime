@@ -60,6 +60,7 @@ namespace lime {
 			static bool SetAllowScreenTimeout (bool allow);
 			static int GetDisplayOrientation (int displayIndex);
 			static std::wstring* GetHint (const char* key);
+			static void SetHint (const char* key, const char* value);
 			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif
