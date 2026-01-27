@@ -328,6 +328,8 @@
 		<file name="src/ui/DropEvent.cpp" />
 		<file name="src/ui/GamepadEvent.cpp" />
 		<file name="src/ui/Haptic.mm" if="ios" />
+		<file name="src/ui/Gesture.mm" if="mac" />
+		<file name="src/ui/GestureEvent.cpp" />
 		<file name="src/ui/JoystickEvent.cpp" />
 		<file name="src/ui/KeyEvent.cpp" />
 		<file name="src/ui/MouseEvent.cpp" />

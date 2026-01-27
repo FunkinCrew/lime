@@ -42,6 +42,7 @@
 #include <ui/MouseEvent.h>
 #include <ui/TextEvent.h>
 #include <ui/TouchEvent.h>
+#include <ui/GestureEvent.h>
 #include <ui/Window.h>
 #include <ui/WindowEvent.h>
 #include <utils/compress/LZMA.h>
@@ -3237,6 +3238,22 @@ namespace lime {
 	}
 
 
+	void lime_gesture_event_manager_register (value callback, value eventObject) {
+
+		GestureEvent::callback = new ValuePointer (callback);
+		GestureEvent::eventObject = new ValuePointer (eventObject);
+
+	}
+
+	// untested
+	HL_PRIM void HL_NAME(hl_gesture_event_manager_register) (vclosure* callback, GestureEvent* eventObject) {
+
+		GestureEvent::callback = new ValuePointer (callback);
+		GestureEvent::eventObject = new ValuePointer ((vobj*)eventObject);
+
+	}
+
+
 	void lime_window_alert (value window, HxString message, HxString title) {
 
 		Window* targetWindow = (Window*)val_data (window);
@@ -4171,6 +4188,7 @@ namespace lime {
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
+	DEFINE_PRIME2v (lime_gesture_event_manager_register);
 	DEFINE_PRIME3v (lime_window_alert);
 	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
@@ -4366,6 +4384,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_windows_console_mode, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
+	DEFINE_HL_PRIM (_VOID, hl_gesture_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_window_alert, _TCFFIPOINTER _STRING _STRING);
 	DEFINE_HL_PRIM (_VOID, hl_window_close, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_flip, _TCFFIPOINTER);

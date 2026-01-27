@@ -15,6 +15,8 @@
 #include <ui/MouseEvent.h>
 #include <ui/TextEvent.h>
 #include <ui/TouchEvent.h>
+#include <ui/GestureEvent.h>
+#include <ui/Gesture.h>
 #include <ui/WindowEvent.h>
 #include "SDLWindow.h"
 
@@ -39,6 +41,7 @@ namespace lime {
 
 		private:
 			void InitializeSensors();
+			void InitializeGesture (SDL_Window *window);
 
 			void HandleEvent (SDL_Event* event);
 			void ProcessClipboardEvent (SDL_Event* event);
@@ -52,6 +55,7 @@ namespace lime {
 			#endif
 			void ProcessTextEvent (SDL_Event* event);
 			void ProcessTouchEvent (SDL_Event* event);
+			void ProcessGestureEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);
 			int WaitEvent (SDL_Event* event);
 
@@ -79,6 +83,7 @@ namespace lime {
 			SensorEvent sensorEvent;
 			TextEvent textEvent;
 			TouchEvent touchEvent;
+			GestureEvent gestureEvent;
 			WindowEvent windowEvent;
 
 	};

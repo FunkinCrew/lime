@@ -17,6 +17,7 @@ import lime.system.Sensor;
 import lime.system.SensorType;
 import lime.system.System;
 import lime.ui.Gamepad;
+import lime.ui.Gesture;
 import lime.ui.Joystick;
 import lime.ui.JoystickHatPosition;
 import lime.ui.KeyCode;
@@ -55,6 +56,9 @@ class NativeApplication
 	private var sensorEventInfo = new SensorEventInfo();
 	private var textEventInfo = new TextEventInfo();
 	private var touchEventInfo = new TouchEventInfo();
+	private var gestureEventInfo = new GestureEventInfo();
+	private var currentGestures = new Map<Int, Gesture>();
+	// private var gestureObj = new Gesture(); // pool?
 	private var unusedTouchesPool = new List<Touch>();
 	private var windowEventInfo = new WindowEventInfo();
 
@@ -125,6 +129,7 @@ class NativeApplication
 		NativeCFFI.lime_render_event_manager_register(handleRenderEvent, renderEventInfo);
 		NativeCFFI.lime_text_event_manager_register(handleTextEvent, textEventInfo);
 		NativeCFFI.lime_touch_event_manager_register(handleTouchEvent, touchEventInfo);
+		NativeCFFI.lime_gesture_event_manager_register(handleGestureEvent, gestureEventInfo);
 		NativeCFFI.lime_window_event_manager_register(handleWindowEvent, windowEventInfo);
 		#if (ios || android)
 		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
@@ -517,6 +522,107 @@ class NativeApplication
 				}
 
 			default:
+		}
+	}
+
+	private function handleGestureEvent():Void
+	{
+		// trace("dfevdferfer");
+		// trace("oops: " + gestureEventInfo + " : " + gestureEventInfo.dDist + " : " + gestureEventInfo.x);
+
+
+		switch (gestureEventInfo.state)
+		{
+			case GESTURE_START:
+				var gestureObj = new Gesture();
+
+				#if !macos
+				gestureObj.dDist = gestureEventInfo.dDist;
+				gestureObj.dTheta = gestureEventInfo.dTheta;
+				gestureObj.timestamp = gestureEventInfo.timestamp;
+				#end
+				gestureObj.id = gestureEventInfo.id;
+				gestureObj.numFingers = gestureEventInfo.numFingers;
+				gestureObj.x = gestureEventInfo.x;
+				gestureObj.y = gestureEventInfo.y;
+				#if macos
+				gestureObj.magnification = gestureEventInfo.magnification;
+				gestureObj.rotation = gestureEventInfo.rotation;
+				#else
+				gestureEventInfo.state = GESTURE_MOVE;
+				#end
+
+				currentGestures.set(gestureEventInfo.id, gestureObj);
+
+				Gesture.onStart.dispatch(gestureObj);
+			case GESTURE_MOVE:
+				var gesture = currentGestures.get(gestureEventInfo.id);
+
+				if (gesture != null)
+				{
+					#if !macos
+					gesture.dDist = gestureEventInfo.dDist;
+					gesture.dTheta = gestureEventInfo.dTheta;
+					gesture.timestamp = gestureEventInfo.timestamp;
+					#end
+					gesture.numFingers = gestureEventInfo.numFingers;
+					gesture.x = gestureEventInfo.x;
+					gesture.y = gestureEventInfo.y;
+					#if macos
+					gesture.magnification = gestureEventInfo.magnification;
+					gesture.rotation = gestureEventInfo.rotation;
+					#else
+					gestureEventInfo.state = GESTURE_MOVE;
+					#end
+
+					Gesture.onMove.dispatch(gesture);
+				}
+			case GESTURE_END:
+				var gesture = currentGestures.get(gestureEventInfo.id);
+
+				if (gesture != null)
+				{
+					#if !macos
+					gesture.dDist = gestureEventInfo.dDist;
+					gesture.dTheta = gestureEventInfo.dTheta;
+					gesture.timestamp = gestureEventInfo.timestamp;
+					#end
+					gesture.numFingers = gestureEventInfo.numFingers;
+					gesture.x = gestureEventInfo.x;
+					gesture.y = gestureEventInfo.y;
+					#if macos
+					gesture.magnification = gestureEventInfo.magnification;
+					gesture.rotation = gestureEventInfo.rotation;
+					#else
+					gestureEventInfo.state = GESTURE_MOVE;
+					#end
+
+					Gesture.onEnd.dispatch(gesture);
+					currentGestures.remove(gestureEventInfo.id);
+				}
+			case GESTURE_CANCEL:
+				var gesture = currentGestures.get(gestureEventInfo.id);
+
+				if (gesture != null)
+				{
+					#if !macos
+					gesture.dDist = gestureEventInfo.dDist;
+					gesture.dTheta = gestureEventInfo.dTheta;
+					gesture.timestamp = gestureEventInfo.timestamp;
+					#end
+					gesture.numFingers = gestureEventInfo.numFingers;
+					gesture.x = gestureEventInfo.x;
+					gesture.y = gestureEventInfo.y;
+					#if macos
+					gesture.magnification = gestureEventInfo.magnification;
+					gesture.rotation = gestureEventInfo.rotation;
+					#else
+					gestureEventInfo.state = GESTURE_MOVE;
+					#end
+
+					Gesture.onEnd.dispatch(gesture);
+					currentGestures.remove(gestureEventInfo.id);
+				}
 		}
 	}
 
@@ -962,6 +1068,48 @@ class NativeApplication
 	var TOUCH_START = 0;
 	var TOUCH_END = 1;
 	var TOUCH_MOVE = 2;
+}
+
+@:keep /*private*/ class GestureEventInfo
+{
+	public var id:Int;
+	public var timestamp:Int;
+	public var dTheta:Float;
+	public var dDist:Float;
+	public var x:Float;
+	public var y:Float;
+	public var numFingers:Int;
+	public var state:GestureEventType;
+	public var magnification:Float;
+	public var rotation:Float;
+
+
+	public function new(id:Int = 0, timestamp:Int = 0, dTheta:Float = 0.0, dDist:Float = 0.0, x:Float = 0.0, y:Float = 0.0, numFingers:Int = 0, state:Int = 0, magnification:Float = 0.0, rotation:Float = 0.0)
+	{
+		this.id = id;
+		this.timestamp = timestamp;
+		this.dTheta = dTheta;
+		this.dDist = dDist;
+		this.x = x;
+		this.y = y;
+		this.numFingers = numFingers;
+		this.state = cast state;
+		this.magnification = magnification;
+		this.rotation = rotation;
+	}
+
+	public function clone():GestureEventInfo
+	{
+		return new GestureEventInfo(id, timestamp, dTheta, dDist, x, y, numFingers, cast state, magnification, rotation);
+	}
+}
+
+#if (haxe_ver >= 4.0) private enum #else @:enum private #end abstract GestureEventType(Int)
+{
+	var GESTURE_START = 0;
+	var GESTURE_END = 2;
+	var GESTURE_MOVE = 1;
+	var GESTURE_CANCEL = 3;
 }
 
 @:keep /*private*/ class WindowEventInfo
