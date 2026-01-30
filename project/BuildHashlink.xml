@@ -1,4 +1,7 @@
 <xml>
+	<error value="HashLink not supported on ARM" if="rpi || HXCPP_ARM64"/>
+
+	<set name="PLATFORM" value="android-21" if="android" />
 	<set name="HXCPP_CPP20" value="1" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
