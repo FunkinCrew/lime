@@ -442,6 +442,25 @@ class AL
 		#end
 	}
 
+	public static function deleteEffect(effect:ALEffect):Void
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_effect(effect);
+		#end
+	}
+
+	public static function deleteFilter(filter:ALFilter):Void {
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_filter(filter);
+		#end
+	}
+
+	public static function deleteAux(aux:ALAuxiliaryEffectSlot):Void {
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_auxiliary_effect_slot(aux);
+		#end
+	}
+
 	public static function disable(capability:Int):Void
 	{
 		#if (lime_cffi && lime_openal && !macro)
