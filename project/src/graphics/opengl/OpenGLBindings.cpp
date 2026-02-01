@@ -8,7 +8,7 @@
 #include <vector>
 
 #ifdef LIME_SDL
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #endif
 
 namespace lime {

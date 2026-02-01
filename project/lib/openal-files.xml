@@ -114,20 +114,6 @@
         <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.1.1/src/format.cc" />
         <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.1.1/src/os.cc" />
 
-        <section if="NATIVE_TOOLKIT_HAVE_SDL">
-
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/sdl/include/" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/default/" unless="windows || mac || linux || rpi" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/linux/" if="linux" unless="rpi" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/mac/" if="mac" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/rpi/" if="rpi" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/windows/" if="windows" />
-
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl2.cpp" />
-
-        </section>
-
         <section if="linux">
 
             <compilerflag value="-D_POSIX_C_SOURCE=200112L" />

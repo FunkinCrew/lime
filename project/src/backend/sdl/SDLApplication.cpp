@@ -35,13 +35,30 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
-		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
+		SDL_SetHint (SDL_HINT_TIMER_RESOLUTION, "1");
 
-		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
-		initFlags |= SDL_INIT_AUDIO;
+		#if !defined(EMSCRIPTEN) && !defined(LIME_SWITCH)
+		SDL_SetHint (SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "0");
+		SDL_SetHint (SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
+		SDL_SetHint (SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+		SDL_SetHint (SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
 		#endif
 
-		if (SDL_Init (initFlags) != 0) {
+		#if !(defined (LIME_ANGLE) && defined (IPHONE))
+		SDL_SetHint (SDL_HINT_VIDEO_FORCE_EGL, "1");
+		#ifdef HX_WINDOWS
+		SDL_SetHint (SDL_HINT_VIDEO_WIN_D3DCOMPILER, "none");
+		#endif
+		SDL_SetHint (SDL_HINT_OPENGL_ES_DRIVER, "1");
+		#endif
+
+		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
+
+		// #if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
+		// initFlags |= SDL_INIT_AUDIO;
+		// #endif
+
+		if (!SDL_Init (initFlags)) {
 
 			printf ("Could not initialize SDL: %s.\n", SDL_GetError ());
 
@@ -51,7 +68,7 @@ namespace lime {
 		SDL_SetEventFilter (HandleAppLifecycleEvent, NULL);
 		#endif
 
-		SDL_LogSetPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
+		SDL_SetLogPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
 
 		currentApplication = this;
 
@@ -61,11 +78,7 @@ namespace lime {
 		lastUpdate = 0;
 		nextUpdate = 0;
 
-		#if defined(ANDROID) || defined (IPHONE)
-		SDL_EventState (SDL_SENSORUPDATE, SDL_ENABLE);
-		#endif
-
-		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
+		SDL_SetEventEnabled (SDL_EVENT_DROP_FILE, true);
 
 		#if defined(ANDROID) || defined (IPHONE)
 		InitializeSensors ();
@@ -167,7 +180,7 @@ namespace lime {
 
 		switch (event->type) {
 
-			case SDL_USEREVENT:
+			case SDL_EVENT_USER:
 
 				if (!inBackground) {
 
@@ -191,62 +204,63 @@ namespace lime {
 
 				break;
 
-			case SDL_CLIPBOARDUPDATE:
+			case SDL_EVENT_CLIPBOARD_UPDATE:
 
 				ProcessClipboardEvent (event);
 				break;
 
-			case SDL_CONTROLLERAXISMOTION:
-			case SDL_CONTROLLERBUTTONDOWN:
-			case SDL_CONTROLLERBUTTONUP:
-			case SDL_CONTROLLERDEVICEADDED:
-			case SDL_CONTROLLERDEVICEREMOVED:
+			case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+			case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+			case SDL_EVENT_GAMEPAD_BUTTON_UP:
+			case SDL_EVENT_GAMEPAD_ADDED:
+			case SDL_EVENT_GAMEPAD_REMOVED:
 
 				ProcessGamepadEvent (event);
 				break;
 
-			case SDL_DROPFILE:
+			case SDL_EVENT_DROP_FILE:
 
 				ProcessDropEvent (event);
 				break;
 
-			case SDL_FINGERMOTION:
-			case SDL_FINGERDOWN:
-			case SDL_FINGERUP:
+			case SDL_EVENT_FINGER_MOTION:
+			case SDL_EVENT_FINGER_DOWN:
+			case SDL_EVENT_FINGER_UP:
 
 				ProcessTouchEvent (event);
 				break;
-			case SDL_JOYAXISMOTION:
+
+			case SDL_EVENT_JOYSTICK_AXIS_MOTION:
 
 				ProcessJoystickEvent (event);
 				break;
 
-			case SDL_JOYBALLMOTION:
-			case SDL_JOYBUTTONDOWN:
-			case SDL_JOYBUTTONUP:
-			case SDL_JOYHATMOTION:
-			case SDL_JOYDEVICEADDED:
-			case SDL_JOYDEVICEREMOVED:
+			case SDL_EVENT_JOYSTICK_BALL_MOTION:
+			case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+			case SDL_EVENT_JOYSTICK_BUTTON_UP:
+			case SDL_EVENT_JOYSTICK_HAT_MOTION:
+			case SDL_EVENT_JOYSTICK_ADDED:
+			case SDL_EVENT_JOYSTICK_REMOVED:
 
 				ProcessJoystickEvent (event);
 				break;
 
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
+			case SDL_EVENT_KEY_DOWN:
+			case SDL_EVENT_KEY_UP:
 
 				ProcessKeyEvent (event);
 				break;
 
-			case SDL_MOUSEMOTION:
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-			case SDL_MOUSEWHEEL:
+			case SDL_EVENT_MOUSE_MOTION:
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			case SDL_EVENT_MOUSE_BUTTON_UP:
+			case SDL_EVENT_MOUSE_WHEEL:
 
 				ProcessMouseEvent (event);
 				break;
 
 			#ifndef EMSCRIPTEN
-			case SDL_RENDER_DEVICE_RESET:
+			case SDL_EVENT_RENDER_DEVICE_RESET:
 
 				renderEvent.type = RENDER_CONTEXT_LOST;
 				RenderEvent::Dispatch (&renderEvent);
@@ -259,83 +273,75 @@ namespace lime {
 			#endif
 
 			#if defined(ANDROID) || defined (IPHONE)
-			case SDL_SENSORUPDATE:
+			case SDL_EVENT_SENSOR_UPDATE:
 
 				ProcessSensorEvent (event);
 				break;
 			#endif
 
-			case SDL_TEXTINPUT:
-			case SDL_TEXTEDITING:
+			case SDL_EVENT_TEXT_INPUT:
+			case SDL_EVENT_TEXT_EDITING:
 
 				ProcessTextEvent (event);
 				break;
 
-			case SDL_WINDOWEVENT:
+			case SDL_EVENT_WINDOW_MOUSE_ENTER:
+			case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+			case SDL_EVENT_WINDOW_SHOWN:
+			case SDL_EVENT_WINDOW_HIDDEN:
+			case SDL_EVENT_WINDOW_FOCUS_GAINED:
+			case SDL_EVENT_WINDOW_FOCUS_LOST:
+			case SDL_EVENT_WINDOW_MAXIMIZED:
+			case SDL_EVENT_WINDOW_MINIMIZED:
+			case SDL_EVENT_WINDOW_MOVED:
+			case SDL_EVENT_WINDOW_RESTORED:
 
-				switch (event->window.event) {
+				ProcessWindowEvent(event);
+				break;
 
-					case SDL_WINDOWEVENT_ENTER:
-					case SDL_WINDOWEVENT_LEAVE:
-					case SDL_WINDOWEVENT_SHOWN:
-					case SDL_WINDOWEVENT_HIDDEN:
-					case SDL_WINDOWEVENT_FOCUS_GAINED:
-					case SDL_WINDOWEVENT_FOCUS_LOST:
-					case SDL_WINDOWEVENT_MAXIMIZED:
-					case SDL_WINDOWEVENT_MINIMIZED:
-					case SDL_WINDOWEVENT_MOVED:
-					case SDL_WINDOWEVENT_RESTORED:
+			case SDL_EVENT_WINDOW_EXPOSED:
 
-						ProcessWindowEvent (event);
-						break;
+				ProcessWindowEvent(event);
 
-					case SDL_WINDOWEVENT_EXPOSED:
+				if (!inBackground) {
 
-						ProcessWindowEvent (event);
-
-						if (!inBackground) {
-
-							RenderEvent::Dispatch (&renderEvent);
-
-						}
-
-						break;
-
-					case SDL_WINDOWEVENT_SIZE_CHANGED:
-
-						ProcessWindowEvent (event);
-
-						if (!inBackground) {
-
-							RenderEvent::Dispatch (&renderEvent);
-
-						}
-
-						break;
-
-					case SDL_WINDOWEVENT_CLOSE:
-
-						ProcessWindowEvent (event);
-
-						// Avoid handling SDL_QUIT if in response to window.close
-						SDL_Event event;
-
-						if (SDL_PollEvent (&event)) {
-
-							if (event.type != SDL_QUIT) {
-
-								HandleEvent (&event);
-
-							}
-
-						}
-						break;
+					RenderEvent::Dispatch(&renderEvent);
 
 				}
 
 				break;
 
-			case SDL_QUIT:
+			case SDL_EVENT_WINDOW_RESIZED:
+
+				ProcessWindowEvent(event);
+
+				if (!inBackground) {
+
+					RenderEvent::Dispatch(&renderEvent);
+
+				}
+
+				break;
+
+			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+
+				ProcessWindowEvent(event);
+
+				SDL_Event event;
+
+				if (SDL_PollEvent(&event)) {
+
+					if (event.type != SDL_EVENT_QUIT) {
+
+						HandleEvent(&event);
+
+					}
+
+				}
+
+				break;
+
+			case SDL_EVENT_QUIT:
 
 				active = false;
 				break;
@@ -372,7 +378,7 @@ namespace lime {
 		if (DropEvent::callback) {
 
 			dropEvent.type = DROP_FILE;
-			dropEvent.file = (vbyte*)event->drop.file;
+			dropEvent.file = (vbyte*)event->drop.data;
 
 			DropEvent::Dispatch (&dropEvent);
 			SDL_free (dropEvent.file);
@@ -388,27 +394,27 @@ namespace lime {
 
 			switch (event->type) {
 
-				case SDL_CONTROLLERAXISMOTION:
+				case SDL_EVENT_GAMEPAD_AXIS_MOTION:
 
-					if (gamepadsAxisMap[event->caxis.which].empty ()) {
+					if (gamepadsAxisMap[event->gaxis.which].empty ()) {
 
-						gamepadsAxisMap[event->caxis.which][event->caxis.axis] = event->caxis.value;
+						gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = event->gaxis.value;
 
-					} else if (gamepadsAxisMap[event->caxis.which][event->caxis.axis] == event->caxis.value) {
+					} else if (gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] == event->gaxis.value) {
 
 						break;
 
 					}
 
 					gamepadEvent.type = GAMEPAD_AXIS_MOVE;
-					gamepadEvent.axis = event->caxis.axis;
-					gamepadEvent.id = event->caxis.which;
+					gamepadEvent.axis = event->gaxis.axis;
+					gamepadEvent.id = event->gaxis.which;
 
-					if (event->caxis.value > -analogAxisDeadZone && event->caxis.value < analogAxisDeadZone) {
+					if (event->gaxis.value > -analogAxisDeadZone && event->gaxis.value < analogAxisDeadZone) {
 
-						if (gamepadsAxisMap[event->caxis.which][event->caxis.axis] != 0) {
+						if (gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] != 0) {
 
-							gamepadsAxisMap[event->caxis.which][event->caxis.axis] = 0;
+							gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = 0;
 							gamepadEvent.axisValue = 0;
 							GamepadEvent::Dispatch (&gamepadEvent);
 
@@ -418,40 +424,40 @@ namespace lime {
 
 					}
 
-					gamepadsAxisMap[event->caxis.which][event->caxis.axis] = event->caxis.value;
-					gamepadEvent.axisValue = event->caxis.value / (event->caxis.value > 0 ? 32767.0 : 32768.0);
-					gamepadEvent.timestamp = event->common.timestamp;
+					gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = event->gaxis.value;
+					gamepadEvent.axisValue = event->gaxis.value / (event->gaxis.value > 0 ? 32767.0 : 32768.0);
+					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gaxis.timestamp);
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
 
-				case SDL_CONTROLLERBUTTONDOWN:
+				case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
 
 					gamepadEvent.type = GAMEPAD_BUTTON_DOWN;
-					gamepadEvent.button = event->cbutton.button;
-					gamepadEvent.id = event->cbutton.which;
-					gamepadEvent.timestamp = event->common.timestamp;
+					gamepadEvent.button = event->gbutton.button;
+					gamepadEvent.id = event->gbutton.which;
+					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gbutton.timestamp);
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
 
-				case SDL_CONTROLLERBUTTONUP:
+				case SDL_EVENT_GAMEPAD_BUTTON_UP:
 
 					gamepadEvent.type = GAMEPAD_BUTTON_UP;
-					gamepadEvent.button = event->cbutton.button;
-					gamepadEvent.id = event->cbutton.which;
-					gamepadEvent.timestamp = event->common.timestamp;
+					gamepadEvent.button = event->gbutton.button;
+					gamepadEvent.id = event->gbutton.which;
+					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gbutton.timestamp);
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
 
-				case SDL_CONTROLLERDEVICEADDED:
+				case SDL_EVENT_GAMEPAD_ADDED:
 
 					if (SDLGamepad::Connect (event->cdevice.which)) {
 
 						gamepadEvent.type = GAMEPAD_CONNECT;
 						gamepadEvent.id = SDLGamepad::GetInstanceID (event->cdevice.which);
-						gamepadEvent.timestamp = event->common.timestamp;
+						gamepadEvent.timestamp = SDL_NS_TO_MS(event->cdevice.timestamp);
 
 						GamepadEvent::Dispatch (&gamepadEvent);
 
@@ -459,11 +465,11 @@ namespace lime {
 
 					break;
 
-				case SDL_CONTROLLERDEVICEREMOVED: {
+				case SDL_EVENT_GAMEPAD_REMOVED: {
 
 					gamepadEvent.type = GAMEPAD_DISCONNECT;
 					gamepadEvent.id = event->cdevice.which;
-					gamepadEvent.timestamp = event->common.timestamp;
+					gamepadEvent.timestamp = SDL_NS_TO_MS(event->cdevice.timestamp);
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					SDLGamepad::Disconnect (event->cdevice.which);
@@ -484,7 +490,7 @@ namespace lime {
 
 			switch (event->type) {
 
-				case SDL_JOYAXISMOTION:
+				case SDL_EVENT_JOYSTICK_AXIS_MOTION:
 
 					joystickEvent.type = JOYSTICK_AXIS_MOVE;
 					joystickEvent.index = event->jaxis.axis;
@@ -494,7 +500,7 @@ namespace lime {
 					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
-				case SDL_JOYBUTTONDOWN:
+				case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
 
 					joystickEvent.type = JOYSTICK_BUTTON_DOWN;
 					joystickEvent.index = event->jbutton.button;
@@ -503,7 +509,7 @@ namespace lime {
 					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
-				case SDL_JOYBUTTONUP:
+				case SDL_EVENT_JOYSTICK_BUTTON_UP:
 
 					joystickEvent.type = JOYSTICK_BUTTON_UP;
 					joystickEvent.index = event->jbutton.button;
@@ -512,7 +518,7 @@ namespace lime {
 					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
-				case SDL_JOYHATMOTION:
+				case SDL_EVENT_JOYSTICK_HAT_MOTION:
 
 					joystickEvent.type = JOYSTICK_HAT_MOVE;
 					joystickEvent.index = event->jhat.hat;
@@ -522,7 +528,7 @@ namespace lime {
 					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
-				case SDL_JOYDEVICEADDED:
+				case SDL_EVENT_JOYSTICK_ADDED:
 
 					joystickEvent.type = JOYSTICK_CONNECT;
 					joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
@@ -530,7 +536,7 @@ namespace lime {
 					JoystickEvent::Dispatch (&joystickEvent);
 					break;
 
-				case SDL_JOYDEVICEREMOVED:
+				case SDL_EVENT_JOYSTICK_REMOVED:
 
 					joystickEvent.type = JOYSTICK_DISCONNECT;
 					joystickEvent.id = event->jdevice.which;
@@ -552,29 +558,29 @@ namespace lime {
 
 			switch (event->type) {
 
-				case SDL_KEYDOWN: keyEvent.type = KEY_DOWN; break;
-				case SDL_KEYUP: keyEvent.type = KEY_UP; break;
+				case SDL_EVENT_KEY_DOWN: keyEvent.type = KEY_DOWN; break;
+				case SDL_EVENT_KEY_UP: keyEvent.type = KEY_UP; break;
 
 			}
 
-			keyEvent.keyCode = event->key.keysym.sym;
-			keyEvent.modifier = event->key.keysym.mod;
+			keyEvent.keyCode = event->key.key;
+			keyEvent.modifier = event->key.mod;
 			keyEvent.windowID = event->key.windowID;
-			keyEvent.timestamp = event->common.timestamp;
+			keyEvent.timestamp = SDL_NS_TO_MS(event->key.timestamp);
 
 			if (keyEvent.type == KEY_DOWN) {
 
-				if (keyEvent.keyCode == SDLK_CAPSLOCK) keyEvent.modifier |= KMOD_CAPS;
-				if (keyEvent.keyCode == SDLK_LALT) keyEvent.modifier |= KMOD_LALT;
-				if (keyEvent.keyCode == SDLK_LCTRL) keyEvent.modifier |= KMOD_LCTRL;
-				if (keyEvent.keyCode == SDLK_LGUI) keyEvent.modifier |= KMOD_LGUI;
-				if (keyEvent.keyCode == SDLK_LSHIFT) keyEvent.modifier |= KMOD_LSHIFT;
-				if (keyEvent.keyCode == SDLK_MODE) keyEvent.modifier |= KMOD_MODE;
-				if (keyEvent.keyCode == SDLK_NUMLOCKCLEAR) keyEvent.modifier |= KMOD_NUM;
-				if (keyEvent.keyCode == SDLK_RALT) keyEvent.modifier |= KMOD_RALT;
-				if (keyEvent.keyCode == SDLK_RCTRL) keyEvent.modifier |= KMOD_RCTRL;
-				if (keyEvent.keyCode == SDLK_RGUI) keyEvent.modifier |= KMOD_RGUI;
-				if (keyEvent.keyCode == SDLK_RSHIFT) keyEvent.modifier |= KMOD_RSHIFT;
+				if (keyEvent.keyCode == SDLK_CAPSLOCK) keyEvent.modifier |= SDL_KMOD_CAPS;
+				if (keyEvent.keyCode == SDLK_LALT) keyEvent.modifier |= SDL_KMOD_LALT;
+				if (keyEvent.keyCode == SDLK_LCTRL) keyEvent.modifier |= SDL_KMOD_LCTRL;
+				if (keyEvent.keyCode == SDLK_LGUI) keyEvent.modifier |= SDL_KMOD_LGUI;
+				if (keyEvent.keyCode == SDLK_LSHIFT) keyEvent.modifier |= SDL_KMOD_LSHIFT;
+				if (keyEvent.keyCode == SDLK_MODE) keyEvent.modifier |= SDL_KMOD_MODE;
+				if (keyEvent.keyCode == SDLK_NUMLOCKCLEAR) keyEvent.modifier |= SDL_KMOD_NUM;
+				if (keyEvent.keyCode == SDLK_RALT) keyEvent.modifier |= SDL_KMOD_RALT;
+				if (keyEvent.keyCode == SDLK_RCTRL) keyEvent.modifier |= SDL_KMOD_RCTRL;
+				if (keyEvent.keyCode == SDLK_RGUI) keyEvent.modifier |= SDL_KMOD_RGUI;
+				if (keyEvent.keyCode == SDLK_RSHIFT) keyEvent.modifier |= SDL_KMOD_RSHIFT;
 
 			}
 
@@ -589,40 +595,44 @@ namespace lime {
 
 		if (MouseEvent::callback) {
 
+			SDL_Window * sdlWindow = SDL_GetWindowFromID(event->window.windowID);
+
+			float scale = SDL_GetWindowPixelDensity(sdlWindow) / SDL_GetWindowDisplayScale(sdlWindow);
+
 			switch (event->type) {
 
-				case SDL_MOUSEMOTION:
+				case SDL_EVENT_MOUSE_MOTION:
 
 					mouseEvent.type = MOUSE_MOVE;
-					mouseEvent.x = event->motion.x;
-					mouseEvent.y = event->motion.y;
-					mouseEvent.movementX = event->motion.xrel;
-					mouseEvent.movementY = event->motion.yrel;
+					mouseEvent.x = event->motion.x * scale;
+					mouseEvent.y = event->motion.y * scale;
+					mouseEvent.movementX = event->motion.xrel * scale;
+					mouseEvent.movementY = event->motion.yrel * scale;
 					break;
 
-				case SDL_MOUSEBUTTONDOWN:
+				case SDL_EVENT_MOUSE_BUTTON_DOWN:
 
-					SDL_CaptureMouse (SDL_TRUE);
+					SDL_CaptureMouse (true);
 
 					mouseEvent.type = MOUSE_DOWN;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
-				case SDL_MOUSEBUTTONUP:
+				case SDL_EVENT_MOUSE_BUTTON_UP:
 
-					SDL_CaptureMouse (SDL_FALSE);
+					SDL_CaptureMouse (false);
 
 					mouseEvent.type = MOUSE_UP;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
-				case SDL_MOUSEWHEEL:
+				case SDL_EVENT_MOUSE_WHEEL:
 
 					mouseEvent.type = MOUSE_WHEEL;
 
@@ -686,12 +696,12 @@ namespace lime {
 
 			switch (event->type) {
 
-				case SDL_TEXTINPUT:
+				case SDL_EVENT_TEXT_INPUT:
 
 					textEvent.type = TEXT_INPUT;
 					break;
 
-				case SDL_TEXTEDITING:
+				case SDL_EVENT_TEXT_EDITING:
 
 					textEvent.type = TEXT_EDIT;
 					textEvent.start = event->edit.start;
@@ -723,17 +733,17 @@ namespace lime {
 
 			switch (event->type) {
 
-				case SDL_FINGERMOTION:
+				case SDL_EVENT_FINGER_MOTION:
 
 					touchEvent.type = TOUCH_MOVE;
 					break;
 
-				case SDL_FINGERDOWN:
+				case SDL_EVENT_FINGER_DOWN:
 
 					touchEvent.type = TOUCH_START;
 					break;
 
-				case SDL_FINGERUP:
+				case SDL_EVENT_FINGER_UP:
 
 					touchEvent.type = TOUCH_END;
 					break;
@@ -742,11 +752,11 @@ namespace lime {
 
 			touchEvent.x = event->tfinger.x;
 			touchEvent.y = event->tfinger.y;
-			touchEvent.id = event->tfinger.fingerId;
+			touchEvent.id = event->tfinger.fingerID;
 			touchEvent.dx = event->tfinger.dx;
 			touchEvent.dy = event->tfinger.dy;
 			touchEvent.pressure = event->tfinger.pressure;
-			touchEvent.device = event->tfinger.touchId;
+			touchEvent.device = event->tfinger.touchID;
 
 			TouchEvent::Dispatch (&touchEvent);
 
@@ -759,34 +769,36 @@ namespace lime {
 
 		if (WindowEvent::callback) {
 
-			switch (event->window.event) {
+			switch (event->type) {
 
-				case SDL_WINDOWEVENT_SHOWN: windowEvent.type = WINDOW_SHOW; break;
-				case SDL_WINDOWEVENT_CLOSE: windowEvent.type = WINDOW_CLOSE; break;
-				case SDL_WINDOWEVENT_HIDDEN: windowEvent.type = WINDOW_HIDE; break;
-				case SDL_WINDOWEVENT_ENTER: windowEvent.type = WINDOW_ENTER; break;
-				case SDL_WINDOWEVENT_FOCUS_GAINED: windowEvent.type = WINDOW_FOCUS_IN; break;
-				case SDL_WINDOWEVENT_FOCUS_LOST: windowEvent.type = WINDOW_FOCUS_OUT; break;
-				case SDL_WINDOWEVENT_LEAVE: windowEvent.type = WINDOW_LEAVE; break;
-				case SDL_WINDOWEVENT_MAXIMIZED: windowEvent.type = WINDOW_MAXIMIZE; break;
-				case SDL_WINDOWEVENT_MINIMIZED: windowEvent.type = WINDOW_MINIMIZE; break;
-				case SDL_WINDOWEVENT_EXPOSED: windowEvent.type = WINDOW_EXPOSE; break;
+				case SDL_EVENT_WINDOW_SHOWN: windowEvent.type = WINDOW_SHOW; break;
+				case SDL_EVENT_WINDOW_CLOSE_REQUESTED: windowEvent.type = WINDOW_CLOSE; break;
+				case SDL_EVENT_WINDOW_HIDDEN: windowEvent.type = WINDOW_HIDE; break;
+				case SDL_EVENT_WINDOW_MOUSE_ENTER: windowEvent.type = WINDOW_ENTER; break;
+				case SDL_EVENT_WINDOW_FOCUS_GAINED: windowEvent.type = WINDOW_FOCUS_IN; break;
+				case SDL_EVENT_WINDOW_FOCUS_LOST: windowEvent.type = WINDOW_FOCUS_OUT; break;
+				case SDL_EVENT_WINDOW_MOUSE_LEAVE: windowEvent.type = WINDOW_LEAVE; break;
+				case SDL_EVENT_WINDOW_MAXIMIZED: windowEvent.type = WINDOW_MAXIMIZE; break;
+				case SDL_EVENT_WINDOW_MINIMIZED: windowEvent.type = WINDOW_MINIMIZE; break;
+				case SDL_EVENT_WINDOW_EXPOSED: windowEvent.type = WINDOW_EXPOSE; break;
 
-				case SDL_WINDOWEVENT_MOVED:
+				case SDL_EVENT_WINDOW_MOVED:
 
 					windowEvent.type = WINDOW_MOVE;
 					windowEvent.x = event->window.data1;
 					windowEvent.y = event->window.data2;
 					break;
 
-				case SDL_WINDOWEVENT_SIZE_CHANGED:
-
+				case SDL_EVENT_WINDOW_RESIZED:
+				{
+					float scale = SDL_GetWindowDisplayScale(SDL_GetWindowFromID(event->window.windowID));
 					windowEvent.type = WINDOW_RESIZE;
-					windowEvent.width = event->window.data1;
-					windowEvent.height = event->window.data2;
+					windowEvent.width = (int)(event->window.data1 / scale);
+					windowEvent.height = (int)(event->window.data2 / scale);
 					break;
+				}
 
-				case SDL_WINDOWEVENT_RESTORED: windowEvent.type = WINDOW_RESTORE; break;
+				case SDL_EVENT_WINDOW_RESTORED: windowEvent.type = WINDOW_RESTORE; break;
 
 			}
 
@@ -813,7 +825,7 @@ namespace lime {
 	void SDLApplication::RegisterWindow (SDLWindow *window) {
 
 		#ifdef IPHONE
-		SDL_iPhoneSetAnimationCallback (window->sdlWindow, 1, UpdateFrame, NULL);
+		SDL_SetiOSAnimationCallback (window->sdlWindow, 1, UpdateFrame, NULL);
 		#endif
 
 	}
@@ -838,15 +850,15 @@ namespace lime {
 	bool timerActive = false;
 	bool firstTime = true;
 
-	Uint32 OnTimer (Uint32 interval, void *) {
+	Uint32 OnTimer (void *userdata, SDL_TimerID timerID, Uint32 interval) {
 
 		SDL_Event event;
 		SDL_UserEvent userevent;
-		userevent.type = SDL_USEREVENT;
+		userevent.type = SDL_EVENT_USER;
 		userevent.code = 0;
 		userevent.data1 = NULL;
 		userevent.data2 = NULL;
-		event.type = SDL_USEREVENT;
+		event.type = SDL_EVENT_USER;
 		event.user = userevent;
 
 		timerActive = false;
@@ -892,7 +904,7 @@ namespace lime {
 
 			if (currentUpdate >= nextUpdate) {
 
-				event.type = SDL_USEREVENT;
+				event.type = SDL_EVENT_USER;
 				HandleEvent (&event);
 				event.type = -1;
 
@@ -903,7 +915,7 @@ namespace lime {
 			if (currentUpdate >= nextUpdate) {
 
 				if (timerActive) SDL_RemoveTimer (timerID);
-				OnTimer (0, 0);
+				OnTimer (0, 1, 0);
 
 			} else if (!timerActive) {
 
@@ -948,7 +960,6 @@ namespace lime {
 
 			case SDL_APP_DIDENTERBACKGROUND:
 
-				inBackground = true;
 				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
 				WindowEvent::Dispatch (&currentApplication->windowEvent);
 				return 0;
@@ -961,7 +972,6 @@ namespace lime {
 
 				currentApplication->windowEvent.type = WINDOW_ACTIVATE;
 				WindowEvent::Dispatch (&currentApplication->windowEvent);
-				inBackground = false;
 				return 0;
 
 			default:
@@ -1013,7 +1023,7 @@ namespace lime {
 
 			SDL_PumpEvents ();
 
-			switch (SDL_PeepEvents (event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) {
+			switch (SDL_PeepEvents (event, 1, SDL_GETEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST)) {
 
 				case -1:
 
