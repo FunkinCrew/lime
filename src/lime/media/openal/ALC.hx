@@ -25,14 +25,28 @@ class ALC
 	public static inline var INVALID_ENUM:Int = 0xA003;
 	public static inline var INVALID_VALUE:Int = 0xA004;
 	public static inline var OUT_OF_MEMORY:Int = 0xA005;
+	public static inline var MAJOR_VERSION:Int = 0x1000;
+	public static inline var MINOR_VERSION:Int = 0x1001;
 	public static inline var ATTRIBUTES_SIZE:Int = 0x1002;
 	public static inline var ALL_ATTRIBUTES:Int = 0x1003;
+	/* ALC_ENUMERATION_EXT */
 	public static inline var DEFAULT_DEVICE_SPECIFIER:Int = 0x1004;
 	public static inline var DEVICE_SPECIFIER:Int = 0x1005;
 	public static inline var EXTENSIONS:Int = 0x1006;
-	public static inline var ENUMERATE_ALL_EXT:Int = 1;
+	/* ALC_EXT_CAPTURE */
+	public static inline var CAPTURE_DEVICE_SPECIFIER:Int = 0x310;
+	public static inline var CAPTURE_DEFAULT_DEVICE_SPECIFIER:Int = 0x311;
+	public static inline var CAPTURE_SAMPLES:Int = 0x312;
+	/* ALC_ENUMERATE_ALL_EXT */
 	public static inline var DEFAULT_ALL_DEVICES_SPECIFIER:Int = 0x1012;
 	public static inline var ALL_DEVICES_SPECIFIER:Int = 0x1013;
+	/* ALC_EXT_disconnect */
+	public static inline var CONNECTED:Int = 0x313;
+	/* ALC_SOFT_device_clock */
+	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
+	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
+	public static inline var DEVICE_CLOCK_LATENCY_SOFT:Int = 0x1602;
+	/* ALC_SOFT_system_events */
 	public static inline var PLAYBACK_DEVICE_SOFT:Int = 0x19D4;
 	public static inline var CAPTURE_DEVICE_SOFT:Int = 0x19D5;
 	public static inline var EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT:Int = 0x19D6;

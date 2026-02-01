@@ -232,15 +232,43 @@ class AL
 	public static inline var FILTER_LOWPASS:Int = 0x0001;
 	public static inline var FILTER_HIGHPASS:Int = 0x0002;
 	public static inline var FILTER_BANDPASS:Int = 0x0003;
-
-	public static inline var STOP_SOURCES_ON_DISCONNECT_SOFT:Int = 0x19AB;
-
-	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
-	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
-	public static inline var DEVICE_CLOCK_LATENCY_SOFT:Int = 0x1602;
-
+	/* AL_EXT_float32 */
+	public static inline var FORMAT_MONO_FLOAT32:Int = 0x10010;
+	public static inline var FORMAT_STEREO_FLOAT32:Int = 0x10011;
+	/* UNKNOWN */
+	public static inline var FORMAT_MONO32:Int = 0x1202;
+	public static inline var FORMAT_STEREO32:Int = 0x1203;
+	/* AL_EXT_MCFORMATS */
+	public static inline var FORMAT_QUAD8:Int = 0x1204;
+	public static inline var FORMAT_QUAD16:Int = 0x1205;
+	public static inline var FORMAT_QUAD32:Int = 0x1206;
+	public static inline var FORMAT_REAR8:Int = 0x1207;
+	public static inline var FORMAT_REAR16:Int = 0x1208;
+	public static inline var FORMAT_REAR32:Int = 0x1209;
+	public static inline var FORMAT_51CHN8:Int = 0x120A;
+	public static inline var FORMAT_51CHN16:Int = 0x120B;
+	public static inline var FORMAT_51CHN32:Int = 0x120C;
+	public static inline var FORMAT_61CHN8:Int = 0x120D;
+	public static inline var FORMAT_61CHN16:Int = 0x120E;
+	public static inline var FORMAT_61CHN32:Int = 0x120F;
+	public static inline var FORMAT_71CHN8:Int = 0x1210;
+	public static inline var FORMAT_71CHN16:Int = 0x1211;
+	public static inline var FORMAT_71CHN32:Int = 0x1212;
+	/* AL_SOFT_loop_points */
+	public static inline var LOOP_POINTS_SOFT:Int = 0x2015;
+	/* AL_EXT_STEREO_ANGLES */
+	public static inline var STEREO_ANGLES:Int = 0x1030;
+	/* AL_SOFT_source_latency */
+	public static inline var SAMPLE_OFFSET_LATENCY_SOFT:Int = 0x1200;
 	public static inline var SEC_OFFSET_LATENCY_SOFT:Int = 0x1201;
+	/* AL_SOFT_source_spatialize */
+	public static inline var SOURCE_SPATIALIZE_SOFT:Int = 0x1214;
+	public static inline var AUTO_SOFT:Int = 0x0002;
+	/* ALC_SOFT_device_clock */
+	public static inline var SAMPLE_OFFSET_CLOCK_SOFT:Int = 0x1202;
 	public static inline var SEC_OFFSET_CLOCK_SOFT:Int = 0x1203;
+	/* AL_SOFT_hold_on_disconnect */
+	public static inline var STOP_SOURCES_ON_DISCONNECT_SOFT:Int = 0x19AB;
 
 	public static function removeDirectFilter(source:ALSource)
 	{
