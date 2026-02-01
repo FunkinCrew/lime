@@ -1,27 +1,23 @@
 #ifndef LIME_UI_FILE_DIALOG_H
 #define LIME_UI_FILE_DIALOG_H
 
-
+#include <ui/Window.h>
 #include <string>
 #include <vector>
-
+#include <functional>
 
 namespace lime {
 
-
 	class FileDialog {
 
-		public:
+	public:
 
-			static std::wstring* OpenDirectory (std::wstring* title = 0, std::wstring* filter = 0, std::wstring* defaultPath = 0);
-			static std::wstring* OpenFile (std::wstring* title = 0, std::wstring* filter = 0, std::wstring* defaultPath = 0);
-			static void OpenFiles (std::vector<std::wstring*>* files, std::wstring* title = 0, std::wstring* filter = 0, std::wstring* defaultPath = 0);
-			static std::wstring* SaveFile (std::wstring* title = 0, std::wstring* filter = 0, std::wstring* defaultPath = 0);
+		static void OpenDirectory (Window* window, std::function<void(const char* const*, int, int)> callback, const char* defaultPath = nullptr, bool allowMultiple = false);
+		static void OpenFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr, bool allowMultiple = false);
+		static void SaveFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr);
 
 	};
 
-
 }
-
 
 #endif

@@ -2,6 +2,24 @@
 #define LIME_GRAPHICS_OPENGL_OPENGL_BINDINGS_H
 
 
+#ifdef LIME_GLAD
+
+#if defined (LIME_OPENGL_GL)
+#include <glad/gl.h>
+#elif defined (LIME_OPENGL_GLES2)
+#include <glad/gles2.h>
+#endif
+
+#else
+
+#if defined (IPHONE) || defined(APPLETV)
+#include <OpenGLES/ES3/gl.h>
+#include <OpenGLES/ES3/glext.h>
+#endif
+
+#endif
+
+
 namespace lime {
 
 
@@ -13,12 +31,6 @@ namespace lime {
 
 			static int defaultFramebuffer;
 			static int defaultRenderbuffer;
-			static void* handle;
-
-			#ifdef NATIVE_TOOLKIT_SDL_ANGLE
-			static void* eglHandle;
-			#endif
-
 
 		private:
 

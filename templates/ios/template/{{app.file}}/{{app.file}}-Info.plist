@@ -9,17 +9,19 @@
 	<array>::foreach languages::
 		<string>::__current__::</string>::end::
 	</array>::end::
-        <key>UIFileSharingEnabled</key>
-		<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
 		<string>launchScreenBackground</string>
 	</dict>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<string>true</string>
-        <key>NSBluetoothAlwaysUsageDescription</key>
-        <string>To play with controller accept bluetooth permission.</string>
+	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>To play with controller accept bluetooth permission.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>CFBundleDisplayName</key>
 	<string>::APP_TITLE::</string>
 	<key>CFBundleExecutable</key>
@@ -41,7 +43,7 @@
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.games</string>
 	<key>GCSupportsGameMode</key>
-	<true />
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	::if (IOS_LAUNCH_STORYBOARD != null)::<key>UILaunchStoryboardName</key>

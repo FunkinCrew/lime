@@ -61,7 +61,7 @@ class FlashWindow
 		create();
 	}
 
-	public function alert(message:String, title:String):Void {}
+	public function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int { return -1; }
 
 	public function close():Void
 	{
@@ -290,7 +290,7 @@ class FlashWindow
 
 	public function focus():Void {}
 
-	public function setVSyncMode(mode:WindowVSyncMode):Bool
+	public function setVSyncMode(mode:lime.ui.WindowVSyncMode):Bool
 	{
 		return false;
 	}

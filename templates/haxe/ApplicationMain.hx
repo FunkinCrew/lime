@@ -23,13 +23,21 @@ import ::APP_MAIN::;
 		#end
 
 		#if !munit
-		var app = new ::APP_MAIN::();
-		app.meta.set("build", "::meta.buildNumber::");
-		app.meta.set("company", "::meta.company::");
-		app.meta.set("file", "::APP_FILE::");
-		app.meta.set("name", "::meta.title::");
-		app.meta.set("packageName", "::meta.packageName::");
-		app.meta.set("version", "::meta.version::");
+
+		::if (WIN_ORIENTATION != "auto")::
+		lime.system.System.setHint("ORIENTATIONS", ::if (WIN_ORIENTATION == "portrait")::"Portrait PortraitUpsideDown"::else::"LandscapeLeft LandscapeRight"::end::);
+		::end::
+
+		final appMeta:Map<String, String> = [];
+
+		appMeta.set("build", "::meta.buildNumber::");
+		appMeta.set("company", "::meta.company::");
+		appMeta.set("file", "::APP_FILE::");
+		appMeta.set("name", "::meta.title::");
+		appMeta.set("packageName", "::meta.packageName::");
+		appMeta.set("version", "::meta.version::");
+
+		var app = new ::APP_MAIN::(appMeta);
 
 		#if !flash
 		::foreach windows::
@@ -37,6 +45,7 @@ import ::APP_MAIN::;
 			{
 				allowHighDPI: ::allowHighDPI::,
 				alwaysOnTop: ::alwaysOnTop::,
+				transparent: ::transparent::,
 				borderless: ::borderless::,
 				// display: ::display::,
 				element: null,
