@@ -53,7 +53,6 @@ namespace lime {
 			void ProcessTextEvent (SDL_Event* event);
 			void ProcessTouchEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);
-			int WaitEvent (SDL_Event* event);
 
 			#if defined(ANDROID) || defined (IPHONE)
 			static int HandleAppLifecycleEvent (void* userdata, SDL_Event* event);
@@ -64,17 +63,18 @@ namespace lime {
 			static SDLApplication* currentApplication;
 
 			bool active;
+			Uint64 frameStart;
+			Uint64 frameEnd;
+			Uint64 frameTargetTime;
+			double deltaTime;
+
 			ApplicationEvent applicationEvent;
 			ClipboardEvent clipboardEvent;
-			Uint32 currentUpdate;
-			double framePeriod;
 			DropEvent dropEvent;
 			GamepadEvent gamepadEvent;
 			JoystickEvent joystickEvent;
 			KeyEvent keyEvent;
-			Uint32 lastUpdate;
 			MouseEvent mouseEvent;
-			Uint32 nextUpdate;
 			RenderEvent renderEvent;
 			SensorEvent sensorEvent;
 			TextEvent textEvent;

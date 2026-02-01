@@ -48,7 +48,7 @@ class Application extends Module
 	/**
 		Update events are dispatched each frame (usually just before rendering)
 	**/
-	public var onUpdate = new Event<Int->Void>();
+	public var onUpdate = new Event<Float->Void>();
 
 	/**
 		Dispatched when a new window has been created by this application
@@ -490,7 +490,7 @@ class Application extends Module
 		Called when an update event is fired on the primary window
 		@param	deltaTime	The amount of time in milliseconds that has elapsed since the last update
 	**/
-	public function update(deltaTime:Int):Void {}
+	public function update(deltaTime:Float):Void {}
 
 	@:noCompletion private function __addWindow(window:Window):Void
 	{

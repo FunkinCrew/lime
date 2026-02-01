@@ -11,6 +11,8 @@
 #include "emscripten.h"
 #endif
 
+#include <cmath>
+
 
 namespace lime {
 
@@ -21,7 +23,6 @@ namespace lime {
 
 	const int analogAxisDeadZone = 1000;
 	std::map<int, std::map<int, int> > gamepadsAxisMap;
-	bool inBackground = false;
 
 
 	#if defined(ANDROID) || defined (IPHONE)
@@ -71,12 +72,11 @@ namespace lime {
 		SDL_SetLogPriority (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN);
 
 		currentApplication = this;
-
-		framePeriod = 1000.0 / 60.0;
-
-		currentUpdate = 0;
-		lastUpdate = 0;
-		nextUpdate = 0;
+		active = false;
+		frameStart = 0;
+		frameEnd = 0;
+		frameTargetTime = std::round (SDL_NS_PER_SECOND / 60.0);
+		deltaTime = 0.0;
 
 		SDL_SetEventEnabled (SDL_EVENT_DROP_FILE, true);
 
@@ -180,30 +180,6 @@ namespace lime {
 
 		switch (event->type) {
 
-			case SDL_EVENT_USER:
-
-				if (!inBackground) {
-
-					currentUpdate = SDL_GetTicks ();
-					applicationEvent.type = UPDATE;
-					applicationEvent.deltaTime = currentUpdate - lastUpdate;
-					lastUpdate = currentUpdate;
-
-					nextUpdate += framePeriod;
-
-					while (nextUpdate <= currentUpdate) {
-
-						nextUpdate += framePeriod;
-
-					}
-
-					ApplicationEvent::Dispatch (&applicationEvent);
-					RenderEvent::Dispatch (&renderEvent);
-
-				}
-
-				break;
-
 			case SDL_EVENT_CLIPBOARD_UPDATE:
 
 				ProcessClipboardEvent (event);
@@ -295,32 +271,10 @@ namespace lime {
 			case SDL_EVENT_WINDOW_MINIMIZED:
 			case SDL_EVENT_WINDOW_MOVED:
 			case SDL_EVENT_WINDOW_RESTORED:
-
-				ProcessWindowEvent(event);
-				break;
-
 			case SDL_EVENT_WINDOW_EXPOSED:
-
-				ProcessWindowEvent(event);
-
-				if (!inBackground) {
-
-					RenderEvent::Dispatch(&renderEvent);
-
-				}
-
-				break;
-
 			case SDL_EVENT_WINDOW_RESIZED:
 
 				ProcessWindowEvent(event);
-
-				if (!inBackground) {
-
-					RenderEvent::Dispatch(&renderEvent);
-
-				}
-
 				break;
 
 			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -354,8 +308,6 @@ namespace lime {
 	void SDLApplication::Init () {
 
 		active = true;
-		lastUpdate = SDL_GetTicks ();
-		nextUpdate = lastUpdate;
 
 	}
 
@@ -833,103 +785,47 @@ namespace lime {
 
 	void SDLApplication::SetFrameRate (double frameRate) {
 
-		if (frameRate > 0) {
-
-			framePeriod = 1000.0 / frameRate;
-
-		} else {
-
-			framePeriod = 1000.0;
-
-		}
-
-	}
-
-
-	static SDL_TimerID timerID = 0;
-	bool timerActive = false;
-	bool firstTime = true;
-
-	Uint32 OnTimer (void *userdata, SDL_TimerID timerID, Uint32 interval) {
-
-		SDL_Event event;
-		SDL_UserEvent userevent;
-		userevent.type = SDL_EVENT_USER;
-		userevent.code = 0;
-		userevent.data1 = NULL;
-		userevent.data2 = NULL;
-		event.type = SDL_EVENT_USER;
-		event.user = userevent;
-
-		timerActive = false;
-		timerID = 0;
-
-		SDL_PushEvent (&event);
-
-		return 0;
+		frameTargetTime = frameRate < 1 ? 0 : std::round (SDL_NS_PER_SECOND / frameRate);
 
 	}
 
 
 	bool SDLApplication::Update () {
 
-		SDL_Event event;
-		event.type = -1;
+		frameStart = SDL_GetTicksNS ();
 
-		#if (!defined (IPHONE) && !defined (EMSCRIPTEN))
-
-		if (active && (firstTime || WaitEvent (&event))) {
-
-			firstTime = false;
-
-			HandleEvent (&event);
-			event.type = -1;
-			if (!active)
-				return active;
-
-		#endif
+		{
+			SDL_Event event;
 
 			while (SDL_PollEvent (&event)) {
 
 				HandleEvent (&event);
-				event.type = -1;
+
 				if (!active)
 					return active;
 
 			}
 
-			currentUpdate = SDL_GetTicks ();
+			applicationEvent.type = UPDATE;
+			applicationEvent.deltaTime = deltaTime;
 
-		#if defined (IPHONE) || defined (EMSCRIPTEN)
+			ApplicationEvent::Dispatch (&applicationEvent);
+			RenderEvent::Dispatch (&renderEvent);
+		}
 
-			if (currentUpdate >= nextUpdate) {
+		frameEnd = SDL_GetTicksNS ();
 
-				event.type = SDL_EVENT_USER;
-				HandleEvent (&event);
-				event.type = -1;
+		Uint64 frameTime = frameEnd - frameStart;
 
-			}
+		if (frameTargetTime > 0 && frameTime < frameTargetTime) {
 
-		#else
-
-			if (currentUpdate >= nextUpdate) {
-
-				if (timerActive) SDL_RemoveTimer (timerID);
-				OnTimer (0, 1, 0);
-
-			} else if (!timerActive) {
-
-				timerActive = true;
-				timerID = SDL_AddTimer (nextUpdate - currentUpdate, OnTimer, 0);
-
-			}
+			SDL_DelayPrecise (frameTargetTime - frameTime);
 
 		}
 
-		#endif
+		deltaTime = (double) (SDL_GetTicksNS () - frameStart) / SDL_NS_PER_MS;
 
 		return active;
-
 	}
 
 
@@ -1002,51 +898,6 @@ namespace lime {
 	void SDLApplication::UpdateFrame (void*) {
 
 		UpdateFrame ();
-
-	}
-
-
-	int SDLApplication::WaitEvent (SDL_Event *event) {
-
-		#if defined(HX_MACOS) || defined(ANDROID)
-
-		System::GCEnterBlocking ();
-		int result = SDL_WaitEvent (event);
-		System::GCExitBlocking ();
-		return result;
-
-		#else
-
-		bool isBlocking = false;
-
-		for(;;) {
-
-			SDL_PumpEvents ();
-
-			switch (SDL_PeepEvents (event, 1, SDL_GETEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST)) {
-
-				case -1:
-
-					if (isBlocking) System::GCExitBlocking ();
-					return 0;
-
-				case 1:
-
-					if (isBlocking) System::GCExitBlocking ();
-					return 1;
-
-				default:
-
-					if (!isBlocking) System::GCEnterBlocking ();
-					isBlocking = true;
-					SDL_Delay (1);
-					break;
-
-			}
-
-		}
-
-		#endif
 
 	}
 

@@ -378,7 +378,7 @@ class NativeAudioSource
 		parent.onComplete.dispatch();
 	}
 
-	private function checkPlay(delta:Int):Void
+	private function checkPlay(_):Void
 	{
 		final finished:Bool = AL.getSourcei(handle, AL.SOURCE_STATE) != AL.PLAYING;
 
