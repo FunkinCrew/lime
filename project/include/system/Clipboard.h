@@ -1,6 +1,8 @@
 #ifndef LIME_SYSTEM_CLIPBOARD_H
 #define LIME_SYSTEM_CLIPBOARD_H
 
+#include <string>
+
 
 namespace lime {
 
@@ -10,7 +12,7 @@ namespace lime {
 
 		public:
 
-			static const char* GetText ();
+			static std::wstring* GetText ();
 			static bool HasText ();
 			static bool SetText (const char* text);
 

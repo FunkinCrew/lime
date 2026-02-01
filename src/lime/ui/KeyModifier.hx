@@ -15,7 +15,7 @@ abstract KeyModifier(Int) from Int to Int from UInt to UInt
 	public static inline var CAPS_LOCK:KeyModifier = 0x2000;
 	public static inline var MODE:KeyModifier = 0x4000;
 	public static inline var CTRL:KeyModifier = (0x0040 | 0x0080);
-	public static inline var SHIFT:KeyModifier = (0x001 | 0x0002);
+	public static inline var SHIFT:KeyModifier = (0x0001 | 0x0002);
 	public static inline var ALT:KeyModifier = (0x0100 | 0x0200);
 	public static inline var META:KeyModifier = (0x0400 | 0x0800);
 

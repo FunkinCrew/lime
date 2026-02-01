@@ -48,7 +48,7 @@ class Application extends Module
 	/**
 		Update events are dispatched each frame (usually just before rendering)
 	**/
-	public var onUpdate = new Event<Int->Void>();
+	public var onUpdate = new Event<Float->Void>();
 
 	/**
 		Dispatched when a new window has been created by this application
@@ -409,9 +409,42 @@ class Application extends Module
 	public function onWindowDeactivate():Void {}
 
 	/**
-		Called when a window drop file event is fired on the primary window
+		Called when a window drop file event is fired on the primary window.
+		@param data   The full path of the dropped file.
+		@param source The source application or identifier of the drop.
+		@param x      The X position of the drop in window coordinates.
+		@param y      The Y position of the drop in window coordinates.
 	**/
-	public function onWindowDropFile(file:String):Void {}
+	public function onWindowDropFile(data:String, source:String, x:Float, y:Float):Void {}
+
+	/**
+		Called when a window drop text event is fired on the primary window.
+		@param data   The dropped text content.
+		@param source The source application or identifier of the drop.
+		@param x      The X position of the drop in window coordinates.
+		@param y      The Y position of the drop in window coordinates.
+	**/
+	public function onWindowDropText(data:String, source:String, x:Float, y:Float):Void {}
+
+	/**
+		Called when a drag-and-drop operation enters the primary window.
+		Triggered before any file or text drop events.
+	**/
+	public function onWindowDropBegin():Void {}
+
+	/**
+		Called when a drag-and-drop operation completes on the primary window.
+		@param x The final X position of the drop in window coordinates.
+		@param y The final Y position of the drop in window coordinates.
+	**/
+	public function onWindowDropComplete(x:Float, y:Float):Void {}
+
+	/**
+		Called when the cursor position changes during a drag-and-drop operation over the primary window.
+		@param x The current X position in window coordinates.
+		@param y The current Y position in window coordinates.
+	**/
+	public function onWindowDropPosition(x:Float, y:Float):Void {}
 
 	/**
 		Called when a window enter event is fired on the primary window
@@ -490,7 +523,7 @@ class Application extends Module
 		Called when an update event is fired on the primary window
 		@param	deltaTime	The amount of time in milliseconds that has elapsed since the last update
 	**/
-	public function update(deltaTime:Int):Void {}
+	public function update(deltaTime:Float):Void {}
 
 	@:noCompletion private function __addWindow(window:Window):Void
 	{
@@ -510,6 +543,10 @@ class Application extends Module
 				window.onRenderContextRestored.add(onRenderContextRestored);
 				window.onDeactivate.add(onWindowDeactivate);
 				window.onDropFile.add(onWindowDropFile);
+				window.onDropText.add(onWindowDropText);
+				window.onDropBegin.add(onWindowDropBegin);
+				window.onDropComplete.add(onWindowDropComplete);
+				window.onDropPosition.add(onWindowDropPosition);
 				window.onEnter.add(onWindowEnter);
 				window.onExpose.add(onWindowExpose);
 				window.onFocusIn.add(onWindowFocusIn);

@@ -104,6 +104,13 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 		return null;
 	}
 
+	public static function toFile(path:String, bytes:Bytes):Void
+	{
+		#if (sys && lime_cffi && !macro)
+		NativeCFFI.lime_bytes_write_file(path, bytes);
+		#end
+	}
+
 	public static function loadFromBytes(bytes:haxe.io.Bytes):Future<Bytes>
 	{
 		return Future.withValue(fromBytes(bytes));

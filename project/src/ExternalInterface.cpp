@@ -576,6 +576,23 @@ namespace lime {
 
 	}
 
+	void lime_bytes_write_file (HxString path, value bytes) {
+
+		Bytes data (bytes);
+		data.WriteFile (hxs_utf8 (path, nullptr));
+
+	}
+
+	HL_PRIM void HL_NAME(hl_bytes_write_file) (hl_vstring* path, Bytes* bytes) {
+
+		if (path) {
+
+			bytes->WriteFile (hl_to_utf8 ((const uchar*)path->bytes));
+
+		}
+
+	}
+
 
 	double lime_cffi_get_native_pointer (value handle) {
 
@@ -627,19 +644,19 @@ namespace lime {
 
 		if (Clipboard::HasText ()) {
 
-			const char* text = Clipboard::GetText ();
-			value _text = alloc_string (text);
+			std::wstring* text = Clipboard::GetText ();
 
-			// TODO: Should we free for all backends? (SDL requires it)
+			if (text) {
 
-			free ((char*)text);
-			return _text;
+				value result = alloc_wstring (text->c_str ());
+				delete text;
+				return result;
 
-		} else {
-
-			return alloc_null ();
+			}
 
 		}
+
+		return alloc_null ();
 
 	}
 
@@ -648,14 +665,19 @@ namespace lime {
 
 		if (Clipboard::HasText ()) {
 
-			const char* text = Clipboard::GetText ();
-			return (vbyte*)text;
+			std::wstring* text = Clipboard::GetText ();
 
-		} else {
+			if (text) {
 
-			return 0;
+				vbyte* const result = hl_wstring_to_utf8_bytes (*text);
+				delete text;
+				return result;
+
+			}
 
 		}
+
+		return 0;
 
 	}
 
@@ -760,271 +782,268 @@ namespace lime {
 	}
 
 
-	value lime_file_dialog_open_directory (HxString title, HxString filter, HxString defaultPath) {
+	void lime_file_dialog_open_directory (value window, value callback, HxString defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::wstring* path = FileDialog::OpenDirectory (_title, _filter, _defaultPath);
+		FileDialog::OpenDirectory (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+				value files = alloc_array (filecount);
 
-		if (path) {
+				for (int i = 0; i < filecount; i++) {
 
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
+					val_array_set_i (files, i, alloc_string (filelist[i]));
 
-		} else {
+				}
 
-			return alloc_null ();
+				targetCallback->Call (files);
 
-		}
-
+				delete targetCallback;
+			}
+		}, hxs_utf8 (defaultPath, nullptr), allowMultiple);
 		#endif
-
-		return alloc_null ();
 
 	}
 
 
-	HL_PRIM vbyte* HL_NAME(hl_file_dialog_open_directory) (hl_vstring* title, hl_vstring* filter, hl_vstring* defaultPath) {
+	HL_PRIM void HL_NAME(hl_file_dialog_open_directory) (HL_CFFIPointer* window, vclosure* callback, hl_vstring* defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::wstring* path = FileDialog::OpenDirectory (_title, _filter, _defaultPath);
+		FileDialog::OpenDirectory (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+				hl_varray* _filelist = (hl_varray*)hl_alloc_array (&hlt_bytes, filecount);
+				vbyte** _filesData = hl_aptr (_filelist, vbyte*);
 
-		if (path) {
+				for (int i = 0; i < filecount; i++) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
+					*_filesData++ = (vbyte*)filelist[i];
 
-		} else {
+				}
 
-			return NULL;
+				targetCallback->Call (_filelist);
 
-		}
+				delete targetCallback;
 
+			}
+		}, (char*)hl_to_utf8 ((const uchar*)defaultPath->bytes), allowMultiple);
 		#endif
-
-		return NULL;
 
 	}
 
 
-	value lime_file_dialog_open_file (HxString title, HxString filter, HxString defaultPath) {
+	void lime_file_dialog_open_file (value window, value callback, value names, value patterns, int filterCount, HxString defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::wstring* path = FileDialog::OpenFile (_title, _filter, _defaultPath);
+		int targetCount = 0;
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		std::vector<const char*> targetNames;
 
-		if (path) {
+		std::vector<const char*> targetPatterns;
 
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
+		if (names && patterns) {
 
-		} else {
+			targetNames.reserve (filterCount);
+			targetPatterns.reserve (filterCount);
 
-			return alloc_null ();
+			for (int i = 0; i < filterCount; i++) {
+
+				targetNames.push_back (val_string (val_array_i (names, i)));
+				targetPatterns.push_back (val_string (val_array_i (patterns, i)));
+				targetCount++;
+
+			}
 
 		}
 
-		#endif
+		FileDialog::OpenFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
 
-		return alloc_null ();
+				value files = alloc_array (filecount);
+
+				for (int i = 0; i < filecount; i++) {
+
+					val_array_set_i (files, i, alloc_string (filelist[i]));
+
+				}
+
+				targetCallback->Call (files, alloc_int (filter));
+
+				delete targetCallback;
+
+			}
+		}, targetNames.data(), targetPatterns.data(), targetCount, hxs_utf8 (defaultPath, nullptr), allowMultiple);
+		#endif
 
 	}
 
 
-	HL_PRIM vbyte* HL_NAME(hl_file_dialog_open_file) (hl_vstring* title, hl_vstring* filter, hl_vstring* defaultPath) {
+	HL_PRIM void HL_NAME(hl_file_dialog_open_file) (HL_CFFIPointer* window, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::wstring* path = FileDialog::OpenFile (_title, _filter, _defaultPath);
+		int targetCount = 0;
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		std::vector<const char*> targetNames;
 
-		if (path) {
+		std::vector<const char*> targetPatterns;
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
+		if (names && patterns) {
 
-		} else {
+			targetNames.reserve (filterCount);
+			targetPatterns.reserve (filterCount);
 
-			return NULL;
+			hl_vstring** namesData = hl_aptr (names, hl_vstring*);
+			hl_vstring** patternsData = hl_aptr (patterns, hl_vstring*);
+
+			for (int i = 0; i < filterCount; i++) {
+
+				targetNames.push_back (hl_to_utf8 ((const uchar*)((*namesData++)->bytes)));
+				targetPatterns.push_back (hl_to_utf8 ((const uchar*)((*patternsData++)->bytes)));
+				targetCount++;
+
+			}
 
 		}
 
-		#endif
+		FileDialog::OpenFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
 
-		return NULL;
+				hl_varray* _filelist = (hl_varray*)hl_alloc_array (&hlt_bytes, filecount);
+				vbyte** _filesData = hl_aptr (_filelist, vbyte*);
+
+				for (int i = 0; i < filecount; i++) {
+
+					*_filesData++ = (vbyte*)filelist[i];
+
+				}
+
+				vdynamic* _filter = hl_alloc_dynamic (&hlt_i32);
+				_filter->v.i = (int)filter;
+
+				targetCallback->Call (_filelist, _filter);
+
+				delete targetCallback;
+
+			}
+		}, targetNames.data(), targetPatterns.data(), targetCount, (char*)hl_to_utf8 ((const uchar*)defaultPath->bytes));
+		#endif
 
 	}
 
 
-	value lime_file_dialog_open_files (HxString title, HxString filter, HxString defaultPath) {
+	void lime_file_dialog_save_file (value window, value callback, value names, value patterns, int filterCount, HxString defaultPath) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::vector<std::wstring*> files;
+		int targetCount = 0;
 
-		FileDialog::OpenFiles (&files, _title, _filter, _defaultPath);
-		value result = alloc_array (files.size ());
+		std::vector<const char*> targetNames;
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		std::vector<const char*> targetPatterns;
 
-		for (int i = 0; i < files.size (); i++) {
+		if (names && patterns) {
 
-			value _file = wstring_to_value (files[i]);
-			val_array_set_i (result, i, _file);
-			delete files[i];
+			targetNames.reserve (filterCount);
+			targetPatterns.reserve (filterCount);
+
+			for (int i = 0; i < filterCount; i++) {
+
+				targetNames.push_back (val_string (val_array_i (names, i)));
+				targetPatterns.push_back (val_string (val_array_i (patterns, i)));
+				targetCount++;
+
+			}
 
 		}
 
-		#else
-		value result = alloc_array (0);
-		#endif
+		FileDialog::SaveFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
 
-		return result;
+				targetCallback->Call ((filelist && filelist[0]) ? alloc_string(filelist[0]) : alloc_null(), alloc_int (filter));
+
+				delete targetCallback;
+
+			}
+		}, targetNames.data(), targetPatterns.data(), targetCount, hxs_utf8 (defaultPath, nullptr));
+		#endif
 
 	}
 
 
-	HL_PRIM hl_varray* HL_NAME(hl_file_dialog_open_files) (hl_vstring* title, hl_vstring* filter, hl_vstring* defaultPath) {
+	HL_PRIM void HL_NAME(hl_file_dialog_save_file) (HL_CFFIPointer* window, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath) {
 
-		#ifdef LIME_TINYFILEDIALOGS
+		#ifdef LIME_SDL
+		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
 
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
+		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		std::vector<std::wstring*> files;
+		int targetCount = 0;
 
-		FileDialog::OpenFiles (&files, _title, _filter, _defaultPath);
-		hl_varray* result = (hl_varray*)hl_alloc_array (&hlt_bytes, files.size ());
-		vbyte** resultData = hl_aptr (result, vbyte*);
+		std::vector<const char*> targetNames;
 
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
+		std::vector<const char*> targetPatterns;
 
-		for (int i = 0; i < files.size (); i++) {
+		if (names && patterns) {
 
-			*resultData++ = hl_wstring_to_utf8_bytes (*files[i]);
-			delete files[i];
+			targetNames.reserve (filterCount);
+			targetPatterns.reserve (filterCount);
 
-		}
+			hl_vstring** namesData = hl_aptr (names, hl_vstring*);
+			hl_vstring** patternsData = hl_aptr (patterns, hl_vstring*);
 
-		#else
-		hl_varray* result = hl_alloc_array (&hlt_bytes, 0);
-		#endif
+			for (int i = 0; i < filterCount; i++) {
 
-		return result;
+				targetNames.push_back (hl_to_utf8 ((const uchar*)((*namesData++)->bytes)));
+				targetPatterns.push_back (hl_to_utf8 ((const uchar*)((*patternsData++)->bytes)));
+				targetCount++;
 
-	}
-
-
-	value lime_file_dialog_save_file (HxString title, HxString filter, HxString defaultPath) {
-
-		#ifdef LIME_TINYFILEDIALOGS
-
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::SaveFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
-
-		if (path) {
-
-			value _path = wstring_to_value (path);
-			delete path;
-			return _path;
-
-		} else {
-
-			return alloc_null ();
+			}
 
 		}
 
+		FileDialog::SaveFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		{
+			if (targetCallback) {
+
+				vdynamic* _filename = hl_alloc_dynamic (&hlt_bytes);
+				_filename->v.bytes = (filelist && filelist[0]) ? (vbyte*)filelist[0] : nullptr;
+
+				vdynamic* _filter = hl_alloc_dynamic (&hlt_i32);
+				_filter->v.i = (int)filter;
+
+				targetCallback->Call (_filename, _filter);
+
+				delete targetCallback;
+
+			}
+		}, targetNames.data(), targetPatterns.data(), targetCount, (char*)hl_to_utf8 ((const uchar*)defaultPath->bytes));
 		#endif
 
-		return alloc_null ();
-
 	}
-
-
-	HL_PRIM vbyte* HL_NAME(hl_file_dialog_save_file) (hl_vstring* title, hl_vstring* filter, hl_vstring* defaultPath) {
-
-		#ifdef LIME_TINYFILEDIALOGS
-
-		std::wstring* _title = hxstring_to_wstring (title);
-		std::wstring* _filter = hxstring_to_wstring (filter);
-		std::wstring* _defaultPath = hxstring_to_wstring (defaultPath);
-
-		std::wstring* path = FileDialog::SaveFile (_title, _filter, _defaultPath);
-
-		if (_title) delete _title;
-		if (_filter) delete _filter;
-		if (_defaultPath) delete _defaultPath;
-
-		if (path) {
-
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
-			return result;
-
-		} else {
-
-			return NULL;
-
-		}
-
-		#endif
-
-		return NULL;
-
-	}
-
 
 	value lime_file_watcher_create (value callback) {
 
@@ -2695,19 +2714,6 @@ namespace lime {
 
 	}
 
-	int lime_sdl_get_ticks () {
-
-		return System::GetTicks();
-
-	}
-
-
-	HL_PRIM int HL_NAME(hl_sdl_get_ticks) () {
-
-		return System::GetTicks();
-
-	}
-
 	bool lime_system_get_allow_screen_timeout () {
 
 		return System::GetAllowScreenTimeout ();
@@ -2856,28 +2862,6 @@ namespace lime {
 	}
 
 
-	bool lime_system_get_ios_tablet () {
-
-		#ifdef IPHONE
-		return System::GetIOSTablet ();
-		#else
-		return false;
-		#endif
-
-	}
-
-
-	HL_PRIM bool HL_NAME(hl_system_get_ios_tablet) () {
-
-		#ifdef IPHONE
-		return System::GetIOSTablet ();
-		#else
-		return false;
-		#endif
-
-	}
-
-
 	int lime_system_get_num_displays () {
 
 		return System::GetNumDisplays ();
@@ -2894,44 +2878,28 @@ namespace lime {
 
 	int lime_system_get_first_gyroscope_sensor_id () {
 
-		#if defined(ANDROID) || defined (IPHONE)
 		return System::GetFirstGyroscopeSensorId ();
-		#else
-		return -1;
-		#endif
 
 	}
 
 
 	HL_PRIM int HL_NAME(hl_system_get_first_gyroscope_sensor_id) () {
 
-		#if defined(ANDROID) || defined (IPHONE)
 		return System::GetFirstGyroscopeSensorId ();
-		#else
-		return -1;
-		#endif
 
 	}
 
 
 	int lime_system_get_first_accelerometer_sensor_id() {
 
-		#if defined(ANDROID) || defined (IPHONE)
 		return System::GetFirstAccelerometerSensorId ();
-		#else
-		return -1;
-		#endif
 
 	}
 
 
 	HL_PRIM int HL_NAME(hl_system_get_first_accelerometer_sensor_id) () {
 
-		#if defined(ANDROID) || defined (IPHONE)
 		return System::GetFirstAccelerometerSensorId ();
-		#else
-		return -1;
-		#endif
 
 	}
 
@@ -3139,7 +3107,7 @@ namespace lime {
 	}
 
 
-	HL_PRIM bool HL_NAME(hl_system_get_display_orientation) (int displayIndex) {
+	HL_PRIM int HL_NAME(hl_system_get_display_orientation) (int displayIndex) {
 
 		return System::GetDisplayOrientation (displayIndex);
 
@@ -3163,11 +3131,9 @@ namespace lime {
 
 	}
 
-	HL_PRIM vbyte* HL_NAME(hl_system_get_hint) (vbyte* key) {
+	HL_PRIM vbyte* HL_NAME(hl_system_get_hint) (hl_vstring* key) {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* hint = System::GetHint ((char*)key);
+		std::wstring* hint = System::GetHint (key ? hl_to_utf8(key->bytes) : nullptr);
 
 		if (hint) {
 
@@ -3176,9 +3142,21 @@ namespace lime {
 			return result;
 		}
 
-		#endif
-
 		return 0;
+
+	}
+
+
+	void lime_system_set_hint (HxString hintKey, HxString hintValue) {
+
+		System::SetHint (hxs_utf8 (hintKey, nullptr), hxs_utf8 (hintValue, nullptr));
+
+	}
+
+
+	HL_PRIM void HL_NAME(hl_system_set_hint) (hl_vstring* key, hl_vstring* value) {
+
+		System::SetHint (key ? hl_to_utf8(key->bytes) : nullptr, value ? hl_to_utf8(value->bytes) : nullptr);
 
 	}
 
@@ -3237,20 +3215,54 @@ namespace lime {
 	}
 
 
-	void lime_window_alert (value window, HxString message, HxString title) {
+	int lime_window_alert (value window, int type, HxString message, HxString title, value buttons) {
 
 		Window* targetWindow = (Window*)val_data (window);
-		targetWindow->Alert (hxs_utf8 (message, nullptr), hxs_utf8 (title, nullptr));
+
+		std::vector<const char*> targetButtons;
+
+		if (buttons) {
+
+			int buttonCount = val_array_size (buttons);
+
+			targetButtons.reserve (buttonCount);
+
+			for (int i = 0; i < buttonCount; i++) {
+
+				targetButtons.push_back (val_string (val_array_i (buttons, i)));
+
+			}
+
+		}
+
+		return targetWindow->Alert (type, hxs_utf8 (message, nullptr), hxs_utf8 (title, nullptr), targetButtons.data (), targetButtons.size ());
 
 	}
 
 
-	HL_PRIM void HL_NAME(hl_window_alert) (HL_CFFIPointer* window, hl_vstring* message, hl_vstring* title) {
+	HL_PRIM int HL_NAME(hl_window_alert) (HL_CFFIPointer* window, int type, hl_vstring* message, hl_vstring* title, hl_varray* buttons) {
 
 		Window* targetWindow = (Window*)window->ptr;
-		const char *cmessage = message ? hl_to_utf8(message->bytes) : nullptr;
-		const char *ctitle = title ? hl_to_utf8(title->bytes) : nullptr;
-		targetWindow->Alert (cmessage, ctitle);
+
+		std::vector<const char*> targetButtons;
+
+		if (buttons) {
+
+			int buttonCount = buttons->size;
+
+			targetButtons.reserve (buttonCount);
+
+			hl_vstring** buttonsData = hl_aptr (buttons, hl_vstring*);
+
+			for (int i = 0; i < buttonCount; i++) {
+
+				targetButtons.push_back (hl_to_utf8 ((const uchar*)((*buttonsData++)->bytes)));
+
+			}
+
+		}
+
+		return targetWindow->Alert (type, message ? hl_to_utf8(message->bytes) : nullptr, title ? hl_to_utf8(title->bytes) : nullptr, targetButtons.data (), targetButtons.size ());
 
 	}
 
@@ -3266,6 +3278,7 @@ namespace lime {
 
 		Window* targetWindow = (Window*)window->ptr;
 		return targetWindow->SetVSyncMode((WindowVSyncMode)mode);
+
 	}
 
 
@@ -3343,7 +3356,7 @@ namespace lime {
 
 	value lime_window_create (value application, int width, int height, int flags, HxString title) {
 
-		Window* window = CreateWindow ((Application*)val_data (application), width, height, flags, hxs_utf8 (title, nullptr));
+		Window* window = MakeWindow ((Application*)val_data (application), width, height, flags, hxs_utf8 (title, nullptr));
 		return CFFIPointer (window, gc_window);
 
 	}
@@ -3351,7 +3364,7 @@ namespace lime {
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_window_create) (HL_CFFIPointer* application, int width, int height, int flags, hl_vstring* title) {
 
-		Window* window = CreateWindow ((Application*)application->ptr, width, height, flags, (const char*)hl_to_utf8 ((const uchar*)title->bytes));
+		Window* window = MakeWindow ((Application*)application->ptr, width, height, flags, (const char*)hl_to_utf8 ((const uchar*)title->bytes));
 		return HLCFFIPointer (window, (hl_finalizer)hl_gc_window);
 
 	}
@@ -4068,6 +4081,7 @@ namespace lime {
 	DEFINE_PRIME1 (lime_bytes_get_data_pointer);
 	DEFINE_PRIME2 (lime_bytes_get_data_pointer_offset);
 	DEFINE_PRIME2 (lime_bytes_read_file);
+	DEFINE_PRIME2v (lime_bytes_write_file);
 	DEFINE_PRIME1 (lime_cffi_get_native_pointer);
 	DEFINE_PRIME1 (lime_cffi_set_finalizer);
 	DEFINE_PRIME2v (lime_clipboard_event_manager_register);
@@ -4077,10 +4091,9 @@ namespace lime {
 	DEFINE_PRIME2 (lime_deflate_compress);
 	DEFINE_PRIME2 (lime_deflate_decompress);
 	DEFINE_PRIME2v (lime_drop_event_manager_register);
-	DEFINE_PRIME3 (lime_file_dialog_open_directory);
-	DEFINE_PRIME3 (lime_file_dialog_open_file);
-	DEFINE_PRIME3 (lime_file_dialog_open_files);
-	DEFINE_PRIME3 (lime_file_dialog_save_file);
+	DEFINE_PRIME4v (lime_file_dialog_open_directory);
+	DEFINE_PRIME7v (lime_file_dialog_open_file);
+	DEFINE_PRIME6v (lime_file_dialog_save_file);
 	DEFINE_PRIME1 (lime_file_watcher_create);
 	DEFINE_PRIME3 (lime_file_watcher_add_directory);
 	DEFINE_PRIME2v (lime_file_watcher_remove_directory);
@@ -4148,13 +4161,11 @@ namespace lime {
 	DEFINE_PRIME3 (lime_png_decode_file);
 	DEFINE_PRIME2v (lime_render_event_manager_register);
 	DEFINE_PRIME2v (lime_sensor_event_manager_register);
-	DEFINE_PRIME0 (lime_sdl_get_ticks);
 	DEFINE_PRIME0 (lime_system_get_allow_screen_timeout);
 	DEFINE_PRIME0 (lime_system_get_device_model);
 	DEFINE_PRIME0 (lime_system_get_device_vendor);
 	DEFINE_PRIME3 (lime_system_get_directory);
 	DEFINE_PRIME1 (lime_system_get_display);
-	DEFINE_PRIME0 (lime_system_get_ios_tablet);
 	DEFINE_PRIME0 (lime_system_get_num_displays);
 	DEFINE_PRIME0 (lime_system_get_first_gyroscope_sensor_id);
 	DEFINE_PRIME0 (lime_system_get_first_accelerometer_sensor_id);
@@ -4168,10 +4179,11 @@ namespace lime {
 	DEFINE_PRIME1 (lime_system_set_allow_screen_timeout);
 	DEFINE_PRIME1 (lime_system_get_display_orientation);
 	DEFINE_PRIME1 (lime_system_get_hint);
+	DEFINE_PRIME2v (lime_system_set_hint);
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
-	DEFINE_PRIME3v (lime_window_alert);
+	DEFINE_PRIME5 (lime_window_alert);
 	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
 	DEFINE_PRIME1v (lime_window_context_flip);
@@ -4221,15 +4233,15 @@ namespace lime {
 
 	#define _ENUM "?"
 	// #define _TCFFIPOINTER _ABSTRACT (HL_CFFIPointer)
-	#define _TAPPLICATION_EVENT _OBJ (_I32 _I32)
+	#define _TAPPLICATION_EVENT _OBJ (_F64 _I32)
 	#define _TBYTES _OBJ (_I32 _BYTES)
 	#define _TCFFIPOINTER _DYN
 	#define _TCLIPBOARD_EVENT _OBJ (_I32)
 	#define _TDISPLAYMODE _OBJ (_I32 _I32 _I32 _I32)
-	#define _TDROP_EVENT _OBJ (_BYTES _I32)
-	#define _TGAMEPAD_EVENT _OBJ (_I32 _I32 _I32 _I32 _F64 _I32)
+	#define _TDROP_EVENT _OBJ (_BYTES _BYTES _I32 _F64 _F64 _I32)
+	#define _TGAMEPAD_EVENT _OBJ (_I32 _I32 _I32 _I32 _F64 _F64)
 	#define _TJOYSTICK_EVENT _OBJ (_I32 _I32 _I32 _I32 _F64 _F64)
-	#define _TKEY_EVENT _OBJ (_F64 _I32 _I32 _I32 _I32)
+	#define _TKEY_EVENT _OBJ (_F64 _I32 _I32 _I32 _F64)
 	#define _TMOUSE_EVENT _OBJ (_I32 _F64 _F64 _I32 _I32 _F64 _F64 _I32)
 	#define _TRECTANGLE _OBJ (_F64 _F64 _F64 _F64)
 	#define _TRENDER_EVENT _OBJ (_I32)
@@ -4263,6 +4275,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer, _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer_offset, _TBYTES _I32);
 	DEFINE_HL_PRIM (_TBYTES, hl_bytes_read_file, _STRING _TBYTES);
+	DEFINE_HL_PRIM (_VOID, hl_bytes_write_file, _STRING _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_cffi_get_native_pointer, _TCFFIPOINTER);
 	// DEFINE_PRIME1 (lime_cffi_set_finalizer);
 	DEFINE_HL_PRIM (_VOID, hl_clipboard_event_manager_register, _FUN(_VOID, _NO_ARG) _TCLIPBOARD_EVENT);
@@ -4272,10 +4285,9 @@ namespace lime {
 	DEFINE_HL_PRIM (_TBYTES, hl_deflate_compress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_deflate_decompress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_drop_event_manager_register, _FUN(_VOID, _NO_ARG) _TDROP_EVENT);
-	DEFINE_HL_PRIM (_BYTES, hl_file_dialog_open_directory, _STRING _STRING _STRING);
-	DEFINE_HL_PRIM (_BYTES, hl_file_dialog_open_file, _STRING _STRING _STRING);
-	DEFINE_HL_PRIM (_ARR, hl_file_dialog_open_files, _STRING _STRING _STRING);
-	DEFINE_HL_PRIM (_BYTES, hl_file_dialog_save_file, _STRING _STRING _STRING);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_directory, _TCFFIPOINTER _FUN(_VOID, _ARR) _STRING _BOOL);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_file, _TCFFIPOINTER _FUN(_VOID, _ARR _I32) _ARR _ARR _I32 _STRING _BOOL);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_save_file, _TCFFIPOINTER _FUN(_VOID, _BYTES  _I32) _ARR _ARR _I32 _STRING);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_file_watcher_create, _DYN);
 	DEFINE_HL_PRIM (_I32, hl_file_watcher_add_directory, _TCFFIPOINTER _STRING _BOOL);
 	DEFINE_HL_PRIM (_VOID, hl_file_watcher_remove_directory, _TCFFIPOINTER _I32);
@@ -4343,13 +4355,11 @@ namespace lime {
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_png_decode_file, _STRING _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_VOID, hl_render_event_manager_register, _FUN (_VOID, _NO_ARG) _TRENDER_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_sensor_event_manager_register, _FUN (_VOID, _NO_ARG) _TSENSOR_EVENT);
-	DEFINE_HL_PRIM (_I32, hl_sdl_get_ticks, _NO_ARG);
 	DEFINE_HL_PRIM (_BOOL, hl_system_get_allow_screen_timeout, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_device_model, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_device_vendor, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_directory, _I32 _STRING _STRING);
 	DEFINE_HL_PRIM (_DYN, hl_system_get_display, _I32);
-	DEFINE_HL_PRIM (_BOOL, hl_system_get_ios_tablet, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_num_displays, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_first_gyroscope_sensor_id, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_first_accelerometer_sensor_id, _NO_ARG);
@@ -4363,10 +4373,11 @@ namespace lime {
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_allow_screen_timeout, _BOOL);
 	DEFINE_HL_PRIM (_I32, hl_system_get_display_orientation, _I32);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_hint, _STRING);
+	DEFINE_HL_PRIM (_VOID, hl_system_set_hint, _STRING _STRING);
 	DEFINE_HL_PRIM (_BOOL, hl_system_set_windows_console_mode, _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
-	DEFINE_HL_PRIM (_VOID, hl_window_alert, _TCFFIPOINTER _STRING _STRING);
+	DEFINE_HL_PRIM (_I32, hl_window_alert, _TCFFIPOINTER _I32 _STRING _STRING _ARR);
 	DEFINE_HL_PRIM (_VOID, hl_window_close, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_flip, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_DYN, hl_window_context_lock, _TCFFIPOINTER);

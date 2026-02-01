@@ -10,8 +10,8 @@ namespace lime {
 
 	bool SDLJoystick::Connect (int deviceID) {
 
-		SDL_Joystick* joystick = SDL_JoystickOpen (deviceID);
-		int id = SDL_JoystickInstanceID (joystick);
+		SDL_Joystick* joystick = SDL_OpenJoystick (deviceID);
+		int id = SDL_GetJoystickID (joystick);
 
 		if (joystick) {
 
@@ -31,7 +31,7 @@ namespace lime {
 		if (joysticks.find (id) != joysticks.end ()) {
 
 			SDL_Joystick* joystick = joysticks[id];
-			SDL_JoystickClose (joystick);
+			SDL_CloseJoystick (joystick);
 			joysticks.erase (id);
 			return true;
 
@@ -52,7 +52,7 @@ namespace lime {
 	const char* Joystick::GetDeviceGUID (int id) {
 
 		char* guid = new char[64];
-		SDL_JoystickGetGUIDString (SDL_JoystickGetGUID (joysticks[id]), guid, 64);
+		SDL_GUIDToString (SDL_GetJoystickGUID (joysticks[id]), guid, 64);
 		return guid;
 
 	}
@@ -60,28 +60,28 @@ namespace lime {
 
 	const char* Joystick::GetDeviceName (int id) {
 
-		return SDL_JoystickName (joysticks[id]);
+		return SDL_GetJoystickName (joysticks[id]);
 
 	}
 
 
 	int Joystick::GetNumAxes (int id) {
 
-		return SDL_JoystickNumAxes (joysticks[id]);
+		return SDL_GetNumJoystickAxes (joysticks[id]);
 
 	}
 
 
 	int Joystick::GetNumButtons (int id) {
 
-		return SDL_JoystickNumButtons (joysticks[id]);
+		return SDL_GetNumJoystickButtons (joysticks[id]);
 
 	}
 
 
 	int Joystick::GetNumHats (int id) {
 
-		return SDL_JoystickNumHats (joysticks[id]);
+		return SDL_GetNumJoystickHats (joysticks[id]);
 
 	}
 

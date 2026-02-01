@@ -34,22 +34,9 @@ public class GameActivity extends SDLActivity {
 
 	private static AssetManager assetManager;
 	private static List<Extension> extensions;
-	private static DisplayMetrics metrics;
 	private static Vibrator vibrator;
 
 	public Handler handler;
-
-	public static double getDisplayXDPI () {
-
-		if (metrics == null) {
-
-			metrics = Extension.mainContext.getResources ().getDisplayMetrics ();
-
-		}
-
-		return metrics.xdpi;
-
-	}
 
 
 	protected String[] getLibraries () {
