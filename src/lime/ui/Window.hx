@@ -61,7 +61,11 @@ class Window
 	public var onActivate(default, null) = new Event<Void->Void>();
 	public var onClose(default, null) = new Event<Void->Void>();
 	public var onDeactivate(default, null) = new Event<Void->Void>();
-	public var onDropFile(default, null) = new Event<String->Void>();
+	public var onDropFile(default, null) = new Event<String->String->Float->Float->Void>();
+	public var onDropText(default, null) = new Event<String->String->Float->Float->Void>();
+	public var onDropBegin(default, null) = new Event<Void->Void>();
+	public var onDropComplete(default, null) = new Event<Float->Float->Void>();
+	public var onDropPosition(default, null) = new Event<Float->Float->Void>();
 	public var onEnter(default, null) = new Event<Void->Void>();
 	public var onExpose(default, null) = new Event<Void->Void>();
 	public var onFocusIn(default, null) = new Event<Void->Void>();
@@ -383,9 +387,9 @@ class Window
 		#end
 	}
 
-	public function alert(message:String = null, title:String = null):Void
+	public function alert(?type:MessageBoxType = INFORMATION, message:String = null, title:String = null, buttons:Array<String> = null):Int
 	{
-		__backend.alert(message, title);
+		return __backend.alert(type, message, title, buttons);
 	}
 
 	public function close():Void
@@ -402,7 +406,7 @@ class Window
 	 * Sets the swap interval for the current window.
 	 * @return `false` if the swap interval could not be set
 	**/
-	public function setVSyncMode(mode:WindowVSyncMode):Bool
+	public function setVSyncMode(mode:lime.ui.WindowVSyncMode):Bool
 	{
 		return __backend.setVSyncMode(mode);
 	}

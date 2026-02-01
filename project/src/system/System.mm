@@ -77,13 +77,6 @@ namespace lime {
 	}
 
 
-	bool System::GetIOSTablet () {
-
-		return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 1 : 0;
-
-	}
-
-
 	std::wstring* System::GetDeviceModel () {
 
 		#ifdef IPHONE
@@ -128,82 +121,6 @@ namespace lime {
 		return new std::wstring (result.begin (), result.end ());
 		#else
 		return NULL;
-		#endif
-
-	}
-
-
-	void System::OpenFile (const char* path) {
-
-		OpenURL (path, NULL);
-
-	}
-
-
-	void System::OpenURL (const char* url, const char* target) {
-
-		#ifndef OBJC_ARC
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		#endif
-
-		UIApplication *application = [UIApplication sharedApplication];
-		NSString *str = [[NSString alloc] initWithUTF8String: url];
-		NSURL *_url = [NSURL URLWithString: str];
-
-		if ([[UIApplication sharedApplication] canOpenURL: _url]) {
-
-			if ([application respondsToSelector: @selector (openURL:options:completionHandler:)]) {
-
-				[application openURL: _url options: @{}
-					completionHandler:^(BOOL success) {
-						//NSLog(@"Open %@: %d", _url, success);
-					}
-				];
-
-			} else {
-
-				BOOL success = [application openURL: _url];
-				//NSLog(@"Open %@: %d",scheme,success);
-
-			}
-
-		}
-
-		#ifndef OBJC_ARC
-		[str release];
-		[pool drain];
-		#endif
-
-	}
-
-	void System::showIOSAlert (const char* message, const char* title) {
-
-		#ifndef OBJC_ARC
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		#endif
-
-		NSLog(@"Message Box");
-		NSLog(@"Title: %@", @(title));
-		NSLog(@"Message: %@", @(message));
-		NSLog(@"Message Box End");
-
-		UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithUTF8String:title] message:[NSString stringWithUTF8String:message] preferredStyle:UIAlertControllerStyleAlert];
-
-		UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
-
-		[alert addAction:defaultAction];
-		alert.preferredAction = defaultAction;
-
-		if ([NSThread isMainThread]) {
-			[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-		} else {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-			});
-		}
-
-		#ifndef OBJC_ARC
-		[pool drain];
 		#endif
 
 	}

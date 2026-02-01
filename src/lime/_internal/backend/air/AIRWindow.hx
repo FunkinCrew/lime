@@ -27,7 +27,7 @@ class AIRWindow extends FlashWindow
 		super(parent);
 	}
 
-	public override function alert(message:String, title:String):Void
+	public override function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int
 	{
 		if (nativeWindow != null)
 		{
@@ -38,8 +38,11 @@ class AIRWindow extends FlashWindow
 				var htmlLoader = new HTMLLoader();
 				htmlLoader.loadString("<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><title></title><script></script></head><body></body></html>");
 				htmlLoader.window.alert(message);
+				return 0;
 			}
 		}
+
+		return -1;
 	}
 
 	public override function close():Void
@@ -178,7 +181,7 @@ class AIRWindow extends FlashWindow
 		}
 	}
 
-	public function setVSyncMode(mode:WindowVSyncMode):Bool
+	public function setVSyncMode(mode:lime.ui.WindowVSyncMode):Bool
 	{
 		return false;
 	}
