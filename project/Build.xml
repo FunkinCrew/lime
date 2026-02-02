@@ -1,5 +1,6 @@
 <xml>
 	<set name="HXCPP_CPP20" value="1" />
+	<set name="OBJC_ARC" value="1" if="apple" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
@@ -484,17 +485,22 @@
 				<vflag name="-rpath" value="/opt/homebrew/lib" if="HXCPP_ARM64"/>
 
 				<vflag name="-l" value="iconv" />
-				<vflag name="-framework" value="IOKit" />
-				<vflag name="-framework" value="Foundation" />
 				<vflag name="-framework" value="AppKit" />
 				<vflag name="-framework" value="AudioToolbox" />
 				<vflag name="-framework" value="AudioUnit" />
+				<vflag name="-framework" value="AVFoundation" />
 				<vflag name="-framework" value="Carbon" />
 				<vflag name="-framework" value="Cocoa" />
 				<vflag name="-framework" value="CoreAudio" />
+				<vflag name="-framework" value="CoreHaptics" />
+				<vflag name="-framework" value="CoreMedia" />
 				<vflag name="-framework" value="CoreVideo" />
 				<vflag name="-framework" value="ForceFeedback" />
+				<vflag name="-framework" value="Foundation" />
+				<vflag name="-framework" value="GameController" />
+				<vflag name="-framework" value="IOKit" />
 				<vflag name="-framework" value="SystemConfiguration" />
+				<vflag name="-framework" value="UniformTypeIdentifiers" />
 
 				<lib name="/opt/local/lib/libgc.a" if="LIME_NEKO" />
 				<lib name="-lm" if="LIME_NEKO" />
