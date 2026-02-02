@@ -1172,6 +1172,14 @@ class ProjectXMLParser extends HXProject
 						{
 							ArrayTools.addUnique(architectures, name);
 						}
+						else if (name.toLowerCase() == "x86_64")
+						{
+							ArrayTools.addUnique(architectures, Architecture.X64);
+						}
+						else if (name.toLowerCase() == "x86_32")
+						{
+							ArrayTools.addUnique(architectures, Architecture.X86);
+						}
 						else
 						{
 							Log.warn("Ignoring unknown architecture: " + name);
@@ -1185,6 +1193,14 @@ class ProjectXMLParser extends HXProject
 						if (exclude != null)
 						{
 							ArrayTools.addUnique(excludeArchitectures, exclude);
+						}
+						else if (exclude.toLowerCase() == "x86_64")
+						{
+							ArrayTools.addUnique(excludeArchitectures, Architecture.X64);
+						}
+						else if (exclude.toLowerCase() == "x86_32")
+						{
+							ArrayTools.addUnique(excludeArchitectures, Architecture.X86);
 						}
 						else
 						{
