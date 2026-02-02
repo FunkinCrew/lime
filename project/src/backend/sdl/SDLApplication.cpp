@@ -75,8 +75,7 @@ namespace lime {
 		active = false;
 		frameStart = 0;
 		frameEnd = 0;
-		frameTargetTime = std::round (SDL_NS_PER_SECOND / 60.0);
-		deltaTime = 0.0;
+		frameTargetTime = (Uint64) std::llround (SDL_NS_PER_SECOND / 60.0);
 
 		SDL_SetEventEnabled (SDL_EVENT_DROP_FILE, true);
 
@@ -237,14 +236,11 @@ namespace lime {
 
 			#ifndef EMSCRIPTEN
 			case SDL_EVENT_RENDER_DEVICE_RESET:
-
 				renderEvent.type = RENDER_CONTEXT_LOST;
 				RenderEvent::Dispatch (&renderEvent);
 
 				renderEvent.type = RENDER_CONTEXT_RESTORED;
 				RenderEvent::Dispatch (&renderEvent);
-
-				renderEvent.type = RENDER;
 				break;
 			#endif
 
@@ -785,12 +781,12 @@ namespace lime {
 
 	void SDLApplication::SetFrameRate (double frameRate) {
 
-		frameTargetTime = frameRate < 1 ? 0 : std::round (SDL_NS_PER_SECOND / frameRate);
+		frameTargetTime = frameRate < 1 ? 0 : (Uint64) std::llround (SDL_NS_PER_SECOND / frameRate);
 
 	}
 
 
-	bool SDLApplication::Update () {
+	bool SDLApplication::Update() {
 
 		frameStart = SDL_GetTicksNS ();
 
@@ -807,9 +803,9 @@ namespace lime {
 			}
 
 			applicationEvent.type = UPDATE;
-			applicationEvent.deltaTime = deltaTime;
-
 			ApplicationEvent::Dispatch (&applicationEvent);
+
+			renderEvent.type = RENDER;
 			RenderEvent::Dispatch (&renderEvent);
 		}
 
@@ -817,15 +813,16 @@ namespace lime {
 
 		Uint64 frameTime = frameEnd - frameStart;
 
+		applicationEvent.deltaTime = (double) (frameTime / SDL_NS_PER_MS);
+
 		if (frameTargetTime > 0 && frameTime < frameTargetTime) {
 
 			SDL_DelayPrecise (frameTargetTime - frameTime);
 
 		}
 
-		deltaTime = (double) (SDL_GetTicksNS () - frameStart) / SDL_NS_PER_MS;
-
 		return active;
+
 	}
 
 

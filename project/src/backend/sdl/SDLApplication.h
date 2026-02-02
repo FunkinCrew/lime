@@ -66,7 +66,6 @@ namespace lime {
 			Uint64 frameStart;
 			Uint64 frameEnd;
 			Uint64 frameTargetTime;
-			double deltaTime;
 
 			ApplicationEvent applicationEvent;
 			ClipboardEvent clipboardEvent;
