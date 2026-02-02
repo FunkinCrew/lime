@@ -91,13 +91,6 @@ namespace lime {
 	}
 
 
-	int System::GetTicks () {
-
-		return SDL_GetTicks ();
-
-	}
-
-
 	bool System::GetAllowScreenTimeout () {
 
 		return SDL_ScreenSaverEnabled ();
@@ -655,7 +648,7 @@ namespace lime {
 
 	double System::GetTimer () {
 
-		return SDL_GetTicks ();
+		return SDL_GetTicksNS ();
 
 	}
 

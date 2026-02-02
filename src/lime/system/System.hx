@@ -351,7 +351,7 @@ class System
 		#elseif ((js && !nodejs) || electron)
 		return Std.int(Browser.window.performance.now());
 		#elseif (lime_cffi && !macro)
-		return cast NativeCFFI.lime_system_get_timer();
+		return cast NativeCFFI.lime_system_get_timer() / 1e+6;
 		#elseif cpp
 		return Std.int(untyped __global__.__time_stamp() * 1000);
 		#elseif sys

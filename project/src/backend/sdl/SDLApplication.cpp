@@ -378,7 +378,7 @@ namespace lime {
 
 					gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = event->gaxis.value;
 					gamepadEvent.axisValue = event->gaxis.value / (event->gaxis.value > 0 ? 32767.0 : 32768.0);
-					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gaxis.timestamp);
+					gamepadEvent.timestamp = event->gaxis.timestamp;
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
@@ -388,7 +388,7 @@ namespace lime {
 					gamepadEvent.type = GAMEPAD_BUTTON_DOWN;
 					gamepadEvent.button = event->gbutton.button;
 					gamepadEvent.id = event->gbutton.which;
-					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gbutton.timestamp);
+					gamepadEvent.timestamp = event->gbutton.timestamp;
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
@@ -398,7 +398,7 @@ namespace lime {
 					gamepadEvent.type = GAMEPAD_BUTTON_UP;
 					gamepadEvent.button = event->gbutton.button;
 					gamepadEvent.id = event->gbutton.which;
-					gamepadEvent.timestamp = SDL_NS_TO_MS(event->gbutton.timestamp);
+					gamepadEvent.timestamp = event->gbutton.timestamp;
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					break;
@@ -409,7 +409,7 @@ namespace lime {
 
 						gamepadEvent.type = GAMEPAD_CONNECT;
 						gamepadEvent.id = SDLGamepad::GetInstanceID (event->cdevice.which);
-						gamepadEvent.timestamp = SDL_NS_TO_MS(event->cdevice.timestamp);
+						gamepadEvent.timestamp = event->cdevice.timestamp;
 
 						GamepadEvent::Dispatch (&gamepadEvent);
 
@@ -421,7 +421,7 @@ namespace lime {
 
 					gamepadEvent.type = GAMEPAD_DISCONNECT;
 					gamepadEvent.id = event->cdevice.which;
-					gamepadEvent.timestamp = SDL_NS_TO_MS(event->cdevice.timestamp);
+					gamepadEvent.timestamp = event->cdevice.timestamp;
 
 					GamepadEvent::Dispatch (&gamepadEvent);
 					SDLGamepad::Disconnect (event->cdevice.which);
@@ -518,7 +518,7 @@ namespace lime {
 			keyEvent.keyCode = event->key.key;
 			keyEvent.modifier = event->key.mod;
 			keyEvent.windowID = event->key.windowID;
-			keyEvent.timestamp = SDL_NS_TO_MS(event->key.timestamp);
+			keyEvent.timestamp = event->key.timestamp;
 
 			if (keyEvent.type == KEY_DOWN) {
 

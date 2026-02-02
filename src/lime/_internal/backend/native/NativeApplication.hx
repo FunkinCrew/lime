@@ -1,5 +1,6 @@
 package lime._internal.backend.native;
 
+import haxe.Int64;
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
@@ -208,21 +209,21 @@ class NativeApplication
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
 				if (gamepad != null) {
 					gamepad.onAxisMove.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue);
-					gamepad.onAxisMovePrecise.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue, gamepadEventInfo.timestamp);
+					gamepad.onAxisMovePrecise.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case BUTTON_DOWN:
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
 				if (gamepad != null) {
 					gamepad.onButtonDown.dispatch(gamepadEventInfo.button);
-					gamepad.onButtonDownPrecise.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
+					gamepad.onButtonDownPrecise.dispatch(gamepadEventInfo.button, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case BUTTON_UP:
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
 				if (gamepad != null) {
 					gamepad.onButtonUp.dispatch(gamepadEventInfo.button);
-					gamepad.onButtonUpPrecise.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
+					gamepad.onButtonUpPrecise.dispatch(gamepadEventInfo.button, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case CONNECT:
@@ -271,7 +272,7 @@ class NativeApplication
 			var int32:Float = keyEventInfo.keyCode;
 			var keyCode:KeyCode = Std.int(int32);
 			var modifier:KeyModifier = keyEventInfo.modifier;
-			var timestamp = keyEventInfo.timestamp;
+			var timestamp:Int64 = Int64.fromFloat(keyEventInfo.timestamp);
 
 			switch (type)
 			{
@@ -715,11 +716,9 @@ class NativeApplication
 	public var id:Int;
 	public var type:GamepadEventType;
 	public var axisValue:Float;
+	public var timestamp:Float;
 
-	// TODO: This should probably be an Int64
-	public var timestamp:Int = 0;
-
-	public function new(type:GamepadEventType = null, id:Int = 0, button:Int = 0, axis:Int = 0, value:Float = 0, timestamp:Int = 0)
+	public function new(type:GamepadEventType = null, id:Int = 0, button:Int = 0, axis:Int = 0, value:Float = 0, timestamp:Float = 0)
 	{
 		this.type = type;
 		this.id = id;
@@ -785,11 +784,9 @@ class NativeApplication
 	public var modifier:Int;
 	public var type:KeyEventType;
 	public var windowID:Int;
+	public var timestamp:Float;
 
-	// TODO: This should probably be an Int64
-	public var timestamp:Int = 0;
-
-	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode: Float = 0, modifier:Int = 0, timestamp:Int = 0)
+	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode: Float = 0, modifier:Int = 0, timestamp:Float = 0)
 	{
 		this.type = type;
 		this.windowID = windowID;

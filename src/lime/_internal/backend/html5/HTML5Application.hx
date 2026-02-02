@@ -412,7 +412,7 @@ class HTML5Application
 
 			var keyCode = cast convertKeyCode(event.keyCode != null ? event.keyCode : event.which);
 			var modifier = (event.shiftKey ? (KeyModifier.SHIFT) : 0) | (event.ctrlKey ? (KeyModifier.CTRL) : 0) | (event.altKey ? (KeyModifier.ALT) : 0) | (event.metaKey ? (KeyModifier.META) : 0);
-			var timestamp = haxe.Int64.fromFloat(event.timeStamp);
+			var timestamp = haxe.Int64.fromFloat(event.timeStamp * 1e+6);
 
 			if (event.type == "keydown")
 			{
@@ -618,7 +618,7 @@ class HTML5Application
 									default: continue;
 								}
 
-								var timestamp = haxe.Int64.fromFloat(js.Browser.window.performance.now());
+								var timestamp = haxe.Int64.fromFloat(js.Browser.window.performance.now() * 1e+6);
 
 								if (value > 0)
 								{
