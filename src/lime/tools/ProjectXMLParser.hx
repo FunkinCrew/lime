@@ -1172,6 +1172,10 @@ class ProjectXMLParser extends HXProject
 						{
 							ArrayTools.addUnique(architectures, name);
 						}
+						else
+						{
+							Log.warn("Ignoring unknown architecture: " + name);
+						}
 					}
 
 					if (element.has.exclude)
@@ -1181,6 +1185,10 @@ class ProjectXMLParser extends HXProject
 						if (exclude != null)
 						{
 							ArrayTools.addUnique(excludeArchitectures, exclude);
+						}
+						else
+						{
+							Log.warn("Ignoring unknown architecture: " + exclude);
 						}
 					}
 
