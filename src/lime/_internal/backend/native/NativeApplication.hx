@@ -61,7 +61,7 @@ class NativeApplication
 
 	public var handle:Dynamic;
 
-	private var pauseTimer:Int;
+	private var pauseTimer:Float;
 	private var parent:Application;
 	private var toggleFullscreen:Bool;
 
