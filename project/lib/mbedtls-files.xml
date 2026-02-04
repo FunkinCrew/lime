@@ -2,7 +2,6 @@
 
 	<files id="native-toolkit-mbedtls">
 
-		<compilerflag value="-std=c11" unless="isMsvc"/>
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/hl-ssl" if="HASHLINK_PATH"/>
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/mbedtls/include/" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib/" />

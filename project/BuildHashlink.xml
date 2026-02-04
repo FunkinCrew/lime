@@ -106,7 +106,7 @@
 		<compilerflag value="-DMBEDTLS_THREADING_C"/>
 		<compilerflag value="-DMBEDTLS_THREADING_PTHREAD" unless="windows"/>
 		<compilerflag value="-DMBEDTLS_THREADING_ALT" if="windows"/>
-		<compilerflag value="/std:c11" if="windows"/>
+		<compilerflag value="/std:c++20" if="windows"/>
 		<file name="${HASHLINK_PATH}/libs/ssl/ssl.c" />
 	</files>
 
