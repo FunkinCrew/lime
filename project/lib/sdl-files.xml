@@ -321,7 +321,7 @@
         <section>
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/process/SDL_process.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/process/dummy/SDL_dummyprocess.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/process/posix/SDL_posixprocess.c" unless="android || ios || windows" />
+            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/process/posix/SDL_posixprocess.c" unless="windows" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/process/windows/SDL_windowsprocess.c" if="windows" />
         </section>
 

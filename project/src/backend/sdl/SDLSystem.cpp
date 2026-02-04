@@ -334,20 +334,15 @@ namespace lime {
 			SDL_GetDisplayBounds (id, &bounds);
 			alloc_field (display, id_bounds, Rectangle (bounds.x, bounds.y, bounds.w, bounds.h).Value ());
 
+			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
+
 			float dpi = 72.0f;
 
 			#ifndef EMSCRIPTEN
 
-			// Based on SDL2_Compat
-			float pixelDensity = SDL_GetDesktopDisplayMode(id)->pixel_density;
+			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
 
-			if (pixelDensity == NULL) {
-
-				pixelDensity = 1.0f;
-
-			}
-
-			float contentScale = SDL_GetDisplayContentScale(id);
+			float contentScale = SDL_GetDisplayContentScale (id);
 
 			if (contentScale == 0.0f) {
 
@@ -355,7 +350,7 @@ namespace lime {
 
 			}
 
-			#if defined(ANDROID) || defined(__IPHONEOS__)
+			#if defined (ANDROID) || defined (__IPHONEOS__)
 			dpi = pixelDensity * contentScale * 160.0f;
 			#else
 			dpi = pixelDensity * contentScale * 96.0f;
@@ -366,8 +361,6 @@ namespace lime {
 			alloc_field (display, id_dpi, alloc_float (dpi));
 
 			DisplayMode mode;
-
-			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
 
 			mode.height = displayMode->h;
 
@@ -480,20 +473,15 @@ namespace lime {
 
 			hl_dyn_setp (display, id_bounds, &hlt_dynobj, _bounds);
 
-			float dpi = 72.0;
+			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
+
+			float dpi = 72.0f;
 
 			#ifndef EMSCRIPTEN
 
-			// Based on SDL2_Compat
-			float pixelDensity = SDL_GetDesktopDisplayMode(id)->pixel_density;
+			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
 
-			if (pixelDensity == NULL) {
-
-				pixelDensity = 1.0f;
-
-			}
-
-			float contentScale = SDL_GetDisplayContentScale(id);
+			float contentScale = SDL_GetDisplayContentScale (id);
 
 			if (contentScale == 0.0f) {
 
@@ -501,7 +489,7 @@ namespace lime {
 
 			}
 
-			#if defined(ANDROID) || defined(__IPHONEOS__)
+			#if defined (ANDROID) || defined (__IPHONEOS__)
 			dpi = pixelDensity * contentScale * 160.0f;
 			#else
 			dpi = pixelDensity * contentScale * 96.0f;
@@ -512,8 +500,6 @@ namespace lime {
 			hl_dyn_setf (display, id_dpi, dpi);
 
 			DisplayMode mode;
-
-			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
 
 			mode.height = displayMode->h;
 
@@ -598,39 +584,53 @@ namespace lime {
 	}
 
 
-	#if defined(ANDROID) || defined (IPHONE)
+	#if defined (ANDROID) || defined (IPHONE)
 	int System::GetFirstGyroscopeSensorId () {
 
-		int numSensors = SDL_NumSensors ();
+		int count = 0;
 
-		for (int i = 0; i < numSensors; i++) {
+		SDL_SensorID *sensors = SDL_GetSensors (&count);
 
-			if (SDL_SensorGetDeviceType (i) == SDL_SENSOR_GYRO) {
+		if (!sensors)
+			return -1;
 
-				return SDL_SensorGetDeviceInstanceID(i);
+		for (int i = 0; i < count; i++)
+		{
+			if (SDL_GetSensorTypeForID (sensors[i]) == SDL_SENSOR_GYRO) {
+
+				SDL_free (sensors);
+				return sensors[i];
 
 			}
 
 		}
 
+		SDL_free (sensors);
 		return -1;
 
 	}
 
 	int System::GetFirstAccelerometerSensorId () {
 
-		int numSensors = SDL_NumSensors ();
+		int count = 0;
 
-		for (int i = 0; i < numSensors; i++) {
+		SDL_SensorID *sensors = SDL_GetSensors(&count);
 
-			if (SDL_SensorGetDeviceType (i) == SDL_SENSOR_ACCEL) {
+		if (!sensors)
+			return -1;
 
-				return SDL_SensorGetDeviceInstanceID(i);
+		for (int i = 0; i < count; i++) {
+
+			if (SDL_GetSensorTypeForID(sensors[i]) == SDL_SENSOR_ACCEL) {
+
+				SDL_free(sensors);
+				return sensors[i];
 
 			}
 
 		}
 
+		SDL_free (sensors);
 		return -1;
 
 	}

@@ -680,7 +680,9 @@ namespace lime {
 
 		} else if (sdlRenderer) {
 
-			if (SDL_GetRendererName(sdlRenderer) == SDL_SOFTWARE_RENDERER) {
+			const char *name = SDL_GetRendererName (sdlRenderer);
+
+			if (name && std::strcmp (name, SDL_SOFTWARE_RENDERER)) {
 
 				return "software";
 

@@ -105,12 +105,12 @@ namespace lime {
 		gyroscopeSensorID = System::GetFirstGyroscopeSensorId ();
 
 		if (gyroscopeSensorID > 0)
-			gyroscopeSensor = SDL_SensorOpen (gyroscopeSensorID);
+			gyroscopeSensor = SDL_OpenSensor (gyroscopeSensorID);
 
 		accelerometerSensorID = System::GetFirstAccelerometerSensorId ();
 
 		if (gyroscopeSensorID > 0)
-			accelerometerSensor = SDL_SensorOpen (gyroscopeSensorID);
+			accelerometerSensor = SDL_OpenSensor (gyroscopeSensorID);
 
 	}
 	#endif
@@ -121,7 +121,7 @@ namespace lime {
 		#if defined(ANDROID) || defined(IPHONE)
 		if (gyroscopeSensor) {
 
-			SDL_SensorClose (gyroscopeSensor);
+			SDL_CloseSensor (gyroscopeSensor);
 			gyroscopeSensor = nullptr;
 			gyroscopeSensorID = -1;
 
@@ -129,7 +129,7 @@ namespace lime {
 
 		if (accelerometerSensor) {
 
-			SDL_SensorClose (accelerometerSensor);
+			SDL_CloseSensor (accelerometerSensor);
 			accelerometerSensor = nullptr;
 			accelerometerSensorID = -1;
 
@@ -827,7 +827,7 @@ namespace lime {
 
 
 	#if defined(ANDROID) || defined (IPHONE)
-	int SDLApplication::HandleAppLifecycleEvent (void* userdata, SDL_Event* event) {
+	bool SDLApplication::HandleAppLifecycleEvent (void* userdata, SDL_Event* event) {
 
 		#if defined(IPHONE)
 
@@ -839,37 +839,37 @@ namespace lime {
 
 		switch (event->type) {
 
-			case SDL_APP_TERMINATING:
+			case SDL_EVENT_TERMINATING:
 
-				return 0;
+				return false;
 
-			case SDL_APP_LOWMEMORY:
+			case SDL_EVENT_LOW_MEMORY:
 
-				return 0;
+				return false;
 
-			case SDL_APP_WILLENTERBACKGROUND:
+			case SDL_EVENT_WILL_ENTER_BACKGROUND:
 
-				return 0;
+				return false;
 
-			case SDL_APP_DIDENTERBACKGROUND:
+			case SDL_EVENT_DID_ENTER_BACKGROUND:
 
 				currentApplication->windowEvent.type = WINDOW_DEACTIVATE;
 				WindowEvent::Dispatch (&currentApplication->windowEvent);
-				return 0;
+				return false;
 
-			case SDL_APP_WILLENTERFOREGROUND:
+			case SDL_EVENT_WILL_ENTER_FOREGROUND:
 
-				return 0;
+				return false;
 
-			case SDL_APP_DIDENTERFOREGROUND:
+			case SDL_EVENT_DID_ENTER_FOREGROUND:
 
 				currentApplication->windowEvent.type = WINDOW_ACTIVATE;
 				WindowEvent::Dispatch (&currentApplication->windowEvent);
-				return 0;
+				return false;
 
 			default:
 
-				return 1;
+				return true;
 
 		}
 

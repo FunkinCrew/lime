@@ -269,7 +269,7 @@ class NativeWindow
 			#if (!macro && lime_cffi)
 			var index = NativeCFFI.lime_window_get_display(handle);
 
-			if (index > -1)
+			if (index >= 1)
 			{
 				return System.getDisplay(index);
 			}
