@@ -29,6 +29,7 @@ jobs:
           haxelib run lime rebuild hxcpp
           haxelib run lime rebuild windows -32 -nocolor -nocffi -eval
           haxelib run lime rebuild windows -64 -nocolor -nocffi -eval
+          haxelib run lime rebuild hl -nocolor -nocffi -eval
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
