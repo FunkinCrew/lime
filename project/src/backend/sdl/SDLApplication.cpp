@@ -41,11 +41,6 @@ namespace lime {
 		initFlags |= SDL_INIT_AUDIO;
 		#endif
 
-		// #ifdef HX_MACOS
-		// huh
-		// SDL_SetHint(SDL_HINT_TRACKPAD_IS_TOUCH_ONLY, "1");
-		// #endif
-
 		if (SDL_Init (initFlags) != 0) {
 
 			printf ("Could not initialize SDL: %s.\n", SDL_GetError ());
@@ -108,56 +103,83 @@ namespace lime {
 	}
 	#endif
 
+
 	#ifdef HX_MACOS
-	void SDLApplication::InitializeGesture(SDL_Window *window)
-	{
-		GestureCallbacks callbacks{};
+	void SDLApplication::InitializeGestures(SDL_Window *window) {
 
-		static double magS = 0;
-		static double rotS = 0;
-		static int stateS = 0;
+		GestureCallbacks callbacks {};
 
-		callbacks.onMagEvent = [&](double mag, int state, double x, double y) {
-
-			magS = mag;
-			stateS = state;
+		auto dispatchEvent = [&] {
 
 			if (SDL_GetEventState(SDL_MULTIGESTURE) == SDL_ENABLE) {
+
 				SDL_Event event;
 				event.mgesture.type = SDL_MULTIGESTURE;
-				event.mgesture.touchId = 0; // idk
-				event.mgesture.x = x;
-				event.mgesture.y = y;
-				event.mgesture.dTheta = rotS;
-				event.mgesture.dDist = magS;
-				event.mgesture.numFingers = 2; // idk
-				event.mgesture.padding = stateS - 1;
+				event.mgesture.touchId = -1;
+				event.mgesture.x = 0.0;
+				event.mgesture.y = 0.0;
+				event.mgesture.dTheta = 0.0;
+				event.mgesture.dDist = 0.0;
+				event.mgesture.numFingers = 0;
 				SDL_PushEvent(&event);
 
-				// printf ("mag: %f.\n", mag);
-			}
-
-			// ProcessGestureEvent(&event);
-		};
-		callbacks.onRotEvent = [&](double rot, int state, double x, double y) {
-			rotS = rot;
-			stateS = state;
-
-			if (SDL_GetEventState(SDL_MULTIGESTURE) == SDL_ENABLE) {
-				SDL_Event event;
-				event.mgesture.type = SDL_MULTIGESTURE;
-				event.mgesture.touchId = 0; // idk
-				event.mgesture.x = x;
-				event.mgesture.y = y;
-				event.mgesture.dTheta = rotS;
-				event.mgesture.dDist = magS;
-				event.mgesture.numFingers = 2; // idk
-				event.mgesture.padding = stateS - 1;
-				SDL_PushEvent(&event);
 			}
 
 		};
-		lime::RegisterCallback(&callbacks, window);
+
+		callbacks.onMagnificationEvent = [&](GestureRecognizerState state, double magnification, ObjcPoint locationInView) {
+
+			gestureEvent.state = Gesture::fromAppleEnum(state);
+			gestureEvent.magnification = magnification;
+			gestureEvent.x = locationInView.x;
+			gestureEvent.y = locationInView.y;
+
+			gestureEvent.rotation = 0.0;
+			gestureEvent.panTranslationX = 0.0;
+			gestureEvent.panTranslationY = 0.0;
+			gestureEvent.panVelocityX = 0.0;
+			gestureEvent.panVelocityY = 0.0;
+
+			dispatchEvent();
+
+		};
+
+		callbacks.onRotationEvent = [&](GestureRecognizerState state, double rotation, ObjcPoint locationInView) {
+
+			gestureEvent.state = Gesture::fromAppleEnum(state);
+			gestureEvent.rotation = rotation;
+			gestureEvent.x = locationInView.x;
+			gestureEvent.y = locationInView.y;
+
+			gestureEvent.magnification = 0.0;
+			gestureEvent.panTranslationX = 0.0;
+			gestureEvent.panTranslationY = 0.0;
+			gestureEvent.panVelocityX = 0.0;
+			gestureEvent.panVelocityY = 0.0;
+
+			dispatchEvent();
+
+		};
+
+		callbacks.onPanEvent = [&](GestureRecognizerState state, ObjcPoint translationInView, ObjcPoint velocityInView, ObjcPoint locationInView) {
+
+			gestureEvent.state = Gesture::fromAppleEnum(state);
+			gestureEvent.panTranslationX = translationInView.x;
+			gestureEvent.panTranslationY = translationInView.y;
+			gestureEvent.panVelocityX = translationInView.x;
+			gestureEvent.panVelocityY = translationInView.y;
+			gestureEvent.x = locationInView.x;
+			gestureEvent.y = locationInView.y;
+
+			gestureEvent.rotation = 0.0;
+			gestureEvent.magnification = 0.0;
+
+			dispatchEvent();
+
+		};
+
+		lime::Gesture::RegisterCallback(&callbacks, window);
+
 	}
 	#endif
 
@@ -264,17 +286,6 @@ namespace lime {
 				break;
 
 			case SDL_DROPFILE:
-
-			// SDL_Event event1;
-			// event1.mgesture.dDist = 0.45;
-			// event1.mgesture.dTheta = 0.1;
-			// event1.mgesture.numFingers = 2;
-			// event1.mgesture.timestamp = 0;
-			// event1.mgesture.touchId = 0;
-			// event1.mgesture.type = 0;
-			// event1.mgesture.x = 0;
-			// event1.mgesture.y = 0;
-			// ProcessGestureEvent(&event1);
 
 				ProcessDropEvent (event);
 				break;
@@ -406,7 +417,8 @@ namespace lime {
 
 			case SDL_MULTIGESTURE:
 
-				ProcessGestureEvent(event);
+				// turned it off for now
+				// ProcessGestureEvent(event);
 				break;
 
 			case SDL_QUIT:
@@ -793,6 +805,27 @@ namespace lime {
 
 	void SDLApplication::ProcessTouchEvent (SDL_Event* event) {
 
+		if (GestureEvent::callback && event->tfinger.touchId == gestureEvent.id) {
+
+			switch (event->type) {
+
+				// delete
+				case SDL_FINGERDOWN:
+
+					gestureEvent.state = GESTURE_BEGAN;
+					break;
+
+				case SDL_FINGERUP:
+
+					gestureEvent.state = GESTURE_ENDED;
+					break;
+
+			}
+
+			GestureEvent::Dispatch(&gestureEvent);
+
+		}
+
 		if (TouchEvent::callback) {
 
 			switch (event->type) {
@@ -828,26 +861,26 @@ namespace lime {
 
 	}
 
-	//.h
+
 	void SDLApplication::ProcessGestureEvent (SDL_Event* event) {
 
 		if (GestureEvent::callback) {
 
+			#ifndef HX_MACOS
 			gestureEvent.id = event->mgesture.touchId;
 			gestureEvent.timestamp = event->mgesture.timestamp;
+			gestureEvent.numFingers = event->mgesture.numFingers;
 			gestureEvent.dTheta = event->mgesture.dTheta;
 			gestureEvent.dDist = event->mgesture.dDist;
 			gestureEvent.x = event->mgesture.x;
 			gestureEvent.y = event->mgesture.y;
-			gestureEvent.numFingers = event->mgesture.numFingers;
-
-			#ifdef HX_MACOS
-			gestureEvent.state = event->mgesture.padding;
-			gestureEvent.magnification = event->mgesture.dDist;
-			gestureEvent.rotation = event->mgesture.dTheta;
+			gestureEvent.state = GESTURE_CHANGED;
+			#else
+			gestureEvent.id = -1;
+			gestureEvent.timestamp = 0;
+			gestureEvent.numFingers = 2;
 			gestureEvent.dTheta = 0.0;
 			gestureEvent.dDist = 0.0;
-			#else
 			#endif
 
 			GestureEvent::Dispatch(&gestureEvent);
@@ -915,7 +948,7 @@ namespace lime {
 	void SDLApplication::RegisterWindow (SDLWindow *window) {
 
 		#ifdef HX_MACOS
-		InitializeGesture(window->sdlWindow);
+		InitializeGestures(window->sdlWindow);
 		#endif
 
 		#ifdef IPHONE

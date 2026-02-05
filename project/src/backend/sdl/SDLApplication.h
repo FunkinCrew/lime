@@ -41,7 +41,7 @@ namespace lime {
 
 		private:
 			void InitializeSensors();
-			void InitializeGesture (SDL_Window *window);
+			void InitializeGestures (SDL_Window *window);
 
 			void HandleEvent (SDL_Event* event);
 			void ProcessClipboardEvent (SDL_Event* event);

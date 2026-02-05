@@ -9,36 +9,34 @@
 
 namespace lime {
 
-	// apple
-	// enum GestureState
-	// {
-	// 	POSSIBLE,
-	// 	BEGAN,
-	// 	CHANGED,
-	// 	ENDED,
-	// 	CANCELLED,
-	// 	FAILED,
-	// 	// RECOGNIZED = ENDED
-	// };
+	enum GestureState
+	{
+		GESTURE_BEGAN = 0,
+		GESTURE_CHANGED = 1,
+		GESTURE_ENDED = 2,
+		GESTURE_CANCELLED = 3
+	};
 
 
 	struct GestureEvent {
 
 		hl_type* t;
-		//Uint32
 		int id;
 		int timestamp;
 		double dTheta;
 		double dDist;
 		double x;
 		double y;
-		//Uint16
 		int numFingers;
-		// int rotation;
-		// int magnification;
-		int state;
-		double magnification; // for mac
-		double rotation; // for mac
+		GestureState state;
+
+		// for mac
+		double magnification;
+		double rotation;
+		double panTranslationX;
+		double panTranslationY;
+		double panVelocityX;
+		double panVelocityY;
 
 		static ValuePointer* callback;
 		static ValuePointer* eventObject;

@@ -10,36 +10,83 @@ static GestureCallbacks* gGestureCallbacks = nullptr;
 @interface CallbackHandler : NSObject
 
 @property (strong, nonatomic) NSView* view;
+@property (strong, nonatomic) NSMagnificationGestureRecognizer* magnificationGestureRecognizer;
+@property (strong, nonatomic) NSRotationGestureRecognizer* rotationGestureRecognizer;
+@property (strong, nonatomic) NSPanGestureRecognizer* panGestureRecognizer;
 
 + (instancetype)sharedInstance;
-- (void)handleMagGesture:(NSMagnificationGestureRecognizer *)gestureRecognizer;
++ (ObjcPoint)toCPoint:(CGPoint)objcPoint;
+- (void)initCallbacks:(NSView *)view;
+- (void)handleMagnificationGesture:(NSMagnificationGestureRecognizer *)gestureRecognizer;
 - (void)handleRotationGesture:(NSRotationGestureRecognizer *)gestureRecognizer;
+- (void)handlePanGesture:(NSPanGestureRecognizer *)gestureRecognizer;
 
 @end
 
 @implementation CallbackHandler
 
++ (ObjcPoint)toCPoint:(CGPoint)objcPoint
+{
+    ObjcPoint cPoint = { objcPoint.x, objcPoint.y };
+    return cPoint;
+}
 
 - (void)handleRotationGesture:(NSRotationGestureRecognizer *)gestureRecognizer
 {
-        // NSLog(@"csssssdvd");
-        NSPoint gestPoint = [gestureRecognizer locationInView:self.view];
+    NSPoint gestPoint = [gestureRecognizer locationInView:self.view];
+    gestPoint.y = self.view.frame.size.height - gestPoint.y;
 
-// dispatch_sync(dispatch_get_main_queue(), ^
-// 		{
-    gGestureCallbacks->onRotEvent(gestureRecognizer.rotation, (int)[gestureRecognizer state], gestPoint.x, gestPoint.y);
-        // });
+    gGestureCallbacks->onRotationEvent((GestureRecognizerState)[gestureRecognizer state],
+                                       gestureRecognizer.rotation,
+                                       [CallbackHandler toCPoint:gestPoint]);
 }
 
-- (void)handleMagGesture:(NSMagnificationGestureRecognizer *)gestureRecognizer
+- (void)handleMagnificationGesture:(NSMagnificationGestureRecognizer *)gestureRecognizer
 {
-        // NSLog(@"caaaadvd");
-        NSPoint gestPoint = [gestureRecognizer locationInView:self.view];
+    NSPoint gestPoint = [gestureRecognizer locationInView:self.view];
+    gestPoint.y = self.view.frame.size.height - gestPoint.y;
 
-// dispatch_sync(dispatch_get_main_queue(), ^
-// 		{
-    gGestureCallbacks->onMagEvent(gestureRecognizer.magnification, (int)[gestureRecognizer state], gestPoint.x, gestPoint.y);
-    // });
+    gGestureCallbacks->onMagnificationEvent((GestureRecognizerState)[gestureRecognizer state],
+                                            gestureRecognizer.magnification,
+                                            [CallbackHandler toCPoint:gestPoint]);
+}
+
+- (void)handlePanGesture:(NSPanGestureRecognizer *)gestureRecognizer
+{
+    NSPoint gestPoint = [gestureRecognizer locationInView:self.view];
+    gestPoint.y = self.view.frame.size.height - gestPoint.y;
+
+    ObjcPoint translationInView = [CallbackHandler toCPoint:[gestureRecognizer translationInView:self.view]];
+    ObjcPoint velocityInView = [CallbackHandler toCPoint:[gestureRecognizer velocityInView:self.view]];
+
+    translationInView.y *= -1;
+
+    gGestureCallbacks->onPanEvent((GestureRecognizerState)[gestureRecognizer state],
+                                  translationInView,
+                                  velocityInView,
+                                  [CallbackHandler toCPoint:gestPoint]);
+}
+
+- (void)initCallbacks:(NSView *)view
+{
+    self.view = view;
+
+    self.rotationGestureRecognizer = [[NSRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationGesture:)];
+    [self.view addGestureRecognizer:self.rotationGestureRecognizer];
+
+    self.magnificationGestureRecognizer = [[NSMagnificationGestureRecognizer alloc] initWithTarget:self action:@selector(handleMagnificationGesture:)];
+    [self.view addGestureRecognizer:self.magnificationGestureRecognizer];
+
+    self.panGestureRecognizer = [[NSPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [self.view addGestureRecognizer:self.panGestureRecognizer];
+}
+
+- (void)dealloc
+{
+    [self.view removeGestureRecognizer:self.rotationGestureRecognizer];
+    [self.view removeGestureRecognizer:self.magnificationGestureRecognizer];
+    [self.view removeGestureRecognizer:self.panGestureRecognizer];
+    [super dealloc];
 }
 
 + (instancetype)sharedInstance {
@@ -58,8 +105,7 @@ static GestureCallbacks* gGestureCallbacks = nullptr;
 
 namespace lime
 {
-    // move all to callbackhandler?
-    void RegisterCallback(const GestureCallbacks* callbacks, SDL_Window* window)
+    void Gesture::RegisterCallback(const GestureCallbacks* callbacks, SDL_Window* window)
     {
        if (callbacks)
            gGestureCallbacksCopy = (*callbacks);
@@ -74,36 +120,12 @@ namespace lime
         {
             NSView* view = [wmInfo.info.cocoa.window contentView];
             CallbackHandler* handler = [CallbackHandler sharedInstance];
-            handler.view = view;
-            [view addGestureRecognizer:[[NSRotationGestureRecognizer alloc] initWithTarget:handler action:@selector(handleRotationGesture:)]];
-            [view addGestureRecognizer:[[NSMagnificationGestureRecognizer alloc] initWithTarget:handler action:@selector(handleMagGesture:)]];
+            [handler initCallbacks:view];
         }
         else
         {
-            NSLog(@"%p rip", SDL_GL_GetCurrentWindow());
+            NSLog(@"Unable to initialize gestures: wrong sdl window");
         }
 
-        // NSWindow* keyWindow = [[NSApplication sharedApplication] keyWindow];
-
-        // NSLog(@"%p", keyWindow);
-
-        // if (keyWindow)
-        // {
-        // NSLog(@"cdvd");
-
-        //     NSView* view = [keyWindow contentView];
-
-        //     CallbackHandler* ch = [CallbackHandler sharedInstance];
-
-        //     NSLog(@"%p", ch);
-
-        //     [view addGestureRecognizer:[[NSRotationGestureRecognizer alloc] initWithTarget:ch action:@selector(handleRotationGesture:)]];
-
-        //     [view addGestureRecognizer:[[NSMagnificationGestureRecognizer alloc] initWithTarget:ch action:@selector(handleMagGesture:)]];
-        // }
-
     }
-
-
-
 }

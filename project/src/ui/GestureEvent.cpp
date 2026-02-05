@@ -15,9 +15,16 @@ namespace lime {
 	static double id_y;
 	static int id_numFingers;
 
+
+
+	static double id_panTranslationX;
+	static double id_panTranslationY;
+	static double id_panVelocityX;
+	static double id_panVelocityY;
+
 	static int id_state;
-	static int id_magnification; // for mac
-	static int id_rotation; // for mac
+	static int id_magnification;
+	static int id_rotation;
 
 	static bool init = false;
 
@@ -30,9 +37,14 @@ namespace lime {
 		x = 0.0;
 		y = 0.0;
 		numFingers = 0;
-		state = 0;
+		state = GESTURE_ENDED;
+
 		magnification = 0.0;
 		rotation = 0.0;
+		panTranslationX = 0.0;
+		panTranslationY = 0.0;
+		panVelocityX = 0.0;
+		panVelocityY = 0.0;
 
 	}
 
@@ -54,6 +66,10 @@ namespace lime {
 					id_state = val_id ("state");
 					id_magnification = val_id ("magnification");
 					id_rotation = val_id ("rotation");
+					id_panTranslationX = val_id ("panTranslationX");
+					id_panTranslationY = val_id ("panTranslationY");
+					id_panVelocityX = val_id ("panVelocityX");
+					id_panVelocityY = val_id ("panVelocityY");
 					init = true;
 
 				}
@@ -70,6 +86,10 @@ namespace lime {
 				alloc_field (object, id_state, alloc_int (event->state));
 				alloc_field (object, id_magnification, alloc_float (event->magnification));
 				alloc_field (object, id_rotation, alloc_float (event->rotation));
+				alloc_field (object, id_panTranslationX, alloc_float (event->panTranslationX));
+				alloc_field (object, id_panTranslationY, alloc_float (event->panTranslationY));
+				alloc_field (object, id_panVelocityX, alloc_float (event->panVelocityX));
+				alloc_field (object, id_panTranslationY, alloc_float (event->panTranslationY));
 
 			} else {
 
@@ -85,6 +105,10 @@ namespace lime {
 				eventObject->state = event->state;
 				eventObject->magnification = event->magnification;
 				eventObject->rotation = event->rotation;
+				eventObject->panTranslationX = event->panTranslationX;
+				eventObject->panTranslationY = event->panTranslationY;
+				eventObject->panVelocityX = event->panVelocityX;
+				eventObject->panVelocityY = event->panVelocityY;
 
 			}
 
