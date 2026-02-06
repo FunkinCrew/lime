@@ -20,7 +20,7 @@ namespace lime {
 	struct ApplicationEvent {
 
 		hl_type* t;
-		int deltaTime;
+		double deltaTime;
 		ApplicationEventType type;
 
 		static ValuePointer* callback;
