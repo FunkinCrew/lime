@@ -8,6 +8,8 @@
 	<string>::APP_FILE::</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
+	<key>CFBundleIconName</key>
+	<string>icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>::APP_PACKAGE::</string>
 	<key>CFBundleInfoDictionaryVersion</key>
