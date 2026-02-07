@@ -764,7 +764,7 @@ namespace lime {
 
 		SDL_GetWindowSizeInPixels (sdlWindow, &width, &height);
 
-		return (int)(height / SDL_GetWindowDisplayScale(sdlWindow));
+		return height;
 
 	}
 
@@ -792,7 +792,7 @@ namespace lime {
 
 	double SDLWindow::GetScale () {
 
-		return SDL_GetWindowDisplayScale (sdlWindow);
+		return 1 /* SDL_GetWindowDisplayScale (sdlWindow) */;
 
 	}
 
@@ -811,7 +811,7 @@ namespace lime {
 
 		SDL_GetWindowSizeInPixels (sdlWindow, &width, &height);
 
-		return (int)(width / SDL_GetWindowDisplayScale(sdlWindow));
+		return width;
 
 	}
 

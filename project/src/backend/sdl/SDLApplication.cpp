@@ -543,19 +543,15 @@ namespace lime {
 
 		if (MouseEvent::callback) {
 
-			SDL_Window * sdlWindow = SDL_GetWindowFromID(event->window.windowID);
-
-			float scale = SDL_GetWindowPixelDensity(sdlWindow) / SDL_GetWindowDisplayScale(sdlWindow);
-
 			switch (event->type) {
 
 				case SDL_EVENT_MOUSE_MOTION:
 
 					mouseEvent.type = MOUSE_MOVE;
-					mouseEvent.x = event->motion.x * scale;
-					mouseEvent.y = event->motion.y * scale;
-					mouseEvent.movementX = event->motion.xrel * scale;
-					mouseEvent.movementY = event->motion.yrel * scale;
+					mouseEvent.x = event->motion.x;
+					mouseEvent.y = event->motion.y;
+					mouseEvent.movementX = event->motion.xrel;
+					mouseEvent.movementY = event->motion.yrel;
 					break;
 
 				case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -564,8 +560,8 @@ namespace lime {
 
 					mouseEvent.type = MOUSE_DOWN;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x * scale;
-					mouseEvent.y = event->button.y * scale;
+					mouseEvent.x = event->button.x;
+					mouseEvent.y = event->button.y;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
@@ -575,8 +571,8 @@ namespace lime {
 
 					mouseEvent.type = MOUSE_UP;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x * scale;
-					mouseEvent.y = event->button.y * scale;
+					mouseEvent.x = event->button.x;
+					mouseEvent.y = event->button.y;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
@@ -738,13 +734,11 @@ namespace lime {
 					break;
 
 				case SDL_EVENT_WINDOW_RESIZED:
-				{
-					float scale = SDL_GetWindowDisplayScale(SDL_GetWindowFromID(event->window.windowID));
+
 					windowEvent.type = WINDOW_RESIZE;
-					windowEvent.width = (int)(event->window.data1 / scale);
-					windowEvent.height = (int)(event->window.data2 / scale);
+					windowEvent.width = event->window.data1;
+					windowEvent.height = event->window.data2;
 					break;
-				}
 
 				case SDL_EVENT_WINDOW_RESTORED: windowEvent.type = WINDOW_RESTORE; break;
 
