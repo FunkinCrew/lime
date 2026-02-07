@@ -343,14 +343,14 @@ class HTML5Application
 
 		lastUpdate = Browser.window.performance.now();
 
-		handleApplicationEvent();
+		handleApplicationEvent(lastUpdate);
 
 		return 0;
 	}
 
 	public function exit():Void {}
 
-	private function handleApplicationEvent(?__):Void
+	private function handleApplicationEvent(time:Float):Void
 	{
 		// TODO: Support independent window frame rates
 
@@ -361,7 +361,7 @@ class HTML5Application
 
 		updateGameDevices();
 
-		currentUpdate = Browser.window.performance.now();
+		currentUpdate = time;
 
 		if (currentUpdate >= nextUpdate)
 		{
