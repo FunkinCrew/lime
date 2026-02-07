@@ -5,7 +5,7 @@ import haxe.io.Path;
 
 /**
 	This file is a wrapper to save to path and some properties about the AdaptiveIcon format from Android
-	It is also used to store Apple's Icon Composer .icon file for iOS since its also a dynamic icon file
+	It is also used to store Apple's Icon Composer .icon file for Apple Platforms as it is also a dynamic icon file
 **/
 class AdaptiveIcon
 {
@@ -18,7 +18,7 @@ class AdaptiveIcon
 		this.path = path;
     	this.hasRoundIcon = hasRoundIcon;
 
-		// macOS files are actually folders with a file extension
+		// Some macOS files are actually folders with a file extension and the icon composer file is one of them
 		this.iconComposerFile = Path.extension(path) == "icon" && FileSystem.isDirectory(path);
 	}
 
