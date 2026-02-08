@@ -396,15 +396,26 @@ class AndroidHelper
 
 		// Use -DFULL_LOGCAT or  <set name="FULL_LOGCAT" /> if you do not want to filter log messages
 
-		var args = ["logcat"];
+		var args = [];
 
 		if (deviceID != null && deviceID != "")
 		{
-			args.unshift(deviceID);
-			args.unshift("-s");
+			args.push("-s");
+			args.push(deviceID);
 
 			connect(deviceID);
 		}
+
+		var pid = System.runProcess(adbPath, adbName, args.concat(["shell", "pidof", project.meta.packageName]));
+
+		args.push("logcat");
+
+		System.runCommand(adbPath, adbName, args.concat(["-c"]));
+
+		pid = StringTools.trim(pid.split(" ")[0]);
+
+		if (pid.length > 0)
+			args.push('--pid=' + pid);
 
 		if (customFilter != null)
 		{
@@ -412,7 +423,6 @@ class AndroidHelper
 		}
 		else if (project.environment.exists("FULL_LOGCAT") || Log.verbose)
 		{
-			System.runCommand(adbPath, adbName, args.concat(["-c"]));
 			System.runCommand(adbPath, adbName, args);
 		}
 		else if (debug)
