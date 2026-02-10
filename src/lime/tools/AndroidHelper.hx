@@ -374,7 +374,7 @@ class AndroidHelper
 
 	public static function run(activityName:String, deviceID:String = null):Void
 	{
-		var args = ["shell", "am", "start", "-a", "android.intent.action.MAIN", "-n", activityName];
+		var args = ["shell", "am"];
 
 		if (deviceID != null && deviceID != "")
 		{
@@ -384,7 +384,9 @@ class AndroidHelper
 			connect(deviceID);
 		}
 
-		System.runCommand(adbPath, adbName, args);
+		System.runCommand(adbPath, adbName, args.concat(["force-stop", activityName]));
+
+		System.runCommand(adbPath, adbName, args.concat(["start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", "-n", activityName]));
 	}
 
 	public static function trace(project:HXProject, debug:Bool, deviceID:String = null, customFilter:String = null):Void
@@ -406,16 +408,19 @@ class AndroidHelper
 			connect(deviceID);
 		}
 
-		var pid = System.runProcess(adbPath, adbName, args.concat(["shell", "pidof", project.meta.packageName]));
+		var pidString = StringTools.trim(System.runProcess(adbPath, adbName, args.concat(["shell", "pidof", "-s", project.meta.packageName])));
 
 		args.push("logcat");
 
 		System.runCommand(adbPath, adbName, args.concat(["-c"]));
 
-		pid = StringTools.trim(pid.split(" ")[0]);
+		var pidInt = Std.parseInt(pidString);
 
-		if (pid.length > 0)
-			args.push('--pid=' + pid);
+		if (pidInt != null)
+			args.push('--pid=' + pidInt);
+
+		args.push("-v");
+		args.push("brief");
 
 		if (customFilter != null)
 		{
