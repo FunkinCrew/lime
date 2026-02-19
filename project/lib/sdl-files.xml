@@ -534,6 +534,50 @@
             </section>
 
             <section if="linux">
+                <compilerflag value="-Iobj/generated/wayland" if="linux" />
+
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandclipboard.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandcolor.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylanddatamanager.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylanddyn.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandevents.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandkeyboard.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmessagebox.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmouse.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandopengles.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandshmbuffer.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandvideo.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandvulkan.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandwindow.c" />
+
+                <file name="obj/generated/wayland/alpha-modifier-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/color-management-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/cursor-shape-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/fractional-scale-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/frog-color-management-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/idle-inhibit-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/input-timestamps-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/pointer-constraints-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/pointer-gestures-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/pointer-warp-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/primary-selection-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/relative-pointer-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/single-pixel-buffer-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/tablet-v2-client-protocol.c" />
+                <file name="obj/generated/wayland/text-input-unstable-v3-client-protocol.c" />
+                <file name="obj/generated/wayland/viewporter-client-protocol.c" />
+                <file name="obj/generated/wayland/wayland-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-activation-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-decoration-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-dialog-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-foreign-unstable-v2-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-output-unstable-v1-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-shell-client-protocol.c" />
+                <file name="obj/generated/wayland/xdg-toplevel-icon-v1-client-protocol.c" />
+            </section>
+
+            <section if="linux">
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/x11/edid-parse.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/x11/SDL_x11clipboard.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/x11/SDL_x11dyn.c" />
