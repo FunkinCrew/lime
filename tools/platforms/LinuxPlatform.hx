@@ -465,8 +465,38 @@ class LinuxPlatform extends PlatformTarget
 		}
 	}
 
+	/**
+	 * Generates the Wayland Protocols into the project obj folder before rebuild.
+	 */
+	private function generateWaylandProtocols():Void
+	{
+		Log.println("Generating Wayland Protocols");
+		var outputDir = project.config.get("project.rebuild.path") + "/obj/generated/wayland";
+		var sdlPath = project.config.get("project.rebuild.path") + "/lib/sdl/wayland-protocols";
+
+		if (!FileSystem.exists(outputDir)) FileSystem.createDirectory(outputDir);
+
+		if (FileSystem.exists(sdlPath))
+		{
+			var xmls:Array<String> = FileSystem.readDirectory(sdlPath);
+			for (xml in xmls)
+			{
+				if (!StringTools.endsWith(xml, ".xml")) continue;
+
+				var name = xml.substring(0, xml.lastIndexOf("."));
+				var xmlPath = '$sdlPath/$xml';
+
+				Log.println(' - obj/generated/wayland/$xml');
+				System.runCommand("", "wayland-scanner", ["client-header", xmlPath, '$outputDir/$name-client-protocol.h']);
+				System.runCommand("", "wayland-scanner", ["private-code", xmlPath, '$outputDir/$name-client-protocol.c']);
+			}
+		}
+	}
+
 	public override function rebuild():Void
 	{
+		generateWaylandProtocols();
+
 		var commands = [];
 
 		if (System.hostArchitecture == ARM64 )
