@@ -232,6 +232,24 @@ class HTML5Application
 		Browser.window.addEventListener("blur", handleWindowEvent, false);
 		Browser.window.addEventListener("resize", handleWindowEvent, false);
 		Browser.window.addEventListener("beforeunload", handleWindowEvent, false);
+		Browser.window.addEventListener("canvasVisibilityChange", handleWindowEvent, false);
+
+		untyped #if haxe4 js.Syntax.code #else __js__ #end ("
+			var canvas = document.querySelector('canvas');
+			if (canvas && 'IntersectionObserver' in window) {
+				var observer = new IntersectionObserver(function(entries) {
+					var visible = entries[0].isIntersecting;
+
+					// idk if js has a event for what i want but that works for now
+					var event = new CustomEvent('canvasVisibilityChange', {
+						detail: { visible: visible }
+					});
+
+					window.dispatchEvent(event);
+				});
+				observer.observe(canvas);
+			}
+		");
 
 		if (accelerometer != null)
 		{
@@ -413,6 +431,7 @@ class HTML5Application
 		}
 	}
 
+	@:keep
 	private function handleWindowEvent(event:js.html.Event):Void
 	{
 		if (parent.window != null)
@@ -433,6 +452,27 @@ class HTML5Application
 						parent.window.onFocusOut.dispatch();
 						parent.window.onDeactivate.dispatch();
 						hidden = true;
+					}
+
+				case 'canvasVisibilityChange':
+					var e:js.html.CustomEvent = cast event;
+					if (!e.detail.visible)
+					{
+						if (!hidden)
+						{
+							parent.window.onFocusOut.dispatch();
+							parent.window.onDeactivate.dispatch();
+							hidden = true;
+						}
+					}
+					else
+					{
+						if (hidden)
+						{
+							parent.window.onFocusIn.dispatch();
+							parent.window.onActivate.dispatch();
+							hidden = false;
+						}
 					}
 
 				case "visibilitychange":
