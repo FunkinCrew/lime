@@ -156,12 +156,6 @@ class HXProject extends Script
 				PlatformType.CONSOLE;
 		}
 
-		if (target == WINDOWS && targetFlags.exists("uwp") || targetFlags.exists("winjs"))
-		{
-			targetFlags.set("uwp", "");
-			targetFlags.set("winjs", "");
-		}
-
 		meta = {};
 		app = {};
 		window = {};
@@ -756,16 +750,6 @@ class HXProject extends Script
 			defines.set("flash", "1");
 			if (targetFlags.exists("ios")) defines.set("ios", "1");
 			if (targetFlags.exists("android")) defines.set("android", "1");
-		}
-		else if (target == Platform.WINDOWS && (targetFlags.exists("uwp") || targetFlags.exists("winjs")))
-		{
-			targetFlags.set("uwp", "");
-			targetFlags.set("winjs", "");
-
-			defines.set("targetType", "js");
-			defines.set("html5", "1");
-			defines.set("uwp", "1");
-			defines.set("winjs", "1");
 		}
 		else if (platformType == DESKTOP && target != System.hostPlatform)
 		{
