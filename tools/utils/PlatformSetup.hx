@@ -365,10 +365,6 @@ class PlatformSetup
 				case "android":
 					setupAndroid();
 
-				case "blackberry":
-
-				// setupBlackBerry ();
-
 				case "html5":
 					Log.println("\x1b[0;3mNo additional configuration is required.\x1b[0m");
 				// setupHTML5 ();
