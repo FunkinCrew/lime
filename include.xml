@@ -7,7 +7,7 @@
 
 	<set name="lime" />
 
-	<define name="native" if="cpp || neko || nodejs || cs || hl" />
+	<define name="native" if="cpp || neko || nodejs || hl" />
 	<define name="howlerjs" if="html5" />
 
 	<define name="lime-cairo" if="native" />
@@ -25,7 +25,6 @@
 	<define name="lime-vorbis" if="native" />
 	<define name="lime-webgl" if="html5" />
 
-	<define name="no-typedarray-inline" if="cs" />
 	<haxedef name="no-compilation" />
 
 	<templatePath name="templates" />
@@ -76,7 +75,7 @@
 		<section unless="force-synchronous || force_synchronous">
 			<haxedef name="lime-threads" if="neko || cpp || html5" unless="emscripten" />
 			<!-- `target.threaded` isn't available, so enumerate the targets instead. -->
-			<haxedef name="lime-threads" if="cs || python || hl" unless="${${haxe_ver} < 4}" />
+			<haxedef name="lime-threads" if="python || hl" unless="${${haxe_ver} < 4}" />
 		</section>
 
 		<section if="cpp ${${haxe_ver} < 3.3}" unless="static_link">

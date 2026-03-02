@@ -727,12 +727,6 @@ class HXProject extends Script
 			defines.set("native", "1");
 			defines.set("nodejs", "1");
 		}
-		else if (targetFlags.exists("cs"))
-		{
-			defines.set("targetType", "cs");
-			defines.set("native", "1");
-			defines.set("cs", "1");
-		}
 		else if (target == Platform.AIR)
 		{
 			defines.set("targetType", "swf");

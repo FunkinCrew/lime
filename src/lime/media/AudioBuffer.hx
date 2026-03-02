@@ -33,10 +33,10 @@ import flash.net.URLRequest;
 #end
 
 /**
-	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`. 
+	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`.
 	It supports a variety of audio formats and platforms, providing a consistent API for loading and managing audio data.
 
-	Depending on the platform, the audio backend may differ, but the class provides a unified interface for accessing 
+	Depending on the platform, the audio backend may differ, but the class provides a unified interface for accessing
 	audio data, whether it's stored in memory, loaded from a file, or streamed.
 
 	@see lime.media.AudioSource
@@ -122,32 +122,13 @@ class AudioBuffer
 		audioBuffer.src = new Howl({src: [base64String], html5: true, preload: false});
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		// if base64String contains codec data, strip it then decode it.
 		var base64StringSplit = base64String.split(",");
 		var base64StringNoEncoding = base64StringSplit[base64StringSplit.length - 1];
 		var bytes:Bytes = Base64.decode(base64StringNoEncoding);
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
-
 		return NativeCFFI.lime_audio_load_bytes(bytes, audioBuffer);
-		#else
-		// if base64String contains codec data, strip it then decode it.
-		var base64StringSplit = base64String.split(",");
-		var base64StringNoEncoding = base64StringSplit[base64StringSplit.length - 1];
-		var bytes:Bytes = Base64.decode(base64StringNoEncoding);
-		var data:Dynamic = NativeCFFI.lime_audio_load_bytes(bytes, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-		#end
 		#end
 
 		return null;
@@ -169,24 +150,9 @@ class AudioBuffer
 
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
-
 		return NativeCFFI.lime_audio_load_bytes(bytes, audioBuffer);
-		#else
-		var data:Dynamic = NativeCFFI.lime_audio_load_bytes(bytes, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-		#end
 		#end
 
 		return null;
@@ -224,26 +190,9 @@ class AudioBuffer
 		audioBuffer.__srcSound = new Sound(new URLRequest(path));
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
-
 		return NativeCFFI.lime_audio_load_file(path, audioBuffer);
-		#else
-		var data:Dynamic = NativeCFFI.lime_audio_load_file(path, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-
-		return null;
-		#end
 		#else
 		return null;
 		#end
@@ -287,7 +236,7 @@ class AudioBuffer
 		@return An `AudioBuffer` instance with the decoded audio data.
 	**/
 	#if lime_vorbis
-		
+
 	public static function fromVorbisFile(vorbisFile:VorbisFile):AudioBuffer
 	{
 		if (vorbisFile == null) return null;
