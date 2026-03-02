@@ -19,11 +19,8 @@ Next, you can test HTML5 and Flash using munit:
 Other targets can be tested using the normal OpenFL test commands:
 
     lime test windows
-    lime test windows -neko
     lime test mac
-    lime test mac -neko
     lime test linux
-    lime test linux -neko
     lime test ios
     lime test ios -simulator
     lime test android

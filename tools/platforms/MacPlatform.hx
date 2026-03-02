@@ -17,7 +17,6 @@ import lime.tools.HashlinkHelper;
 import lime.tools.HXProject;
 import lime.tools.Icon;
 import lime.tools.IconHelper;
-import lime.tools.NekoHelper;
 import lime.tools.NodeJSHelper;
 import lime.tools.Orientation;
 import lime.tools.Platform;
@@ -121,11 +120,7 @@ class MacPlatform extends PlatformTarget
 			}
 		}
 
-		if (project.targetFlags.exists("neko") || project.target != System.hostPlatform)
-		{
-			targetType = "neko";
-		}
-		else if (project.targetFlags.exists("hl") || project.targetFlags.exists("hlc"))
+		if (project.targetFlags.exists("hl") || project.targetFlags.exists("hlc"))
 		{
 			targetType = "hl";
 			var hlVer = project.haxedefs.get("hl-ver");
@@ -188,16 +183,7 @@ class MacPlatform extends PlatformTarget
 			}
 		}
 
-		if (targetType == "neko")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			NekoHelper.createExecutable(project.templatePaths, "mac" + dirSuffix.toLowerCase(), targetDirectory + "/obj/ApplicationMain.n", executablePath);
-			NekoHelper.copyLibraries(project.templatePaths, "mac" + dirSuffix.toLowerCase(), executableDirectory);
-		}
-		else if (targetType == "hl")
+		if (targetType == "hl")
 		{
 			System.runCommand("", "haxe", [hxml]);
 
@@ -369,8 +355,6 @@ class MacPlatform extends PlatformTarget
 			{
 				case "hl":
 					hxml.hl = "_.hl";
-				case "neko":
-					hxml.neko = "_.n";
 				default:
 					hxml.cpp = "_";
 			}
