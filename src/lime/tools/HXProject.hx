@@ -145,7 +145,7 @@ class HXProject extends Script
 			case FLASH, HTML5, FIREFOX, WEB_ASSEMBLY:
 				PlatformType.WEB;
 
-			case ANDROID, BLACKBERRY, IOS, TIZEN, TVOS:
+			case ANDROID, BLACKBERRY, IOS, TVOS:
 				PlatformType.MOBILE;
 
 			case WINDOWS, MAC, LINUX, AIR:

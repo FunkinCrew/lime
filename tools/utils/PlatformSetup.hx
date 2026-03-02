@@ -391,10 +391,6 @@ class PlatformSetup
 						setupMac();
 					}
 
-				case "tizen":
-
-				// setupTizen ();
-
 				case "webassembly", "wasm", "emscripten":
 					setupWebAssembly();
 
