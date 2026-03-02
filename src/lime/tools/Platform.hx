@@ -18,7 +18,6 @@ package lime.tools;
 	var VITA = "vita";
 	var WEB_ASSEMBLY = "webassembly";
 	var WINDOWS = "windows";
-	var WEBOS = "webos";
 	var WIIU = "wiiu";
 	var XBOX1 = "xbox1";
 	var EMSCRIPTEN = "emscripten";
