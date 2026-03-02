@@ -87,8 +87,7 @@ class JPEG
 			image.format = RGBA32;
 		}
 
-		#if java
-		#elseif (sys && lime_cffi && (!disable_cffi || !format) && !macro)
+		#if (sys && lime_cffi && (!disable_cffi || !format) && !macro)
 		if (CFFI.enabled)
 		{
 			#if !cs
