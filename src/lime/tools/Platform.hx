@@ -14,7 +14,6 @@ package lime.tools;
 	var MAC = "mac";
 	var PS3 = "ps3";
 	var PS4 = "ps4";
-	var TIZEN = "tizen";
 	var VITA = "vita";
 	var WEB_ASSEMBLY = "webassembly";
 	var WINDOWS = "windows";
