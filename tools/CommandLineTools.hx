@@ -233,10 +233,6 @@ class CommandLineTools
 							target = System.hostPlatform;
 							targetFlags.set("cpp", "");
 
-						case "neko":
-							target = System.hostPlatform;
-							targetFlags.set("neko", "");
-
 						case "hl", "hashlink":
 							target = System.hostPlatform;
 							targetFlags.set("hl", "");
@@ -1449,10 +1445,6 @@ class CommandLineTools
 			case "cpp":
 				target = System.hostPlatform;
 				targetFlags.set("cpp", "");
-
-			case "neko":
-				target = System.hostPlatform;
-				targetFlags.set("neko", "");
 
 			case "hl", "hashlink":
 				target = System.hostPlatform;

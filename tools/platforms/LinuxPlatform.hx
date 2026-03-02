@@ -13,7 +13,6 @@ import lime.tools.AssetType;
 import lime.tools.CPPHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
-import lime.tools.NekoHelper;
 import lime.tools.NodeJSHelper;
 import lime.tools.Orientation;
 import lime.tools.Platform;
@@ -132,11 +131,7 @@ class LinuxPlatform extends PlatformTarget
 			}
 		}
 
-		if (project.targetFlags.exists("neko"))
-		{
-			targetType = "neko";
-		}
-		else if (project.targetFlags.exists("hl") || targetFlags.exists("hlc"))
+		if (project.targetFlags.exists("hl") || targetFlags.exists("hlc"))
 		{
 			targetType = "hl";
 			is64 = true;
@@ -198,17 +193,7 @@ class LinuxPlatform extends PlatformTarget
 			}
 		}
 
-		if (targetType == "neko")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			NekoHelper.createExecutable(project.templatePaths, "linux" + (( System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64)?"Arm":"") + (is64 ? "64" : ""), targetDirectory + "/obj/ApplicationMain.n", executablePath);
-			NekoHelper.copyLibraries(project.templatePaths, "linux" + (is64 ? "64" : ""), applicationDirectory);
-
-		}
-		else if (targetType == "hl")
+		if (targetType == "hl")
 		{
 			System.runCommand("", "haxe", [hxml]);
 
@@ -411,8 +396,6 @@ class LinuxPlatform extends PlatformTarget
 			{
 				case "hl":
 					hxml.hl = "_.hl";
-				case "neko":
-					hxml.neko = "_.n";
 				default:
 					hxml.cpp = "_";
 			}

@@ -184,7 +184,7 @@ class HXProject extends Script
 		else
 		{
 			environment = Sys.environment();
-			for (conflict in ["air", "android", "cpp", "flash", "hl", "html5", "ios", "linux", "mac", "neko", "webassembly", "windows"])
+			for (conflict in ["air", "android", "cpp", "flash", "hl", "html5", "ios", "linux", "mac", "webassembly", "windows"])
 			{
 				environment.remove(conflict);
 			}
@@ -705,13 +705,7 @@ class HXProject extends Script
 				defines.set("console", "1");
 		}
 
-		if (targetFlags.exists("neko"))
-		{
-			defines.set("targetType", "neko");
-			defines.set("native", "1");
-			defines.set("neko", "1");
-		}
-		else if (targetFlags.exists("hl"))
+		if (targetFlags.exists("hl"))
 		{
 			defines.set("targetType", "hl");
 			defines.set("native", "1");
