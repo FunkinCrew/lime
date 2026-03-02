@@ -27,7 +27,7 @@ import haxe.io.Path;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
-#if (!display && !flash && !nodejs && !macro)
+#if (!display && !flash && !macro)
 @:autoBuild(lime._internal.macros.AssetsMacro.embedFont())
 #end
 @:access(lime._internal.backend.native.NativeCFFI)
@@ -38,12 +38,12 @@ class Font
      	* The ascender value of the font.
      	*/
 	public var ascender:Int;
-	
+
 	 /**
      	* The descender value of the font.
      	*/
 	public var descender:Int;
-	
+
 	/**
      	* The height of the font.
      	*/
@@ -59,7 +59,7 @@ class Font
      	*/
 	public var numGlyphs:Int;
 
-	
+
 	public var src:Dynamic;
 
 	/**
