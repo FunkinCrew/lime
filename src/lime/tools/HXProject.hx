@@ -721,12 +721,6 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
-		else if (targetFlags.exists("java"))
-		{
-			defines.set("targetType", "java");
-			defines.set("native", "1");
-			defines.set("java", "1");
-		}
 		else if (targetFlags.exists("nodejs"))
 		{
 			defines.set("targetType", "nodejs");
