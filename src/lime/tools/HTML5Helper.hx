@@ -224,20 +224,6 @@ class HTML5Helper
 
 				System.runCommand("", executable, args);
 			}
-			else if (project.targetFlags.exists("yui"))
-			{
-				var templatePaths = [
-					Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
-				].concat(project.templatePaths);
-				System.runCommand("", "java", [
-					"-Dapple.awt.UIElement=true",
-					"-jar",
-					System.findTemplate(templatePaths, "bin/yuicompressor-2.4.7.jar"),
-					"-o",
-					tempFile,
-					sourceFile
-				]);
-			}
 			else
 			{
 				var executable:String;
