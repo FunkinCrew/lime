@@ -16,8 +16,6 @@ class CFFI
 	@:noCompletion private static var __moduleNames:Map<String, String> = null;
 	#if neko
 	private static var __loadedNekoAPI:Bool;
-	#elseif nodejs
-	private static var __nodeNDLLModule:Dynamic;
 	#end
 	public static var available:Bool;
 	public static var enabled:Bool;
@@ -109,8 +107,6 @@ class CFFI
 				#else
 				return neko.Lib.load(__moduleNames.get(library), method, args);
 				#end
-				#elseif nodejs
-				return untyped __nodeNDLLModule.load_lib(__moduleNames.get(library), method, args);
 				#else
 				return null;
 				#end
@@ -120,11 +116,6 @@ class CFFI
 			if (library == "lime")
 			{
 				flash.Lib.load("waxe", "wx_boot", 1);
-			}
-			#elseif nodejs
-			if (__nodeNDLLModule == null)
-			{
-				__nodeNDLLModule = untyped require('ndll');
 			}
 			#end
 
@@ -314,10 +305,8 @@ class CFFI
 		{
 			#if cpp
 			var result = cpp.Lib.load(name, func, args);
-			#elseif (neko)
+			#elseif neko
 			var result = neko.Lib.load(name, func, args);
-			#elseif nodejs
-			var result = untyped __nodeNDLLModule.load_lib(name, func, args);
 			#else
 			var result = null;
 			#end
