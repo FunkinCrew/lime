@@ -264,10 +264,6 @@ class CommandLineTools
 							target = Platform.HTML5;
 							targetFlags.set("electron", "");
 
-						case "firefox", "firefoxos":
-							target = Platform.FIREFOX;
-							overrides.haxedefs.set("firefoxos", "");
-
 						case "appletv", "appletvos":
 							target = Platform.TVOS;
 
@@ -390,15 +386,6 @@ class CommandLineTools
 						}
 					}
 				}
-
-			case "publish":
-				if (words.length < 1 || words.length > 2)
-				{
-					Log.error("Incorrect number of arguments for command '" + command + "'");
-					return;
-				}
-
-				publishProject();
 
 			case "installer", "copy-if-newer":
 
@@ -597,10 +584,6 @@ class CommandLineTools
 
 				case HTML5:
 					platform = new HTML5Platform(command, project, targetFlags);
-
-				// case FIREFOX:
-
-				// 	platform = new FirefoxPlatform (command, project, targetFlags);
 
 				case WEB_ASSEMBLY:
 					platform = new WebAssemblyPlatform(command, project, targetFlags);
@@ -1515,10 +1498,6 @@ class CommandLineTools
 				target = Platform.HTML5;
 				targetFlags.set("electron", "");
 
-			case "firefox", "firefoxos":
-				target = Platform.FIREFOX;
-				overrides.haxedefs.set("firefoxos", "");
-
 			case "mac", "macos":
 				target = Platform.MAC;
 				overrides.haxedefs.set("macos", "");
@@ -2244,27 +2223,6 @@ class CommandLineTools
 			{
 				words.push(argument);
 			}
-		}
-	}
-
-	private function publishProject()
-	{
-		switch (words[words.length - 1])
-		{
-			case "firefox":
-				var project = initializeProject(null, "firefox");
-
-				Log.info("", Log.accentColor + "Using publishing target: FIREFOX MARKETPLACE" + Log.resetColor);
-
-				// if (FirefoxMarketplace.isValid (project)) {
-				//
-				// buildProject (project, "build");
-				//
-				// Log.info ("", "\n" + Log.accentColor + "Running command: PUBLISH" + Log.resetColor);
-				//
-				// FirefoxMarketplace.publish (project);
-				//
-				// }
 		}
 	}
 
