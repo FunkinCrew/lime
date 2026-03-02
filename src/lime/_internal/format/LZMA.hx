@@ -18,13 +18,7 @@ class LZMA
 	public static function compress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		#if !cs
 		return NativeCFFI.lime_lzma_compress(bytes, Bytes.alloc(0));
-		#else
-		var data:Dynamic = NativeCFFI.lime_lzma_compress(bytes, null);
-		if (data == null) return null;
-		return @:privateAccess new Bytes(data.length, data.b);
-		#end
 		#elseif js
 		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("LZMA.compress")(new UInt8Array(bytes.getData()), 5);
 		if ((data is String))
@@ -51,13 +45,7 @@ class LZMA
 	public static function decompress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		#if !cs
 		return NativeCFFI.lime_lzma_decompress(bytes, Bytes.alloc(0));
-		#else
-		var data:Dynamic = NativeCFFI.lime_lzma_decompress(bytes, null);
-		if (data == null) return null;
-		return @:privateAccess new Bytes(data.length, data.b);
-		#end
 		#elseif js
 		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("LZMA.decompress")(new UInt8Array(bytes.getData()));
 		if ((data is String))

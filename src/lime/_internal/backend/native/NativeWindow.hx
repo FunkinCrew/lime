@@ -431,16 +431,7 @@ class NativeWindow
 
 			default:
 				#if (!macro && lime_cffi)
-				#if !cs
 				imageBuffer = NativeCFFI.lime_window_read_pixels(handle, rect, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
-				#else
-				var data:Dynamic = NativeCFFI.lime_window_read_pixels(handle, rect, null);
-				if (data != null)
-				{
-					imageBuffer = new ImageBuffer(new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b)), data.width, data.height,
-						data.bitsPerPixel);
-				}
-				#end
 				#end
 
 				if (imageBuffer != null)

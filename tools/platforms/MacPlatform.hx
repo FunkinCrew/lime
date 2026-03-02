@@ -11,7 +11,6 @@ import lime.tools.Architecture;
 import lime.tools.AssetHelper;
 import lime.tools.AssetType;
 import lime.tools.CPPHelper;
-import lime.tools.CSHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.GUID;
 import lime.tools.HashlinkHelper;
@@ -147,10 +146,6 @@ class MacPlatform extends PlatformTarget
 		{
 			targetType = "nodejs";
 		}
-		else if (project.targetFlags.exists("cs"))
-		{
-			targetType = "cs";
-		}
 		else
 		{
 			targetType = "cpp";
@@ -280,20 +275,6 @@ class MacPlatform extends PlatformTarget
 
 			// NekoHelper.createExecutable (project.templatePaths, "Mac" + dirSuffix, targetDirectory + "/obj/ApplicationMain.n", executablePath);
 			// NekoHelper.copyLibraries (project.templatePaths, "Mac" + dirSuffix, executableDirectory);
-		}
-		else if (targetType == "cs")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			CSHelper.copySourceFiles(project.templatePaths, targetDirectory + "/obj/src");
-			var txtPath = targetDirectory + "/obj/hxcs_build.txt";
-			CSHelper.addSourceFiles(txtPath, CSHelper.ndllSourceFiles);
-			CSHelper.addGUID(txtPath, GUID.uuid());
-			CSHelper.compile(project, targetDirectory + "/obj", targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : ""), "x64", "desktop");
-			System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : "") + ".exe", executablePath + ".exe");
-			File.saveContent(executablePath, "#!/bin/sh\nmono ${PWD}/" + project.app.file + ".exe");
 		}
 		else
 		{
