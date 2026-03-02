@@ -9,7 +9,6 @@ nddl/*/libnme*
 project/all_objs
 project/obj
 project/vc*.pdb
-project/winrt/shaders/
 *.userprefs
 *.swp
 .idea/
