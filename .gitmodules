@@ -55,10 +55,6 @@
 	path = project/lib/efsw
 	url = https://github.com/SpartanJ/efsw
 	shallow = true
-[submodule "project/lib/vpx"]
-	path = project/lib/vpx
-	url = https://github.com/webmproject/libvpx
-	shallow = true
 [submodule "project/lib/webm"]
 	path = project/lib/webm
 	url = https://github.com/webmproject/libwebm
