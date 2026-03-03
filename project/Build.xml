@@ -34,7 +34,6 @@
 	<set name="LIME_PNG" value="1" />
 	<set name="LIME_SDL" value="1" />
 	<set name="LIME_VORBIS" value="1" />
-	<!--<set name="LIME_WEBM" value="1" /> -->
 	<set name="LIME_ZLIB" value="1" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
@@ -328,7 +327,6 @@
 	<include name="lib/png-files.xml" />
 	<include name="lib/sdl-files.xml" />
 	<include name="lib/vorbis-files.xml" />
-	<include name="lib/webm-files.xml" />
 	<include name="lib/zlib-files.xml" />
 
 	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
@@ -358,7 +356,6 @@
 		<files id="native-toolkit-sdl" if="LIME_SDL" unless="emscripten" />
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
 		<files id="native-toolkit-vorbis" if="LIME_VORBIS" />
-		<files id="native-toolkit-webm" if="LIME_WEBM" />
 		<files id="native-toolkit-zlib" if="LIME_ZLIB" />
 
 		<section unless="static_link">
