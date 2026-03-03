@@ -17,17 +17,18 @@
 	<set name="LIME_JPEG" value="1" />
 	<set name="LIME_FREETYPE" value="1" />
 	<set name="LIME_HARFBUZZ" value="1" />
-	<!-- <set name="LIME_HASHLINK" value="1" if="windows || mac || linux" /> -->
 	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
 	<set name="LIME_OGG" value="1" />
+
 	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone" unless="tvos" />
 	<set name="LIME_OPENAL" value="1" if="webassembly || tvos" />
-	<set name="LIME_MOJOAL" value="1" if="switch || static_link || mojoal" unless="LIME_OPENAL || iphone LIME_OPENALSOFT" />
+	<set name="LIME_MOJOAL" value="1" if="static_link || mojoal" unless="LIME_OPENAL || iphone LIME_OPENALSOFT" />
 	<unset name="LIME_OPENALSOFT" if="LIME_MOJOAL" />
 	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT" />
 	<set name="LIME_OPENAL" value="1" if="LIME_MOJOAL" />
+
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -36,7 +37,6 @@
 	<set name="LIME_VORBIS" value="1" />
 	<set name="LIME_ZLIB" value="1" />
 
-	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
 
 	<set name="NATIVE_TOOLKIT_HAVE_CAIRO" value="1" if="LIME_CAIRO" />
@@ -301,16 +301,6 @@
 
 	</files>
 
-	<files id="android-cpufeatures">
-
-		<compilerflag value="-I${ANDROID_NDK_ROOT}/sources/android/cpufeatures" if="android" />
-		<file name="${ANDROID_NDK_ROOT}/sources/android/cpufeatures/cpu-features.c" />
-
-	</files>
-	<!-- Run setup now so the submodule projects can determine whether clang or GCC will be used. -->
-	<!-- TODO: if https://github.com/HaxeFoundation/hxcpp/issues/930 ever gets resolved, use that instead. -->
-	<setup name="androidNdk" if="android" />
-
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
@@ -329,6 +319,7 @@
 	<include name="lib/vorbis-files.xml" />
 	<include name="lib/zlib-files.xml" />
 
+	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
 	<set name="LIBSUFFIX" value="${HX_TARGET_SUFFIX}" if="HX_TARGET_SUFFIX" />
 	<set name="LIBSUFFIX" value="${LIBEXTRA}" unless="LIBSUFFIX" />
@@ -338,7 +329,6 @@
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 
 		<files id="lime" />
-		<files id="android-cpufeatures" if="android" />
 
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
 		<files id="native-toolkit-curl" if="LIME_CURL" />
@@ -362,38 +352,33 @@
 
 			<ext value=".so" />
 			<ext value=".ndll" if="windows || mac || linux" />
-
-			<!-- TODO: Support single binary -->
 			<ext value=".hdll" if="LIME_HASHLINK" />
 
 			<section if="windows">
 
-				<lib name="gdi32.lib" />
-				<lib name="opengl32.lib" />
-				<lib name="user32.lib" />
-				<lib name="kernel32.lib" />
 				<lib name="advapi32.lib" />
-				<lib name="winmm.lib" />
+				<lib name="avrt.lib" />
+				<lib name="comdlg32.lib" />
+				<lib name="comsuppw.lib" />
+				<lib name="dwrite.lib" />
+				<lib name="gdi32.lib" />
 				<lib name="imm32.lib" />
+				<lib name="kernel32.lib" />
 				<lib name="ole32.lib" />
 				<lib name="oleaut32.lib" />
-				<lib name="version.lib" />
-				<lib name="ws2_32.lib" />
-				<lib name="wldap32.lib" />
-				<lib name="shell32.lib" />
-				<lib name="comdlg32.lib" />
+				<lib name="opengl32.lib" />
+				<lib name="rpcrt4.lib" />
 				<lib name="setupapi.lib" />
-				<lib name="avrt.lib" if="LIME_OPENALSOFT"/>
-
-				<lib name="usp10.lib" if="LIME_HARFBUZZ" />
-				<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
-				<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
-
-				<lib name="comsuppw.lib" />
+				<lib name="shell32.lib" />
+				<lib name="user32.lib" />
+				<lib name="usp10.lib" />
+				<lib name="version.lib" />
+				<lib name="winmm.lib" />
+				<lib name="wldap32.lib" />
+				<lib name="ws2_32.lib" />
 
 				<lib name="-libpath:../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
 				<lib name="libhl.lib" if="LIME_HASHLINK" />
-				<!-- <lib name="-delayload:libhl.dll" /> -->
 
 			</section>
 
@@ -409,10 +394,6 @@
 
 			<section if="mac">
 				<vflag name="-install_name" value="@executable_path/lime.hdll" if="LIME_HASHLINK"/>
-				<!--
-					starting in xcode 15, rpath doesn't automatically include
-					/usr/local/lib, but we need it for neko
-				-->
 				<vflag name="-rpath" value="/usr/local/lib" />
 				<vflag name="-rpath" value="/opt/homebrew/lib" if="HXCPP_ARM64"/>
 
