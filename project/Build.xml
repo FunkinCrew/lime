@@ -21,7 +21,6 @@
 	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
-	<!-- <set name="LIME_NEKO" value="1" if="linux" /> -->
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone" unless="tvos" />
 	<set name="LIME_OPENAL" value="1" if="webassembly || tvos" />
@@ -145,15 +144,6 @@
 			<compilerflag value="-DLIME_LZMA" />
 
 			<file name="src/utils/compress/LZMA.cpp" />
-
-		</section>
-
-		<section if="LIME_NEKO">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/neko/vm/" />
-			<compilerflag value="-DLIME_NEKO" />
-
-			<file name="src/vm/NekoVM.cpp" />
 
 		</section>
 
@@ -333,7 +323,6 @@
 	<include name="lib/lzma-files.xml" />
 	<include name="lib/mbedtls-files.xml" />
 	<include name="lib/mojoal-files.xml" />
-	<include name="lib/neko-files.xml" />
 	<include name="lib/ogg-files.xml" />
 	<include name="lib/openal-files.xml" />
 	<include name="lib/pixman-files.xml" />
@@ -364,7 +353,6 @@
 		<files id="native-toolkit-lzma" if="LIME_LZMA" />
 		<files id="native-toolkit-mbedtls" if="LIME_MBEDTLS" />
 		<files id="native-toolkit-mojoal" if="LIME_MOJOAL" />
-		<files id="native-toolkit-neko" if="LIME_NEKO" />
 		<files id="native-toolkit-ogg" if="LIME_OGG" />
 		<files id="native-toolkit-openal" if="LIME_OPENALSOFT" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
@@ -420,9 +408,6 @@
 				<lib name="-lpthread" />
 				<lib name="-lrt" />
 
-				<lib name="-lgc" if="LIME_NEKO" />
-				<lib name="-lm" if="LIME_NEKO" />
-
 				<lib name="-L../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
 				<lib name="-lhl" if="LIME_HASHLINK" />
 
@@ -456,9 +441,6 @@
 				<vflag name="-framework" value="IOKit" />
 				<vflag name="-framework" value="SystemConfiguration" />
 				<vflag name="-framework" value="UniformTypeIdentifiers" />
-
-				<lib name="/opt/local/lib/libgc.a" if="LIME_NEKO" />
-				<lib name="-lm" if="LIME_NEKO" />
 
 				<lib name="-L../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
 				<lib name="-lhl" if="LIME_HASHLINK" />
