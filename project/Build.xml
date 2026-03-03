@@ -23,7 +23,7 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten || winrt" />
 	<!-- <set name="LIME_NEKO" value="1" if="linux" /> -->
-	<set name="LIME_OGG" value="1" />
+	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone || tvos" />
 	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT || webassembly" />
 	<set name="LIME_OPENGL" value="1" />
@@ -35,6 +35,7 @@
 	<!-- <set name="LIME_VPX" value="1" />
 	<set name="LIME_WEBM" value="1" /> -->
 	<set name="LIME_ZLIB" value="1" />
+	<set name="LIME_DRLIBS" value="1" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
@@ -76,6 +77,18 @@
 			<compilerflag value="-DCURL_STATICLIB" />
 
 			<file name="src/net/curl/CURLBindings.cpp" />
+
+		</section>
+
+		<section if="LIME_DRLIBS">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/dr_libs/" />
+			<compilerflag value="-DLIME_DRLIBS" />
+
+			<file name="src/media/codecs/flac/DrFlac.cpp" />
+			<file name="src/media/codecs/mp3/DrMp3.cpp" />
+			<file name="src/media/codecs/wav/DrWav.cpp" />
+			<file name="src/media/codecs/DrLibsBindings.cpp" />
 
 		</section>
 
@@ -163,14 +176,14 @@
 
 		</section>
 
-		<section if="LIME_OGG">
+		<section if="LIME_OPUS">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
-			<compilerflag value="-DLIME_OGG" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
+			<compilerflag value="-DLIME_OPUS" />
 
-			<file name="src/media/containers/OGG.cpp" />
+			<file name="src/media/codecs/opus/OpusFile.cpp" />
+			<file name="src/media/codecs/OpusBindings.cpp" />
 
 		</section>
 
@@ -275,12 +288,13 @@
 
 		<section if="LIME_VORBIS">
 
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
 			<compilerflag value="-DLIME_VORBIS" />
 
-			<file name="src/media/codecs/vorbis/VorbisBindings.cpp" />
 			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
+			<file name="src/media/codecs/VorbisBindings.cpp" />
 
 		</section>
 
@@ -303,8 +317,6 @@
 		<file name="src/math/Matrix3.cpp" />
 		<file name="src/math/Rectangle.cpp" />
 		<file name="src/math/Vector2.cpp" />
-		<file name="src/media/AudioBuffer.cpp" />
-		<file name="src/media/containers/WAV.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
 		<file name="src/system/ClipboardEvent.cpp" />
@@ -343,6 +355,7 @@
 
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
+	<include name="lib/dr-libs-files.xml" />
 	<include name="lib/efsw-files.xml" />
 	<include name="lib/faudio-files.xml" if="LIME_FAUDIO" />
 	<include name="lib/freetype-files.xml" />
@@ -352,7 +365,7 @@
 	<include name="lib/lzma-files.xml" />
 	<include name="lib/mbedtls-files.xml" />
 	<include name="lib/neko-files.xml" />
-	<include name="lib/ogg-files.xml" />
+	<include name="lib/opus-files.xml" />
 	<include name="lib/openal-files.xml" />
 	<include name="lib/pixman-files.xml" />
 	<include name="lib/png-files.xml" />
@@ -383,7 +396,7 @@
 		<files id="native-toolkit-lzma" if="LIME_LZMA" />
 		<files id="native-toolkit-mbedtls" if="LIME_MBEDTLS" />
 		<files id="native-toolkit-neko" if="LIME_NEKO" />
-		<files id="native-toolkit-ogg" if="LIME_OGG" />
+		<files id="native-toolkit-opus" if="LIME_OPUS" />
 		<files id="native-toolkit-openal" if="LIME_OPENALSOFT" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-png" if="LIME_PNG" />
@@ -393,6 +406,7 @@
 		<files id="native-toolkit-vpx" if="LIME_VPX" />
 		<files id="native-toolkit-webm" if="LIME_WEBM" />
 		<files id="native-toolkit-zlib" if="LIME_ZLIB" />
+		<files id="native-toolkit-dr-libs" if="LIME_DRLIBS" />
 
 		<section unless="static_link">
 

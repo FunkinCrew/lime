@@ -1,0 +1,187 @@
+<xml>
+
+	<files id="native-toolkit-opus-depends">
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus_custom.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus_defines.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus_multistream.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus_projection.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opus/include/opus_types.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/opusfile/include/opusfile.h" />
+	</files>
+
+	<files id="native-toolkit-opus" tags="" >
+
+		<cache value="1" />
+		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/ogg/src/bitwise.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/ogg/src/framing.c" />
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/celt" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/silk/float" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/silk" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/src" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
+
+		<compilerflag value="-DOPUS_BUILD" />
+		<compilerflag value="-DUSE_ALLOCA" />
+		<compilerflag value="-DHAVE_LRINTF" if="HXCPP_ARMV7" />
+
+		<depend files="native-toolkit-opus-depends" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/bands.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/celt_decoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/celt_encoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/celt_lpc.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/celt.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/cwrs.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/entcode.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/entdec.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/entenc.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/kiss_fft.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/laplace.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/mathops.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/mdct.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/modes.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/pitch.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/quant_bands.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/rate.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/celt/vq.c" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/CNG.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/code_signs.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/init_decoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_core.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_frame.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_parameters.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_indices.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_pulses.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decoder_set_fs.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/dec_API.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/enc_API.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/encode_indices.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/encode_pulses.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/gain_quant.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/interpolate.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/LP_variable_cutoff.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_decode.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NSQ.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NSQ_del_dec.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/PLC.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/shell_coder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_gain.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_LTP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_NLSF_CB_NB_MB.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_NLSF_CB_WB.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_other.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_pitch_lag.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/tables_pulses_per_block.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/VAD.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/control_audio_bandwidth.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/quant_LTP_gains.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/VQ_WMat_EC.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/HP_variable_cutoff.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_encode.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_VQ.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_unpack.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_del_dec_quant.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/process_NLSFs.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_LR_to_MS.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_MS_to_LR.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/check_control_input.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/control_SNR.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/init_encoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/control_codec.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/A2NLSF.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/ana_filt_bank_1.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/biquad_alt.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/bwexpander_32.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/bwexpander.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/debug.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/decode_pitch.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/inner_prod_aligned.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/lin2log.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/log2lin.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/LPC_analysis_filter.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/LPC_inv_pred_gain.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/table_LSF_cos.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF2A.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_stabilize.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/NLSF_VQ_weights_laroia.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/pitch_est_tables.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_down2_3.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_down2.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_private_AR2.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_private_down_FIR.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_private_IIR_FIR.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_private_up2_HQ.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/resampler_rom.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/sigm_Q15.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/sort.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/sum_sqr_shift.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_decode_pred.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_encode_pred.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_find_predictor.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/stereo_quant_pred.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/LPC_fit.c" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/apply_sine_window_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/corrMatrix_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/encode_frame_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/find_LPC_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/find_LTP_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/find_pitch_lags_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/find_pred_coefs_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/LPC_analysis_filter_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/LTP_analysis_filter_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/LTP_scale_ctrl_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/noise_shape_analysis_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/process_gains_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/regularize_correlations_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/residual_energy_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/warped_autocorrelation_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/wrappers_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/autocorrelation_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/burg_modified_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/bwexpander_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/energy_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/inner_product_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/k2a_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/LPC_inv_pred_gain_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/pitch_analysis_core_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/scale_copy_vector_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/scale_vector_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/schur_FLP.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/silk/float/sort_FLP.c" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/analysis.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/extensions.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/mapping_matrix.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/mlp_data.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/mlp.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_decoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_encoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_multistream_decoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_multistream_encoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_multistream.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_projection_decoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus_projection_encoder.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/opus.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opus/src/repacketizer.c" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/http.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/info.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/internal.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/opusfile.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/stream.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/wincerts.c" />
+
+	</files>
+
+</xml>

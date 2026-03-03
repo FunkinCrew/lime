@@ -10,9 +10,6 @@ class AudioContext
 	#if (!lime_doc_gen || flash)
 	public var flash(default, null):FlashAudioContext;
 	#end
-	#if (!lime_doc_gen || (js && html5))
-	public var html5(default, null):HTML5AudioContext;
-	#end
 	#if (!lime_doc_gen || lime_openal)
 	public var openal(default, null):OpenALAudioContext;
 	#end
@@ -34,13 +31,10 @@ class AudioContext
 					web = cast untyped #if haxe4 js.Syntax.code #else __js__ #end ("new window.AudioContext ()");
 					this.type = WEB;
 				}
-				catch (e:Dynamic) {}
-			}
-
-			if (web == null && type != WEB)
-			{
-				html5 = new HTML5AudioContext();
-				this.type = HTML5;
+				catch (e:Dynamic)
+				{
+					lime.utils.Log.error("Unable to create AudioContext for Web!");
+				}
 			}
 			#elseif flash
 			flash = new FlashAudioContext();

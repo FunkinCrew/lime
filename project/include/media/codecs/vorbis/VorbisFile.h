@@ -3,6 +3,7 @@
 
 
 #include <utils/Bytes.h>
+#include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
 
 

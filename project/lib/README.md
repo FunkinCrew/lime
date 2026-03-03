@@ -5,6 +5,7 @@ Lime includes code from several other C/C++ libraries, listed below. Lime prefer
 
 - [**Cairo**](https://www.cairographics.org/) | [primary repo](https://gitlab.freedesktop.org/cairo/cairo) | [GitHub mirror](https://github.com/freedesktop/cairo)
 - [**cURL**](https://curl.se/) | [primary repo](https://github.com/curl/curl)
+- [**dr_libs**](https://github.com/mackron/dr_libs) | [primary repo](https://github.com/mackron/dr_libs)
 - **efsw** | [primary repo](https://github.com/SpartanJ/efsw)
 - [**FreeType**](https://freetype.org/) | [primary repo](https://gitlab.freedesktop.org/freetype/freetype) | [GitHub mirror](https://github.com/freetype/freetype)
 - [**HarfBuzz**](https://harfbuzz.github.io/) | [primary repo](https://github.com/harfbuzz/harfbuzz)
