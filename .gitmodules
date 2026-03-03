@@ -55,10 +55,6 @@
 	path = project/lib/efsw
 	url = https://github.com/SpartanJ/efsw
 	shallow = true
-[submodule "project/lib/webm"]
-	path = project/lib/webm
-	url = https://github.com/webmproject/libwebm
-	shallow = true
 [submodule "project/lib/mbedtls"]
 	path = project/lib/mbedtls
 	url = https://github.com/Mbed-TLS/mbedtls
