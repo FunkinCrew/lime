@@ -15,7 +15,6 @@
 	<set name="LIME_CURL" value="1" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
 	<set name="LIME_JPEG" value="1" />
-	<!-- <set name="LIME_FAUDIO" value="1" /> -->
 	<set name="LIME_FREETYPE" value="1" />
 	<set name="LIME_HARFBUZZ" value="1" />
 	<!-- <set name="LIME_HASHLINK" value="1" if="windows || mac || linux" /> -->
@@ -89,15 +88,6 @@
 			<compilerflag value="-DLIME_EFSW" />
 
 			<file name="src/system/FileWatcher.cpp" />
-
-		</section>
-
-		<section if="LIME_FAUDIO">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/faudio/src" />
-			<compilerflag value="-DLIME_FAUDIO" />
-
-			<!-- <file name="src/graphics/format/PNG.cpp" /> -->
 
 		</section>
 
@@ -336,7 +326,6 @@
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
-	<include name="lib/faudio-files.xml" if="LIME_FAUDIO" />
 	<include name="lib/freetype-files.xml" />
 	<include name="lib/harfbuzz-files.xml" />
 	<include name="lib/glad-files.xml" />
@@ -369,7 +358,6 @@
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
 		<files id="native-toolkit-curl" if="LIME_CURL" />
 		<files id="native-toolkit-efsw" if="LIME_EFSW" />
-		<files id="native-toolkit-faudio" if="LIME_FAUDIO" />
 		<files id="native-toolkit-freetype" if="LIME_FREETYPE" />
 		<files id="native-toolkit-harfbuzz" if="LIME_HARFBUZZ" />
 		<files id="native-toolkit-jpeg" if="LIME_JPEG" />
