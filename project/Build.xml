@@ -12,16 +12,16 @@
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />
 	<set name="LIME_CAIRO" value="1" />
-	<set name="LIME_CURL" value="1" unless="winrt" />
-	<set name="LIME_EFSW" value="1" if="windows || mac || linux" unless="winrt" />
+	<set name="LIME_CURL" value="1" />
+	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
 	<set name="LIME_JPEG" value="1" />
 	<!-- <set name="LIME_FAUDIO" value="1" /> -->
 	<set name="LIME_FREETYPE" value="1" />
-	<set name="LIME_HARFBUZZ" value="1" unless="winrt" />
+	<set name="LIME_HARFBUZZ" value="1" />
 	<!-- <set name="LIME_HASHLINK" value="1" if="windows || mac || linux" /> -->
 	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
-	<set name="LIME_MBEDTLS" value="1" unless="emscripten || winrt" />
+	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
 	<!-- <set name="LIME_NEKO" value="1" if="linux" /> -->
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_MOJOAL" value="1" if="mojoal" />
@@ -200,7 +200,7 @@
 			</section>
 
 			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || emscripten || tizen || ios || tvos" />
+			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || emscripten || ios || tvos" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/graphics/opengl/OpenGLBindings.cpp" />
@@ -230,14 +230,6 @@
 			<section unless="emscripten">
 
 				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/default/" unless="windows || mac || linux || rpi" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/linux/" if="linux" unless="rpi" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/windows/" if="windows" unless="winrt" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/mac/" if="mac" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/rpi/" if="rpi" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/winrt/" if="winrt" />
-
-				<compilerflag value="-DHAVE_LIBC" />
 
 			</section>
 
@@ -260,7 +252,6 @@
 			<compilerflag value="-D__IPHONEOS__" if="ios || tvos" />
 			<compilerflag value="-D__APPLETVOS__" if="tvos" />
 			<compilerflag value="-DAPPLETV" if="tvos" />
-			<compilerflag value="-DHAVE_STDIO_H" unless="windows" />
 
 			<file name="src/backend/sdl/SDLApplication.cpp" />
 			<file name="src/backend/sdl/SDLGamepad.cpp" />
@@ -426,12 +417,7 @@
 				<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
 				<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
 
-				<lib name="comsuppw.lib" unless="winrt" />
-
-				<lib name="D3D11.lib" if="winrt" />
-				<lib name="RuntimeObject.lib" if="winrt" />
-				<lib name="Xinput.lib" if="winrt" />
-				<lib name="DXGI.lib" if="winrt" />
+				<lib name="comsuppw.lib" />
 
 				<lib name="-libpath:../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
 				<lib name="libhl.lib" if="LIME_HASHLINK" />

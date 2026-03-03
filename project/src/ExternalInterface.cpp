@@ -3039,7 +3039,7 @@ namespace lime {
 
 	int lime_system_get_windows_console_mode (int handleType) {
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 		return System::GetWindowsConsoleMode (handleType);
 		#else
 		return 0;
@@ -3050,7 +3050,7 @@ namespace lime {
 
 	HL_PRIM int HL_NAME(hl_system_get_windows_console_mode) (int handleType) {
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 		return System::GetWindowsConsoleMode (handleType);
 		#else
 		return 0;
@@ -3163,7 +3163,7 @@ namespace lime {
 
 	bool lime_system_set_windows_console_mode (int handleType, int mode) {
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 		return System::SetWindowsConsoleMode (handleType, mode);
 		#else
 		return false;
@@ -3174,7 +3174,7 @@ namespace lime {
 
 	HL_PRIM bool HL_NAME(hl_system_set_windows_console_mode) (int handleType, int mode) {
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 		return System::SetWindowsConsoleMode (handleType, mode);
 		#else
 		return false;
