@@ -488,6 +488,10 @@ abstract TypedArrayType(Int) from Int to Int
 	}
 
 	// 16
+	#if !no_typedarray_inline
+	#if (haxe_ver >= 4.0) extern #else @:extern #end
+	inline
+	#end
 	public static function getInt16(buffer:ArrayBuffer, byteOffset:Int):Int
 	{
 		#if cpp
@@ -502,6 +506,10 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
+	#if !no_typedarray_inline
+	#if (haxe_ver >= 4.0) extern #else @:extern #end
+	inline
+	#end
 	public static function getInt16_BE(buffer:ArrayBuffer, byteOffset:Int):Int
 	{
 		#if cpp
@@ -516,6 +524,10 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
+	#if !no_typedarray_inline
+	#if (haxe_ver >= 4.0) extern #else @:extern #end
+	inline
+	#end
 	public static function setInt16(buffer:ArrayBuffer, byteOffset:Int, value:Int)
 	{
 		#if cpp
@@ -531,6 +543,10 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
+	#if !no_typedarray_inline
+	#if (haxe_ver >= 4.0) extern #else @:extern #end
+	inline
+	#end
 	public static function setInt16_BE(buffer:ArrayBuffer, byteOffset:Int, value:Int)
 	{
 		#if cpp

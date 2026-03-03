@@ -75,3 +75,13 @@
 	path = project/lib/hashlink
 	url = https://github.com/HaxeFoundation/hashlink
 	shallow = true
+[submodule "project/lib/dr_libs"]
+	path = project/lib/dr_libs
+	url = https://github.com/mackron/dr_libs
+	shallow = true
+[submodule "project/lib/opusfile"]
+	path = project/lib/opusfile
+	url = https://github.com/xiph/opusfile
+[submodule "project/lib/opus"]
+	path = project/lib/opus
+	url = https://github.com/xiph/opus

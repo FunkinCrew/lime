@@ -16,9 +16,6 @@
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/RenderEvent.h>
-#include <media/containers/OGG.h>
-#include <media/containers/WAV.h>
-#include <media/AudioBuffer.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
 #include <system/ClipboardEvent.h>
@@ -372,123 +369,6 @@ namespace lime {
 
 		Application* app = (Application*)application->ptr;
 		return app->Update ();
-
-	}
-
-
-	value lime_audio_load_bytes (value data, value buffer) {
-
-		Resource resource;
-		Bytes bytes;
-
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
-
-		bytes.Set (data);
-		resource = Resource (&bytes);
-
-		if (WAV::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
-
-		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_bytes) (Bytes* data, AudioBuffer* buffer) {
-
-		Resource resource = Resource (data);
-
-		if (WAV::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-
-		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-		#endif
-
-		return 0;
-
-	}
-
-
-	value lime_audio_load_file (value data, value buffer) {
-
-		Resource resource;
-
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
-
-		resource = Resource (val_string (data));
-
-		if (WAV::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
-
-		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_file) (hl_vstring* data, AudioBuffer* buffer) {
-
-		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
-
-		if (WAV::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-
-		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-		#endif
-
-		return 0;
-
-	}
-
-
-	value lime_audio_load (value data, value buffer) {
-
-		if (val_is_string (data)) {
-
-			return lime_audio_load_file (data, buffer);
-
-		} else {
-
-			return lime_audio_load_bytes (data, buffer);
-
-		}
 
 	}
 
@@ -4080,9 +3960,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_application_quit);
 	DEFINE_PRIME2v (lime_application_set_frame_rate);
 	DEFINE_PRIME1 (lime_application_update);
-	DEFINE_PRIME2 (lime_audio_load);
-	DEFINE_PRIME2 (lime_audio_load_bytes);
-	DEFINE_PRIME2 (lime_audio_load_file);
 	DEFINE_PRIME3 (lime_bytes_from_data_pointer);
 	DEFINE_PRIME1 (lime_bytes_get_data_pointer);
 	DEFINE_PRIME2 (lime_bytes_get_data_pointer_offset);
@@ -4275,8 +4152,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_application_quit, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_application_set_frame_rate, _TCFFIPOINTER _F64);
 	DEFINE_HL_PRIM (_BOOL, hl_application_update, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_bytes, _TBYTES _TAUDIOBUFFER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_file, _STRING _TAUDIOBUFFER);
 	DEFINE_HL_PRIM (_TBYTES, hl_bytes_from_data_pointer, _F64 _I32 _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer, _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer_offset, _TBYTES _I32);
@@ -4446,6 +4321,12 @@ extern "C" int lime_curl_register_prims ();
 extern "C" int lime_curl_register_prims () { return 0; }
 #endif
 
+#ifdef LIME_DRLIBS
+extern "C" int lime_drlibs_register_prims ();
+#else
+extern "C" int lime_drlibs_register_prims () { return 0; }
+#endif
+
 #ifdef LIME_HARFBUZZ
 extern "C" int lime_harfbuzz_register_prims ();
 #else
@@ -4464,6 +4345,12 @@ extern "C" int lime_opengl_register_prims ();
 extern "C" int lime_opengl_register_prims () { return 0; }
 #endif
 
+#ifdef LIME_OPUS
+extern "C" int lime_opus_register_prims ();
+#else
+extern "C" int lime_opus_register_prims () { return 0; }
+#endif
+
 #ifdef LIME_VORBIS
 extern "C" int lime_vorbis_register_prims ();
 #else
@@ -4475,9 +4362,11 @@ extern "C" int lime_register_prims () {
 
 	lime_cairo_register_prims ();
 	lime_curl_register_prims ();
+	lime_drlibs_register_prims ();
 	lime_harfbuzz_register_prims ();
 	lime_openal_register_prims ();
 	lime_opengl_register_prims ();
+	lime_opus_register_prims ();
 	lime_vorbis_register_prims ();
 
 	return 0;

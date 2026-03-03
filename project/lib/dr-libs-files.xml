@@ -1,0 +1,23 @@
+<xml>
+
+	<files id="native-toolkit-dr-libs-depends">
+		<depend name="${NATIVE_TOOLKIT_PATH}/dr_libs/dr_flac.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/dr_libs/dr_mp3.h" />
+		<depend name="${NATIVE_TOOLKIT_PATH}/dr_libs/dr_wav.h" />
+	</files>
+
+	<files id="native-toolkit-dr-libs" tags="" >
+
+		<cache value="1" />
+		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/dr_libs/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/dr_libs/" />
+
+		<depend files="native-toolkit-dr-libs-depends" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/custom/dr_libs/dr_libs.c" />
+
+	</files>
+
+</xml>
