@@ -45,7 +45,7 @@ namespace lime {
 			static std::wstring* GetPlatformName ();
 			static std::wstring* GetPlatformVersion ();
 			static double GetTimer ();
-			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
+			#if defined(HX_WINDOWS)
 			static int GetWindowsConsoleMode (int handleType);
 			#endif
 			static void OpenFile (const char* path);
@@ -54,7 +54,7 @@ namespace lime {
 			static int GetDisplayOrientation (int displayIndex);
 			static std::wstring* GetHint (const char* key);
 			static void SetHint (const char* key, const char* value);
-			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
+			#if defined(HX_WINDOWS)
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif
 
