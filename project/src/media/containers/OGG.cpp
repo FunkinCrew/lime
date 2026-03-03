@@ -43,7 +43,6 @@ namespace lime {
 
 		if (pInfo == NULL) {
 
-			//LOG_SOUND("FAILED TO READ OGG SOUND INFO, IS THIS EVEN AN OGG FILE?\n");
 			ov_clear (oggFile);
 			delete oggFile;
 

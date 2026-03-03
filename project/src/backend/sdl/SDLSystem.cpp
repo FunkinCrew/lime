@@ -150,12 +150,7 @@ namespace lime {
 
 			case DESKTOP: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::KnownFolders::HomeGroup;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				char folderPath[MAX_PATH] = "";
 				SHGetFolderPath (NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -187,12 +182,7 @@ namespace lime {
 
 			case DOCUMENTS: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::KnownFolders::DocumentsLibrary;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				char folderPath[MAX_PATH] = "";
 				SHGetFolderPath (NULL, CSIDL_MYDOCUMENTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -226,11 +216,7 @@ namespace lime {
 
 			case FONTS: {
 
-				#if defined (HX_WINRT)
-
-				// TODO
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				char folderPath[MAX_PATH] = "";
 				SHGetFolderPath (NULL, CSIDL_FONTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -250,10 +236,6 @@ namespace lime {
 
 				result = new std::wstring (L"/system/fonts");
 
-				#elif defined (BLACKBERRY)
-
-				result = new std::wstring (L"/usr/fonts/font_repository/monotype");
-
 				#else
 
 				result = new std::wstring (L"/usr/share/fonts/truetype");
@@ -265,12 +247,7 @@ namespace lime {
 
 			case USER: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::ApplicationData::Current->RoamingFolder;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				char folderPath[MAX_PATH] = "";
 				SHGetFolderPath (NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, folderPath);
