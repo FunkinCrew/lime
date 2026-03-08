@@ -301,7 +301,6 @@ public var VERTEX_ATTRIB_ARRAY_NORMALIZED(get, never):Int;
 public var VERTEX_ATTRIB_ARRAY_POINTER(get, never):Int;
 public var VERTEX_ATTRIB_ARRAY_BUFFER_BINDING(get, never):Int;
 public var VERTEX_PROGRAM_POINT_SIZE(get, never):Int;
-public var POINT_SPRITE(get, never):Int;
 public var COMPILE_STATUS(get, never):Int;
 public var LOW_FLOAT(get, never):Int;
 public var MEDIUM_FLOAT(get, never):Int;
@@ -1858,10 +1857,6 @@ public var version(get, never):Float;
 
 @:noCompletion private inline function get_VERTEX_PROGRAM_POINT_SIZE():Int
 {#if (js && html5) return 0; #else return this.VERTEX_PROGRAM_POINT_SIZE; #end
-} // TODO
-
-@:noCompletion private inline function get_POINT_SPRITE():Int
-{#if (js && html5) return 0; #else return this.POINT_SPRITE; #end
 } // TODO
 
 @:noCompletion private inline function get_COMPILE_STATUS():Int
