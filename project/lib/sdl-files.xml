@@ -18,6 +18,10 @@
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src/" />
 
+        <compilerflag value="-DSDL_GPU_DISABLED" />
+        <compilerflag value="-DSDL_CAMERA_DISABLED" />
+        <compilerflag value="-DSDL_AUDIO_DISABLED" unless="NATIVE_TOOLKIT_HAVE_MOJOAL" />
+
         <compilerflag value="-DSDL_DISABLE_ALLOCA" />
 
         <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/SDL.c" />
@@ -44,24 +48,26 @@
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/SDL_mixer.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/SDL_wave.c" />
 
-            <section if="android">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/aaudio/SDL_aaudio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/openslES/SDL_openslES.c" />
-            </section>
+            <section if="NATIVE_TOOLKIT_HAVE_MOJOAL">
+                <section if="android">
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/aaudio/SDL_aaudio.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/openslES/SDL_openslES.c" />
+                </section>
 
-            <section if="apple">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/coreaudio/SDL_coreaudio.m" />
-            </section>
+                <section if="apple">
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/coreaudio/SDL_coreaudio.m" />
+                </section>
 
-            <section if="linux">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/alsa/SDL_alsa_audio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pulseaudio/SDL_pulseaudio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/dsp/SDL_dspaudio.c" />
-            </section>
+                <section if="linux">
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/alsa/SDL_alsa_audio.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pulseaudio/SDL_pulseaudio.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/dsp/SDL_dspaudio.c" />
+                </section>
 
-            <section if="windows">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/wasapi/SDL_wasapi.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/directsound/SDL_directsound.c" />
+                <section if="windows">
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/wasapi/SDL_wasapi.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/directsound/SDL_directsound.c" />
+                </section>
             </section>
 
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/dummy/SDL_dummyaudio.c" />

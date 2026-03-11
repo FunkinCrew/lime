@@ -21,14 +21,9 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
 	<set name="LIME_OGG" value="1" />
-
-	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone" unless="tvos" />
-	<set name="LIME_OPENAL" value="1" if="webassembly || tvos" />
-	<set name="LIME_MOJOAL" value="1" if="static_link || mojoal" unless="LIME_OPENAL || iphone LIME_OPENALSOFT" />
-	<unset name="LIME_OPENALSOFT" if="LIME_MOJOAL" />
-	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT" />
-	<set name="LIME_OPENAL" value="1" if="LIME_MOJOAL" />
-
+	<set name="LIME_MOJOAL" value="1" if="mojoal" />
+	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || iphone || tvos" unless="LIME_MOJOAL" />
+	<set name="LIME_OPENAL" value="1" if="LIME_MOJOAL || LIME_OPENALSOFT || webassembly" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -43,6 +38,7 @@
 	<set name="NATIVE_TOOLKIT_HAVE_FREETYPE" value="1" if="LIME_FREETYPE" />
 	<set name="NATIVE_TOOLKIT_HAVE_HARFBUZZ" value="1" if="LIME_HARFBUZZ" />
 	<set name="NATIVE_TOOLKIT_HAVE_MBEDTLS" value="1" if="LIME_MBEDTLS" />
+	<set name="NATIVE_TOOLKIT_HAVE_MOJOAL" value="1" if="LIME_MOJOAL" />
 	<set name="NATIVE_TOOLKIT_HAVE_PNG" value="1" if="LIME_PNG" />
 	<set name="NATIVE_TOOLKIT_HAVE_SDL" value="1" if="LIME_SDL" />
 
