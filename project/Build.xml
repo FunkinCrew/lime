@@ -296,6 +296,8 @@
 
 	</files>
 
+	<setup name="androidNdk" if="android" />
+
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
