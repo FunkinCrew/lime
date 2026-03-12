@@ -212,13 +212,25 @@ namespace lime {
 
 		sdlButtons.reserve (count);
 
-		for (int i = 0; i < count; ++i) {
+		if (count == 1) {
 
 			SDL_MessageBoxButtonData button;
-			SDL_zero (button);
-			button.buttonID = i;
-			button.text = buttons[i];
+			button.flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+			button.buttonID = 0;
+			button.text = buttons[0];
 			sdlButtons.push_back (button);
+
+		} else {
+
+			for (int i = 0; i < count; ++i) {
+
+				SDL_MessageBoxButtonData button;
+				SDL_zero (button);
+				button.buttonID = i;
+				button.text = buttons[i];
+				sdlButtons.push_back (button);
+
+			}
 
 		}
 
