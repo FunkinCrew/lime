@@ -312,6 +312,9 @@ namespace lime {
 
 	void* System::GetDisplay (bool useCFFIValue, int id) {
 
+		if (id == 0)
+			id = SDL_GetPrimaryDisplay();
+
 		if (useCFFIValue) {
 
 			if (!init) {
@@ -326,12 +329,6 @@ namespace lime {
 				id_supportedModes = val_id ("supportedModes");
 				id_width = val_id ("width");
 				init = true;
-
-			}
-
-			if (id == 0) {
-
-				return alloc_null ();
 
 			}
 
@@ -457,12 +454,6 @@ namespace lime {
 			const int id_safeArea = hl_hash_utf8 ("safeArea");
 			const int id_x = hl_hash_utf8 ("x");
 			const int id_y = hl_hash_utf8 ("y");
-
-			if (id == 0) {
-
-				return 0;
-
-			}
 
 			const char* displayName = SDL_GetDisplayName (id);
 			if (displayName == NULL) {
