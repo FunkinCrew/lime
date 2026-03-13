@@ -21,12 +21,6 @@ namespace lime {
 		bool transparent;
 		int width;
 
-		vdynamic* __srcBitmapData;
-		vdynamic* __srcCanvas;
-		vdynamic* __srcContext;
-		vdynamic* __srcCustom;
-		vdynamic* __srcImage;
-		vdynamic* __srcImageData;
 
 		ImageBuffer (value imageBuffer);
 		~ImageBuffer ();
