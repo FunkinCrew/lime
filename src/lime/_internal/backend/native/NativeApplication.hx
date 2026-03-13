@@ -61,7 +61,6 @@ class NativeApplication
 
 	public var handle:Dynamic;
 
-	private var pauseTimer:Float;
 	private var parent:Application;
 	private var toggleFullscreen:Bool;
 
@@ -75,7 +74,7 @@ class NativeApplication
 	public function new(parent:Application):Void
 	{
 		this.parent = parent;
-		pauseTimer = -1;
+
 		toggleFullscreen = true;
 
 		AudioManager.init();
@@ -86,21 +85,6 @@ class NativeApplication
 		Sensor.registerSensor(SensorType.ACCELEROMETER, NativeCFFI.lime_system_get_first_accelerometer_sensor_id());
 
 		Sensor.registerSensor(SensorType.GYROSCOPE, NativeCFFI.lime_system_get_first_gyroscope_sensor_id());
-		#end
-	}
-
-	private function advanceTimer():Void
-	{
-		#if (lime_cffi && !macro)
-		if (pauseTimer > -1)
-		{
-			var offset = System.getTimer() - pauseTimer;
-			for (i in 0...Timer.sRunningTimers.length)
-			{
-				if (Timer.sRunningTimers[i] != null) Timer.sRunningTimers[i].mFireAt += offset;
-			}
-			pauseTimer = -1;
-		}
 		#end
 	}
 
@@ -170,7 +154,14 @@ class NativeApplication
 		switch (applicationEventInfo.type)
 		{
 			case UPDATE:
-				updateTimer();
+				// https://github.com/HeapsIO/heaps/blob/bade3542a2f148785f9458a7988de8bc4034e0af/hxd/System.hl.hx#L156-L169
+				#if (haxe_ver >= 5)
+				sys.thread.Thread.current().events.loopOnce();
+				#elseif (target.threaded && (haxe_ver >= 4.2))
+				sys.thread.Thread.current().events.progress();
+				#else
+				@:privateAccess haxe.MainLoop.tick();
+				#end
 
 				parent.onUpdate.dispatch(applicationEventInfo.deltaTime);
 
@@ -534,7 +525,6 @@ class NativeApplication
 			switch (windowEventInfo.type)
 			{
 				case WINDOW_ACTIVATE:
-					advanceTimer();
 					window.onActivate.dispatch();
 					AudioManager.resume();
 
@@ -544,7 +534,6 @@ class NativeApplication
 				case WINDOW_DEACTIVATE:
 					window.onDeactivate.dispatch();
 					AudioManager.suspend();
-					pauseTimer = System.getTimer();
 
 				case WINDOW_ENTER:
 					window.onEnter.dispatch();
@@ -595,56 +584,6 @@ class NativeApplication
 					window.onHide.dispatch();
 			}
 		}
-	}
-
-	private function updateTimer():Void
-	{
-		#if (lime_cffi && !macro)
-		if (Timer.sRunningTimers.length > 0)
-		{
-			var currentTime = System.getTimer();
-			var foundNull = false;
-			var timer;
-
-			for (i in 0...Timer.sRunningTimers.length)
-			{
-				timer = Timer.sRunningTimers[i];
-
-				if (timer != null)
-				{
-					if (timer.mRunning && currentTime >= timer.mFireAt)
-					{
-						timer.mFireAt += timer.mTime;
-						timer.run();
-					}
-				}
-				else
-				{
-					foundNull = true;
-				}
-			}
-
-			if (foundNull)
-			{
-				Timer.sRunningTimers = Timer.sRunningTimers.filter(function(val)
-				{
-					return val != null;
-				});
-			}
-		}
-
-		#if (haxe_ver >= 4.2)
-		#if target.threaded
-		sys.thread.Thread.current().events.progress();
-		#else
-		// Duplicate code required because Haxe 3 can't handle
-		// #if (haxe_ver >= 4.2 && target.threaded)
-		@:privateAccess haxe.EntryPoint.processEvents();
-		#end
-		#else
-		@:privateAccess haxe.EntryPoint.processEvents();
-		#end
-		#end
 	}
 }
 
