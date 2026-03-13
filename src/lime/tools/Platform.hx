@@ -2,7 +2,6 @@ package lime.tools;
 
 #if (haxe_ver >= 4.0) enum #else @:enum #end abstract Platform(String) from hxp.HostPlatform
 {
-	var AIR = "air";
 	var ANDROID = "android";
 	var CONSOLE_PC = "console-pc";
 	var FLASH = "flash";

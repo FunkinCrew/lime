@@ -359,9 +359,6 @@ class PlatformSetup
 
 			switch (target)
 			{
-				case "air":
-					setupAIR();
-
 				case "android":
 					setupAndroid();
 
@@ -554,18 +551,6 @@ class PlatformSetup
 				System.runCommand("", "open", [path], false);
 			}
 		}
-	}
-
-	public static function setupAIR():Void
-	{
-		Log.println("\x1b[1mIn order to package SWF applications using Adobe AIR, you must");
-		Log.println("download and extract the Adobe AIR SDK.");
-		Log.println("");
-
-		getDefineValue("AIR_SDK", "Absolute path to AIR SDK");
-
-		Log.println("");
-		Log.println("Setup complete.");
 	}
 
 	public static function setupAndroid():Void
