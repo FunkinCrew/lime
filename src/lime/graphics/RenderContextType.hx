@@ -21,11 +21,6 @@ package lime.graphics;
 	var DOM = "dom";
 
 	/**
-		Describes a Flash render context
-	**/
-	var FLASH = "flash";
-
-	/**
 		Describes an OpenGL render context
 	**/
 	var OPENGL = "opengl";

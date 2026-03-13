@@ -304,7 +304,7 @@ private abstract StringU16(String)
 
 	public var length(get, never):Int;
 
-	public #if !flash inline #end function codeUnitAt(index:Int):Int
+	public inline function codeUnitAt(index:Int):Int
 	{
 		return StringTools.fastCodeAt(this, index);
 	}

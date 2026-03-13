@@ -1,9 +1,5 @@
 package lime.math;
 
-#if flash
-import flash.geom.Point;
-#end
-
 /**
 	The `Vector2` class can be used for calculating math with
 	basic (x, y) coordinates
@@ -175,15 +171,6 @@ class Vector2
 		if (result == null) result = new Vector2();
 		result.setTo(x - v.x, y - v.y);
 		return result;
-	}
-
-	@:noCompletion private function __toFlashPoint():#if flash Point #else Dynamic #end
-	{
-		#if flash
-		return new Point(x, y);
-		#else
-		return null;
-		#end
 	}
 
 	// Getters & Setters

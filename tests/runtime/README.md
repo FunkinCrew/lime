@@ -12,7 +12,7 @@ First, change to the openfl-validation directory:
 
     cd openfl-validation
 
-Next, you can test HTML5 and Flash using munit:
+Next, you can test HTML5 using munit:
 
     haxelib run munit test
 

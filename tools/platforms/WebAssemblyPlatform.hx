@@ -433,7 +433,6 @@ class WebAssemblyPlatform extends PlatformTarget
 
 		var context = project.templateContext;
 
-		context.WIN_FLASHBACKGROUND = StringTools.hex(project.window.background, 6);
 		context.OUTPUT_DIR = targetDirectory;
 		context.OUTPUT_FILE = outputFile;
 		context.CPP_DIR = targetDirectory + "/obj";

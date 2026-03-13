@@ -9,11 +9,6 @@ import lime.ui.WindowAttributes;
 import lime.utils.ArrayBuffer;
 import lime.utils.UInt8Array;
 import lime.utils.UInt16Array;
-#if flash
-import flash.net.URLRequest;
-import flash.system.Capabilities;
-import flash.Lib;
-#end
 #if ((js && html5) || electron)
 import js.html.Element;
 import js.Browser;
@@ -289,17 +284,12 @@ class System
 
 			return display;
 		}
-		#elseif (flash || html5)
+		#elseif (js && html5)
 		if (id == 0)
 		{
 			var display = new Display();
 			display.id = 0;
 			display.name = "Generic Display";
-
-			#if flash
-			display.dpi = Capabilities.screenDPI;
-			display.currentMode = new DisplayMode(Std.int(Capabilities.screenResolutionX), Std.int(Capabilities.screenResolutionY), 60, ARGB32);
-			#elseif (js && html5)
 			// var div = Browser.document.createElement ("div");
 			// div.style.width = "1in";
 			// Browser.document.body.appendChild (div);
@@ -308,8 +298,6 @@ class System
 			// display.dpi = Std.parseFloat (ppi);
 			display.dpi = 96 * Browser.window.devicePixelRatio;
 			display.currentMode = new DisplayMode(Browser.window.screen.width, Browser.window.screen.height, 60, ARGB32);
-			#end
-
 			display.supportedModes = [display.currentMode];
 			display.bounds = new Rectangle(0, 0, display.currentMode.width, display.currentMode.height);
 			return display;
@@ -322,11 +310,9 @@ class System
 	/**
 		The number of milliseconds since the application was initialized.
 	**/
-	public static function getTimer():#if flash Int #else Float #end
+	public static function getTimer():Float
 	{
-		#if flash
-		return flash.Lib.getTimer();
-		#elseif (js || electron)
+		#if (js || electron)
 		return Browser.window.performance.now();
 		#elseif (lime_cffi && !macro && !neko)
 		return NativeCFFI.lime_system_get_timer() / 1e+6;
@@ -367,8 +353,6 @@ class System
 			Sys.command("/usr/bin/xdg-open", [path]);
 			#elseif (js && html5)
 			Browser.window.open(path, "_blank");
-			#elseif flash
-			Lib.getURL(new URLRequest(path), "_blank");
 			#elseif (lime_cffi && !macro)
 			NativeCFFI.lime_system_open_file(path);
 			#end
@@ -386,8 +370,6 @@ class System
 			openFile(url);
 			#elseif (js && html5)
 			Browser.window.open(url, target);
-			#elseif flash
-			Lib.getURL(new URLRequest(url), target);
 			#elseif (lime_cffi && !macro)
 			NativeCFFI.lime_system_open_url(url, target);
 			#end
@@ -478,20 +460,6 @@ class System
 
 			__directories.set(type, path);
 			return path;
-		}
-		#elseif flash
-		if (type != FONTS && Capabilities.playerType == "Desktop")
-		{
-			var propertyName = switch (type)
-			{
-				case APPLICATION: "applicationDirectory";
-				case APPLICATION_STORAGE: "applicationStorageDirectory";
-				case DESKTOP: "desktopDirectory";
-				case DOCUMENTS: "documentsDirectory";
-				default: "userDirectory";
-			}
-
-			return Reflect.getProperty(Type.resolveClass("flash.filesystem.File"), propertyName).nativePath;
 		}
 		#end
 
@@ -748,7 +716,7 @@ class System
 	{
 		if (__endianness == null)
 		{
-			#if (ps3 || wiiu || flash)
+			#if (ps3 || wiiu)
 			__endianness = BIG_ENDIAN;
 			#else
 			var arrayBuffer = new ArrayBuffer(2);
@@ -818,8 +786,6 @@ class System
 			__platformName = "iOS";
 			#elseif android
 			__platformName = "Android";
-			#elseif flash
-			__platformName = "Flash Player";
 			#elseif tvos
 			__platformName = "tvOS";
 			#elseif js
@@ -846,8 +812,6 @@ class System
 			__platformVersion = __runProcess("sw_vers", ["-productVersion"]);
 			#elseif linux
 			__platformVersion = __runProcess("lsb_release", ["-rs"]);
-			#elseif flash
-			__platformVersion = Capabilities.version;
 			#end
 		}
 

@@ -14,12 +14,6 @@ class Build extends Script
 				noOutput: true
 			});
 
-		var flash = base.clone();
-		flash.xml = "xml/Flash.xml";
-		flash.swf = "obj/docs";
-		flash.swfVersion = "17.0";
-		flash.build();
-
 		var native = base.clone();
 		native.cpp = "obj/docs";
 		native.define("native");
