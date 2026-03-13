@@ -58,18 +58,18 @@ class Application extends Module
 	/**
 		The Preloader for the current Application
 	**/
-	public var preloader(get, null):Preloader;
+	public var preloader(get, never):Preloader;
 
 	/**
 		The Window associated with this Application, or the first Window
 		if there are multiple Windows active
 	**/
-	public var window(get, null):Window;
+	public var window(get, never):Window;
 
 	/**
 		A list of active Window instances associated with this Application
 	**/
-	public var windows(get, null):Array<Window>;
+	public var windows(get, never):Array<Window>;
 
 	@:noCompletion private var __backend:ApplicationBackend;
 	@:noCompletion private var __preloader:Preloader;
