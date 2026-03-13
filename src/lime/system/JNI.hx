@@ -467,7 +467,7 @@ class JNISafetyTools
 					// Check the thread before running the function.
 					f.expr = macro
 						if (!lime.system.JNI.JNISafetyTools.onMainThread())
-							haxe.MainLoop.runInMainThread($i{field.name}.bind($a{args}))
+							lime.utils.MainLoop.runInMainThread($i{field.name}.bind($a{args}))
 						else
 							${f.expr};
 				default:
