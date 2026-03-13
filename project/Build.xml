@@ -286,7 +286,6 @@
 		<file name="src/graphics/ImageBuffer.cpp" />
 		<file name="src/graphics/RenderEvent.cpp" />
 		<file name="src/graphics/utils/ImageDataUtil.cpp" />
-		<file name="src/hx/CFFIExt.cpp" />
 		<file name="src/math/ColorMatrix.cpp" />
 		<file name="src/math/Matrix3.cpp" />
 		<file name="src/math/Rectangle.cpp" />
