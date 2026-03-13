@@ -67,7 +67,7 @@ import sys.FileSystem;
 
 		}
 
-		#if (openfl && !flash && !display)
+		#if (openfl && !display)
 		::if (assets != null)::::foreach assets::::if (type == "font")::openfl.text.Font.registerFont (__ASSET__OPENFL__::flatName::);
 		::end::::end::::end::
 		#end
@@ -80,7 +80,7 @@ import sys.FileSystem;
 		Assets.registerLibrary ("::library::", library);
 		::else::Assets.libraryPaths["::library::"] = rootPath + "::resourceName::";
 		::end::::end::::if (type == "bundle")::::if (embed)::
-		bundle = AssetBundle.fromBytes (#if flash Bytes.ofData (new __ASSET__::flatName:: () #else new __ASSET__::flatName:: () #end));
+		bundle = AssetBundle.fromBytes (new __ASSET__::flatName:: ()));
 		library = AssetLibrary.fromBundle (bundle);
 		Assets.registerLibrary ("::library::", library);
 		::else::Assets.bundlePaths["::library::"] = rootPath + "::resourceName::";
@@ -97,12 +97,7 @@ import sys.FileSystem;
 }
 
 #if !display
-#if flash
-
-::foreach assets::::if (embed != false)::::if (type == "image")::@:keep @:bind @:noCompletion #if display private #end class __ASSET__::flatName:: extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }::else::@:keep @:bind @:noCompletion #if display private #end class __ASSET__::flatName:: extends ::flashClass:: { }::end::
-::end::::end::
-
-#elseif (desktop || cpp)
+#if (desktop || cpp)
 
 ::if (assets != null)::::foreach assets::::if (embed)::@:keep ::if (type == "image")::@:image("::sourcePath::") @:noCompletion #if display private #end class __ASSET__::flatName:: extends lime.graphics.Image {}
 ::elseif (type == "sound")::@:file("::sourcePath::") @:noCompletion #if display private #end class __ASSET__::flatName:: extends haxe.io.Bytes {}
@@ -120,7 +115,7 @@ import sys.FileSystem;
 
 #end
 
-#if (openfl && !flash)
+#if (openfl)
 
 #if html5
 ::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__OPENFL__::flatName::') @:noCompletion #if display private #end class __ASSET__OPENFL__::flatName:: extends openfl.text.Font { public function new () {::if (embed):: __fromLimeFont (new __ASSET__::flatName:: ());::else::::if (fontName):: name = "::fontName::";::end::::end:: super (); }}

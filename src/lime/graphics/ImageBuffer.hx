@@ -15,8 +15,6 @@ import js.lib.Uint8ClampedArray;
 #else
 import js.html.Uint8ClampedArray;
 #end
-#elseif flash
-import flash.display.BitmapData;
 #end
 
 /**
@@ -60,7 +58,7 @@ class ImageBuffer
 	public var premultiplied:Bool;
 
 	/**
-		The data for this image, represented as a `js.html.CanvasElement`, `js.html.Image` or `flash.display.BitmapData`
+		The data for this image, represented as a `js.html.CanvasElement` or `js.html.Image`
 	**/
 	public var src(get, set):Dynamic;
 
@@ -79,7 +77,6 @@ class ImageBuffer
 	**/
 	public var width:Int;
 
-	@:noCompletion private var __srcBitmapData:#if flash BitmapData #else Dynamic #end;
 	@:noCompletion private var __srcCanvas:#if (js && html5) CanvasElement #else Dynamic #end;
 	@:noCompletion private var __srcContext:#if (js && html5) CanvasRenderingContext2D #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
@@ -128,9 +125,7 @@ class ImageBuffer
 	{
 		var buffer = new ImageBuffer(data, width, height, bitsPerPixel);
 
-		#if flash
-		if (__srcBitmapData != null) buffer.__srcBitmapData = __srcBitmapData.clone();
-		#elseif (js && html5)
+		#if (js && html5)
 		if (data != null)
 		{
 			buffer.data = new UInt8Array(data.byteLength);
@@ -181,8 +176,6 @@ class ImageBuffer
 		#if (js && html5)
 		if (__srcImage != null) return __srcImage;
 		return __srcCanvas;
-		#elseif flash
-		return __srcBitmapData;
 		#else
 		return __srcCustom;
 		#end
@@ -200,8 +193,6 @@ class ImageBuffer
 			__srcCanvas = cast value;
 			__srcContext = cast __srcCanvas.getContext("2d");
 		}
-		#elseif flash
-		__srcBitmapData = cast value;
 		#else
 		__srcCustom = value;
 		#end

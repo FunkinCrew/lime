@@ -4,7 +4,6 @@ package lime.tools;
 {
 	var ANDROID = "android";
 	var CONSOLE_PC = "console-pc";
-	var FLASH = "flash";
 	var HTML5 = "html5";
 	var IOS = "ios";
 	var LINUX = "linux";

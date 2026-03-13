@@ -13,13 +13,13 @@
 	<define name="lime-cairo" if="native" />
 	<define name="lime-canvas" if="html5" />
 	<define name="lime-cffi" if="native" />
-	<define name="lime-curl" unless="lime-console || lime-switch || emscripten || flash || html5" />
+	<define name="lime-curl" unless="lime-console || lime-switch || emscripten || html5" />
 	<define name="lime-dom" if="html5" />
 	<define name="lime-harfbuzz" if="native" />
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />
-	<define name="lime-openal" unless="lime-console || flash || html5" />
+	<define name="lime-openal" unless="lime-console || html5" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
 	<define name="lime-opengles" if="emscripten || mobile" />
 	<define name="lime-vorbis" if="native" />
@@ -55,7 +55,6 @@
 
 		<target name="android" path="tools/platforms/AndroidPlatform.hx" />
 		<target name="emscripten" path="tools/platforms/EmscriptenPlatform.hx" />
-		<target name="flash" path="tools/platforms/FlashPlatform.hx" />
 		<target name="html5" path="tools/platforms/HTML5Platform.hx" />
 		<target name="ios" path="tools/platforms/IOSPlatform.hx" />
 		<target name="linux" path="tools/platforms/LinuxPlatform.hx" />
@@ -123,9 +122,6 @@
 			<dependency name="QuartzCore.framework" />
 			<dependency name="UIKit.framework" />
 		</section>
-
-		<define name="native-trace" if="flash" unless="haxe-trace || haxetrace" />
-		<define name="fdb" if="flash debug" unless="nofdb" />
 
 		<define name="MACOSX_DEPLOYMENT_TARGET" value="10.9" if="mac" unless="MACOSX_DEPLOYMENT_TARGET" />
 		<setenv name="MACOSX_DEPLOYMENT_TARGET" value="${MACOSX_DEPLOYMENT_TARGET}" if="mac" />
