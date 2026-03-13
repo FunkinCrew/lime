@@ -649,7 +649,7 @@ class FlashHelper
 				width: (project.window.width == 0 ? 800 : project.window.width),
 				height: (project.window.height == 0 ? 500 : project.window.height),
 				fps: project.window.fps * 256,
-				nframes: project.target == AIR ? 1 : 2
+				nframes: 2
 			};
 
 		var tags = new Array<SWFTag>();
@@ -658,10 +658,7 @@ class FlashHelper
 
 		tags.push(TBackgroundColor(project.window.background & 0xFFFFFF));
 
-		if (project.target != AIR)
-		{
-			tags.push(TShowFrame);
-		}
+		tags.push(TShowFrame);
 
 		// Might generate ABC later, so we don't need the @:bind calls in DefaultAssetLibrary?
 

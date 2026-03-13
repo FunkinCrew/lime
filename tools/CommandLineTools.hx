@@ -579,9 +579,6 @@ class CommandLineTools
 				case TVOS:
 					platform = new TVOSPlatform(command, project, targetFlags);
 
-				case AIR:
-					platform = new AIRPlatform(command, project, targetFlags);
-
 				default:
 			}
 
@@ -864,7 +861,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println(" " + Log.accentColor + "Targets:" + Log.resetColor);
 			Log.println("");
-			Log.println("  \x1b[1mair\x1b[0m -- Create an AIR application");
 			Log.println("  \x1b[1mandroid\x1b[0m -- Create an Android application");
 			Log.println("  \x1b[1mflash\x1b[0m -- Create a Flash SWF application");
 			Log.println("  \x1b[1mhtml5\x1b[0m -- Create an HTML5 application");
@@ -936,7 +932,6 @@ class CommandLineTools
 		{
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cpp\x1b[0m -- Build with C++ (default behavior)");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-neko\x1b[0m -- Build with Neko instead of C++");
-			Log.println("  \x1b[3m(windows|mac|ios|android)\x1b[0m \x1b[1m-air\x1b[0m -- Build with AIR instead of C++");
 		}
 
 		if (isBuildCommand)
@@ -968,10 +963,6 @@ class CommandLineTools
 			Log.println("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
 			Log.println("  \x1b[3m(html5)\x1b[0m \x1b[1m-npm\x1b[0m -- Target HTML5 using an NPM project structure");
 			Log.println("  \x1b[3m(flash)\x1b[0m \x1b[1m-web\x1b[0m -- Test Flash target using a web template");
-			Log.println("  \x1b[3m(air)\x1b[0m \x1b[1m-ios\x1b[0m -- Target iOS instead of AIR desktop");
-			Log.println("  \x1b[3m(air)\x1b[0m \x1b[1m-android\x1b[0m -- Target Android instead of AIR desktop");
-			Log.println("  \x1b[3m(air)\x1b[0m \x1b[1m-ios -air-simulator\x1b[0m -- Target AIR simulator as iOS");
-			Log.println("  \x1b[3m(air)\x1b[0m \x1b[1m-android -air-simulator\x1b[0m -- Target AIR simulator as Android");
 
 			if (command != "run" && command != "trace")
 			{
@@ -1414,28 +1405,6 @@ class CommandLineTools
 				}
 			}
 			catch (e:Dynamic) {}
-		}
-
-		if (targetFlags.exists("air"))
-		{
-			switch (targetName)
-			{
-				case "android":
-					targetName = "air";
-					targetFlags.set("android", "");
-
-				case "ios":
-					targetName = "air";
-					targetFlags.set("ios", "");
-
-				case "windows":
-					targetName = "air";
-					targetFlags.set("windows", "");
-
-				case "mac", "macos":
-					targetName = "air";
-					targetFlags.set("mac", "");
-			}
 		}
 
 		var target:Platform = null;

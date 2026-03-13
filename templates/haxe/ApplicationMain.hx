@@ -99,8 +99,6 @@ import ::APP_MAIN::;
 
 		app.createWindow(attributes);
 		::end::
-		#elseif air
-		app.window.title = "::meta.title::";
 		#else
 		app.window.context.attributes.background = ::WIN_BACKGROUND::;
 		app.window.frameRate = ::WIN_FPS::;

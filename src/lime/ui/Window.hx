@@ -742,9 +742,7 @@ class Window
 	}
 }
 
-#if air
-@:noCompletion private typedef WindowBackend = lime._internal.backend.air.AIRWindow;
-#elseif flash
+#if flash
 @:noCompletion private typedef WindowBackend = lime._internal.backend.flash.FlashWindow;
 #elseif (js && html5)
 @:noCompletion private typedef WindowBackend = lime._internal.backend.html5.HTML5Window;
