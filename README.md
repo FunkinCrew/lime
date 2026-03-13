@@ -102,7 +102,6 @@ Lime currently supports the following targets:
     lime test ios
     lime test html5
     lime test flash
-    lime test air
     lime test neko
     lime test hl
 

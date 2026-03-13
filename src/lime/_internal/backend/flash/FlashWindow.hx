@@ -198,7 +198,7 @@ class FlashWindow
 
 	private function create():Void
 	{
-		if (#if air true #else FlashApplication.createFirstWindow #end)
+		if (FlashApplication.createFirstWindow)
 		{
 			var attributes = parent.__attributes;
 
@@ -242,10 +242,7 @@ class FlashWindow
 			stage.addEventListener(FocusEvent.FOCUS_IN, handleWindowEvent);
 			stage.addEventListener(FocusEvent.FOCUS_OUT, handleWindowEvent);
 			stage.addEventListener(Event.MOUSE_LEAVE, handleWindowEvent);
-
-			// #if !air
 			stage.addEventListener(Event.RESIZE, handleWindowEvent);
-			// #end
 
 			var context = new RenderContext();
 			context.flash = Lib.current;

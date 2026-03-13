@@ -14,9 +14,6 @@ import flash.net.URLRequest;
 import flash.system.Capabilities;
 import flash.Lib;
 #end
-#if air
-import flash.desktop.NativeApplication;
-#end
 #if ((js && html5) || electron)
 import js.html.Element;
 import js.Browser;
@@ -207,7 +204,7 @@ class System
 	public static function exit(code:Int):Void
 	{
 		var currentApp = Application.current;
-		#if ((sys || (js && html5) || air) && !macro)
+		#if ((sys || (js && html5)) && !macro)
 		if (currentApp != null)
 		{
 			currentApp.onExit.dispatch(code);
@@ -226,8 +223,6 @@ class System
 		{
 			currentApp.window.close();
 		}
-		#elseif air
-		NativeApplication.nativeApplication.exit(code);
 		#end
 	}
 	#end
@@ -823,8 +818,6 @@ class System
 			__platformName = "iOS";
 			#elseif android
 			__platformName = "Android";
-			#elseif air
-			__platformName = "AIR";
 			#elseif flash
 			__platformName = "Flash Player";
 			#elseif tvos

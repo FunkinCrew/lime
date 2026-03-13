@@ -28,8 +28,6 @@
 	<haxedef name="no-compilation" />
 
 	<templatePath name="templates" />
-	<source path="externs/air" if="air" />
-	<haxeflag name="--macro" value="allowPackage('sys')" if="air" />
 	<sample path="samples" unless="openfl" />
 
 	<target name="ps3" handler="lime-ps3" />
@@ -55,7 +53,6 @@
 
 	<section if="hxp" unless="lime-tools">
 
-		<target name="air" path="tools/platforms/AIRPlatform.hx" />
 		<target name="android" path="tools/platforms/AndroidPlatform.hx" />
 		<target name="emscripten" path="tools/platforms/EmscriptenPlatform.hx" />
 		<target name="flash" path="tools/platforms/FlashPlatform.hx" />

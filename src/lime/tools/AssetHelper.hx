@@ -211,7 +211,7 @@ class AssetHelper
 				type: Std.string(asset.type)
 			};
 
-		if (project.target == FLASH || project.target == AIR)
+		if (project.target == FLASH)
 		{
 			if (asset.embed != false || asset.type == FONT)
 			{
