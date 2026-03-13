@@ -1,7 +1,7 @@
 package lime.utils;
 
 #if (js && !doc_gen)
-typedef ArrayBufferView = #if haxe4 js.lib.ArrayBufferView #else js.html.ArrayBufferView #end;
+typedef ArrayBufferView = js.lib.ArrayBufferView;
 #else #if !lime_debug @:fileXml('tags="haxe,release"')
 @:noDebug #end
 class ArrayBufferView

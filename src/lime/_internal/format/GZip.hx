@@ -16,9 +16,9 @@ class GZip
 		return NativeCFFI.lime_gzip_compress(bytes, Bytes.alloc(0));
 		#elseif js
 		#if commonjs
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("require (\"pako\").gzip")(bytes.getData());
+		var data = untyped js.Syntax.code ("require (\"pako\").gzip")(bytes.getData());
 		#else
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("pako.gzip")(bytes.getData());
+		var data = untyped js.Syntax.code ("pako.gzip")(bytes.getData());
 		#end
 		return Bytes.ofData(data);
 		#else
@@ -32,9 +32,9 @@ class GZip
 		return NativeCFFI.lime_gzip_decompress(bytes, Bytes.alloc(0));
 		#elseif js
 		#if commonjs
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("require (\"pako\").ungzip")(bytes.getData());
+		var data = untyped js.Syntax.code ("require (\"pako\").ungzip")(bytes.getData());
 		#else
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("pako.ungzip")(bytes.getData());
+		var data = untyped js.Syntax.code ("pako.ungzip")(bytes.getData());
 		#end
 		return Bytes.ofData(data);
 		#else
