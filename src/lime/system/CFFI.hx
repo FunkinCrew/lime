@@ -112,13 +112,6 @@ class CFFI
 				#end
 			}
 
-			#if waxe
-			if (library == "lime")
-			{
-				flash.Lib.load("waxe", "wx_boot", 1);
-			}
-			#end
-
 			__moduleNames.set(library, library);
 
 			var programPath:String = ".";

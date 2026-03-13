@@ -27,7 +27,7 @@ import haxe.io.Path;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
-#if (!display && !flash && !macro)
+#if (!display && !macro)
 @:autoBuild(lime._internal.macros.AssetsMacro.embedFont())
 #end
 @:access(lime._internal.backend.native.NativeCFFI)

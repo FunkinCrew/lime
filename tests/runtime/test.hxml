@@ -7,8 +7,6 @@
 -lib lime
 -D web
 -cp test
--swf-version 11.3
--swf build/as3_test.swf
 
 # Trick munit into building our app
 
@@ -52,7 +50,6 @@
 #-D display
 
 #-cpp build/linux64/cpp/bin
-#--remap flash:flash
 #--no-output
 
 

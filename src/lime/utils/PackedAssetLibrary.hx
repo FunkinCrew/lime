@@ -11,10 +11,6 @@ import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
-#if flash
-import flash.display.BitmapData;
-import flash.media.Sound;
-#end
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')

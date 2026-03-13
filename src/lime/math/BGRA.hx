@@ -19,7 +19,7 @@ import lime.utils.UInt8Array;
 	```
 **/
 @:transitive
-abstract BGRA(#if (flash && !lime_doc_gen) Int #else UInt #end) from Int to Int from UInt to UInt
+abstract BGRA(UInt) from Int to Int from UInt to UInt
 {
 	private static var a16:Int;
 	private static var unmult:Float;

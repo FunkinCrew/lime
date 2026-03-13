@@ -37,17 +37,6 @@ import js.html.CanvasElement;
 import js.html.Image as JSImage;
 import js.html.ImageElement;
 import lime._internal.backend.html5.HTML5Thread;
-#elseif flash
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Loader;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.geom.Matrix;
-import flash.net.URLRequest;
-import flash.system.LoaderContext;
-import flash.utils.ByteArray;
 #end
 #if format
 import format.png.Data;
@@ -150,7 +139,7 @@ class Image
 
 	/**
 		A higher-level representation of the source `ImageBuffer`. This might be an
-		HTML5 Image, CanvasElement or a Flash BitmapData instance.
+		HTML5 Image or a CanvasElement instance.
 	**/
 	public var src(get, set):Dynamic;
 
@@ -238,8 +227,6 @@ class Image
 				type = DATA;
 			}
 			#end
-			#elseif flash
-			type = FLASH;
 			#else
 			type = DATA;
 			#end
@@ -269,12 +256,6 @@ class Image
 						{
 							fillRect(new Rectangle(0, 0, width, height), color);
 						}
-
-					case FLASH:
-						#if flash
-						this.buffer = new ImageBuffer(null, width, height);
-						this.buffer.src = new BitmapData(width, height, true, ((color & 0xFF) << 24) | (color >> 8));
-						#end
 
 					default:
 				}
@@ -337,10 +318,6 @@ class Image
 
 				ImageDataUtil.colorTransform(this, rect, colorMatrix);
 
-			case FLASH:
-				rect.offset(offsetX, offsetY);
-				buffer.__srcBitmapData.colorTransform(rect.__toFlashRectangle(), colorMatrix.__toFlashColorTransform());
-
 			default:
 		}
 	}
@@ -374,29 +351,6 @@ class Image
 				#end
 
 				ImageDataUtil.copyChannel(this, sourceImage, sourceRect, destPoint, sourceChannel, destChannel);
-
-			case FLASH:
-				var srcChannel = switch (sourceChannel)
-				{
-					case RED: 1;
-					case GREEN: 2;
-					case BLUE: 4;
-					case ALPHA: 8;
-				}
-
-				var dstChannel = switch (destChannel)
-				{
-					case RED: 1;
-					case GREEN: 2;
-					case BLUE: 4;
-					case ALPHA: 8;
-				}
-
-				sourceRect.offset(sourceImage.offsetX, sourceImage.offsetY);
-				destPoint.offset(offsetX, offsetY);
-
-				buffer.__srcBitmapData.copyChannel(sourceImage.buffer.src, sourceRect.__toFlashRectangle(), destPoint.__toFlashPoint(), srcChannel,
-					dstChannel);
 
 			default:
 		}
@@ -489,18 +443,6 @@ class Image
 
 				ImageDataUtil.copyPixels(this, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
 
-			case FLASH:
-				sourceRect.offset(sourceImage.offsetX, sourceImage.offsetY);
-				destPoint.offset(offsetX, offsetY);
-
-				if (alphaImage != null && alphaPoint != null)
-				{
-					alphaPoint.offset(alphaImage.offsetX, alphaImage.offsetY);
-				}
-
-				buffer.__srcBitmapData.copyPixels(sourceImage.buffer.__srcBitmapData, sourceRect.__toFlashRectangle(), destPoint.__toFlashPoint(),
-					alphaImage != null ? alphaImage.buffer.src : null, alphaPoint != null ? alphaPoint.__toFlashPoint() : null, mergeAlpha);
-
 			default:
 		}
 	}
@@ -555,18 +497,6 @@ class Image
 
 				ImageDataUtil.fillRect(this, rect, color, format);
 
-			case FLASH:
-				rect.offset(offsetX, offsetY);
-
-				var argb:ARGB = switch (format)
-				{
-					case ARGB32: color;
-					case BGRA32: (color : BGRA);
-					default: (color : RGBA);
-				}
-
-				buffer.__srcBitmapData.fillRect(rect.__toFlashRectangle(), argb);
-
 			default:
 		}
 	}
@@ -597,16 +527,6 @@ class Image
 
 				ImageDataUtil.floodFill(this, x, y, color, format);
 
-			case FLASH:
-				var argb:ARGB = switch (format)
-				{
-					case ARGB32: color;
-					case BGRA32: (color : BGRA);
-					default: (color : RGBA);
-				}
-
-				buffer.__srcBitmapData.floodFill(x + offsetX, y + offsetY, argb);
-
 			default:
 		}
 	}
@@ -625,30 +545,10 @@ class Image
 		return image;
 	}
 
-	#if (!lime_doc_gen || flash)
-	/**
-		Creates a new `Image` from a Flash `BitmapData` instance
-		@param	bitmapData	A source `bitmapData` to use
-		@return		A new `Image` instance
-	**/
-	public static function fromBitmapData(bitmapData:#if flash BitmapData #else Dynamic #end):Image
-	{
-		if (bitmapData == null) return null;
-		#if flash
-		var buffer = new ImageBuffer(null, bitmapData.width, bitmapData.height);
-		buffer.__srcBitmapData = bitmapData;
-		buffer.transparent = bitmapData.transparent;
-		return new Image(buffer);
-		#else
-		return bitmapData.image;
-		#end
-	}
-	#end
-
 	/**
 		Converts a `Bytes` object to an `Image` instance
 
-		Some platforms (such as Flash and HTML5) cannot convert `Bytes` to an
+		Some platforms (such as HTML5) cannot convert `Bytes` to an
 		`Image` synchronously, and may not work properly.
 
 		`Image.loadFromBytes` works asynchronously, and should work
@@ -691,7 +591,7 @@ class Image
 	/**
 		Loads an `Image` from a path synchronously.
 
-		Some platforms, such as Flash and HTML5, cannot load
+		Some platforms, such as HTML5, cannot load
 		images synchronously.
 
 		`Image.loadFromFile` works asynchronously, and should
@@ -756,10 +656,6 @@ class Image
 			case DATA:
 				return ImageDataUtil.getColorBoundsRect(this, mask, color, findColor, format);
 
-			case FLASH:
-				var rect = buffer.__srcBitmapData.getColorBoundsRect(mask, color, findColor);
-				return new Rectangle(rect.x, rect.y, rect.width, rect.height);
-
 			default:
 				return null;
 		}
@@ -787,20 +683,6 @@ class Image
 				#end
 
 				return ImageDataUtil.getPixel(this, x, y, format);
-
-			case FLASH:
-				var color:ARGB = buffer.__srcBitmapData.getPixel(x + offsetX, y + offsetY);
-
-				switch (format)
-				{
-					case ARGB32: return color;
-					case BGRA32:
-						var bgra:BGRA = color;
-						return bgra;
-					default:
-						var rgba:RGBA = color;
-						return rgba;
-				}
 
 			default:
 				return 0;
@@ -830,20 +712,6 @@ class Image
 
 				return ImageDataUtil.getPixel32(this, x, y, format);
 
-			case FLASH:
-				var color:ARGB = buffer.__srcBitmapData.getPixel32(x + offsetX, y + offsetY);
-
-				switch (format)
-				{
-					case ARGB32: return color;
-					case BGRA32:
-						var bgra:BGRA = color;
-						return bgra;
-					default:
-						var rgba:RGBA = color;
-						return rgba;
-				}
-
 			default:
 				return 0;
 		}
@@ -870,46 +738,6 @@ class Image
 				#end
 
 				return ImageDataUtil.getPixels(this, rect, format);
-
-			case FLASH:
-				#if flash
-				rect.offset(offsetX, offsetY);
-				var byteArray:ByteArray = buffer.__srcBitmapData.getPixels(rect.__toFlashRectangle());
-
-				switch (format)
-				{
-					case ARGB32: // do nothing
-					case BGRA32:
-						var color:BGRA;
-						var length = Std.int(byteArray.length / 4);
-
-						for (i in 0...length)
-						{
-							color = (byteArray.readUnsignedInt() : ARGB);
-							byteArray.position -= 4;
-							byteArray.writeUnsignedInt(color);
-						}
-
-						byteArray.position = 0;
-
-					default:
-						var color:RGBA;
-						var length = Std.int(byteArray.length / 4);
-
-						for (i in 0...length)
-						{
-							color = (byteArray.readUnsignedInt() : ARGB);
-							byteArray.position -= 4;
-							byteArray.writeUnsignedInt(color);
-						}
-
-						byteArray.position = 0;
-				}
-
-				return Bytes.ofData(byteArray);
-				#else
-				return null;
-				#end
 
 			default:
 				return null;
@@ -978,29 +806,6 @@ class Image
 		#else
 		return loadFromBase64(Base64.encode(bytes), type);
 		#end
-		#elseif flash
-		var promise = new Promise<Image>();
-
-		var loader = new Loader();
-
-		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(event)
-		{
-			promise.complete(Image.fromBitmapData(cast(loader.content, Bitmap).bitmapData));
-		});
-
-		loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, function(event)
-		{
-			promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
-		});
-
-		loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, function(event)
-		{
-			promise.error(event.errorID);
-		});
-
-		loader.loadBytes(bytes.getData());
-
-		return promise.future;
 		#else
 		return new Future(fromBytes.bind(bytes), true);
 		#end
@@ -1017,29 +822,6 @@ class Image
 
 		#if (js && html5 && !display)
 		return HTML5HTTPRequest.loadImage(path);
-		#elseif flash
-		var promise = new Promise<Image>();
-
-		var loader = new Loader();
-
-		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(event)
-		{
-			promise.complete(Image.fromBitmapData(cast(loader.content, Bitmap).bitmapData));
-		});
-
-		loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, function(event)
-		{
-			promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
-		});
-
-		loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, function(event)
-		{
-			promise.error(event.errorID);
-		});
-
-		loader.load(new URLRequest(path), new LoaderContext(true));
-
-		return promise.future;
 		#else
 		var request = new HTTPRequest<Image>();
 		return request.load(path).then(function(image)
@@ -1085,11 +867,6 @@ class Image
 
 				ImageDataUtil.merge(this, sourceImage, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 
-			case FLASH:
-				sourceRect.offset(offsetX, offsetY);
-				buffer.__srcBitmapData.merge(sourceImage.buffer.__srcBitmapData, sourceRect.__toFlashRectangle(), destPoint.__toFlashPoint(), redMultiplier,
-					greenMultiplier, blueMultiplier, alphaMultiplier);
-
 			default:
 				return;
 		}
@@ -1110,15 +887,6 @@ class Image
 
 			case DATA:
 				ImageDataUtil.resize(this, newWidth, newHeight);
-
-			case FLASH:
-				#if flash
-				var matrix = new Matrix();
-				matrix.scale(newWidth / buffer.__srcBitmapData.width, newHeight / buffer.__srcBitmapData.height);
-				var data = new BitmapData(newWidth, newHeight, true, 0x00FFFFFF);
-				data.draw(buffer.__srcBitmapData, matrix, null, null, null, true);
-				buffer.__srcBitmapData = data;
-				#end
 
 			default:
 		}
@@ -1153,9 +921,6 @@ class Image
 			case DATA:
 				copyPixels(this, rect, new Vector2(x, y));
 
-			case FLASH:
-				buffer.__srcBitmapData.scroll(x + offsetX, y + offsetX);
-
 			default:
 		}
 	}
@@ -1183,16 +948,6 @@ class Image
 
 				ImageDataUtil.setPixel(this, x, y, color, format);
 
-			case FLASH:
-				var argb:ARGB = switch (format)
-				{
-					case ARGB32: color;
-					case BGRA32: (color : BGRA);
-					default: (color : RGBA);
-				}
-
-				buffer.__srcBitmapData.setPixel(x + offsetX, y + offsetX, argb);
-
 			default:
 		}
 	}
@@ -1219,16 +974,6 @@ class Image
 				#end
 
 				ImageDataUtil.setPixel32(this, x, y, color, format);
-
-			case FLASH:
-				var argb:ARGB = switch (format)
-				{
-					case ARGB32: color;
-					case BGRA32: (color : BGRA);
-					default: (color : RGBA);
-				}
-
-				buffer.__srcBitmapData.setPixel32(x + offsetX, y + offsetY, argb);
 
 			default:
 		}
@@ -1258,58 +1003,6 @@ class Image
 				#end
 
 				ImageDataUtil.setPixels(this, rect, bytePointer, format, endian);
-
-			case FLASH:
-				#if flash
-				rect.offset(offsetX, offsetY);
-				var byteArray = new ByteArray();
-
-				switch (format)
-				{
-					case ARGB32: // do nothing
-					case BGRA32:
-						var srcData:ByteArray = bytePointer.bytes.getData();
-						byteArray = new ByteArray();
-						byteArray.position = bytePointer.offset;
-						#if flash
-						byteArray.length = srcData.length;
-						#end
-
-						var color:BGRA;
-						var length = Std.int(byteArray.length / 4);
-
-						for (i in 0...length)
-						{
-							color = srcData.readUnsignedInt();
-							byteArray.writeUnsignedInt(cast(color, ARGB));
-						}
-
-						srcData.position = 0;
-						byteArray.position = 0;
-
-					default:
-						var srcData = bytePointer.bytes.getData();
-						byteArray = new ByteArray();
-						byteArray.position = bytePointer.offset;
-						#if flash
-						byteArray.length = srcData.length;
-						#end
-
-						var color:RGBA;
-						var length = Std.int(byteArray.length / 4);
-
-						for (i in 0...length)
-						{
-							color = srcData.readUnsignedInt();
-							byteArray.writeUnsignedInt(cast(color, ARGB));
-						}
-
-						srcData.position = 0;
-						byteArray.position = 0;
-				}
-
-				buffer.__srcBitmapData.setPixels(rect.__toFlashRectangle(), byteArray);
-				#end
 
 			default:
 		}
@@ -1361,27 +1054,6 @@ class Image
 				#end
 
 				return ImageDataUtil.threshold(this, sourceImage, sourceRect, destPoint, operation, threshold, color, mask, copySource, format);
-
-			case FLASH:
-				var _color:ARGB = switch (format)
-				{
-					case ARGB32: color;
-					case BGRA32: (color : BGRA);
-					default: (color : RGBA);
-				}
-
-				var _mask:ARGB = switch (format)
-				{
-					case ARGB32: mask;
-					case BGRA32: (mask : BGRA);
-					default: (mask : RGBA);
-				}
-
-				sourceRect.offset(sourceImage.offsetX, sourceImage.offsetY);
-				destPoint.offset(offsetX, offsetY);
-
-				return buffer.__srcBitmapData.threshold(sourceImage.buffer.src, sourceRect.__toFlashRectangle(), destPoint.__toFlashPoint(), operation,
-					threshold, _color, _mask, copySource);
 
 			default:
 		}
@@ -1666,9 +1338,6 @@ class Image
 		{
 			#if (js && html5)
 			ImageCanvasUtil.convertToData(this);
-			#elseif flash
-			var pixels = buffer.__srcBitmapData.getPixels(buffer.__srcBitmapData.rect);
-			buffer.data = new UInt8Array(Bytes.ofData(pixels));
 			#end
 		}
 
@@ -1740,16 +1409,6 @@ class Image
 
 				case DATA:
 					ImageDataUtil.resizeBuffer(this, newWidth, newHeight);
-
-				case FLASH:
-					#if flash
-					var bitmapData = new BitmapData(newWidth, newHeight, true, 0x000000);
-					bitmapData.draw(buffer.src, null, null, null, true);
-
-					buffer.src = bitmapData;
-					buffer.width = newWidth;
-					buffer.height = newHeight;
-					#end
 
 				default:
 			}

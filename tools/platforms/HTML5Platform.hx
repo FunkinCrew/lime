@@ -395,7 +395,6 @@ class HTML5Platform extends PlatformTarget
 
 		var context = project.templateContext;
 
-		context.WIN_FLASHBACKGROUND = project.window.background != null ? StringTools.hex(project.window.background, 6) : "";
 		context.OUTPUT_DIR = npm ? Path.tryFullPath(targetDirectory) : targetDirectory;
 		context.OUTPUT_FILE = outputFile;
 

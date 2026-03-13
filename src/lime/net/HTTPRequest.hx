@@ -189,9 +189,7 @@ public function load(uri:String = null):Future<T>
 	public function cancel():Void;
 }
 
-#if flash
-private typedef HTTPRequestBackend = lime._internal.backend.flash.FlashHTTPRequest;
-#elseif (js && html5)
+#if (js && html5)
 private typedef HTTPRequestBackend = lime._internal.backend.html5.HTML5HTTPRequest;
 #else
 private typedef HTTPRequestBackend = lime._internal.backend.native.NativeHTTPRequest;
