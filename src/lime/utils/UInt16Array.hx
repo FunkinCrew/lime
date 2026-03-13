@@ -1,13 +1,8 @@
 package lime.utils;
 
 #if (js && !doc_gen)
-#if haxe4
 import js.lib.Uint8Array as JSUInt8Array;
 import js.lib.Uint16Array as JSUInt16Array;
-#else
-import js.html.Uint8Array as JSUInt8Array;
-import js.html.Uint16Array as JSUInt16Array;
-#end
 @:forward
 @:transitive
 abstract UInt16Array(JSUInt16Array) from JSUInt16Array to JSUInt16Array
@@ -61,10 +56,10 @@ abstract UInt16Array(JSUInt16Array) from JSUInt16Array to JSUInt16Array
 		}
 	}
 
-	@:arrayAccess #if (haxe_ver >= 4.0) extern #else @:extern #end inline function __set(idx:Int, val:UInt):UInt
+	@:arrayAccess extern inline function __set(idx:Int, val:UInt):UInt
 		return this[idx] = val;
 
-	@:arrayAccess #if (haxe_ver >= 4.0) extern #else @:extern #end inline function __get(idx:Int):UInt
+	@:arrayAccess extern inline function __get(idx:Int):UInt
 		return this[idx];
 
 	// non spec haxe conversions
@@ -94,9 +89,6 @@ abstract UInt16Array(ArrayBufferView) from ArrayBufferView to ArrayBufferView
 
 	public var length(get, never):Int;
 
-	#if (haxe_ver < 4.2)
-	@:generic
-	#end
 	public inline function new<T>(?elements:Int, ?buffer:ArrayBuffer, ?array:Array<T>, #if openfl ?vector:openfl.Vector<Int>, #end ?view:ArrayBufferView,
 			?byteoffset:Int = 0, ?len:Null<Int>)
 	{
@@ -148,14 +140,14 @@ abstract UInt16Array(ArrayBufferView) from ArrayBufferView to ArrayBufferView
 		return this.length;
 
 	@:noCompletion
-	@:arrayAccess #if (haxe_ver >= 4.0) extern #else @:extern #end
+	@:arrayAccess extern
 	public inline function __get(idx:Int)
 	{
 		return ArrayBufferIO.getUint16(this.buffer, this.byteOffset + (idx * BYTES_PER_ELEMENT));
 	}
 
 	@:noCompletion
-	@:arrayAccess #if (haxe_ver >= 4.0) extern #else @:extern #end
+	@:arrayAccess extern
 	public inline function __set(idx:Int, val:UInt)
 	{
 		ArrayBufferIO.setUint16(this.buffer, this.byteOffset + (idx * BYTES_PER_ELEMENT), val);

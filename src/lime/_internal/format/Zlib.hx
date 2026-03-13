@@ -19,9 +19,9 @@ class Zlib
 		return NativeCFFI.lime_zlib_compress(bytes, Bytes.alloc(0));
 		#elseif js
 		#if commonjs
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("require (\"pako\").deflate")(bytes.getData());
+		var data = untyped js.Syntax.code ("require (\"pako\").deflate")(bytes.getData());
 		#else
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("pako.deflate")(bytes.getData());
+		var data = untyped js.Syntax.code ("pako.deflate")(bytes.getData());
 		#end
 		return Bytes.ofData(data);
 		#elseif flash
@@ -43,9 +43,9 @@ class Zlib
 		return NativeCFFI.lime_zlib_decompress(bytes, Bytes.alloc(0));
 		#elseif js
 		#if commonjs
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("require (\"pako\").inflate")(bytes.getData());
+		var data = untyped js.Syntax.code ("require (\"pako\").inflate")(bytes.getData());
 		#else
-		var data = untyped #if haxe4 js.Syntax.code #else __js__ #end ("pako.inflate")(bytes.getData());
+		var data = untyped js.Syntax.code ("pako.inflate")(bytes.getData());
 		#end
 		return Bytes.ofData(data);
 		#elseif flash

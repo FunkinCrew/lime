@@ -157,8 +157,6 @@ class CFFI
 					}
 				}
 			}
-
-			__loaderTrace("Result : " + result);
 		}
 
 		#if neko
@@ -229,23 +227,6 @@ class CFFI
 		return "";
 	}
 
-	private static function __loaderTrace(message:String)
-	{
-		#if (sys && !html5)
-		// #if (haxe_ver < 3.4)
-		// var get_env = cpp.Lib.load ("std", "get_env", 1);
-		// var debug = (get_env ("OPENFL_LOAD_DEBUG") != null);
-		// #else
-		var debug = (Sys.getEnv("OPENFL_LOAD_DEBUG") != null);
-		// #end
-
-		if (debug)
-		{
-			Sys.println(message);
-		}
-		#end
-	}
-
 	#if neko
 	private static function __loadNekoAPI(lazy:Bool):Void
 	{
@@ -262,7 +243,6 @@ class CFFI
 
 			if (init != null)
 			{
-				__loaderTrace("Found nekoapi @ " + __moduleNames.get("lime"));
 				init(function(s) return new String(s), function(len:Int)
 				{
 					var r = [];
@@ -313,15 +293,11 @@ class CFFI
 
 			if (result != null)
 			{
-				__loaderTrace("Got result " + name);
 				__moduleNames.set(library, name);
 				return result;
 			}
 		}
-		catch (e:Dynamic)
-		{
-			__loaderTrace("Failed to load : " + name);
-		}
+		catch (e:Dynamic) {}
 		#end
 
 		return null;

@@ -872,7 +872,7 @@ class System
 	}
 }
 
-#if (haxe_ver >= 4.0) enum #else @:enum #end abstract DisplayOrientation(Int) from Int to Int from UInt to UInt
+enum abstract DisplayOrientation(Int) from Int to Int from UInt to UInt
 {
 	var DISPLAY_ORIENTATION_UNKNOWN = 0;
 	var DISPLAY_ORIENTATION_LANDSCAPE = 1;
@@ -881,7 +881,7 @@ class System
 	var DISPLAY_ORIENTATION_PORTRAIT_FLIPPED = 4;
 }
 
-#if (haxe_ver >= 4.0) private enum #else @:enum private #end abstract SystemDirectory(Int) from Int to Int from UInt to UInt
+private enum abstract SystemDirectory(Int) from Int to Int from UInt to UInt
 {
 	var APPLICATION = 0;
 	var APPLICATION_STORAGE = 1;

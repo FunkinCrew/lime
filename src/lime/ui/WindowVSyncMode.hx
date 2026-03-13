@@ -3,7 +3,7 @@ package lime.ui;
 /**
 	An enum containing swap intervals for the current window.
 **/
-#if (haxe_ver >= 4.0) enum #else @:enum #end abstract WindowVSyncMode(Int) from Int to Int from UInt to UInt
+enum abstract WindowVSyncMode(Int) from Int to Int from UInt to UInt
 {
 	/**
 		Disable VSync, and push immediate updates.

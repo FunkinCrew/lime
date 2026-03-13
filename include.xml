@@ -76,12 +76,6 @@
 			<haxedef name="lime-threads" if="python || hl" unless="${${haxe_ver} < 4}" />
 		</section>
 
-		<section if="cpp ${${haxe_ver} < 3.3}" unless="static_link">
-			<ndll name="std" haxelib="hxcpp" />
-			<ndll name="regexp" haxelib="hxcpp" />
-			<ndll name="zlib" haxelib="hxcpp" unless="emscripten || ios || tvos" />
-		</section>
-
 		<ndll name="lime" if="native" unless="lime-console static_link || lime-switch static_link" />
 
 		<dependency name="extension-api" path="dependencies/extension-api" if="android" />
