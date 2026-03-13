@@ -15,14 +15,10 @@ using haxe.macro.TypedExprTools;
 import js.Browser;
 import js.html.*;
 import js.Lib;
-#if haxe4
 import js.lib.Function;
 import js.lib.Object;
 import js.lib.Promise;
 import js.Syntax;
-#else
-import js.Promise;
-#end
 // Same with classes that import lots of other things.
 import lime.app.Application;
 #end
@@ -32,7 +28,7 @@ import lime.app.Application;
 **/
 class HTML5Thread {
 	private static var __current:HTML5Thread = new HTML5Thread(Lib.global.location.href);
-	private static var __isWorker:Bool #if !macro = #if !haxe4 untyped __js__ #else Syntax.code #end ('typeof window == "undefined"') #end;
+	private static var __isWorker:Bool #if !macro = Syntax.code ('typeof window == "undefined"') #end;
 	private static var __messages:List<Dynamic> = new List();
 	private static var __resolveMethods:List<Dynamic->Void> = new List();
 	private static var __workerCount:Int = 0;
@@ -50,7 +46,7 @@ class HTML5Thread {
 	private static function __init__():Void
 	{
 		#if !macro
-		if (#if !haxe4 untyped __js__ #else Syntax.code #end ('typeof window == "undefined"'))
+		if (Syntax.code ('typeof window == "undefined"'))
 		{
 			Lib.global.onmessage = function(event:MessageEvent):Void
 			{
@@ -122,7 +118,7 @@ class HTML5Thread {
 	**/
 	public static macro function readMessage(block:ExprOf<Bool>):Dynamic
 	{
-		var jsCode:Expr = macro #if haxe4 js.Syntax.code #else untyped __js__ #end;
+		var jsCode:Expr = macro js.Syntax.code;
 
 		// `onmessage` events are only received when the main function is
 		// suspended, so we must insert `await` even if `block` is false.
@@ -138,7 +134,7 @@ class HTML5Thread {
 			default:
 				return macro if ($block && @:privateAccess lime._internal.backend.html5.HTML5Thread.__messages.isEmpty())
 				{
-					$jsCode("await {0}", new #if haxe4 js.lib.Promise #else js.Promise #end
+					$jsCode("await {0}", new js.lib.Promise
 						(function(resolve, _):Void
 						{
 							@:privateAccess lime._internal.backend.html5.HTML5Thread.__resolveMethods.add(resolve);
@@ -359,7 +355,7 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 		return macro $self.toFunction()($a{args});
 	}
 
-	#if haxe4 @:to #end
+	@:to
 	public function toFunction():T
 	{
 		if (this.func != null)
@@ -369,7 +365,7 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 		else if (this.classPath != null && this.functionName != null)
 		{
 			#if !macro
-			this.func = #if !haxe4 untyped __js__ #else Syntax.code #end
+			this.func = Syntax.code
 				("$hxClasses[{0}][{1}]", this.classPath, this.functionName);
 			#end
 			return this.func;
@@ -377,7 +373,7 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 		else if (this.sourceCode != null)
 		{
 			#if !macro
-			this.func = #if !haxe4 untyped __js__ #else Syntax.code #end
+			this.func = Syntax.code
 				('new Function("return " + {0})()', this.sourceCode);
 			#end
 			return this.func;
@@ -399,7 +395,7 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 			if (this.classPath != null || this.functionName != null)
 			{
 				#if !macro
-				var func = #if !haxe4 untyped __js__ #else Syntax.code #end
+				var func = Syntax.code
 					("$hxClasses[{0}] && $hxClasses[{0}][{1}]", this.classPath, this.functionName);
 				if (func != this.func)
 				{
@@ -485,7 +481,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 			// enumerate. This also applies to `Int8Array`, `Float64Array`, etc.
 			|| object.byteLength != null && object.byteOffset != null
 				&& object.buffer != null
-				&& #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (object.buffer, #if haxe4 js.lib.ArrayBuffer #else js.html.ArrayBuffer #end);
+				&& #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (object.buffer, js.lib.ArrayBuffer);
 	}
 	#end
 
@@ -527,11 +523,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 			{
 				if (this.__class__ != null)
 				{
-					#if haxe4
 					Reflect.setField(this, PROTOTYPE_FIELD, this.__class__.__name__);
-					#else
-					Reflect.setField(this, PROTOTYPE_FIELD, this.__class__.__name__.join("."));
-					#end
 				}
 				else
 				{
@@ -547,7 +539,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 			// While usually it's the user's job not to include any functions,
 			// enums come with a built-in `toString` function that needs to be
 			// removed, and it isn't fair to ask the user to know that.
-			if (#if haxe4 Syntax.code #else untyped __js__ #end ('typeof {0}.toString == "function"', this))
+			if (Syntax.code ('typeof {0}.toString == "function"', this))
 			{
 				Reflect.deleteField(this, "toString");
 			}
@@ -601,7 +593,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 			try
 			{
 				Object.setPrototypeOf(this,
-					#if haxe4 Syntax.code #else untyped __js__ #end
+					Syntax.code
 						("$hxClasses[{0}].prototype", Reflect.field(this, PROTOTYPE_FIELD)));
 			}
 			catch (e:Dynamic) {}
@@ -646,12 +638,3 @@ abstract Transferable(Dynamic) #if macro from Dynamic
 	#else from lime.utils.ArrayBuffer from js.html.MessagePort from js.html.ImageBitmap #end
 {
 }
-
-#if (!haxe4 && !macro)
-@:native("Object")
-extern class Object {
-	static function setPrototypeOf<T:{}>(obj:T, prototype:Null<{}>):T;
-	@:pure static function values(obj:{}):Array<Dynamic>;
-	static var prototype(default, never):Dynamic;
-}
-#end

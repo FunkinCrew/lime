@@ -1,13 +1,8 @@
 package lime.utils;
 
 #if (js && !doc_gen)
-#if haxe4
 import js.lib.Int16Array as JSInt16Array;
 import js.lib.Uint8Array as JSUInt8Array;
-#else
-import js.html.Int16Array as JSInt16Array;
-import js.html.Uint8Array as JSUInt8Array;
-#end
 @:forward
 @:transitive
 abstract Int16Array(JSInt16Array) from JSInt16Array to JSInt16Array
