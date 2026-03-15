@@ -227,6 +227,8 @@
 
 	<include haxelib="lime-samples" if="create" />
 
+	<haxeflag name="--macro" value="haxe.macro.Compiler.addMetadata('@:build(lime._internal.macros.BytesMacro.build())', 'haxe.io.Bytes')"/>
+
 	<section if="rebuild">
 
 		<config:project>
