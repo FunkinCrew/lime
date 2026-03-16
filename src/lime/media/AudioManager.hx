@@ -1,5 +1,7 @@
 package lime.media;
 
+import haxe.Timer;
+import lime._internal.backend.native.NativeCFFI;
 import lime.media.openal.AL;
 import lime.media.openal.ALC;
 import lime.media.openal.ALDevice;
@@ -19,6 +21,7 @@ import js.Browser;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
+@:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.media.openal.ALDevice)
 class AudioManager
 {
