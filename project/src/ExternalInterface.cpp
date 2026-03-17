@@ -782,14 +782,14 @@ namespace lime {
 	}
 
 
-	void lime_file_dialog_open_directory (value window, value callback, HxString defaultPath, bool allowMultiple) {
+	void lime_file_dialog_open_directory (value window, HxString title, value callback, HxString defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 
 		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		FileDialog::OpenDirectory (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::OpenDirectory (targetWindow, hxs_utf8 (title, nullptr), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -811,14 +811,14 @@ namespace lime {
 	}
 
 
-	HL_PRIM void HL_NAME(hl_file_dialog_open_directory) (HL_CFFIPointer* window, vclosure* callback, hl_vstring* defaultPath, bool allowMultiple) {
+	HL_PRIM void HL_NAME(hl_file_dialog_open_directory) (HL_CFFIPointer* window, hl_vstring* title, vclosure* callback, hl_vstring* defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
 
 		ValuePointer* targetCallback = new ValuePointer (callback);
 
-		FileDialog::OpenDirectory (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::OpenDirectory (targetWindow, (char*)hl_to_utf8 ((const uchar*)title->bytes), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -842,7 +842,7 @@ namespace lime {
 	}
 
 
-	void lime_file_dialog_open_file (value window, value callback, value names, value patterns, int filterCount, HxString defaultPath, bool allowMultiple) {
+	void lime_file_dialog_open_file (value window, HxString title, value callback, value names, value patterns, int filterCount, HxString defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
@@ -870,7 +870,7 @@ namespace lime {
 
 		}
 
-		FileDialog::OpenFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::OpenFile (targetWindow, hxs_utf8 (title, nullptr), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -893,7 +893,7 @@ namespace lime {
 	}
 
 
-	HL_PRIM void HL_NAME(hl_file_dialog_open_file) (HL_CFFIPointer* window, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath, bool allowMultiple) {
+	HL_PRIM void HL_NAME(hl_file_dialog_open_file) (HL_CFFIPointer* window, hl_vstring* title, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
@@ -924,7 +924,7 @@ namespace lime {
 
 		}
 
-		FileDialog::OpenFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::OpenFile (targetWindow, (char*)hl_to_utf8 ((const uchar*)title->bytes), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -951,7 +951,7 @@ namespace lime {
 	}
 
 
-	void lime_file_dialog_save_file (value window, value callback, value names, value patterns, int filterCount, HxString defaultPath) {
+	void lime_file_dialog_save_file (value window, HxString title, value callback, value names, value patterns, int filterCount, HxString defaultPath) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
@@ -979,7 +979,7 @@ namespace lime {
 
 		}
 
-		FileDialog::SaveFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::SaveFile (targetWindow, hxs_utf8 (title, nullptr), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -994,7 +994,7 @@ namespace lime {
 	}
 
 
-	HL_PRIM void HL_NAME(hl_file_dialog_save_file) (HL_CFFIPointer* window, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath) {
+	HL_PRIM void HL_NAME(hl_file_dialog_save_file) (HL_CFFIPointer* window, hl_vstring* title, vclosure* callback, hl_varray* names, hl_varray* patterns, int filterCount, hl_vstring* defaultPath) {
 
 		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)window->ptr : nullptr;
@@ -1025,7 +1025,7 @@ namespace lime {
 
 		}
 
-		FileDialog::SaveFile (targetWindow, [targetCallback](const char* const* filelist, int filecount, int filter)
+		FileDialog::SaveFile (targetWindow, (char*)hl_to_utf8 ((const uchar*)title->bytes), [targetCallback](const char* const* filelist, int filecount, int filter)
 		{
 			if (targetCallback) {
 
@@ -4091,9 +4091,9 @@ namespace lime {
 	DEFINE_PRIME2 (lime_deflate_compress);
 	DEFINE_PRIME2 (lime_deflate_decompress);
 	DEFINE_PRIME2v (lime_drop_event_manager_register);
-	DEFINE_PRIME4v (lime_file_dialog_open_directory);
-	DEFINE_PRIME7v (lime_file_dialog_open_file);
-	DEFINE_PRIME6v (lime_file_dialog_save_file);
+	DEFINE_PRIME5v (lime_file_dialog_open_directory);
+	DEFINE_PRIME8v (lime_file_dialog_open_file);
+	DEFINE_PRIME7v (lime_file_dialog_save_file);
 	DEFINE_PRIME1 (lime_file_watcher_create);
 	DEFINE_PRIME3 (lime_file_watcher_add_directory);
 	DEFINE_PRIME2v (lime_file_watcher_remove_directory);
@@ -4285,9 +4285,9 @@ namespace lime {
 	DEFINE_HL_PRIM (_TBYTES, hl_deflate_compress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_deflate_decompress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_drop_event_manager_register, _FUN(_VOID, _NO_ARG) _TDROP_EVENT);
-	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_directory, _TCFFIPOINTER _FUN(_VOID, _ARR) _STRING _BOOL);
-	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_file, _TCFFIPOINTER _FUN(_VOID, _ARR _I32) _ARR _ARR _I32 _STRING _BOOL);
-	DEFINE_HL_PRIM (_VOID, hl_file_dialog_save_file, _TCFFIPOINTER _FUN(_VOID, _BYTES  _I32) _ARR _ARR _I32 _STRING);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_directory, _TCFFIPOINTER _STRING _FUN(_VOID, _ARR) _STRING _BOOL);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_open_file, _TCFFIPOINTER _STRING _FUN(_VOID, _ARR _I32) _ARR _ARR _I32 _STRING _BOOL);
+	DEFINE_HL_PRIM (_VOID, hl_file_dialog_save_file, _TCFFIPOINTER _STRING _FUN(_VOID, _BYTES  _I32) _ARR _ARR _I32 _STRING);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_file_watcher_create, _DYN);
 	DEFINE_HL_PRIM (_I32, hl_file_watcher_add_directory, _TCFFIPOINTER _STRING _BOOL);
 	DEFINE_HL_PRIM (_VOID, hl_file_watcher_remove_directory, _TCFFIPOINTER _I32);

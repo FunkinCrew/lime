@@ -35,8 +35,10 @@ class FileDialog
 		@param callback      Called with the list of selected directories when the dialog is confirmed, or an empty array if the user cancelled.
 		@param defaultPath   The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
 		@param allowMultiple Whether the user can select multiple directories.
+		@param title         The title of the dialog window.
 	**/
-	public static function openDirectory(window:Window = null, callback:Array<String>->Void = null, defaultPath:String = null, allowMultiple:Bool = false):Void
+	public static function openDirectory(window:Window = null, callback:Array<String>->Void = null,
+	    defaultPath:String = null, allowMultiple:Bool = false, ?title:String):Void
 	{
 		#if (lime_cffi && !macro)
 		if (defaultPath == null)
@@ -62,7 +64,7 @@ class FileDialog
 		}
 		#end
 
-		NativeCFFI.lime_file_dialog_open_directory(window.__backend.handle, dialogCallback, defaultPath, allowMultiple);
+		NativeCFFI.lime_file_dialog_open_directory(window.__backend.handle, title ?? "Open Directory", dialogCallback, defaultPath, allowMultiple);
 		#end
 	}
 
@@ -73,9 +75,10 @@ class FileDialog
 		@param filters       A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
 		@param defaultPath   The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
 		@param allowMultiple Whether the user can select multiple files.
+		@param title         The title of the dialog window.
 	**/
 	public static function openFile(window:Window, callback:Array<String>->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			defaultPath:String = null, ?allowMultiple:Bool = false):Void
+			defaultPath:String = null, ?allowMultiple:Bool = false, ?title:String):Void
 	{
 		#if (lime_cffi && !macro)
 		if (defaultPath == null)
@@ -115,19 +118,20 @@ class FileDialog
 		}
 		#end
 
-		NativeCFFI.lime_file_dialog_open_file(window.__backend.handle, dialogCallback, names, patterns, count, defaultPath, allowMultiple);
+		NativeCFFI.lime_file_dialog_open_file(window.__backend.handle, title ?? "Open File", dialogCallback, names, patterns, count, defaultPath, allowMultiple);
 		#end
 	}
 
 	/**
 		Opens a save file dialog. If successful, `callback` will be called with the selected path and the filter that was active when the user confirmed.
-		@param window          The parent window for the dialog.
-		@param callback        Called with the selected save path and the active `FileDialogFilter` when the dialog is confirmed, or `null` if the user cancelled.
-		@param filters         A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
+		@param window      The parent window for the dialog.
+		@param callback    Called with the selected save path and the active `FileDialogFilter` when the dialog is confirmed, or `null` if the user cancelled.
+		@param filters     A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
 		@param defaultPath The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
+		@param title       The title of the dialog window.
 	**/
 	public static function saveFile(window:Window = null, callback:String->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			defaultPath:String = null):Void
+			defaultPath:String = null, ?title:String):Void
 	{
 		#if (lime_cffi && !macro)
 		if (defaultPath == null)
@@ -171,7 +175,7 @@ class FileDialog
 		}
 		#end
 
-		NativeCFFI.lime_file_dialog_save_file(window.__backend.handle, dialogCallback, names, patterns, count, defaultPath);
+		NativeCFFI.lime_file_dialog_save_file(window.__backend.handle, title ?? "Save File", dialogCallback, names, patterns, count, defaultPath);
 		#end
 	}
 

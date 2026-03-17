@@ -1,6 +1,8 @@
 #include <ui/FileDialog.h>
 #ifdef LIME_SDL
 #include "../backend/sdl/SDLWindow.h"
+#include <SDL3/SDL_properties.h>
+#include <SDL3/SDL_dialog.h>
 #endif
 #include <stdio.h>
 #include <vector>
@@ -13,6 +15,7 @@ namespace lime {
 	struct FileDialogData {
 		std::function<void(const char* const*, int, int)> callback;
 		std::vector<SDL_DialogFileFilter> filters;
+		SDL_PropertiesID props;
 	};
 
 
@@ -113,6 +116,7 @@ namespace lime {
 			}
 
 			SDL_RunOnMainThread (mainThreadCallback, mainData, false);
+			SDL_DestroyProperties (data->props);
 
 		}
 
@@ -140,36 +144,66 @@ namespace lime {
 	#endif
 
 
-    void FileDialog::OpenDirectory (Window* window, std::function<void(const char* const*, int, int)> callback, const char* defaultPath, bool allowMultiple) {
+    void FileDialog::OpenDirectory (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char* defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		auto* dialogData = new FileDialogData;
 		dialogData->callback = std::move(callback);
-        SDL_ShowOpenFolderDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, defaultPath, allowMultiple);
+		dialogData->props = SDL_CreateProperties();
+
+		SDL_FileDialogType dialogType = SDL_FILEDIALOG_OPENFOLDER;
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.title", title);
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.location", defaultPath);
+		SDL_SetBooleanProperty(dialogData->props, "SDL.filedialog.many", allowMultiple);
+		SDL_SetPointerProperty(dialogData->props, "SDL.filedialog.window", window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr);
+
+		SDL_ShowFileDialogWithProperties(dialogType, dialogFileCallbackThunk, dialogData, dialogData->props);
+		// SDL_ShowOpenFolderDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, defaultPath, allowMultiple);
 		#endif
 
     }
 
 
-	void FileDialog::OpenFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath, bool allowMultiple) {
+	void FileDialog::OpenFile (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath, bool allowMultiple) {
 
 		#ifdef LIME_SDL
 		auto* dialogData = new FileDialogData;
 		dialogData->callback = std::move(callback);
 		dialogData->filters = buildFilters(names, patterns, filterCount);
-		SDL_ShowOpenFileDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, dialogData->filters.data(), static_cast<int>(dialogData->filters.size()), defaultPath, allowMultiple);
+		dialogData->props = SDL_CreateProperties();
+
+		SDL_FileDialogType dialogType = SDL_FILEDIALOG_OPENFILE;
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.title", title);
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.location", defaultPath);
+		SDL_SetBooleanProperty(dialogData->props, "SDL.filedialog.many", allowMultiple);
+		SDL_SetPointerProperty(dialogData->props, "SDL.filedialog.filters", dialogData->filters.data());
+		SDL_SetNumberProperty(dialogData->props, "SDL.filedialog.nfilters", static_cast<int>(dialogData->filters.size()));
+		SDL_SetPointerProperty(dialogData->props, "SDL.filedialog.window", window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr);
+
+		SDL_ShowFileDialogWithProperties(dialogType, dialogFileCallbackThunk, dialogData, dialogData->props);
+		// SDL_ShowOpenFileDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, dialogData->filters.data(), static_cast<int>(dialogData->filters.size()), defaultPath, allowMultiple);
 		#endif
 
 	}
 
 
-	void FileDialog::SaveFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath) {
+	void FileDialog::SaveFile (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath) {
 
 		#ifdef LIME_SDL
 		auto* dialogData = new FileDialogData;
 		dialogData->callback = std::move(callback);
 		dialogData->filters = buildFilters(names, patterns, filterCount);
-		SDL_ShowSaveFileDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, dialogData->filters.data(), static_cast<int>(dialogData->filters.size()), defaultPath);
+		dialogData->props = SDL_CreateProperties();
+
+		SDL_FileDialogType dialogType = SDL_FILEDIALOG_SAVEFILE;
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.title", title);
+		SDL_SetStringProperty(dialogData->props, "SDL.filedialog.location", defaultPath);
+		SDL_SetPointerProperty(dialogData->props, "SDL.filedialog.filters", dialogData->filters.data());
+		SDL_SetNumberProperty(dialogData->props, "SDL.filedialog.nfilters", static_cast<int>(dialogData->filters.size()));
+		SDL_SetPointerProperty(dialogData->props, "SDL.filedialog.window", window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr);
+
+		SDL_ShowFileDialogWithProperties(dialogType, dialogFileCallbackThunk, dialogData, dialogData->props);
+		// SDL_ShowSaveFileDialog(dialogFileCallbackThunk, dialogData, window ? static_cast<SDLWindow*>(window)->sdlWindow : nullptr, dialogData->filters.data(), static_cast<int>(dialogData->filters.size()), defaultPath);
 		#endif
 
 	}
