@@ -185,7 +185,7 @@ class NativeApplication
 
 	private function handleDropEvent():Void
 	{
-		var window = parent.__windowByID.get(dropEventInfo.windowID);
+		var window = #if mobile parent.window #else parent.__windowByID.get(dropEventInfo.windowID) #end;
 
 		if (window != null)
 		{
