@@ -707,8 +707,6 @@ namespace lime {
 
 		}
 
-		SDL_GetHint (hintKey.c_str ());
-
 		const char* raw = SDL_GetHint (hintKey.c_str ());
 
 		if (!raw) {
