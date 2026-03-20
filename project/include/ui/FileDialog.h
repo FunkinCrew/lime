@@ -12,9 +12,9 @@ namespace lime {
 
 	public:
 
-		static void OpenDirectory (Window* window, std::function<void(const char* const*, int, int)> callback, const char* defaultPath = nullptr, bool allowMultiple = false);
-		static void OpenFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr, bool allowMultiple = false);
-		static void SaveFile (Window* window, std::function<void(const char* const*, int, int)> callback, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr);
+		static void OpenDirectory (Window* window = nullptr, const char* title = nullptr, std::function<void(const char* const*, int, int)> callback = nullptr, const char* defaultPath = nullptr, bool allowMultiple = false);
+		static void OpenFile (Window* window = nullptr, const char* title = nullptr, std::function<void(const char* const*, int, int)> callback = nullptr, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr, bool allowMultiple = false);
+		static void SaveFile (Window* window = nullptr, const char* title = nullptr, std::function<void(const char* const*, int, int)> callback = nullptr, const char** names = nullptr, const char** patterns = nullptr, int filterCount = 0, const char* defaultPath = nullptr);
 
 	};
 

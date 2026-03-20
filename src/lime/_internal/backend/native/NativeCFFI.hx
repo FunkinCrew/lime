@@ -101,11 +101,11 @@ class NativeCFFI
 
 	@:cffi private static function lime_drop_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
-	@:cffi private static function lime_file_dialog_open_directory(handle:CFFIPointer, callback:Dynamic, defaultPath:String, allowMultiple:Bool):Void;
+	@:cffi private static function lime_file_dialog_open_directory(handle:CFFIPointer, title:String, callback:Dynamic, defaultPath:String, allowMultiple:Bool):Void;
 
-	@:cffi private static function lime_file_dialog_open_file(handle:CFFIPointer, callback:Dynamic, names:Dynamic, patterns:Dynamic, filterCount:Int, defaultPath:String, allowMultiple:Bool):Void;
+	@:cffi private static function lime_file_dialog_open_file(handle:CFFIPointer, title:String, callback:Dynamic, names:Dynamic, patterns:Dynamic, filterCount:Int, defaultPath:String, allowMultiple:Bool):Void;
 
-	@:cffi private static function lime_file_dialog_save_file(handle:CFFIPointer, callback:Dynamic, names:Dynamic, patterns:Dynamic, filterCount:Int, defaultPath:String):Void;
+	@:cffi private static function lime_file_dialog_save_file(handle:CFFIPointer, title:String, callback:Dynamic, names:Dynamic, patterns:Dynamic, filterCount:Int, defaultPath:String):Void;
 
 	@:cffi private static function lime_file_watcher_create(callback:Dynamic):CFFIPointer;
 
@@ -411,12 +411,12 @@ class NativeCFFI
 		"ooo", false));
 	private static var lime_drop_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_drop_event_manager_register", "oov", false));
-	private static var lime_file_dialog_open_directory = new cpp.Callable<cpp.Object->cpp.Object->String->Bool->cpp.Void>(cpp.Prime._loadPrime("lime",
-		"lime_file_dialog_open_directory", "oosbv", false));
-	private static var lime_file_dialog_open_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->cpp.Object->Int->String->Bool->cpp.Void>(cpp.Prime._loadPrime("lime",
-		"lime_file_dialog_open_file", "ooooisbv", false));
-	private static var lime_file_dialog_save_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->cpp.Object->Int->String->cpp.Void>(cpp.Prime._loadPrime("lime",
-		"lime_file_dialog_save_file", "ooooisv", false));
+	private static var lime_file_dialog_open_directory = new cpp.Callable<cpp.Object->String->cpp.Object->String->Bool->cpp.Void>(cpp.Prime._loadPrime("lime",
+		"lime_file_dialog_open_directory", "ososbv", false));
+	private static var lime_file_dialog_open_file = new cpp.Callable<cpp.Object->String->cpp.Object->cpp.Object->cpp.Object->Int->String->Bool->cpp.Void>(cpp.Prime._loadPrime("lime",
+		"lime_file_dialog_open_file", "osoooisbv", false));
+	private static var lime_file_dialog_save_file = new cpp.Callable<cpp.Object->String->cpp.Object->cpp.Object->cpp.Object->Int->String->cpp.Void>(cpp.Prime._loadPrime("lime",
+		"lime_file_dialog_save_file", "osoooisv", false));
 	private static var lime_file_watcher_create = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_file_watcher_create", "oo",
 		false));
 	private static var lime_file_watcher_add_directory = new cpp.Callable<cpp.Object->cpp.Object->Bool->cpp.Object>(cpp.Prime._loadPrime("lime",
@@ -670,7 +670,7 @@ class NativeCFFI
 	private static var lime_deflate_compress = CFFI.load("lime", "lime_deflate_compress", 2);
 	private static var lime_deflate_decompress = CFFI.load("lime", "lime_deflate_decompress", 2);
 	private static var lime_drop_event_manager_register = CFFI.load("lime", "lime_drop_event_manager_register", 2);
-	private static var lime_file_dialog_open_directory = CFFI.load("lime", "lime_file_dialog_open_directory", 4);
+	private static var lime_file_dialog_open_directory = CFFI.load("lime", "lime_file_dialog_open_directory", 5);
 	private static var lime_file_dialog_open_file = CFFI.load("lime", "lime_file_dialog_open_file", -1);
 	private static var lime_file_dialog_save_file = CFFI.load("lime", "lime_file_dialog_save_file", -1);
 	private static var lime_file_watcher_create = CFFI.load("lime", "lime_file_watcher_create", 1);
@@ -900,11 +900,11 @@ class NativeCFFI
 	@:hlNative("lime", "hl_drop_event_manager_register") private static function lime_drop_event_manager_register(callback:Void->Void,
 		eventObject:DropEventInfo):Void {}
 
-	@:hlNative("lime", "hl_file_dialog_open_directory") private static function lime_file_dialog_open_directory(handle:CFFIPointer, callback:hl.NativeArray<hl.Bytes>->Void, defaultPath:String, allowMultiple:Bool):Void {}
+	@:hlNative("lime", "hl_file_dialog_open_directory") private static function lime_file_dialog_open_directory(handle:CFFIPointer, title:String, callback:hl.NativeArray<hl.Bytes>->Void, defaultPath:String, allowMultiple:Bool):Void {}
 
-	@:hlNative("lime", "hl_file_dialog_open_file") private static function lime_file_dialog_open_file(handle:CFFIPointer, callback:hl.NativeArray<hl.Bytes>->Int->Void, names:hl.NativeArray<String>, patterns:hl.NativeArray<String>, filterCount:Int, defaultPath:String, allowMultiple:Bool):Void {}
+	@:hlNative("lime", "hl_file_dialog_open_file") private static function lime_file_dialog_open_file(handle:CFFIPointer, title:String, callback:hl.NativeArray<hl.Bytes>->Int->Void, names:hl.NativeArray<String>, patterns:hl.NativeArray<String>, filterCount:Int, defaultPath:String, allowMultiple:Bool):Void {}
 
-	@:hlNative("lime", "hl_file_dialog_save_file") private static function lime_file_dialog_save_file(handle:CFFIPointer, callback:hl.Bytes->Int->Void, names:hl.NativeArray<String>, patterns:hl.NativeArray<String>, filterCount:Int, defaultPath:String):Void {}
+	@:hlNative("lime", "hl_file_dialog_save_file") private static function lime_file_dialog_save_file(handle:CFFIPointer, title:String, callback:hl.Bytes->Int->Void, names:hl.NativeArray<String>, patterns:hl.NativeArray<String>, filterCount:Int, defaultPath:String):Void {}
 
 	@:hlNative("lime", "hl_file_watcher_create") private static function lime_file_watcher_create(callback:Dynamic):CFFIPointer
 	{
