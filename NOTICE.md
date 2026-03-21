@@ -81,9 +81,6 @@ The typed array implementation was developed in collaboration with Sven Bergstr√
 and the hxtypedarray project, which is available under an "MIT" license.
 For details, see https://github.com/underscorediscovery/hxtypedarray
 
-The unifill project is included in the [lime/text/unifill/](lime/text/unifill/) directory,
-which is available under an "MIT" license. For details, see https://github.com/mandel59/unifill
-
 lime/_internal/graphics/StackBlur.hx is adapted from original code by Mario Klingemann
 and the EaselJS project, and is available under an "MIT" license. For details, see
 http://www.quasimondo.com/StackBlurForCanvas/StackBlur.js and
