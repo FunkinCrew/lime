@@ -13,7 +13,6 @@ import lime.tools.AssetType;
 import lime.tools.CPPHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
-import lime.tools.NodeJSHelper;
 import lime.tools.Orientation;
 import lime.tools.Platform;
 import lime.tools.PlatformTarget;
