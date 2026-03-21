@@ -157,6 +157,10 @@ class NativeCFFI
 
 	@:cffi private static function lime_gamepad_get_device_name(id:Int):Dynamic;
 
+	@:cffi private static function lime_gamepad_rumble(id:Int, lowFrequencyRumble:Float, highFrequencyRumble:Float, duration:Int):Void;
+
+	@:cffi private static function lime_gamepad_set_led(id:Int, red:Int, green:Int, blue:Int):Void;
+
 	@:cffi private static function lime_gamepad_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
 	@:cffi private static function lime_gzip_compress(data:Dynamic, bytes:Dynamic):Dynamic;
@@ -212,6 +216,10 @@ class NativeCFFI
 	@:cffi private static function lime_joystick_get_num_buttons(id:Int):Int;
 
 	@:cffi private static function lime_joystick_get_num_hats(id:Int):Int;
+
+	@:cffi private static function lime_joystick_rumble(id:Int, lowFrequencyRumble:Float, highFrequencyRumble:Float, duration:Int):Void;
+
+	@:cffi private static function lime_joystick_set_led(id:Int, red:Int, green:Int, blue:Int):Void;
 
 	@:cffi private static function lime_joystick_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
@@ -458,6 +466,10 @@ class NativeCFFI
 		false));
 	private static var lime_gamepad_get_device_name = new cpp.Callable<Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_gamepad_get_device_name", "io",
 		false));
+	private static var lime_gamepad_rumble = new cpp.Callable<Int->Float->Float->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gamepad_rumble", "iddiv",
+		false));
+	private static var lime_gamepad_set_led = new cpp.Callable<Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gamepad_set_led", "iiiiv",
+		false));
 	private static var lime_gamepad_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_gamepad_event_manager_register", "oov", false));
 	private static var lime_gzip_compress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_gzip_compress", "ooo",
@@ -505,6 +517,10 @@ class NativeCFFI
 	private static var lime_joystick_get_num_axes = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_joystick_get_num_axes", "ii", false));
 	private static var lime_joystick_get_num_buttons = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_joystick_get_num_buttons", "ii", false));
 	private static var lime_joystick_get_num_hats = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_joystick_get_num_hats", "ii", false));
+	private static var lime_joystick_rumble = new cpp.Callable<Int->Float->Float->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_joystick_rumble", "iddiv",
+		false));
+	private static var lime_joystick_set_led = new cpp.Callable<Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_joystick_set_led", "iiiiv",
+		false));
 	private static var lime_joystick_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_joystick_event_manager_register", "oov", false));
 	private static var lime_jpeg_decode_bytes = new cpp.Callable<cpp.Object->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
@@ -698,6 +714,8 @@ class NativeCFFI
 	private static var lime_gamepad_add_mappings = CFFI.load("lime", "lime_gamepad_add_mappings", 1);
 	private static var lime_gamepad_get_device_guid = CFFI.load("lime", "lime_gamepad_get_device_guid", 1);
 	private static var lime_gamepad_get_device_name = CFFI.load("lime", "lime_gamepad_get_device_name", 1);
+	private static var lime_gamepad_rumble = CFFI.load("lime", "lime_gamepad_rumble", 4);
+	private static var lime_gamepad_set_led = CFFI.load("lime", "lime_gamepad_set_led", 4);
 	private static var lime_gamepad_event_manager_register = CFFI.load("lime", "lime_gamepad_event_manager_register", 2);
 	private static var lime_gzip_compress = CFFI.load("lime", "lime_gzip_compress", 2);
 	private static var lime_gzip_decompress = CFFI.load("lime", "lime_gzip_decompress", 2);
@@ -724,6 +742,8 @@ class NativeCFFI
 	private static var lime_joystick_get_num_axes = CFFI.load("lime", "lime_joystick_get_num_axes", 1);
 	private static var lime_joystick_get_num_buttons = CFFI.load("lime", "lime_joystick_get_num_buttons", 1);
 	private static var lime_joystick_get_num_hats = CFFI.load("lime", "lime_joystick_get_num_hats", 1);
+	private static var lime_joystick_rumble = CFFI.load("lime", "lime_joystick_rumble", 4);
+	private static var lime_joystick_set_led = CFFI.load("lime", "lime_joystick_set_led", 4);
 	private static var lime_joystick_event_manager_register = CFFI.load("lime", "lime_joystick_event_manager_register", 2);
 	private static var lime_jpeg_decode_bytes = CFFI.load("lime", "lime_jpeg_decode_bytes", 3);
 	private static var lime_jpeg_decode_file = CFFI.load("lime", "lime_jpeg_decode_file", 3);
@@ -1019,6 +1039,10 @@ class NativeCFFI
 		return null;
 	}
 
+	@:hlNative("lime", "hl_gamepad_rumble") private static function lime_gamepad_rumble(id:Int, lowFrequencyRumble:Float, highFrequencyRumble:Float, duration:Int):Void {}
+
+	@:hlNative("lime", "hl_gamepad_set_led") private static function lime_gamepad_set_led(id:Int, red:Int, green:Int, blue:Int):Void {}
+
 	@:hlNative("lime", "hl_gamepad_event_manager_register") private static function lime_gamepad_event_manager_register(callback:Void->Void,
 		eventObject:GamepadEventInfo):Void {}
 
@@ -1119,6 +1143,10 @@ class NativeCFFI
 	{
 		return 0;
 	}
+
+	@:hlNative("lime", "hl_joystick_rumble") private static function lime_joystick_rumble(id:Int, lowFrequencyRumble:Float, highFrequencyRumble:Float, duration:Int):Void {}
+
+	@:hlNative("lime", "hl_joystick_set_led") private static function lime_joystick_set_led(id:Int, red:Int, green:Int, blue:Int):Void {}
 
 	@:hlNative("lime", "hl_joystick_event_manager_register") private static function lime_joystick_event_manager_register(callback:Void->Void,
 		eventObject:JoystickEventInfo):Void {}
