@@ -1,29 +1,21 @@
-#if defined(HX_MACOS) && defined(HXCPP_ARM64)
+/* Define to 1 if the given backend is enabled, else 0 */
 
-#include "config/backends/config_backends-macos-arm64.h"
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+    #include "platforms/windows/config_backends.h"
+#elif defined(__APPLE__) || defined(__MACH__)
+    #include "platforms/apple/config_backends.h"
+#elif defined(__ANDROID__)
+    #include "platforms/android/config_backends.h"
+#elif defined(__linux__)
+    #include "platforms/linux/config_backends.h"
+#endif
 
-#elif defined(HX_MACOS)
+#define HAVE_WAVE 0
 
-#include "config/backends/config_backends-macos-x86_64.h"
-
-#elif defined(HX_WINDOWS)
-
-#ifdef HXCPP_M64
-#include "config/backends/config_backends-windows-x86_64.h"
+#ifdef NATIVE_TOOLKIT_HAVE_SDL
+#define HAVE_SDL3 1
 #else
-#include "config/backends/config_backends-windows-x86.h"
+#define HAVE_SDL3 0
 #endif
 
-#elif defined(HX_LINUX)
-
-#include "config/backends/config_backends-linux-x86_64.h"
-
-#elif defined (HX_ANDROID)
-
-#include "config/backends/config_backends-android.h"
-
-#elif defined(IPHONE)
-
-#include "config/backends/config_backends-iphoneos.h"
-
-#endif
+#define HAVE_SDL2 0
