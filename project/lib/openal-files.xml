@@ -2,203 +2,279 @@
 
     <files id="native-toolkit-openal">
 
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/alc/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/common/" />
+        <section>
+
+            <section if="linux">
+
+                <compilerflag value="-I/usr/include/dbus-1.0" />
+
+                <section>
+
+                    <compilerflag value="-I/usr/lib/dbus-1.0/include" />
+                    <compilerflag value="-I/usr/lib/aarch64-linux-gnu/dbus-1.0/include" if="HXCPP_ARM64" />
+                    <compilerflag value="-I/usr/lib/x86_64-linux-gnu/dbus-1.0/include" if="HXCPP_M64" unless="HXCPP_ARM64" />
+                    <compilerflag value="-I/usr/lib/i386-linux-gnu/dbus-1.0/include" if="HXCPP_M32" />
+
+                </section>
+
+            </section>
+
+            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/fmt-11.2.0/include" />
+
+            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/gsl/include" />
+
+            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include" if="NATIVE_TOOLKIT_HAVE_SDL" />
+
+        </section>
+
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/alc" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/common" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/core" />
+
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/openal/include/" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/core/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/fmt-11.1.1/include/" />
 
-        <compilerflag value="-DAL_LIBTYPE_STATIC" if="native_toolkit_openal_static" />
+        <section>
 
-        <compilerflag value="-DAL_ALEXT_PROTOTYPES" />
-        <compilerflag value="-D_LARGEFILE_SOURCE" />
-        <compilerflag value="-D_LARGE_FILES" />
-        <compilerflag value="-DNOMINMAX" />
+            <compilerflag value="-DAL_ALEXT_PROTOTYPES" />
 
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/auxeffectslot.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/buffer.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effect.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/error.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/event.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/extension.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/filter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/listener.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/source.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/state.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alc.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/context.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/device.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/device.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alconfig.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alu.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/ambdec.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/ambidefs.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/base.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/loopback.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/null.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wave.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bformatdec.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bs2b.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/converter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bsinc_tables.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/autowah.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/chorus.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/compressor.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/convolution.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/dedicated.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/distortion.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/echo.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/equalizer.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/fshifter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/modulator.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/null.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/pshifter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/reverb.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/vmorpher.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/autowah.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/chorus.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/compressor.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/convolution.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/dedicated.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/distortion.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/echo.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/equalizer.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/fshifter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/modulator.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/null.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/pshifter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/reverb.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/vmorpher.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/biquad.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/nfc.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/splitter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/context.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/helpers.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/logging.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/hrtf.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mastering.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/effectslot.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/cpu_caps.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/fpu_ctrl.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/buffer_storage.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_c.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_neon.cpp" if="rpi || HXCPP_ARM64" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse.cpp" unless="rpi || android || HXCPP_ARM64" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse2.cpp" unless="rpi || android || HXCPP_ARM64" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse3.cpp" unless="rpi || android || HXCPP_ARM64" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse41.cpp" unless="rpi || android || HXCPP_ARM64" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/panning.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/ringbuffer.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/uhjfilter.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/voice.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alcomplex.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/except.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alstring.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/dynload.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/polyphase_resampler.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/strutils.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/devformat.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alsem.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/al/debug.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/althrd_setname.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alassert.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/pffft.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/common/filesystem.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/cubic_tables.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/core/storage_formats.cpp" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/events.cpp" />
+            <compilerflag value="-DAL_LIBTYPE_STATIC" />
 
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.1.1/src/format.cc" />
-        <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.1.1/src/os.cc" />
-
-        <section if="NATIVE_TOOLKIT_HAVE_SDL">
-
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/sdl/include/" />
-            <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" />
+            <compilerflag value="-DNATIVE_TOOLKIT_HAVE_SDL" if="NATIVE_TOOLKIT_HAVE_SDL" />
 
         </section>
 
-        <section if="linux">
+        <section>
 
-            <compilerflag value="-D_POSIX_C_SOURCE=200112L" />
-            <compilerflag value="-D_XOPEN_SOURCE=500" />
-            <compilerflag value="-mmmx" unless="rpi" />
-            <compilerflag value="-msse" unless="rpi" />
-            <compilerflag value="-msse2" unless="rpi" />
-            <compilerflag value="-msse3" unless="rpi" />
-            <compilerflag value="-mssse3" unless="rpi" />
-            <compilerflag value="-mfpu=neon" if="rpi" unless="HXCPP_ARM64" />
-            <compilerflag value="-fcommon" />
+            <section if="windows">
 
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/alsa.cpp" />
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" />
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pulseaudio.cpp" />
+                <compilerflag value="-DNOMINMAX" />
 
-        </section>
+                <compilerflag value="/utf-8" />
 
-        <section if="mac">
+                <compilerflag value="/wd4267" />
 
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" />
+            </section>
 
-            <compilerflag value="-mmmx" unless="HXCPP_ARM64" />
-            <compilerflag value="-msse" unless="HXCPP_ARM64" />
-            <compilerflag value="-msse2" unless="HXCPP_ARM64" />
-            <compilerflag value="-msse3" unless="HXCPP_ARM64" />
-            <compilerflag value="-mssse3" unless="HXCPP_ARM64" />
+            <compilerflag value="-Wno-switch" if="android" />
+
+            <section if="linux">
+
+                <compilerflag value="-Wno-interference-size" />
+
+                <compilerflag value="-Wno-stringop-overflow" />
+
+            </section>
 
         </section>
 
-        <section if="ios">
+        <section>
 
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" />
+            <section if="windows">
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/api.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/call.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/exception.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/fx_slot_index.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/fx_slots.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax/utils.cpp" />
+
+            </section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/autowah.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/chorus.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/compressor.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/convolution.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/dedicated.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/distortion.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/echo.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/effects.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/equalizer.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/fshifter.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/modulator.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/null.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/pshifter.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/reverb.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effects/vmorpher.cpp" />
+
+            </section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/auxeffectslot.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/buffer.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/debug.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/eax.cpp" if="windows" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/effect.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/error.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/event.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/extension.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/filter.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/listener.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/source.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/al/state.cpp" />
+
+            </section>
 
         </section>
 
-        <section if="windows">
+        <section>
 
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/winmm.cpp" />
+            <section>
+
+                <section>
+
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/base.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/loopback.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/null.cpp" />
+
+                </section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/opensl.cpp" if="android" />
+
+                <section if="linux">
+
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/alsa.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pulseaudio.cpp" />
+
+                </section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" if="apple" />
+
+                <section if="windows">
+
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/winmm.cpp" />
+
+                </section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" if="NATIVE_TOOLKIT_HAVE_SDL" />
+
+                <!-- Unused Backends, perhaps useful later idk -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/jack.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oboe.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pipewire.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/portaudio.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl2.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sndio.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/solaris.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wave.cpp" /> -->
+
+            </section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/autowah.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/chorus.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/compressor.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/convolution.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/dedicated.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/distortion.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/echo.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/equalizer.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/fshifter.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/modulator.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/null.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/pshifter.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/reverb.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/effects/vmorpher.cpp" />
+
+            </section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alc.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alconfig.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alu.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/context.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/device.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/events.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/panning.cpp" />
+
+            </section>
+
+        </section>
+
+        <section>
+
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alcomplex.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/almalloc.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alstring.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/althrd_setname.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/dynload.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/filesystem.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/pffft.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/polyphase_resampler.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/strutils.cpp" />
+
+        </section>
+
+        <section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/biquad.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/nfc.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/core/filters/splitter.cpp" />
+
+            </section>
+
+            <section>
+
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_c.cpp" />
+
+                <section if="HXCPP_ARM64">
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_neon.cpp" />
+                </section>
+
+                <section unless="HXCPP_ARM64 || HXCPP_ARMV7">
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse2.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse3.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer/mixer_sse41.cpp" />
+                </section>
+
+            </section>
+
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/ambdec.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/ambidefs.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bformatdec.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bs2b.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/bsinc_tables.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/context.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/converter.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/cpu_caps.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/cubic_tables.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/devformat.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/device.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/effectslot.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/except.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/fpu_ctrl.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/helpers.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/hrtf_loader.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/hrtf_resource.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/hrtf.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/logging.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mastering.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/mixer.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/rtkit.cpp" if="linux" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/storage_formats.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/tsmefilter.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/uhjfilter.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/core/uiddefs.cpp" />
-
-            <compilerflag value="-DWIN32" />
-            <compilerflag value="-D_WINDOWS" />
-            <compilerflag value="-D_WIN32" />
-            <compilerflag value="-D_WIN32_WINNT=0x0600" />
-            <compilerflag value="-D_CRT_SECURE_NO_WARNINGS" />
-            <compilerflag value="-D_CRT_NONSTDC_NO_DEPRECATE" />
-            <compilerflag value="/wd4098" />
-			<compilerflag value="/wd4293" />
-            <compilerflag value="-Dstrcasecmp=_stricmp" />
-            <compilerflag value="-Dstrncasecmp=_strnicmp" />
-			<compilerflag value="/utf-8" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/core/voice.cpp" />
 
         </section>
 
-        <section unless="windows">
+        <section>
 
-            <!--
-            <compilerflag value="-Winline -Wall" />
-            <compilerflag value="-Wextra" />
-            <compilerflag value="-Werror" />
-            -->
-            <compilerflag value="-fPIC" />
-            <compilerflag value="-fvisibility=hidden" />
-            <compilerflag value="-pthread" />
-
-        </section>
-
-        <section if="android">
-
-            <error value="NDK version 20 or higher is required." unless="NDKV20+" />
-            <compilerflag value="-fsigned-char" />
-
-            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/opensl.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.2.0/src/format.cc" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/fmt-11.2.0/src/os.cc" />
 
         </section>
 
