@@ -78,13 +78,14 @@ class NativeApplication
 		pauseTimer = -1;
 		toggleFullscreen = true;
 
+		#if (lime_cffi && !macro)
+		handle = NativeCFFI.lime_application_create();
+		#end
+
 		AudioManager.init();
 
-		#if (!macro && lime_cffi)
-		handle = NativeCFFI.lime_application_create();
-
+		#if (lime_cffi && !macro)
 		Sensor.registerSensor(SensorType.ACCELEROMETER, NativeCFFI.lime_system_get_first_accelerometer_sensor_id());
-
 		Sensor.registerSensor(SensorType.GYROSCOPE, NativeCFFI.lime_system_get_first_gyroscope_sensor_id());
 		#end
 	}
