@@ -71,10 +71,6 @@
 	path = project/lib/mbedtls
 	url = https://github.com/Mbed-TLS/mbedtls
 	shallow = true
-[submodule "project/lib/mojoal"]
-	path = project/lib/mojoal
-	url = https://github.com/icculus/mojoAL
-	shallow = true
 [submodule "project/lib/hashlink"]
 	path = project/lib/hashlink
 	url = https://github.com/HaxeFoundation/hashlink

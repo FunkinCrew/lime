@@ -12,7 +12,6 @@ Lime includes code from several other C/C++ libraries, listed below. Lime prefer
 - [**libjpeg-turbo**](https://www.libjpeg-turbo.org/) | [primary repo](https://github.com/libjpeg-turbo/libjpeg-turbo)
 - **LZMA** | [download](https://www.7-zip.org/sdk.html) | [unofficial GitHub mirror](https://github.com/openfl/liblzma)
 - [**mbed TLS**](https://tls.mbed.org/) | [primary repo](https://github.com/Mbed-TLS/mbedtls)
-- [**MojoAL**](https://icculus.org/mojoAL/) | [primary repo](https://github.com/icculus/mojoAL/)
 - [**Neko**](https://nekovm.org/) | [primary repo](https://github.com/HaxeFoundation/neko)
 - [**Ogg**](https://www.xiph.org/ogg/) | [primary repo](https://github.com/xiph/ogg)
 - [**OpenAL Soft**](https://openal-soft.org/) | [primary repo](https://github.com/kcat/openal-soft)
