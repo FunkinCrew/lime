@@ -1547,8 +1547,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_bufferiv(buffer:CFFIPointer, param:Int, values:Dynamic):Void;
 
-	@:cffi private static function lime_al_cleanup():Void;
-
 	@:cffi private static function lime_al_delete_buffer(buffer:CFFIPointer):Void;
 
 	@:cffi private static function lime_al_delete_buffers(n:Int, buffers:Dynamic):Void;
@@ -1776,7 +1774,6 @@ class NativeCFFI
 	private static var lime_al_bufferi = new cpp.Callable<cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_bufferi", "oiiv", false));
 	private static var lime_al_bufferiv = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_bufferiv", "oiov",
 		false));
-	private static var lime_al_cleanup = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_cleanup", "v", false));
 	private static var lime_al_delete_buffer = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_buffer", "ov", false));
 	private static var lime_al_delete_buffers = new cpp.Callable<Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_buffers", "iov",
 		false));
@@ -1935,7 +1932,6 @@ class NativeCFFI
 	private static var lime_al_bufferfv = CFFI.load("lime", "lime_al_bufferfv", 3);
 	private static var lime_al_bufferi = CFFI.load("lime", "lime_al_bufferi", 3);
 	private static var lime_al_bufferiv = CFFI.load("lime", "lime_al_bufferiv", 3);
-	private static var lime_al_cleanup = CFFI.load("lime", "lime_al_cleanup", 0);
 	private static var lime_al_delete_buffer = CFFI.load("lime", "lime_al_delete_buffer", 1);
 	private static var lime_al_delete_buffers = CFFI.load("lime", "lime_al_delete_buffers", 2);
 	private static var lime_al_delete_source = CFFI.load("lime", "lime_al_delete_source", 1);
@@ -2061,8 +2057,6 @@ class NativeCFFI
 	@:hlNative("lime", "hl_al_bufferi") private static function lime_al_bufferi(buffer:CFFIPointer, param:Int, value:Int):Void {}
 
 	@:hlNative("lime", "hl_al_bufferiv") private static function lime_al_bufferiv(buffer:CFFIPointer, param:Int, values:hl.NativeArray<Int>):Void {}
-
-	@:hlNative("lime", "hl_al_cleanup") private static function lime_al_cleanup():Void {}
 
 	@:hlNative("lime", "hl_al_delete_buffer") private static function lime_al_delete_buffer(buffer:CFFIPointer):Void {}
 
