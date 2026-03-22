@@ -68,14 +68,6 @@ class AudioManager
 			}
 
 			AudioManager.context = context;
-
-			#if (lime_cffi && !macro && lime_openal && (ios || tvos || mac))
-			var timer = new Timer(100);
-			timer.run = function()
-			{
-				NativeCFFI.lime_al_cleanup();
-			};
-			#end
 		}
 	}
 
