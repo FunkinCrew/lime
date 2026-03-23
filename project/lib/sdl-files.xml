@@ -2,6 +2,8 @@
 
     <files id="native-toolkit-sdl" tags="">
         <section if="linux">
+            <compilerflag value="-I/usr/include/pipewire-0.3" />
+            <compilerflag value="-I/usr/include/spa-0.2" />
             <compilerflag value="-I/usr/include/dbus-1.0" />
 
             <section>
@@ -55,6 +57,7 @@
 
             <section if="linux">
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/alsa/SDL_alsa_audio.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pipewire/SDL_pipewire.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pulseaudio/SDL_pulseaudio.c" />
             </section>
 
