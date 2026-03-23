@@ -12,7 +12,7 @@
 
 #define HAVE_DSOUND 1
 
-#define HAVE_WINMM 1
+#define HAVE_WINMM 0
 
 #define HAVE_PORTAUDIO 0
 
