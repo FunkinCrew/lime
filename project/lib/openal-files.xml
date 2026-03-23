@@ -6,6 +6,8 @@
 
             <section if="linux">
 
+                <compilerflag value="-I/usr/include/pipewire-0.3" />
+                <compilerflag value="-I/usr/include/spa-0.2" />
                 <compilerflag value="-I/usr/include/dbus-1.0" />
 
                 <section>
@@ -138,6 +140,7 @@
                 <section if="linux">
 
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/alsa.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pipewire.cpp" />
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pulseaudio.cpp" />
 
                 </section>
@@ -157,7 +160,6 @@
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/jack.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oboe.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pipewire.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/portaudio.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl2.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sndio.cpp" /> -->
