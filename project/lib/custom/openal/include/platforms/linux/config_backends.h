@@ -1,6 +1,6 @@
 #define HAVE_ALSA 1
 
-#define HAVE_OSS 1
+#define HAVE_OSS 0
 
 #define HAVE_PIPEWIRE 0
 

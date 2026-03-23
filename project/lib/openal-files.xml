@@ -138,7 +138,6 @@
                 <section if="linux">
 
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/alsa.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" />
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pulseaudio.cpp" />
 
                 </section>
@@ -158,6 +157,7 @@
                 <!-- Unused Backends, perhaps useful later idk -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/jack.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oboe.cpp" /> -->
+                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pipewire.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/portaudio.cpp" /> -->
                 <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl2.cpp" /> -->
