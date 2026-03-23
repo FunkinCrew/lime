@@ -156,17 +156,6 @@
 
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" if="NATIVE_TOOLKIT_HAVE_SDL" />
 
-                <!-- Unused Backends, perhaps useful later idk -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/jack.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oboe.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/oss.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/portaudio.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl2.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sndio.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/solaris.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wave.cpp" /> -->
-                <!-- <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/winmm.cpp" /> -->
-
             </section>
 
             <section>
