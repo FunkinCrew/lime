@@ -527,17 +527,19 @@
  * @brief Drivers and subsystems enabled for Linux platforms.
  * @{
  */
-# define SDL_AUDIO_DRIVER_ALSA 1                             /**< ALSA (Advanced Linux Sound Architecture) audio driver */
-# define SDL_AUDIO_DRIVER_ALSA_DYNAMIC "libasound.so.2"      /**< Dynamically loaded ALSA shared library */
-# define SDL_AUDIO_DRIVER_PULSEAUDIO 1                       /**< PulseAudio sound server audio driver */
-# define SDL_AUDIO_DRIVER_PULSEAUDIO_DYNAMIC "libpulse.so.0" /**< Dynamically loaded PulseAudio shared library */
-# define SDL_CAMERA_DRIVER_V4L2 1                            /**< Video4Linux2 camera driver */
-# define SDL_FILESYSTEM_UNIX 1                               /**< Unix filesystem operations */
-# define SDL_HAPTIC_LINUX 1                                  /**< Linux haptic (force feedback) support */
-# define SDL_JOYSTICK_LINUX 1                                /**< Linux joystick support */
-# define SDL_POWER_LINUX 1                                   /**< Linux power management */
-# define SDL_SENSOR_DUMMY 1                                  /**< Dummy sensor driver (no native support) */
-# define SDL_STORAGE_STEAM 1                                 /**< Steam cloud storage support */
+#define SDL_AUDIO_DRIVER_ALSA 1                                  /**< ALSA (Advanced Linux Sound Architecture) audio driver */
+#define SDL_AUDIO_DRIVER_ALSA_DYNAMIC "libasound.so.2"           /**< Dynamically loaded ALSA shared library */
+#define SDL_AUDIO_DRIVER_PIPEWIRE 1                              /**< PipeWire (modern multimedia server for audio/video on Linux) */
+#define SDL_AUDIO_DRIVER_PIPEWIRE_DYNAMIC "libpipewire-0.3.so.0" /**< Dynamically loaded PipeWire client library */
+#define SDL_AUDIO_DRIVER_PULSEAUDIO 1                            /**< PulseAudio sound server audio driver */
+#define SDL_AUDIO_DRIVER_PULSEAUDIO_DYNAMIC "libpulse.so.0"      /**< Dynamically loaded PulseAudio shared library */
+#define SDL_CAMERA_DRIVER_V4L2 1                                 /**< Video4Linux2 camera driver */
+#define SDL_FILESYSTEM_UNIX 1                                    /**< Unix filesystem operations */
+#define SDL_HAPTIC_LINUX 1                                       /**< Linux haptic (force feedback) support */
+#define SDL_JOYSTICK_LINUX 1                                     /**< Linux joystick support */
+#define SDL_POWER_LINUX 1                                        /**< Linux power management */
+#define SDL_SENSOR_DUMMY 1                                       /**< Dummy sensor driver (no native support) */
+#define SDL_STORAGE_STEAM 1                                      /**< Steam cloud storage support */
 
 /**
  * @name KMS/DRM Video Driver
