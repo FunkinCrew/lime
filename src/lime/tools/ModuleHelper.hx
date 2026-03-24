@@ -69,18 +69,15 @@ class ModuleHelper
 
 				for (key in project.haxedefs.keys())
 				{
-					if (key != "no-compilation")
-					{
-						var value = project.haxedefs.get(key);
+					var value = project.haxedefs.get(key);
 
-						if (value == null || value == "")
-						{
-							hxml += "\n-D " + key;
-						}
-						else
-						{
-							hxml += "\n-D " + key + "=" + value;
-						}
+					if (value == null || value == "")
+					{
+						hxml += "\n-D " + key;
+					}
+					else
+					{
+						hxml += "\n-D " + key + "=" + value;
 					}
 				}
 

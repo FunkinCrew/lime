@@ -13,7 +13,7 @@ import sys.thread.Thread;
 	operations like file I/O, network requests, or computationally intensive tasks.
 
 	### Notes:
-	- **Thread Support:** Only system targets (such as C++, Neko) support threading.
+	- **Thread Support:** Only system targets (such as C++, Hashlink) support threading.
 	- **Events:** The class uses the `Event` class to dispatch completion, error,
 	  and progress notifications.
 
@@ -61,7 +61,7 @@ class BackgroundWorker
 	public var onProgress = new Event<Dynamic->Void>();
 
 	@:noCompletion private var __runMessage:Dynamic;
-	#if (cpp || neko || hl)
+	#if native
 	@:noCompletion private var __messageQueue:Deque<Dynamic>;
 	@:noCompletion private var __workerThread:Thread;
 	#end
@@ -79,7 +79,7 @@ class BackgroundWorker
 	{
 		canceled = true;
 
-		#if (cpp || neko || hl)
+		#if native
 		__workerThread = null;
 		#end
 	}
@@ -94,7 +94,7 @@ class BackgroundWorker
 		completed = false;
 		__runMessage = message;
 
-		#if (cpp || neko || hl)
+		#if native
 		__messageQueue = new Deque<Dynamic>();
 		__workerThread = Thread.create(__doWork);
 
@@ -117,7 +117,7 @@ class BackgroundWorker
 	{
 		completed = true;
 
-		#if (cpp || neko || hl)
+		#if native
 		__messageQueue.add(MESSAGE_COMPLETE);
 		__messageQueue.add(message);
 		#else
@@ -135,7 +135,7 @@ class BackgroundWorker
 	**/
 	public function sendError(message:Dynamic = null):Void
 	{
-		#if (cpp || neko || hl)
+		#if native
 		__messageQueue.add(MESSAGE_ERROR);
 		__messageQueue.add(message);
 		#else
@@ -153,7 +153,7 @@ class BackgroundWorker
 	**/
 	public function sendProgress(message:Dynamic = null):Void
 	{
-		#if (cpp || neko || hl)
+		#if native
 		__messageQueue.add(message);
 		#else
 		if (!canceled)
@@ -166,26 +166,11 @@ class BackgroundWorker
 	@:noCompletion private function __doWork():Void
 	{
 		doWork.dispatch(__runMessage);
-
-		// #if (cpp || neko)
-		//
-		// __messageQueue.add (MESSAGE_COMPLETE);
-		//
-		// #else
-		//
-		// if (!canceled) {
-		//
-		// canceled = true;
-		// onComplete.dispatch (null);
-		//
-		// }
-		//
-		// #end
 	}
 
 	@:noCompletion private function __update(deltaTime:Float):Void
 	{
-		#if (cpp || neko || hl)
+		#if native
 		var message = __messageQueue.pop(false);
 
 		if (message != null)

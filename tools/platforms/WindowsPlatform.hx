@@ -433,8 +433,6 @@ class WindowsPlatform extends PlatformTarget
 			context.VERSION_NUMBER = versionParts.join(",");
 		}
 
-		context.NEKO_FILE = targetDirectory + "/obj/ApplicationMain.n";
-		context.NODE_FILE = targetDirectory + "/bin/ApplicationMain.js";
 		context.HL_FILE = targetDirectory + "/obj/ApplicationMain" + (project.defines.exists("hlc") ? ".c" : ".hl");
 		context.CPPIA_FILE = targetDirectory + "/obj/ApplicationMain.cppia";
 		context.CPP_DIR = targetDirectory + "/obj";

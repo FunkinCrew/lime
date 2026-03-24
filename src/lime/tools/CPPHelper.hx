@@ -27,38 +27,6 @@ class CPPHelper
 					args.push("-options");
 					args.push(Path.tryFullPath(options));
 
-					// var list;
-					// var input = File.read (options, false);
-					// var text = input.readLine ();
-
-					// if (StringTools.startsWith (text, " -D")) {
-
-					// 	list = text.split (" ");
-
-					// } else {
-
-					// 	list = [ "-D" + StringTools.trim (text) ];
-
-					// 	while (!input.eof ()) {
-
-					// 		list.push ("-D" + StringTools.trim (input.readLine ()));
-
-					// 	}
-
-					// 	list.pop ();
-
-					// }
-
-					// for (option in list) {
-
-					// 	if (option != "" && !StringTools.startsWith (option, "-Dno_compilation") && !StringTools.startsWith (option, "-Dno-compilation")) {
-
-					// 		args.push (option);
-
-					// 	}
-
-					// }
-
 					foundOptions = true;
 				}
 			}

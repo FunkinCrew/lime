@@ -6,10 +6,6 @@ import lime.system.WorkOutput;
 import lime.utils.Log;
 #if target.threaded
 import sys.thread.Thread;
-#elseif (cpp || webassembly)
-import cpp.vm.Thread;
-#elseif neko
-import neko.vm.Thread;
 #elseif html5
 import lime._internal.backend.html5.HTML5Thread as Thread;
 #end

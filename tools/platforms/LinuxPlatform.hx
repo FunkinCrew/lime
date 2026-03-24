@@ -359,14 +359,9 @@ class LinuxPlatform extends PlatformTarget
 		}
 
 		var context = project.templateContext;
-
-		context.NEKO_FILE = targetDirectory + "/obj/ApplicationMain.n";
-		context.NODE_FILE = targetDirectory + "/bin/ApplicationMain.js";
 		context.HL_FILE = targetDirectory + "/obj/ApplicationMain" + (project.defines.exists("hlc") ? ".c" : ".hl");
 		context.CPP_DIR = targetDirectory + "/obj/";
 		context.BUILD_DIR = project.app.path + "/linux" + (is64 ? "64" : "") + (isRaspberryPi ? "-rpi" : "");
-		context.WIN_ALLOW_SHADERS = false;
-
 		return context;
 	}
 

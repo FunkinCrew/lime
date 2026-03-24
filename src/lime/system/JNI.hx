@@ -11,10 +11,6 @@ import lime._internal.backend.native.NativeCFFI;
 #if !lime_doc_gen
 #if target.threaded
 import sys.thread.Thread;
-#elseif cpp
-import cpp.vm.Thread;
-#elseif neko
-import neko.vm.Thread;
 #end
 #end
 
@@ -387,8 +383,6 @@ class JNIMethod
 #if !doc_gen
 #if target.threaded
 @:autoBuild(lime.system.JNI.JNISafetyTools.build())
-#elseif (cpp || neko)
-@:autoBuild(lime.system.JNI.JNISafetyTools.build())
 #end
 #end
 interface JNISafety {}
@@ -398,8 +392,6 @@ class JNISafetyTools
 {
 	#if target.threaded
 	private static var mainThread:Thread = Thread.current();
-	#elseif (cpp || neko)
-	private static var mainThread:Thread = Thread.current();
 	#end
 
 	/**
@@ -408,8 +400,6 @@ class JNISafetyTools
 	public static inline function onMainThread():Bool
 	{
 		#if target.threaded
-		return Thread.current() == mainThread;
-		#elseif (cpp || neko)
 		return Thread.current() == mainThread;
 		#else
 		return true;

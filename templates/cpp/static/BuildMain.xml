@@ -43,9 +43,6 @@
 			<lib name="-lpthread" />
 			<lib name="-lrt" />
 
-			<lib name="-lgc" if="LIME_NEKO" />
-			<lib name="-lm" if="LIME_NEKO" />
-
 		</section>
 
 		<section if="mac">
@@ -64,9 +61,6 @@
 			<vflag name="-framework" value="AppKit" />
 			<vflag name="-framework" value="OpenAL"/>
 			<vflag name="-framework" value="SystemConfiguration"/>
-
-			<lib name="/opt/local/lib/libgc.a" if="LIME_NEKO" />
-			<lib name="-lm" if="LIME_NEKO" />
 
 		</section>
 

@@ -320,12 +320,9 @@ class MacPlatform extends PlatformTarget
 	private function generateContext():Dynamic
 	{
 		var context = project.templateContext;
-		context.NEKO_FILE = targetDirectory + "/obj/ApplicationMain.n";
-		context.NODE_FILE = executableDirectory + "/ApplicationMain.js";
 		context.HL_FILE = targetDirectory + "/obj/ApplicationMain" + (project.defines.exists("hlc") ? ".c" : ".hl");
 		context.CPP_DIR = targetDirectory + "/obj/";
 		context.BUILD_DIR = project.app.path + "/mac" + dirSuffix.toLowerCase();
-
 		return context;
 	}
 
