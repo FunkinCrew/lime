@@ -5,9 +5,7 @@
 #define ALSOFT_EMBED_HRTF_DATA
 
 /* Define if we have the proc_pidpath function */
-#if defined(__APPLE__) && defined(__MACH__)
-	#define HAVE_PROC_PIDPATH
-#endif
+/* #define HAVE_PROC_PIDPATH */
 
 /* Define if we have dlfcn.h */
 #define HAVE_DLFCN_H
@@ -37,7 +35,7 @@
 #define HAVE_PTHREAD_SETNAME_NP
 
 /* Define if we have pthread_set_name_np() */
-#define HAVE_PTHREAD_SET_NAME_NP
+/* #define HAVE_PTHREAD_SET_NAME_NP */
 
 /* Define the installation data directory */
 /* #define ALSOFT_INSTALL_DATADIR "@ALSOFT_INSTALL_DATADIR@" */
