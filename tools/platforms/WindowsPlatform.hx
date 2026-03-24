@@ -212,9 +212,7 @@ class WindowsPlatform extends PlatformTarget
 				}
 				else
 				{
-					ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "",
-						(ndll.haxelib != null && (ndll.haxelib.name == "hxcpp" || ndll.haxelib.name == "hxlibc")) ? ".dll" : ".ndll",
-						applicationDirectory, project.debug, targetSuffix);
+					ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".ndll", applicationDirectory, project.debug, targetSuffix);
 				}
 			}
 		}

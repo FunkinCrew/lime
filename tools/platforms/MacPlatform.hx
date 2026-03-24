@@ -174,10 +174,7 @@ class MacPlatform extends PlatformTarget
 				}
 				else
 				{
-					ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "",
-						(ndll.haxelib != null
-							&& (ndll.haxelib.name == "hxcpp" || ndll.haxelib.name == "hxlibc")) ? ".dll" : ".ndll", executableDirectory,
-						project.debug, targetSuffix);
+					ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".ndll", executableDirectory, project.debug, targetSuffix);
 				}
 			}
 		}
