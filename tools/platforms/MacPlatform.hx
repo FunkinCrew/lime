@@ -161,21 +161,16 @@ class MacPlatform extends PlatformTarget
 
 		System.mkdir(targetDirectory);
 
-		if (!project.targetFlags.exists("static") || targetType != "cpp")
+		for (ndll in project.ndlls)
 		{
-			var targetSuffix = (targetType == "hl") ? ".hdll" : null;
-
-			for (ndll in project.ndlls)
+			// TODO: Support single binary for HashLink
+			if (targetType == "hl")
 			{
-				// TODO: Support single binary for HashLink
-				if (targetType == "hl")
-				{
-					ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".hdll", executableDirectory, project.debug, targetSuffix);
-				}
-				else
-				{
-					ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".ndll", executableDirectory, project.debug, targetSuffix);
-				}
+				ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".hdll", executableDirectory, project.debug, ".hdll");
+			}
+			else
+			{
+				ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".ndll", executableDirectory, project.debug, null);
 			}
 		}
 
@@ -263,27 +258,13 @@ class MacPlatform extends PlatformTarget
 				flags.push("-DHXCPP_ARM64");
 			}
 
-			if (!project.targetFlags.exists("static"))
-			{
-				System.runCommand("", "haxe", haxeArgs);
+			System.runCommand("", "haxe", haxeArgs);
 
-				if (noOutput) return;
+			if (noOutput) return;
 
-				CPPHelper.compile(project, targetDirectory + "/obj", flags);
+			CPPHelper.compile(project, targetDirectory + "/obj", flags);
 
-				System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : ""), executablePath);
-			}
-			else
-			{
-				System.runCommand("", "haxe", haxeArgs.concat(["-D", "static_link"]));
-
-				if (noOutput) return;
-
-				CPPHelper.compile(project, targetDirectory + "/obj", flags.concat(["-Dstatic_link"]));
-				CPPHelper.compile(project, targetDirectory + "/obj", flags, "BuildMain.xml");
-
-				System.copyFile(targetDirectory + "/obj/Main" + (project.debug ? "-debug" : ""), executablePath);
-			}
+			System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : ""), executablePath);
 		}
 
 		if (System.hostPlatform != WINDOWS && sys.FileSystem.exists(executablePath))
@@ -449,34 +430,14 @@ class MacPlatform extends PlatformTarget
 		var context = generateContext();
 		context.OUTPUT_DIR = targetDirectory;
 
-		if (targetType == "cpp" && project.targetFlags.exists("static"))
-		{
-			for (i in 0...project.ndlls.length)
-			{
-				var ndll = project.ndlls[i];
-
-				if (ndll.path == null || ndll.path == "")
-				{
-					context.ndlls[i].path = NDLL.getLibraryPath(ndll, "Mac" + dirSuffix, "lib", ".a", project.debug);
-				}
-			}
-		}
-
 		System.mkdir(targetDirectory);
 		System.mkdir(targetDirectory + "/obj");
 		System.mkdir(targetDirectory + "/haxe");
 		System.mkdir(applicationDirectory);
 		System.mkdir(contentDirectory);
 
-		// SWFHelper.generateSWFClasses (project, targetDirectory + "/haxe");
-
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, targetType + "/hxml", targetDirectory + "/haxe", context);
-
-		if (targetType == "cpp" && project.targetFlags.exists("static"))
-		{
-			ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/static", targetDirectory + "/obj", context);
-		}
 
 		System.copyFileTemplate(project.templatePaths, "mac/Info.plist", targetDirectory + "/bin/" + project.app.file + ".app/Contents/Info.plist", context);
 		System.copyFileTemplate(project.templatePaths, "mac/Entitlements.plist",

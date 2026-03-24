@@ -196,24 +196,19 @@ class WindowsPlatform extends PlatformTarget
 			}
 		}
 
-		if (!project.targetFlags.exists("static") || targetType != "cpp")
+		for (ndll in project.ndlls)
 		{
-			var targetSuffix = (targetType == "hl") ? ".hdll" : null;
-
-			for (ndll in project.ndlls)
+			// TODO: Support single binary for HashLink
+			if (targetType == "hl")
 			{
-				// TODO: Support single binary for HashLink
-				if (targetType == "hl")
-				{
-					ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".hdll", applicationDirectory, project.debug,
-						targetSuffix);
-					ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".lib", applicationDirectory, project.debug,
-						".lib");
-				}
-				else
-				{
-					ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".ndll", applicationDirectory, project.debug, targetSuffix);
-				}
+				ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".hdll", applicationDirectory, project.debug,
+					".hdll");
+				ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".lib", applicationDirectory, project.debug,
+					".lib");
+			}
+			else
+			{
+				ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".ndll", applicationDirectory, project.debug, null);
 			}
 		}
 
@@ -334,49 +329,32 @@ class WindowsPlatform extends PlatformTarget
 				flags.push("-Dno_console");
 			}
 
-			if (!project.targetFlags.exists("static"))
+			System.runCommand("", "haxe", haxeArgs);
+
+			if (noOutput) return;
+
+			IconHelper.createWindowsIcon(icons, Path.combine(targetDirectory + "/obj", "ApplicationMain.ico"));
+
+			CPPHelper.compile(project, targetDirectory + "/obj", flags);
+
+			System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : "") + ".exe", executablePath);
+
+			if (project.defines.exists("mingw"))
 			{
-				System.runCommand("", "haxe", haxeArgs);
-
-				if (noOutput) return;
-
-				IconHelper.createWindowsIcon(icons, Path.combine(targetDirectory + "/obj", "ApplicationMain.ico"));
-
-				CPPHelper.compile(project, targetDirectory + "/obj", flags);
-
-				System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : "") + ".exe", executablePath);
-
-				if (project.defines.exists("mingw"))
+				var libraries = ["libwinpthread-1.dll", "libstdc++-6.dll"];
+				if (is64)
 				{
-					var libraries = ["libwinpthread-1.dll", "libstdc++-6.dll"];
-					if (is64)
-					{
-						libraries.push("libgcc_s_seh-1.dll");
-					}
-					else
-					{
-						libraries.push("libgcc_s_dw2-1.dll");
-					}
-
-					for (library in libraries)
-					{
-						System.copyIfNewer(targetDirectory + "/obj/" + library, Path.combine(applicationDirectory, library));
-					}
+					libraries.push("libgcc_s_seh-1.dll");
 				}
-			}
-			else
-			{
-				System.runCommand("", "haxe", haxeArgs.concat(["-D", "static_link"]));
+				else
+				{
+					libraries.push("libgcc_s_dw2-1.dll");
+				}
 
-				if (noOutput) return;
-
-				IconHelper.createWindowsIcon(icons, Path.combine(targetDirectory + "/obj", "ApplicationMain.ico"));
-
-				CPPHelper.compile(project, targetDirectory + "/obj", flags.concat(["-Dstatic_link"]));
-
-				CPPHelper.compile(project, targetDirectory + "/obj", flags, "BuildMain.xml");
-
-				System.copyFile(targetDirectory + "/obj/Main" + (project.debug ? "-debug" : "") + ".exe", executablePath);
+				for (library in libraries)
+				{
+					System.copyIfNewer(targetDirectory + "/obj/" + library, Path.combine(applicationDirectory, library));
+				}
 			}
 		}
 	}
@@ -568,40 +546,10 @@ class WindowsPlatform extends PlatformTarget
 		var context = generateContext();
 		context.OUTPUT_DIR = targetDirectory;
 
-		if (targetType == "cpp" && project.targetFlags.exists("static"))
-		{
-			var programFiles = project.environment.get("ProgramFiles(x86)");
-			var hasVSCommunity = (programFiles != null
-				&& FileSystem.exists(Path.combine(programFiles, "Microsoft Visual Studio/Installer/vswhere.exe")));
-			var hxcppMSVC = project.environment.get("HXCPP_MSVC");
-			var vs140 = project.environment.get("VS140COMNTOOLS");
-
-			var msvc19 = true;
-
-			if ((!hasVSCommunity && vs140 == null) || (hxcppMSVC != null && hxcppMSVC != vs140))
-			{
-				msvc19 = false;
-			}
-
-			var suffix = (msvc19 ? "-19.lib" : ".lib");
-
-			for (i in 0...project.ndlls.length)
-			{
-				var ndll = project.ndlls[i];
-
-				if (ndll.path == null || ndll.path == "")
-				{
-					context.ndlls[i].path = NDLL.getLibraryPath(ndll, "Windows" + (is64 ? "64" : ""), "lib", suffix, project.debug);
-				}
-			}
-		}
-
 		System.mkdir(targetDirectory);
 		System.mkdir(targetDirectory + "/obj");
 		System.mkdir(targetDirectory + "/haxe");
 		System.mkdir(applicationDirectory);
-
-		// SWFHelper.generateSWFClasses (project, targetDirectory + "/haxe");
 
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, targetType + "/hxml", targetDirectory + "/haxe", context);
@@ -609,19 +557,7 @@ class WindowsPlatform extends PlatformTarget
 		if (targetType == "cpp")
 		{
 			ProjectHelper.recursiveSmartCopyTemplate(project, "windows/resource", targetDirectory + "/obj", context);
-
-			if (project.targetFlags.exists("static"))
-			{
-				ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/static", targetDirectory + "/obj", context);
-			}
 		}
-
-		/*if (IconHelper.createIcon (project.icons, 32, 32, Path.combine (applicationDirectory, "icon.png"))) {
-
-			context.HAS_ICON = true;
-			context.WIN_ICON = "icon.png";
-
-		}*/
 
 		for (asset in project.assets)
 		{

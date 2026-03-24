@@ -589,8 +589,6 @@ class TVOSPlatform extends PlatformTarget
 		System.copyFileTemplate(project.templatePaths, "tvos/PROJ/PROJ-Prefix.pch", projectDirectory + "/" + project.app.file + "-Prefix.pch", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "tvos/PROJ.xcodeproj", targetDirectory + "/" + project.app.file + ".xcodeproj", context);
 
-		// SWFHelper.generateSWFClasses (project, projectDirectory + "/haxe");
-
 		System.mkdir(projectDirectory + "/lib");
 
 		for (archID in 0...3)
