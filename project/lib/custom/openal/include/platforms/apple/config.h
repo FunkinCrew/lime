@@ -37,7 +37,7 @@
 #define HAVE_PTHREAD_SETNAME_NP
 
 /* Define if we have pthread_set_name_np() */
-#define HAVE_PTHREAD_SET_NAME_NP
+/* #define HAVE_PTHREAD_SET_NAME_NP */
 
 /* Define the installation data directory */
 /* #define ALSOFT_INSTALL_DATADIR "@ALSOFT_INSTALL_DATADIR@" */
