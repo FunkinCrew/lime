@@ -86,9 +86,9 @@ class NativeAudioSource
 	public static final STREAM_PROCESS_BUFFERS:Int = 1;
 
 	/**
-		What delay (in seconds) to wait between flushing the buffers.
+		What delay (in seconds) to wait between updating the buffers.
 	**/
-	public static final STREAM_FLUSH_DELAY:Float = 0.04;
+	public static final STREAM_UPDATE_DELAY:Float = 0.04;
 
 	/**
 		What ticks it need to be passed in stream flush tick to process, unless a source doesnt have much buffers to play.
@@ -1045,7 +1045,7 @@ class NativeAudioSource
 		}
 	}
 
-	function flushBuffers():Void
+	function queueBuffers():Void
 	{
 		var internalQueuedBuffers = AL.getSourcei(source, AL.BUFFERS_QUEUED);
 		var i = STREAM_MAX_BUFFERS - queuedBuffers + internalQueuedBuffers;
@@ -1082,7 +1082,7 @@ class NativeAudioSource
 				if (sample >= bufferCurs[i] && sample < bufferCurs[i] + (bufferLens[i] / (parent.buffer.bitsPerSample >> 3) / parent.buffer.channels))
 			{
 				skipBuffers(i - STREAM_MAX_BUFFERS + queuedBuffers);
-				flushBuffers();
+				queueBuffers();
 				AL.sourcei(source, AL.SAMPLE_OFFSET, sample - bufferCurs[i]);
 				return;
 			}
@@ -1095,7 +1095,7 @@ class NativeAudioSource
 		queuedBuffers = filledBuffers = streamLoops = nextBuffer = 0;
 		decoder.seek(sample);
 		fillBuffers(n);
-		flushBuffers();
+		queueBuffers();
 	}
 
 	static function streamThreadRun():Void
@@ -1188,7 +1188,7 @@ class NativeAudioSource
 					}
 				}
 
-				backend.flushBuffers();
+				backend.queueBuffers();
 
 				if (AL.getSourcei(backend.source, AL.SOURCE_STATE) != AL.PLAYING)
 				{
@@ -1203,7 +1203,7 @@ class NativeAudioSource
 			}
 
 			streamMutex.release();
-			Sys.sleep(STREAM_FLUSH_DELAY);
+			Sys.sleep(STREAM_UPDATE_DELAY);
 		}
 
 		threadRunning = false;
