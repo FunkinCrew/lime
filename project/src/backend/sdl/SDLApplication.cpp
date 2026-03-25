@@ -42,7 +42,7 @@ namespace lime {
 
 		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
-		#if defined(LIME_MOJOAL) || defined(LIME_OPENALSOFT)
+		#ifdef LIME_OPENALSOFT
 		initFlags |= SDL_INIT_AUDIO;
 		#endif
 
