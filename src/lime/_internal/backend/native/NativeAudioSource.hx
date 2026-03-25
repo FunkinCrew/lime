@@ -503,10 +503,12 @@ class NativeAudioSource
 	// Event Handlers
 	private function stopTimer():Void
 	{
-		if (playingAudios.contains(this))
+		var idx = playingAudios.indexOf(this);
+		if (idx != -1)
 		{
-			if (playingAudios.length == 0) Application.current.onUpdate.remove(timerHandler);
-			playingAudios.remove(this);
+			if (playingAudios.length == 1) Application.current.onUpdate.remove(timerHandler);
+			else playingAudios[idx] = playingAudios[playingAudios.length - 1];
+			playingAudios.pop();
 		}
 	}
 
@@ -527,7 +529,15 @@ class NativeAudioSource
 
 		while (i-- > 0)
 		{
-			if (timer < (backend = playingAudios[i]).timeEnd) continue;
+			if ((backend = playingAudios[i]) == null)
+			{
+				if (playingAudios.length == 1) Application.current.onUpdate.remove(timerHandler);
+				else playingAudios[i] = playingAudios[playingAudios.length - 1];
+				playingAudios.pop();
+
+				continue;
+			}
+			else if (timer < backend.timeEnd) continue;
 
 			if (backend.streamed)
 			{
@@ -597,6 +607,7 @@ class NativeAudioSource
 			completed = true;
 			playing = false;
 			pauseSample = 0;
+			stopTimer();
 			if (streamed) stopStream(false);
 		}
 
