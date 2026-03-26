@@ -35,8 +35,6 @@
 
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/openal/include/" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
-
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/openal/alc" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/alc" />
 
         <section>
@@ -151,8 +149,8 @@
 
                 <section if="windows">
 
+                    <file name="${NATIVE_TOOLKIT_PATH}/custom/openal/alc/backends/wasapi.cpp" />
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
 
                 </section>
 

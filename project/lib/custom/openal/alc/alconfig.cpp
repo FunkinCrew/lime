@@ -385,7 +385,6 @@ void LoadConfigFromFile(std::istream &f)
 
 void FunkinALConfigDefault()
 {
-    SetConfigValue("hrtf", "false");
     SetConfigValue("sample-type", "float32");
     SetConfigValue("stereo-mode", "speakers");
     SetConfigValue("stereo-encoding", "basic");
@@ -393,13 +392,20 @@ void FunkinALConfigDefault()
     SetConfigValue("output-limiter", "false");
     SetConfigValue("front-stablizer", "false");
     SetConfigValue("volume-adjust", "0");
-    SetConfigValue("period_size", "441");
-    SetConfigValue("sources", "512");
+    SetConfigValue("period_size", "256");
+    SetConfigValue("periods", "3");
+    // weird number, but ive heard that this is to avoid overhead in cpu?
+    // https://github.com/OldUnreal/UT2004Patches/issues/116
+    SetConfigValue("sources", "384");
     SetConfigValue("sends", "64");
     SetConfigValue("dither", "false");
+    SetConfigValue("dither-depth", "0");
     SetConfigValue("decoder/hq-mode", "false");
     SetConfigValue("decoder/distance-comp", "false");
     SetConfigValue("decoder/nfc", "false");
+    // exclusive-mode removes the latency about 20ms (from 80ms to 40ms in my testing -ralty)
+    // but game recorders wont be able to record the game because of the audio mixer being exclusive and not shared.
+    SetConfigValue("wasapi/exclusive-mode", "false");
     SetConfigValue("wasapi/spatial-api", "false");
     SetConfigValue("wasapi/allow-resampler", "false");
     ConfOpts.shrink_to_fit();
