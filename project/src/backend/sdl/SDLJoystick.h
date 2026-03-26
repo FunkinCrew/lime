@@ -14,7 +14,7 @@ namespace lime {
 
 		public:
 
-			static bool Connect (int id);
+			static bool Connect (int deviceID);
 			static bool Disconnect (int id);
 			static int GetInstanceID (int deviceID);
 

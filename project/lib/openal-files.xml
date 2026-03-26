@@ -30,12 +30,12 @@
         </section>
 
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/alc" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/common" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/core" />
 
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/openal/include/" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/alc" />
 
         <section>
 
@@ -149,8 +149,8 @@
 
                 <section if="windows">
 
+                    <file name="${NATIVE_TOOLKIT_PATH}/custom/openal/alc/backends/wasapi.cpp" />
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
 
                 </section>
 
@@ -180,7 +180,7 @@
             <section>
 
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alc.cpp" />
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alconfig.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/custom/openal/alc/alconfig.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alu.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/context.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/device.cpp" />

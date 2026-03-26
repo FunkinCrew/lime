@@ -33,6 +33,20 @@ class Joystick
 		connected = true;
 	}
 
+	public function rumble(lowFrequencyRumble:Float, highFrequencyRumble:Float, duration:Int):Void
+	{
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_joystick_rumble(this.id, lowFrequencyRumble, highFrequencyRumble, duration);
+		#end
+	}
+
+	public function setLED(red:Int, green:Int, blue:Int):Void
+	{
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_joystick_set_led(this.id, red, green, blue);
+		#end
+	}
+
 	@:noCompletion private static function __connect(id:Int):Void
 	{
 		if (!devices.exists(id))

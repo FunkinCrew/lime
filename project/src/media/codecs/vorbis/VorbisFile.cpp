@@ -28,31 +28,32 @@ namespace lime {
 
 			memcpy (dest, (src->data + src->pos), len);
 			src->pos += len;
+			return len;
 
 		}
 
-		return len;
+		return 0;
 
 	}
 
 
-	static int VorbisFile_BufferSeek (VorbisFile_Buffer* src, ogg_int64_t pos, int whence) {
+	static int VorbisFile_BufferSeek (VorbisFile_Buffer* src, ogg_int64_t offset, int whence) {
 
 		switch (whence) {
 
 			case SEEK_CUR:
 
-				src->pos += pos;
+				src->pos += offset;
 				break;
 
 			case SEEK_END:
 
-				src->pos = src->size - pos;
+				src->pos = src->size - offset;
 				break;
 
 			case SEEK_SET:
 
-				src->pos = pos;
+				src->pos = offset;
 				break;
 
 			default:
@@ -111,9 +112,9 @@ namespace lime {
 	}
 
 
-	static int VorbisFile_FileSeek (FILE_HANDLE* file, ogg_int64_t pos, int whence) {
+	static int VorbisFile_FileSeek (FILE_HANDLE* file, ogg_int64_t offset, int whence) {
 
-		return lime::fseek (file, pos, whence);
+		return lime::fseek (file, offset, whence);
 
 	}
 
@@ -144,6 +145,8 @@ namespace lime {
 
 	OggVorbis_File* VorbisFile::FromBytes (Bytes* bytes) {
 
+		if (!bytes) return 0;
+
 		OggVorbis_File* vorbisFile = new OggVorbis_File;
 		memset (vorbisFile, 0, sizeof (OggVorbis_File));
 
@@ -167,30 +170,23 @@ namespace lime {
 
 	OggVorbis_File* VorbisFile::FromFile (const char* path) {
 
-		if (path) {
+		if (!path) return 0;
 
-			FILE_HANDLE *file = lime::fopen (path, "rb");
+		FILE_HANDLE *file = lime::fopen (path, "rb");
+		if (!file) return 0;
 
-			if (file) {
+		OggVorbis_File* vorbisFile = new OggVorbis_File;
+		memset (vorbisFile, 0, sizeof (OggVorbis_File));
 
-				OggVorbis_File* vorbisFile = new OggVorbis_File;
-				memset (vorbisFile, 0, sizeof (OggVorbis_File));
+		if (ov_open_callbacks (file,  vorbisFile, NULL, 0, VORBIS_FILE_FILE_CALLBACKS) != 0) {
 
-				if (ov_open_callbacks (file, vorbisFile, NULL, 0, VORBIS_FILE_FILE_CALLBACKS) != 0) {
-
-					delete vorbisFile;
-					lime::fclose (file);
-					return 0;
-
-				}
-
-				return vorbisFile;
-
-			}
+			delete vorbisFile;
+			lime::fclose (file);
+			return 0;
 
 		}
 
-		return 0;
+		return vorbisFile;
 
 	}
 
