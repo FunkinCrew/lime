@@ -659,6 +659,10 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
+		System.removeDirectory(sourceSet + "/java");
+		System.removeDirectory(destination + "/app/libs");
+		System.removeDirectory(destination + "/deps");
+
 		var packageDirectory = project.meta.packageName;
 		packageDirectory = sourceSet + "/java/" + packageDirectory.split(".").join("/");
 		System.mkdir(packageDirectory);
@@ -675,11 +679,11 @@ class AndroidPlatform extends PlatformTarget
 				{
 					if (Path.extension(javaPath) == "jar")
 					{
-						copyIfNewer(javaPath, destination + "/app/libs/" + Path.withoutDirectory(javaPath));
+						System.copyFile(javaPath, destination + "/app/libs/" + Path.withoutDirectory(javaPath));
 					}
 					else
 					{
-						copyIfNewer(javaPath, sourceSet + "/java/" + Path.withoutDirectory(javaPath));
+						System.copyFile(javaPath, sourceSet + "/java/" + Path.withoutDirectory(javaPath));
 					}
 				}
 			}
