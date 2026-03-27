@@ -137,7 +137,19 @@
 		<define name="MACOSX_DEPLOYMENT_TARGET" value="10.9" if="mac" unless="MACOSX_DEPLOYMENT_TARGET" />
 		<setenv name="MACOSX_DEPLOYMENT_TARGET" value="${MACOSX_DEPLOYMENT_TARGET}" if="mac" />
 
-		<architecture name="armv7" if="android" />
+		<section if="android">
+			<architecture name="armv7" />
+
+			<config:android>
+				<manifest>
+					<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+					<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+					<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+					<uses-permission android:name="android.permission.INTERNET" />
+					<uses-permission android:name="android.permission.VIBRATE" />
+				</manifest>
+			</config:android>
+		</section>
 
 		<section if="emscripten">
 
