@@ -36,6 +36,8 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
+		SDL_SetHint (SDL_HINT_JOYSTICK_HIDAPI, "1");
+
 		#ifdef IPHONE
 		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "3");
 		#endif
