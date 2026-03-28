@@ -189,7 +189,8 @@ class TVOSPlatform extends PlatformTarget
 			if (!StringTools.endsWith(dependency.name, ".framework")
 				&& !StringTools.endsWith(dependency.name, ".tbd")
 				&& !StringTools.endsWith(dependency.path, ".framework")
-				&& !StringTools.endsWith(dependency.path, ".xcframework"))
+				&& !StringTools.endsWith(dependency.path, ".xcframework")
+				&& !StringTools.endsWith(dependency.path, ".bundle"))
 			{
 				if (dependency.path != "")
 				{
@@ -290,45 +291,71 @@ class TVOSPlatform extends PlatformTarget
 			var name:String = null;
 			var path:String = null;
 			var fileType:String = null;
+			var embed:Bool = false;
 
-			if (Path.extension(dependency.name) == "framework")
+			if (Path.extension(dependency.name) == "tbd")
+			{
+				name = dependency.name;
+				path = "/usr/lib/" + dependency.name;
+				fileType = "sourcecode.text-based-dylib-definition";
+				embed = false;
+			}
+			else if (Path.extension(dependency.name) == "framework")
 			{
 				name = dependency.name;
 				path = "/System/Library/Frameworks/" + dependency.name;
 				fileType = "wrapper.framework";
-			}
-			else if (Path.extension(dependency.name) == "tbd")
-			{
-				name = dependency.name;
-				path = "usr/lib/" + dependency.name;
-				fileType = "sourcecode.text-based-dylib-definition";
+				embed = false;
 			}
 			else if (Path.extension(dependency.path) == "framework")
 			{
 				name = Path.withoutDirectory(dependency.path);
 				path = Path.tryFullPath(dependency.path);
 				fileType = "wrapper.framework";
+				embed = dependency.embed;
 			}
 			else if (Path.extension(dependency.path) == "xcframework")
 			{
 				name = Path.withoutDirectory(dependency.path);
 				path = Path.tryFullPath(dependency.path);
 				fileType = "wrapper.xcframework";
+				embed = false;
+			}
+			else if (Path.extension(dependency.path) == "bundle")
+			{
+				name = Path.withoutDirectory(dependency.path);
+				path = Path.tryFullPath(dependency.path);
+				fileType = "wrapper.plug-in";
+				embed = false;
 			}
 
 			if (name != null)
 			{
-				var frameworkID = "11C0000000000018" + StringTools.getUniqueID();
+				var buildFileID = "11C0000000000018" + StringTools.getUniqueID();
 				var fileID = "11C0000000000018" + StringTools.getUniqueID();
+				var embedFileID = "11C0000000000018" + StringTools.getUniqueID();
 
-				ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
+				switch (fileType)
+				{
+					case "wrapper.plug-in":
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Resources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_RESOURCES_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Resources */,\n";
+						context.ADDL_PBX_RESOURCE_GROUP += "                " + fileID + " /* " + name + " */,\n";
+					case "wrapper.framework", "wrapper.xcframework", "sourcecode.text-based-dylib-definition":
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Frameworks */,\n";
+						context.ADDL_PBX_FRAMEWORK_GROUP += "                " + fileID + " /* " + name + " */,\n";
 
-				context.ADDL_PBX_BUILD_FILE += "		" + frameworkID + " /* " + name + " in Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* "
-					+ name + " */; };\n";
-				context.ADDL_PBX_FILE_REFERENCE += "		" + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType
-					+ "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
-				context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "				" + frameworkID + " /* " + name + " in Frameworks */,\n";
-				context.ADDL_PBX_FRAMEWORK_GROUP += "				" + fileID + " /* " + name + " */,\n";
+						if (embed == true)
+						{
+							context.ADDL_PBX_BUILD_FILE += "        " + embedFileID + " /* " + name + " in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy); }; };\n";
+							context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE += "                " + embedFileID + " /* " + name + " in Embed Frameworks */,\n";
+						}
+
+						ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
+				}
+
+				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
 			}
 		}
 
