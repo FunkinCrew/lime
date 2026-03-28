@@ -555,14 +555,12 @@
 
 	</target>
 
-	<include name="../legacy/project/Build.xml" if="lime-legacy" />
-
 	<target id="default">
 
-		<target id="lime" unless="lime-legacy" />
-		<target id="lime-legacy" if="lime-legacy" />
+		<target id="lime" />
 
 	</target>
+
 	<copyFile name="lime.lib" from="obj/lib/" overwrite="true" toolId="dll" if="windows LIME_HASHLINK" />
 
 </xml>
