@@ -10,9 +10,6 @@ import sys.thread.Thread;
 #elseif cpp
 import cpp.vm.Deque;
 import cpp.vm.Thread;
-#elseif neko
-import neko.vm.Deque;
-import neko.vm.Thread;
 #elseif html5
 import lime._internal.backend.html5.HTML5Thread as Thread;
 import lime._internal.backend.html5.HTML5Thread.Transferable;

@@ -7,7 +7,7 @@
 
 	<set name="lime" />
 
-	<define name="native" if="cpp || neko || hl" />
+	<define name="native" if="cpp || hl" />
 	<define name="howlerjs" if="html5" />
 
 	<define name="lime-cairo" if="native" />
@@ -73,12 +73,12 @@
 	<section unless="display">
 
 		<section unless="force-synchronous || force_synchronous">
-			<haxedef name="lime-threads" if="neko || cpp || html5" unless="emscripten" />
+			<haxedef name="lime-threads" if="cpp || html5" unless="emscripten" />
 			<!-- `target.threaded` isn't available, so enumerate the targets instead. -->
 			<haxedef name="lime-threads" if="python || hl" unless="${${haxe_ver} < 4}" />
 
 			<!-- For internal use; may be removed or renamed without warning. -->
-			<haxedef name="lime-threads-deque" if="neko || cpp || python || hl" />
+			<haxedef name="lime-threads-deque" if="cpp || python || hl" />
 		</section>
 
 		<section if="cpp ${${haxe_ver} < 3.3}" unless="static_link">

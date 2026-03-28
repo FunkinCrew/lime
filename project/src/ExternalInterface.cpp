@@ -47,7 +47,6 @@
 #include <ui/WindowEvent.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
-#include <vm/NekoVM.h>
 
 #ifdef HX_WINDOWS
 #include <locale>
@@ -2567,15 +2566,6 @@ namespace lime {
 	}
 
 
-	void lime_neko_execute (HxString module) {
-
-		#ifdef LIME_NEKO
-		NekoVM::Execute (module.c_str ());
-		#endif
-
-	}
-
-
 	void lime_orientation_event_manager_register (value callback, value eventObject) {
 
 		OrientationEvent::callback = new ValuePointer (callback);
@@ -4048,7 +4038,6 @@ namespace lime {
 	DEFINE_PRIME2 (lime_lzma_compress);
 	DEFINE_PRIME2 (lime_lzma_decompress);
 	DEFINE_PRIME2v (lime_mouse_event_manager_register);
-	DEFINE_PRIME1v (lime_neko_execute);
 	DEFINE_PRIME2v (lime_orientation_event_manager_register);
 	DEFINE_PRIME3 (lime_png_decode_bytes);
 	DEFINE_PRIME3 (lime_png_decode_file);
@@ -4243,7 +4232,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_TBYTES, hl_lzma_compress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_lzma_decompress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_mouse_event_manager_register, _FUN (_VOID, _NO_ARG) _TMOUSE_EVENT);
-	// DEFINE_PRIME1v (lime_neko_execute);
 	DEFINE_HL_PRIM (_VOID, hl_orientation_event_manager_register, _FUN (_VOID, _NO_ARG) _TORIENTATION_EVENT);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_png_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_png_decode_file, _STRING _BOOL _TIMAGEBUFFER);

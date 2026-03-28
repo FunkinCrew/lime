@@ -7,9 +7,7 @@ import lime.tools.HXProject;
 import lime.tools.Platform;
 import sys.FileSystem;
 import sys.io.File;
-#if neko
-import neko.vm.Thread;
-#elseif cpp
+#if cpp
 import cpp.vm.Thread;
 #end
 
@@ -36,14 +34,6 @@ class HTML5Helper
 		}
 	}
 
-	// public static function generateFontData (project:HXProject, font:Asset):String {
-	// 	var sourcePath = font.sourcePath;
-	// 	if (!FileSystem.exists (FileSystem.fullPath (sourcePath) + ".hash")) {
-	// 		var templatePaths = [ Path.combine (Haxelib.getPath (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
-	// 		System.runCommand (Path.directory (sourcePath), "neko", [ System.findTemplate (templatePaths, "bin/hxswfml.n"), "ttf2hash2", Path.withoutDirectory (sourcePath), FileSystem.fullPath (sourcePath) + ".hash", "-glyphs", font.glyphs ]);
-	// 	}
-	// 	return "-resource " + FileSystem.fullPath (sourcePath) + ".hash@__ASSET__" + font.flatName;
-	// }
 	public static function generateWebfonts(project:HXProject, font:Asset):Void
 	{
 		var suffix = switch (System.hostPlatform)

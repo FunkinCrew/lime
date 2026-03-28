@@ -85,7 +85,7 @@ You can build a sample Lime project with the following commands:
 
     lime create HelloWorld
     cd HelloWorld
-    lime test neko
+    lime test windows
 
 You can also list other projects that are available using "lime create".
 
@@ -103,7 +103,6 @@ Lime currently supports the following targets:
     lime test html5
     lime test flash
     lime test air
-    lime test neko
     lime test hl
 
 Desktop builds are currently designed to be built on the same host OS

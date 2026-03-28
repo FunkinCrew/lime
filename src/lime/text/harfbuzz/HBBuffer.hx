@@ -346,9 +346,6 @@ abstract HBBuffer(CFFIPointer) from CFFIPointer to CFFIPointer
 	@:noCompletion private inline function set_script(value:HBScript):HBScript
 	{
 		#if (lime_cffi && lime_harfbuzz && !macro)
-		#if neko
-		value = -1;
-		#end
 		NativeCFFI.lime_hb_buffer_set_script(this, value);
 		#end
 		return value;

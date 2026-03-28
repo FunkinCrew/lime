@@ -236,10 +236,6 @@ class CommandLineTools
 							target = System.hostPlatform;
 							targetFlags.set("cpp", "");
 
-						case "neko":
-							target = System.hostPlatform;
-							targetFlags.set("neko", "");
-
 						case "hl", "hashlink":
 							target = System.hostPlatform;
 							targetFlags.set("hl", "");
@@ -897,7 +893,6 @@ class CommandLineTools
 			Log.println(" " + Log.accentColor + "Target Aliases:" + Log.resetColor);
 			Log.println("");
 			Log.println("  \x1b[1mcpp\x1b[0m -- Alias for host platform (using \x1b[1m-cpp\x1b[0m)");
-			Log.println("  \x1b[1mneko\x1b[0m -- Alias for host platform (using \x1b[1m-neko\x1b[0m)");
 			Log.println("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
 			Log.println("  \x1b[1mhl/hashlink\x1b[0m -- Alias for host platform (using \x1b[1m-hl\x1b[0m)");
 			Log.println("  \x1b[1mhlc\x1b[0m -- Alias for host platform (using \x1b[1m-hlc\x1b[0m)");
@@ -959,7 +954,6 @@ class CommandLineTools
 		if (isProjectCommand)
 		{
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cpp\x1b[0m -- Build with C++ (default behavior)");
-			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-neko\x1b[0m -- Build with Neko instead of C++");
 			Log.println("  \x1b[3m(windows|mac|ios|android)\x1b[0m \x1b[1m-air\x1b[0m -- Build with AIR instead of C++");
 		}
 
@@ -1475,10 +1469,6 @@ class CommandLineTools
 				{
 					overrides.haxedefs.set("macos", "");
 				}
-
-			case "neko":
-				target = System.hostPlatform;
-				targetFlags.set("neko", "");
 
 			case "hl", "hashlink":
 				target = System.hostPlatform;

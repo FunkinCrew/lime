@@ -8,10 +8,6 @@ import sys.thread.Tls;
 import cpp.vm.Deque;
 import cpp.vm.Thread;
 import cpp.vm.Tls;
-#elseif neko
-import neko.vm.Deque;
-import neko.vm.Thread;
-import neko.vm.Tls;
 #end
 #if html5
 import lime._internal.backend.html5.HTML5Thread as Thread;
@@ -389,7 +385,7 @@ class JSAsync
 // Define platform-specific types
 #if target.threaded
 // Haxe 3 compatibility: "target.threaded" can't go in parentheses.
-#elseif !(cpp || neko)
+#elseif !cpp
 @:forward(push, add)
 abstract Deque<T>(List<T>) from List<T> to List<T>
 {

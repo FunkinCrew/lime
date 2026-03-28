@@ -3,9 +3,7 @@ package lime.tools;
 import hxp.*;
 import sys.io.File;
 import sys.FileSystem;
-#if neko
-import neko.Lib;
-#elseif cpp
+#if cpp
 import cpp.Lib;
 #end
 

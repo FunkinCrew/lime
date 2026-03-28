@@ -44,7 +44,7 @@ lime rebuild hl #Recompile the HashLink binaries (lime.hdll and others).
 
 See `lime help rebuild` for details and additional options.
 
-> Note: even without an explicit `rebuild` command, running `lime` will automatically build lime.ndll for your machine. Even if you never target C++ or Neko, this binary will help with small tasks such as rendering icons.
+> Note: even without an explicit `rebuild` command, running `lime` will automatically build lime.ndll for your machine. Even if you never target C++, this binary will help with small tasks such as rendering icons.
 
 ### Build troubleshooting
 If errors appeared after updating Lime, the update process may not be complete. Run these commands:

@@ -13,8 +13,6 @@ import lime._internal.backend.native.NativeCFFI;
 import sys.thread.Thread;
 #elseif cpp
 import cpp.vm.Thread;
-#elseif neko
-import neko.vm.Thread;
 #end
 #end
 
@@ -387,7 +385,7 @@ class JNIMethod
 #if !(doc_gen || macro)
 #if target.threaded
 @:autoBuild(lime.system.JNI.JNISafetyTools.build())
-#elseif (cpp || neko)
+#elseif cpp
 @:autoBuild(lime.system.JNI.JNISafetyTools.build())
 #end
 #end
@@ -398,7 +396,7 @@ class JNISafetyTools
 {
 	#if target.threaded
 	private static var mainThread:Thread = Thread.current();
-	#elseif (cpp || neko)
+	#elseif cpp
 	private static var mainThread:Thread = Thread.current();
 	#end
 
@@ -409,7 +407,7 @@ class JNISafetyTools
 	{
 		#if target.threaded
 		return Thread.current() == mainThread;
-		#elseif (cpp || neko)
+		#elseif cpp
 		return Thread.current() == mainThread;
 		#else
 		return true;

@@ -677,10 +677,6 @@ class AssetHelper
 					{
 						output.close();
 						FileSystem.deleteFile(cacheDirectory + filename);
-
-						#if neko
-						neko.Lib.rethrow(e);
-						#end
 					}
 
 					output.close();

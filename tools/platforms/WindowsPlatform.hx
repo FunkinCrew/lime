@@ -19,7 +19,6 @@ import lime.tools.HXProject;
 import lime.tools.Icon;
 import lime.tools.IconHelper;
 import lime.tools.ModuleHelper;
-import lime.tools.NekoHelper;
 import lime.tools.NodeJSHelper;
 import lime.tools.Orientation;
 import lime.tools.Platform;
@@ -123,11 +122,7 @@ class WindowsPlatform extends PlatformTarget
 			project.architectures.remove(excludeArchitecture);
 		}
 
-		if (project.targetFlags.exists("neko"))
-		{
-			targetType = "neko";
-		}
-		else if (project.targetFlags.exists("hl") || targetFlags.exists("hlc"))
+		if (project.targetFlags.exists("hl") || targetFlags.exists("hlc"))
 		{
 			targetType = "hl";
 			is64 = !project.flags.exists("32") && !project.flags.exists("x86_32");
@@ -162,25 +157,6 @@ class WindowsPlatform extends PlatformTarget
 				if (targetType == "cpp")
 				{
 					is64 = true;
-				}
-				else if (targetType == "neko")
-				{
-					try
-					{
-						var process = new Process("haxe", ["-version"]);
-						var haxeVersion = StringTools.trim(process.stderr.readAll().toString());
-						if (haxeVersion == "")
-						{
-							haxeVersion = StringTools.trim(process.stdout.readAll().toString());
-						}
-						process.close();
-
-						if (Std.parseInt(haxeVersion.split(".")[0]) >= 4)
-						{
-							is64 = true;
-						}
-					}
-					catch (e:Dynamic) {}
 				}
 			}
 		}
@@ -245,23 +221,7 @@ class WindowsPlatform extends PlatformTarget
 
 		// IconHelper.createIcon (project.icons, 32, 32, Path.combine (applicationDirectory, "icon.png"));
 
-		if (targetType == "neko")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			var iconPath = Path.combine(applicationDirectory, "icon.ico");
-
-			if (!IconHelper.createWindowsIcon(icons, iconPath))
-			{
-				iconPath = null;
-			}
-
-			NekoHelper.createWindowsExecutable(project.templatePaths, targetDirectory + "/obj/ApplicationMain.n", executablePath, iconPath);
-			NekoHelper.copyLibraries(project.templatePaths, "windows" + (is64 ? "64" : ""), applicationDirectory);
-		}
-		else if (targetType == "hl")
+		if (targetType == "hl")
 		{
 			System.runCommand("", "haxe", [hxml]);
 
@@ -499,8 +459,6 @@ class WindowsPlatform extends PlatformTarget
 			{
 				case "hl":
 					hxml.hl = "_.hl";
-				case "neko":
-					hxml.neko = "_.n";
 				case "cppia":
 					hxml.cppia = "_.cppia";
 				default:
@@ -548,7 +506,7 @@ class WindowsPlatform extends PlatformTarget
 
 			if (!targetFlags.exists("32") && !targetFlags.exists("x86_32")
 				&& System.hostArchitecture == X64
-				&& (command != "rebuild" || targetType == "cpp" || targetType == "neko"))
+				&& (command != "rebuild" || targetType == "cpp"))
 			{
 				commands.push(["-Dwindows", "-DHXCPP_M64"]);
 			}

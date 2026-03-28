@@ -237,8 +237,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_mouse_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
-	@:cffi private static function lime_neko_execute(module:String):Void;
-
 	@:cffi private static function lime_orientation_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
 	@:cffi private static function lime_png_decode_bytes(data:Dynamic, decodeData:Bool, buffer:Dynamic):Dynamic;
@@ -529,7 +527,6 @@ class NativeCFFI
 		false));
 	private static var lime_mouse_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_mouse_event_manager_register", "oov", false));
-	private static var lime_neko_execute = new cpp.Callable<String->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_neko_execute", "sv", false));
 	private static var lime_orientation_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_orientation_event_manager_register", "oov", false));
 	private static var lime_png_decode_bytes = new cpp.Callable<cpp.Object->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
@@ -737,7 +734,6 @@ class NativeCFFI
 	private static var lime_lzma_compress = CFFI.load("lime", "lime_lzma_compress", 2);
 	private static var lime_lzma_decompress = CFFI.load("lime", "lime_lzma_decompress", 2);
 	private static var lime_mouse_event_manager_register = CFFI.load("lime", "lime_mouse_event_manager_register", 2);
-	private static var lime_neko_execute = CFFI.load("lime", "lime_neko_execute", 1);
 	private static var lime_orientation_event_manager_register = CFFI.load("lime", "lime_orientation_event_manager_register", 2);
 	private static var lime_png_decode_bytes = CFFI.load("lime", "lime_png_decode_bytes", 3);
 	private static var lime_png_decode_file = CFFI.load("lime", "lime_png_decode_file", 3);
@@ -1187,8 +1183,6 @@ class NativeCFFI
 
 	@:hlNative("lime", "hl_mouse_event_manager_register") private static function lime_mouse_event_manager_register(callback:Void->Void,
 		eventObject:MouseEventInfo):Void {}
-
-	// @:cffi private static function lime_neko_execute (module:String):Void;
 
 	@:hlNative("lime", "hl_orientation_event_manager_register") private static function lime_orientation_event_manager_register(callback:Void->Void,
 		eventObject:OrientationEventInfo):Void {}
