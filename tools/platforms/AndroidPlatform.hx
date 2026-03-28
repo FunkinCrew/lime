@@ -437,6 +437,26 @@ class AndroidPlatform extends PlatformTarget
 
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.OUTPUT_DIR = targetDirectory;
+
+		context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS = [];
+
+		for (asset in project.assets)
+		{
+			if (asset.type != AssetType.TEMPLATE && asset.embed != true)
+			{
+				if (asset.deliveryPackName != '' && !context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.contains(asset.deliveryPackName))
+				{
+					var gradleProject = project.config.getString("android.gradle-project-directory", "bin");
+
+					var padContext:Dynamic = {};
+					padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.deliveryPackName;
+					System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/" + gradleProject + "/" + asset.deliveryPackName + "/build.gradle", padContext);
+
+					context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.deliveryPackName);
+				}
+			}
+		}
+
 		context.ANDROID_MINIMUM_SDK_VERSION = project.config.getInt("android.minimum-sdk-version", 28);
 		context.ANDROID_TARGET_SDK_VERSION = project.config.getInt("android.target-sdk-version", 35);
 		context.ANDROID_EXTENSIONS = project.config.getArrayString("android.extension");
@@ -662,14 +682,51 @@ class AndroidPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "android/hxml", targetDirectory + "/haxe", context);
 
-		for (asset in project.assets)
+		copyProjectAssets(destination, sourceSet + "/assets/");
+	}
+
+	private override function copyProjectAssets(outputDirectory:String, assetDirectory:String = null)
+	{
+		if (assetDirectory == null)
 		{
-			if (asset.type != AssetType.TEMPLATE)
-			{
-				asset.targetPath = asset.resourceName;
-			}
+			assetDirectory = outputDirectory;
+		}
+		else if (!StringTools.startsWith(assetDirectory, targetDirectory))
+		{
+			assetDirectory = Path.combine(outputDirectory, assetDirectory);
 		}
 
-		copyProjectAssets(destination, sourceSet + "/assets/");
+		var embedDirectory = Path.combine(targetDirectory, "obj/tmp");
+
+		for (asset in project.assets)
+		{
+			if (asset.type == AssetType.TEMPLATE)
+			{
+				var path = Path.combine(outputDirectory, asset.targetPath);
+				System.mkdir(Path.directory(path));
+				AssetHelper.copyAsset(asset, path, project.templateContext);
+			}
+			else
+			{
+				asset.targetPath = asset.resourceName;
+
+				if (asset.embed == true)
+				{
+					if (asset.sourcePath == "")
+					{
+						var path = Path.combine(embedDirectory, asset.targetPath);
+						System.mkdir(Path.directory(path));
+						AssetHelper.copyAsset(asset, path);
+						asset.sourcePath = path;
+					}
+				}
+				else
+				{
+					var path = Path.combine(asset.deliveryPackName != '' ? (outputDirectory + "/" + asset.deliveryPackName + "/src/main/assets/") : assetDirectory, asset.targetPath);
+					System.mkdir(Path.directory(path));
+					AssetHelper.copyAssetIfNewer(asset, path);
+				}
+			}
+		}
 	}
 }
