@@ -15,7 +15,6 @@ import sys.io.Process;
 import sys.FileSystem;
 import utils.publish.*;
 import utils.CreateTemplate;
-import utils.JavaExternGenerator;
 import utils.PlatformSetup;
 
 @:access(lime.tools.HXProject)
@@ -248,10 +247,6 @@ class CommandLineTools
 						case "cppia":
 							target = System.hostPlatform;
 							targetFlags.set("cppia", "");
-
-						case "java":
-							target = System.hostPlatform;
-							targetFlags.set("java", "");
 
 						case "nodejs":
 							target = System.hostPlatform;
@@ -930,7 +925,6 @@ class CommandLineTools
 			Log.println("  \x1b[1mneko\x1b[0m -- Alias for host platform (using \x1b[1m-neko\x1b[0m)");
 			Log.println("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
 			Log.println("  \x1b[1mnodejs\x1b[0m -- Alias for host platform (using \x1b[1m-nodejs\x1b[0m)");
-			Log.println("  \x1b[1mjava\x1b[0m -- Alias for host platform (using \x1b[1m-java\x1b[0m)");
 			Log.println("  \x1b[1mcs\x1b[0m -- Alias for host platform (using \x1b[1m-cs\x1b[0m)");
 			Log.println("  \x1b[1mhl/hashlink\x1b[0m -- Alias for host platform (using \x1b[1m-hl\x1b[0m)");
 			Log.println("  \x1b[1mhlc\x1b[0m -- Alias for host platform (using \x1b[1m-hlc\x1b[0m)");
@@ -1048,7 +1042,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println("  \x1b[1m-watch\x1b[0m -- Execute the current command when the source changes");
 			Log.println("  \x1b[3m(linux)\x1b[0m \x1b[1m-rpi\x1b[0m -- Build for Raspberry Pi");
-			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-java\x1b[0m -- Build for Java instead of C++");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-nodejs\x1b[0m -- Build for Node.js instead of C++");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cs\x1b[0m -- Build for C# instead of C++");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-hl\x1b[0m -- Build for HashLink/JIT instead of C++");
@@ -1234,14 +1227,6 @@ class CommandLineTools
 			// var details = Font.load (sourcePath);
 			// var json = Json.stringify (details);
 			// Sys.print (json);
-		}
-		else if (targetFlags.exists("java-externs"))
-		{
-			var config = ConfigHelper.getConfig();
-			var sourcePath = words[0];
-			var targetPath = words[1];
-
-			new JavaExternGenerator(config, sourcePath, targetPath);
 		}
 	}
 
@@ -1536,10 +1521,6 @@ class CommandLineTools
 			case "cppia":
 				target = System.hostPlatform;
 				targetFlags.set("cppia", "");
-
-			case "java":
-				target = System.hostPlatform;
-				targetFlags.set("java", "");
 
 			case "nodejs":
 				target = System.hostPlatform;

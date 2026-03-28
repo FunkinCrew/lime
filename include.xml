@@ -7,7 +7,7 @@
 
 	<set name="lime" />
 
-	<define name="native" if="cpp || neko || nodejs || cs || java || hl" />
+	<define name="native" if="cpp || neko || nodejs || cs || hl" />
 	<define name="howlerjs" if="html5" />
 
 	<define name="lime-cairo" if="native" />
@@ -36,7 +36,6 @@
 	<sample path="samples" unless="openfl" />
 
 	<haxelib name="nodejs" if="nodejs" />
-	<haxelib name="format" if="java" />
 
 	<target name="ps3" handler="lime-ps3" />
 	<haxelib name="lime-ps3" if="ps3" />
@@ -79,10 +78,10 @@
 		<section unless="force-synchronous || force_synchronous">
 			<haxedef name="lime-threads" if="neko || cpp || html5" unless="emscripten" />
 			<!-- `target.threaded` isn't available, so enumerate the targets instead. -->
-			<haxedef name="lime-threads" if="cs || java || python || hl" unless="${${haxe_ver} < 4}" />
+			<haxedef name="lime-threads" if="cs || python || hl" unless="${${haxe_ver} < 4}" />
 
 			<!-- For internal use; may be removed or renamed without warning. -->
-			<haxedef name="lime-threads-deque" if="neko || cpp || cs || java || python || hl" />
+			<haxedef name="lime-threads-deque" if="neko || cpp || cs || python || hl" />
 		</section>
 
 		<section if="cpp ${${haxe_ver} < 3.3}" unless="static_link">

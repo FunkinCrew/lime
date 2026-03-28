@@ -19,7 +19,6 @@ import lime.tools.HTML5Helper;
 import lime.tools.HXProject;
 import lime.tools.Icon;
 import lime.tools.IconHelper;
-import lime.tools.JavaHelper;
 import lime.tools.ModuleHelper;
 import lime.tools.NekoHelper;
 import lime.tools.NodeJSHelper;
@@ -159,10 +158,6 @@ class WindowsPlatform extends PlatformTarget
 		else if (project.targetFlags.exists("cs"))
 		{
 			targetType = "cs";
-		}
-		else if (project.targetFlags.exists("java"))
-		{
-			targetType = "java";
 		}
 		else
 		{
@@ -388,31 +383,6 @@ class WindowsPlatform extends PlatformTarget
 			CSHelper.addGUID(txtPath, GUID.uuid());
 			CSHelper.compile(project, targetDirectory + "/obj", applicationDirectory + project.app.file, "x86", "desktop");
 		}
-		else if (targetType == "java")
-		{
-			var libPath = Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates/java/lib/");
-
-			System.runCommand("", "haxe", [hxml, "-java-lib", libPath + "disruptor.jar", "-java-lib", libPath + "lwjgl.jar"]);
-			// System.runCommand ("", "haxe", [ hxml ]);
-
-			if (noOutput) return;
-
-			var haxeVersion = project.environment.get("haxe_ver");
-			var haxeVersionString = "3404";
-
-			if (haxeVersion.length > 4)
-			{
-				haxeVersionString = haxeVersion.charAt(0)
-					+ haxeVersion.charAt(2)
-					+ (haxeVersion.length == 5 ? "0" + haxeVersion.charAt(4) : haxeVersion.charAt(4) + haxeVersion.charAt(5));
-			}
-
-			System.runCommand(targetDirectory + "/obj", "haxelib", ["run", "hxjava", "hxjava_build.txt", "--haxe-version", haxeVersionString]);
-			System.recursiveCopy(targetDirectory + "/obj/lib", Path.combine(applicationDirectory, "lib"));
-			System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-Debug" : "") + ".jar",
-				Path.combine(applicationDirectory, project.app.file + ".jar"));
-			JavaHelper.copyLibraries(project.templatePaths, "Windows" + (is64 ? "64" : ""), applicationDirectory);
-		}
 		else
 		{
 			var haxeArgs = [hxml, "-D", "resourceFile=ApplicationMain.rc"];
@@ -563,8 +533,6 @@ class WindowsPlatform extends PlatformTarget
 					hxml.neko = "_.n";
 				case "cppia":
 					hxml.cppia = "_.cppia";
-				case "java":
-					hxml.java = "_";
 				case "nodejs":
 					hxml.js = "_.js";
 				default:
@@ -644,10 +612,6 @@ class WindowsPlatform extends PlatformTarget
 			// arguments = arguments.concat(["-livereload"]);
 			arguments = ["script.cppia"]; // .concat(arguments);
 			System.runCommand(applicationDirectory, Path.withoutDirectory(executablePath), arguments);
-		}
-		else if (targetType == "java")
-		{
-			System.runCommand(applicationDirectory, "java", ["-jar", project.app.file + ".jar"].concat(arguments));
 		}
 		else if (project.target == System.hostPlatform)
 		{

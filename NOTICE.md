@@ -75,7 +75,6 @@ https://github.com/haxenme/nme
     project/src/system/JNI.cpp
     project/src/text/Font.cpp
     project/src/utils/compress/LZMA.cpp
-    tools/utils/JavaExternGenerator.hx
 
 The typed array implementation was developed in collaboration with Sven Bergström
 and the hxtypedarray project, which is available under an "MIT" license.

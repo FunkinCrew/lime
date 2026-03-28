@@ -1560,10 +1560,10 @@ class Image
 		if (image.complete) {}
 
 		return true;
-		#elseif (lime_cffi || java)
+		#elseif lime_cffi
 		var buffer:ImageBuffer = null;
 
-		#if (!sys || disable_cffi || java || macro)
+		#if (!sys || disable_cffi || macro)
 		if (false) {}
 		#else
 		if (CFFI.enabled)
