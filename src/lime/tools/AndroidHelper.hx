@@ -18,16 +18,22 @@ class AndroidHelper
 			Sys.putEnv("ANDROID_SDK", project.environment.get("ANDROID_SDK"));
 		}
 
-		var task = "assembleDebug";
-
-		if (project.keystore != null)
-		{
-			task = "assembleRelease";
-		}
+		var task = '';
 
 		if (project.environment.exists("ANDROID_GRADLE_TASK"))
 		{
 			task = project.environment.get("ANDROID_GRADLE_TASK");
+		}
+		else
+		{
+			if (project.targetFlags.exists("bundle"))
+			{
+				task = project.keystore != null ? "bundleRelease" : "bundleDebug";
+			}
+			else
+			{
+				task = project.keystore != null ? "assembleRelease" : "assembleDebug";
+			}
 		}
 
 		var args = task.split(" ");
@@ -204,7 +210,7 @@ class AndroidHelper
 		}
 	}
 
-	public static function install(project:HXProject, targetPath:String, deviceID:String = null):String
+	public static function install(project:HXProject, targetPath:String, deviceID:String = null, isBundle:Bool = false):String
 	{
 		if (!FileSystem.exists(adbPath + adbName))
 		{
@@ -276,25 +282,75 @@ class AndroidHelper
 			System.runCommand(adbPath, adbName, ["-s", deviceID, "shell", "input", "keyevent", "82"]);
 		}
 
-		var args = ["install", "-r"];
+		var args = null;
 
-		// if (getDeviceSDKVersion (deviceID) > 16) {
-
-		args.push("-d");
-
-		// }
-
-		args.push(targetPath);
-
-		if (deviceID != null && deviceID != "")
+		if (isBundle)
 		{
-			args.unshift(deviceID);
-			args.unshift("-s");
+			var bundletoolPath = Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates/bin/android/bundletool.jar");
 
-			connect(deviceID);
+			var apksPath = haxe.io.Path.withExtension(targetPath, "apks");
+
+			if (FileSystem.exists(apksPath))
+			{
+				System.deleteFile(apksPath);
+			}
+
+			args = ["build-apks"];
+
+			args.push("--bundle=" + targetPath);
+			args.push("--output=" + apksPath);
+			args.push("--mode=universal");
+			args.push("--ks=" + project.keystore.path);
+			args.push("--ks-pass=pass:" + project.keystore.password);
+			args.push("--ks-key-alias=" + project.keystore.alias);
+			args.push("--key-pass=pass:" + project.keystore.password);
+
+			if (deviceID != null && deviceID != "")
+			{
+				args.push("--device-id=" + deviceID);
+			}
+
+			args.unshift(bundletoolPath);
+			args.unshift("-jar");
+
+			System.runCommand(Path.combine(project.environment.get("JAVA_HOME"), "bin"), "java", args);
+
+			args = ["install-apks"];
+
+			args.push("--apks=" + apksPath);
+
+			if (deviceID != null && deviceID != "")
+			{
+				args.push("--device-id=" + deviceID);
+			}
+
+			args.unshift(bundletoolPath);
+			args.unshift("-jar");
+
+			System.runCommand(Path.combine(project.environment.get("JAVA_HOME"), "bin"), "java", args);
 		}
+		else
+		{
+			var args = ["install", "-r"];
 
-		System.runCommand(adbPath, adbName, args);
+			// if (getDeviceSDKVersion (deviceID) > 16) {
+
+			args.push("-d");
+
+			// }
+
+			args.push(targetPath);
+
+			if (deviceID != null && deviceID != "")
+			{
+				args.unshift(deviceID);
+				args.unshift("-s");
+
+				connect(deviceID);
+			}
+
+			System.runCommand(adbPath, adbName, args);
+		}
 
 		return deviceID;
 	}

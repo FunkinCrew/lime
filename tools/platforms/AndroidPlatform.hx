@@ -267,14 +267,28 @@ class AndroidPlatform extends PlatformTarget
 			var outputDirectory:String = null;
 			if (project.config.exists("android.gradle-build-directory"))
 			{
-				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				if (targetFlags.exists("bundle"))
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk");
+				}
 			}
 			else
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				if (targetFlags.exists("bundle"))
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle");
+				}
+				else
+				{
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk");
+				}
 			}
 
-			Sys.println(Path.combine(outputDirectory, project.app.file + build + ".apk"));
+			Sys.println(Path.combine(outputDirectory, project.app.file + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}'));
 		}
 		else
 		{
@@ -318,7 +332,7 @@ class AndroidPlatform extends PlatformTarget
 		if (project.environment.exists("ANDROID_GRADLE_TASK"))
 		{
 			var task = project.environment.get("ANDROID_GRADLE_TASK");
-			if (task == "assembleDebug")
+			if (task == "assembleDebug" || task == "bundleDebug")
 			{
 				build = "debug";
 			}
@@ -332,16 +346,30 @@ class AndroidPlatform extends PlatformTarget
 
 		if (project.config.exists("android.gradle-build-directory"))
 		{
-			outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			if (targetFlags.exists("bundle"))
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(project.config.getString("android.gradle-build-directory"), project.app.file + "/app/outputs/apk/" + build);
+			}
 		}
 		else
 		{
-			outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			if (targetFlags.exists("bundle"))
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/bundle/" + build);
+			}
+			else
+			{
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), "bin/app/build/outputs/apk/" + build);
+			}
 		}
 
-		var apkPath = Path.combine(outputDirectory, project.app.file + "-" + build + ".apk");
+		var packagePath = Path.combine(outputDirectory, project.app.file + "-" + build + '${targetFlags.exists("bundle") ? ".aab" : ".apk"}');
 
-		deviceID = AndroidHelper.install(project, apkPath, deviceID);
+		deviceID = AndroidHelper.install(project, packagePath, deviceID, targetFlags.exists("bundle"));
 	}
 
 	public override function rebuild():Void
