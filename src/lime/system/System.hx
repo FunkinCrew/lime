@@ -877,8 +877,6 @@ class System
 			__platformName = "BlackBerry";
 			#elseif firefox
 			__platformName = "Firefox";
-			#elseif webos
-			__platformName = "webOS";
 			#elseif nodejs
 			__platformName = "Node.js";
 			#elseif js

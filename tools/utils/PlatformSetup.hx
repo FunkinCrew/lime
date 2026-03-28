@@ -398,10 +398,6 @@ class PlatformSetup
 				case "webassembly", "wasm", "emscripten":
 					setupWebAssembly();
 
-				case "webos":
-
-				// setupWebOS ();
-
 				case "electron":
 					setupElectron();
 
@@ -718,7 +714,7 @@ class PlatformSetup
 		// 	}
 
 		// 	createPath (path + "/lib");
-		// 	var libs = [ "android", "bada-wac", "bada", "blackberry", "ios", "mac", "qt", "tizen", "tvos", "webos", "wp7" ];
+		// 	var libs = [ "android", "bada-wac", "bada", "blackberry", "ios", "mac", "qt", "tizen", "tvos", "wp7" ];
 
 		// 	for (archive in childArchives) {
 
