@@ -133,7 +133,6 @@ class AudioBuffer
 
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		// if base64String contains codec data, strip it then decode it.
 		var base64StringSplit = base64String.split(",");
 		var base64StringNoEncoding = base64StringSplit[base64StringSplit.length - 1];
@@ -142,24 +141,6 @@ class AudioBuffer
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
 
 		return NativeCFFI.lime_audio_load_bytes(bytes, audioBuffer);
-		#else
-		// if base64String contains codec data, strip it then decode it.
-		var base64StringSplit = base64String.split(",");
-		var base64StringNoEncoding = base64StringSplit[base64StringSplit.length - 1];
-		var bytes:Bytes = Base64.decode(base64StringNoEncoding);
-		var data:Dynamic = NativeCFFI.lime_audio_load_bytes(bytes, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.dataFormat = data.dataFormat;
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-		#end
 		#end
 
 		return null;
@@ -186,25 +167,9 @@ class AudioBuffer
 
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
-
 		return NativeCFFI.lime_audio_load_bytes(bytes, audioBuffer);
-		#else
-		var data:Dynamic = NativeCFFI.lime_audio_load_bytes(bytes, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.dataFormat = data.dataFormat;
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-		#end
 		#end
 
 		return null;
@@ -242,27 +207,9 @@ class AudioBuffer
 		audioBuffer.__srcSound = new Sound(new URLRequest(path));
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
-		#if !cs
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.data = new UInt8Array(Bytes.alloc(0));
-
 		return NativeCFFI.lime_audio_load_file(path, audioBuffer);
-		#else
-		var data:Dynamic = NativeCFFI.lime_audio_load_file(path, null);
-
-		if (data != null)
-		{
-			var audioBuffer = new AudioBuffer();
-			audioBuffer.bitsPerSample = data.bitsPerSample;
-			audioBuffer.channels = data.channels;
-			audioBuffer.data = new UInt8Array(@:privateAccess new Bytes(data.data.length, data.data.b));
-			audioBuffer.dataFormat = data.dataFormat;
-			audioBuffer.sampleRate = data.sampleRate;
-			return audioBuffer;
-		}
-
-		return null;
-		#end
 		#else
 		return null;
 		#end

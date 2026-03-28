@@ -12,7 +12,6 @@ import lime.tools.Asset;
 import lime.tools.AssetHelper;
 import lime.tools.AssetType;
 import lime.tools.CPPHelper;
-import lime.tools.CSHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.GUID;
 import lime.tools.HTML5Helper;
@@ -154,10 +153,6 @@ class WindowsPlatform extends PlatformTarget
 		else if (project.targetFlags.exists("nodejs"))
 		{
 			targetType = "nodejs";
-		}
-		else if (project.targetFlags.exists("cs"))
-		{
-			targetType = "cs";
 		}
 		else
 		{
@@ -370,18 +365,6 @@ class WindowsPlatform extends PlatformTarget
 
 			// NekoHelper.createExecutable (project.templatePaths, "windows" + (is64 ? "64" : ""), targetDirectory + "/obj/ApplicationMain.n", executablePath);
 			// NekoHelper.copyLibraries (project.templatePaths, "windows" + (is64 ? "64" : ""), applicationDirectory);
-		}
-		else if (targetType == "cs")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			CSHelper.copySourceFiles(project.templatePaths, targetDirectory + "/obj/src");
-			var txtPath = targetDirectory + "/obj/hxcs_build.txt";
-			CSHelper.addSourceFiles(txtPath, CSHelper.ndllSourceFiles);
-			CSHelper.addGUID(txtPath, GUID.uuid());
-			CSHelper.compile(project, targetDirectory + "/obj", applicationDirectory + project.app.file, "x86", "desktop");
 		}
 		else
 		{

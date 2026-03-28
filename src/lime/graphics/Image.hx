@@ -1488,18 +1488,7 @@ class Image
 			return false;
 		}
 
-		var imageBuffer:ImageBuffer = null;
-
-		#if !cs
-		imageBuffer = NativeCFFI.lime_image_load_bytes(bytes, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
-		#else
-		var data = NativeCFFI.lime_image_load_bytes(bytes, null);
-		if (data != null)
-		{
-			imageBuffer = new ImageBuffer(new UInt8Array(@:privateAccess new Bytes(data.data.buffer.length, data.data.buffer.b)), data.width, data.height,
-				data.bitsPerPixel);
-		}
-		#end
+		var imageBuffer:ImageBuffer = NativeCFFI.lime_image_load_bytes(bytes, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
 
 		if (imageBuffer != null)
 		{
@@ -1568,16 +1557,7 @@ class Image
 		#else
 		if (CFFI.enabled)
 		{
-			#if !cs
 			buffer = NativeCFFI.lime_image_load_file(path, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
-			#else
-			var data = NativeCFFI.lime_image_load_file(path, null);
-			if (data != null)
-			{
-				buffer = new ImageBuffer(new UInt8Array(@:privateAccess new Bytes(data.data.buffer.length, data.data.buffer.b)), data.width, data.height,
-					data.bitsPerPixel);
-			}
-			#end
 		}
 		#end
 
