@@ -871,8 +871,6 @@ class System
 			__platformName = "Flash Player";
 			#elseif tvos
 			__platformName = "tvOS";
-			#elseif firefox
-			__platformName = "Firefox";
 			#elseif js
 			__platformName = "HTML5";
 			#end

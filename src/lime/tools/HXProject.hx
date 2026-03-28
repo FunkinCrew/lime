@@ -141,7 +141,7 @@ class HXProject extends Script
 			case AIR if (targetFlags.exists("ios") || targetFlags.exists("android")):
 				PlatformType.MOBILE;
 
-			case FLASH, HTML5, FIREFOX, WEB_ASSEMBLY:
+			case FLASH, HTML5, WEB_ASSEMBLY:
 				PlatformType.WEB;
 
 			case ANDROID, IOS, TVOS:
@@ -714,11 +714,6 @@ class HXProject extends Script
 			{
 				defines.set("hlc", "1");
 			}
-		}
-		else if (target == Platform.FIREFOX)
-		{
-			defines.set("targetType", "js");
-			defines.set("html5", "1");
 		}
 		else if (target == Platform.AIR)
 		{
