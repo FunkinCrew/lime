@@ -16,6 +16,13 @@
 
 namespace lime {
 
+	enum WindowVSyncMode {
+
+		WINDOW_VSYNC_ADAPTIVE = -1,
+		WINDOW_VSYNC_OFF = 0,
+		WINDOW_VSYNC_ON = 1,
+
+	};
 
 	class Window {
 
@@ -25,6 +32,7 @@ namespace lime {
 			virtual ~Window () {};
 
 			virtual void Alert (const char* message, const char* title) = 0;
+			virtual bool SetVSyncMode (int mode) = 0;
 			virtual void Close () = 0;
 			virtual void ContextFlip () = 0;
 			virtual void* ContextLock (bool useCFFIValue) = 0;

@@ -217,6 +217,11 @@ class AIRWindow extends FlashWindow
 		parent.application.onDisplayOrientationChange.dispatch(parent.display.id, newDisplayOrientation);
 	}
 
+	public function setVSyncMode(mode:lime.ui.WindowVSyncMode):Bool
+	{
+		return false;
+	}
+
 	private function handleNativeWindowEvent(event:Event):Void
 	{
 		switch (event.type)
