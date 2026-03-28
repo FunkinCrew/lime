@@ -38,11 +38,9 @@ class HTML5HTTPRequest
 	private var binary:Bool;
 	private var parent:_IHTTPRequest;
 	private var request:XMLHttpRequest;
-	private var validStatus0:Bool;
 
 	public function new()
 	{
-		validStatus0 = #if allow_status_0 true #else ~/Tizen/gi.match(Browser.window.navigator.userAgent) #end;
 	}
 
 	public function cancel():Void
@@ -422,7 +420,7 @@ class HTML5HTTPRequest
 				bytes = Bytes.ofData(request.response);
 			}
 
-			if (request.status != null && ((request.status >= 200 && request.status < 400) || (validStatus0 && request.status == 0)))
+			if (request.status != null && ((request.status >= 200 && request.status < 400)))
 			{
 				processResponse();
 				promise.complete(bytes);
@@ -535,7 +533,7 @@ class HTML5HTTPRequest
 		{
 			if (request.readyState != 4) return;
 
-			if (request.status != null && ((request.status >= 200 && request.status < 400) || (validStatus0 && request.status == 0)))
+			if (request.status != null && ((request.status >= 200 && request.status < 400)))
 			{
 				processResponse();
 				promise.complete(request.responseText);

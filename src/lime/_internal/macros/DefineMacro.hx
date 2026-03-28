@@ -44,7 +44,7 @@ class DefineMacro
 
 				var cffi = (!Context.defined("nocffi") && !Context.defined("eval"));
 
-				if (Context.defined("ios") || Context.defined("android") || Context.defined("tizen"))
+				if (Context.defined("ios") || Context.defined("android"))
 				{
 					Compiler.define("mobile");
 					if (cffi) Compiler.define("lime-opengles");

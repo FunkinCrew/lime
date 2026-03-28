@@ -17,13 +17,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-#elif defined (TIZEN)
-
-#define LIME_GLES
-#define LIME_GLES3_API
-#include <gl3.h>
-#include <gl3ext.h>
-
 #elif defined (IPHONE) || defined(APPLETV)
 
 #define LIME_GLES

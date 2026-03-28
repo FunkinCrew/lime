@@ -391,10 +391,6 @@ class PlatformSetup
 						setupMac();
 					}
 
-				case "tizen":
-
-				// setupTizen ();
-
 				case "webassembly", "wasm", "emscripten":
 					setupWebAssembly();
 
@@ -714,7 +710,7 @@ class PlatformSetup
 		// 	}
 
 		// 	createPath (path + "/lib");
-		// 	var libs = [ "android", "bada-wac", "bada", "blackberry", "ios", "mac", "qt", "tizen", "tvos", "wp7" ];
+		// 	var libs = [ "android", "bada-wac", "bada", "blackberry", "ios", "mac", "qt", "tvos", "wp7" ];
 
 		// 	for (archive in childArchives) {
 

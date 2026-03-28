@@ -606,10 +606,6 @@ class CommandLineTools
 				case IOS:
 					platform = new IOSPlatform(command, project, targetFlags);
 
-				case TIZEN:
-
-				// platform = new TizenPlatform (command, project, targetFlags);
-
 				case WINDOWS:
 					platform = new WindowsPlatform(command, project, targetFlags);
 
@@ -928,7 +924,6 @@ class CommandLineTools
 			Log.println("  \x1b[1mios\x1b[0m -- Create an iOS application");
 			Log.println("  \x1b[1mlinux\x1b[0m -- Create a Linux application");
 			Log.println("  \x1b[1mmac\x1b[0m -- Create a macOS application");
-			// Log.println ("  \x1b[1mtizen\x1b[0m -- Create a Tizen application");
 			Log.println("  \x1b[1mtvos\x1b[0m -- Create a tvOS application");
 			Log.println("  \x1b[1mwebassembly\x1b[0m -- Create a WebAssembly application");
 			Log.println("  \x1b[1mwindows\x1b[0m -- Create a Windows application");
@@ -1030,7 +1025,7 @@ class CommandLineTools
 				Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-xcode\x1b[0m -- Launch the generated Xcode project");
 			}
 
-			// Log.println ("  \x1b[3m(ios|blackberry|tizen|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
+			// Log.println ("  \x1b[3m(ios|blackberry|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
 			Log.println("  \x1b[3m(ios|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
 			Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator -ipad\x1b[0m -- Build/test for the iPad Simulator");
 			Log.println("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
