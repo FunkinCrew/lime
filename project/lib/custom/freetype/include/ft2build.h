@@ -34,11 +34,6 @@
 #ifndef FT2BUILD_H_
 #define FT2BUILD_H_
 
-#ifdef HX_WINRT
-#define NOMINMAX
-#define generic GenericFromFreeTypeLibrary
-#endif
-
 #include <freetype/config/ftheader.h>
 
 #endif /* FT2BUILD_H_ */

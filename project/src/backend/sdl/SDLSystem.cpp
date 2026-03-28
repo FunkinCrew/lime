@@ -142,12 +142,7 @@ namespace lime {
 
 			case DESKTOP: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::KnownFolders::HomeGroup;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				WCHAR folderPath[MAX_PATH] = L"";
 				SHGetFolderPathW (NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -176,12 +171,7 @@ namespace lime {
 
 			case DOCUMENTS: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::KnownFolders::DocumentsLibrary;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				WCHAR folderPath[MAX_PATH] = L"";
 				SHGetFolderPathW (NULL, CSIDL_MYDOCUMENTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -214,11 +204,7 @@ namespace lime {
 
 			case FONTS: {
 
-				#if defined (HX_WINRT)
-
-				// TODO
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				WCHAR folderPath[MAX_PATH] = L"";
 				SHGetFolderPathW (NULL, CSIDL_FONTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
@@ -251,12 +237,7 @@ namespace lime {
 
 			case USER: {
 
-				#if defined (HX_WINRT)
-
-				Windows::Storage::StorageFolder^ folder = Windows::Storage::ApplicationData::Current->RoamingFolder;
-				result = new std::wstring (folder->Path->Data ());
-
-				#elif defined (HX_WINDOWS)
+				#if defined (HX_WINDOWS)
 
 				WCHAR folderPath[MAX_PATH] = L"";
 				SHGetFolderPathW (NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, folderPath);

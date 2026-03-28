@@ -405,7 +405,7 @@ class PlatformSetup
 				case "electron":
 					setupElectron();
 
-				case "windows", "winrt":
+				case "windows":
 					if (System.hostPlatform == WINDOWS)
 					{
 						setupWindows();

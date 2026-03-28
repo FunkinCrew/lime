@@ -1591,10 +1591,6 @@ class CommandLineTools
 				target = Platform.WEB_ASSEMBLY;
 				targetFlags.set("webassembly", "");
 
-			case "winrt":
-				target = Platform.WINDOWS;
-				targetFlags.set("winrt", "");
-
 			default:
 				target = cast targetName.toLowerCase();
 		}

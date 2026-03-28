@@ -55,13 +55,6 @@
 
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_sound/src/" />
 
-        <section if="winrt">
-
-            <compilerflag value="-D__WINRT__" />
-            <compilerflag value="-DUNICODE" />
-
-        </section>
-
         <section if="linux">
 
             <compilerflag value="-D_REENTRANT" />

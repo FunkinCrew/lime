@@ -45,13 +45,13 @@ namespace lime {
 			static std::wstring* GetPlatformName ();
 			static std::wstring* GetPlatformVersion ();
 			static double GetTimer ();
-			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
+			#if defined(HX_WINDOWS)
 			static int GetWindowsConsoleMode (int handleType);
 			#endif
 			static void OpenFile (const char* path);
 			static void OpenURL (const char* url, const char* target);
 			static bool SetAllowScreenTimeout (bool allow);
-			#if defined(HX_WINDOWS) && !defined (HX_WINRT)
+			#if defined(HX_WINDOWS)
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif
 			static void EnableDeviceOrientationChange(bool enable);

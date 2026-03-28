@@ -56,7 +56,7 @@ namespace lime {
 		if (flags & WINDOW_FLAG_ALWAYS_ON_TOP) sdlWindowFlags |= SDL_WINDOW_ALWAYS_ON_TOP;
 		#endif
 
-		#if defined (HX_WINDOWS) && defined (NATIVE_TOOLKIT_SDL_ANGLE) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS) && defined (NATIVE_TOOLKIT_SDL_ANGLE)
 		OSVERSIONINFOEXW osvi = { sizeof (osvi), 0, 0, 0, 0, {0}, 0, 0 };
 		DWORDLONG const dwlConditionMask = VerSetConditionMask (VerSetConditionMask (VerSetConditionMask (0, VER_MAJORVERSION, VER_GREATER_EQUAL), VER_MINORVERSION, VER_GREATER_EQUAL), VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
 		osvi.dwMajorVersion = HIBYTE (_WIN32_WINNT_VISTA);
@@ -167,7 +167,7 @@ namespace lime {
 
 		}
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 
 		HINSTANCE handle = ::GetModuleHandle (nullptr);
 		HICON icon = ::LoadIcon (handle, MAKEINTRESOURCE (1));
@@ -319,7 +319,7 @@ namespace lime {
 
 	void SDLWindow::Alert (const char* message, const char* title) {
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		#if defined (HX_WINDOWS)
 
 		int count = 0;
 		int speed = 0;

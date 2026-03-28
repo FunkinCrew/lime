@@ -49,11 +49,10 @@
 		<compilerflag value="-DUSE_MBEDTLS=1" if="NATIVE_TOOLKIT_HAVE_MBEDTLS" />
 		<compilerflag value="-DNATIVE_TOOLKIT_CURL_DISABLE_AXTLS_NONBLOCKING" if="NATIVE_TOOLKIT_CURL_DISABLE_AXTLS_NONBLOCKING" />
 		<compilerflag value="-DHAVE_CONFIG_H" unless="windows" />
-		<compilerflag value="-DWIN32" if="windows" unless="winrt" />
+		<compilerflag value="-DWIN32" if="windows" />
 		<compilerflag value="-DALLOW_MSVC6_WITHOUT_PSDK" if="windows" />
 		<compilerflag value="-DENABLE_IPV6=1" />
 		<compilerflag value="-DNEED_THREAD_SAFE=1" />
-		<compilerflag value="-DCURL_DISABLE_LDAP" if="winrt" />
 
 		<section if="windows">
 
