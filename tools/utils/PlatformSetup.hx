@@ -365,10 +365,6 @@ class PlatformSetup
 				case "android":
 					setupAndroid();
 
-				case "blackberry":
-
-				// setupBlackBerry ();
-
 				case "html5":
 					Log.println("\x1b[0;3mNo additional configuration is required.\x1b[0m");
 				// setupHTML5 ();
@@ -710,19 +706,13 @@ class PlatformSetup
 		// 	}
 
 		// 	createPath (path + "/lib");
-		// 	var libs = [ "android", "bada-wac", "bada", "blackberry", "ios", "mac", "qt", "tvos", "wp7" ];
+		// 	var libs = [ "android", "bada-wac", "bada", "ios", "mac", "qt", "tvos", "wp7" ];
 
 		// 	for (archive in childArchives) {
 
 		// 		var name = Path.withoutExtension (archive);
 		// 		name = StringTools.replace (name, "incubator-", "");
 		// 		name = StringTools.replace (name, "cordova-", "");
-
-		// 		if (name == "blackberry-webworks") {
-
-		// 			name = "blackberry";
-
-		// 		}
 
 		// 		var basePath = path + "/";
 

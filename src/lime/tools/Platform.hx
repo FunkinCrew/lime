@@ -4,7 +4,6 @@ enum abstract Platform(String) from hxp.HostPlatform
 {
 	var AIR = "air";
 	var ANDROID = "android";
-	var BLACKBERRY = "blackberry";
 	var CONSOLE_PC = "console-pc";
 	var FIREFOX = "firefox";
 	var FLASH = "flash";

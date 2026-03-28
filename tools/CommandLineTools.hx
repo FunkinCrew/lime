@@ -599,10 +599,6 @@ class CommandLineTools
 				case ANDROID:
 					platform = new AndroidPlatform(command, project, targetFlags);
 
-				case BLACKBERRY:
-
-				// platform = new BlackBerryPlatform (command, project, targetFlags);
-
 				case IOS:
 					platform = new IOSPlatform(command, project, targetFlags);
 
@@ -918,7 +914,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println("  \x1b[1mair\x1b[0m -- Create an AIR application");
 			Log.println("  \x1b[1mandroid\x1b[0m -- Create an Android application");
-			// Log.println ("  \x1b[1mblackberry\x1b[0m -- Create a BlackBerry application");
 			Log.println("  \x1b[1mflash\x1b[0m -- Create a Flash SWF application");
 			Log.println("  \x1b[1mhtml5\x1b[0m -- Create an HTML5 application");
 			Log.println("  \x1b[1mios\x1b[0m -- Create an iOS application");
@@ -1025,7 +1020,7 @@ class CommandLineTools
 				Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-xcode\x1b[0m -- Launch the generated Xcode project");
 			}
 
-			// Log.println ("  \x1b[3m(ios|blackberry|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
+			// Log.println ("  \x1b[3m(ios|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
 			Log.println("  \x1b[3m(ios|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
 			Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator -ipad\x1b[0m -- Build/test for the iPad Simulator");
 			Log.println("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");

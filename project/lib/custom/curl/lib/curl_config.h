@@ -258,7 +258,7 @@
 #define HAVE_GETHOSTNAME 1
 
 /* Define to 1 if you have a working getifaddrs function. */
-#if !defined(ANDROID) && !defined(HX_LINUX) && !defined(BLACKBERRY)
+#if !defined(ANDROID) && !defined(HX_LINUX)
 #define HAVE_GETIFADDRS 1
 #endif
 
@@ -330,7 +330,7 @@
 /* #undef HAVE_IDN2_H */
 
 /* Define to 1 if you have the <ifaddrs.h> header file. */
-#if !defined(ANDROID) && !defined(HX_LINUX) && !defined(BLACKBERRY)
+#if !defined(ANDROID) && !defined(HX_LINUX)
 #define HAVE_IFADDRS_H 1
 #endif
 
@@ -684,7 +684,7 @@
 #define HAVE_SYS_SOCKET_H 1
 
 /* Define to 1 if you have the <sys/sockio.h> header file. */
-#if !defined(ANDROID) && !defined(HX_LINUX) && !defined(BLACKBERRY) && !defined(EMSCRIPTEN)
+#if !defined(ANDROID) && !defined(HX_LINUX) && !defined(EMSCRIPTEN)
 #define HAVE_SYS_SOCKIO_H 1
 #endif
 

@@ -222,10 +222,6 @@ namespace lime {
 
 				result = new std::wstring (L"/system/fonts");
 
-				#elif defined (BLACKBERRY)
-
-				result = new std::wstring (L"/usr/fonts/font_repository/monotype");
-
 				#else
 
 				result = new std::wstring (L"/usr/share/fonts/truetype");
