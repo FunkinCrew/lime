@@ -155,14 +155,6 @@ class ImageBuffer
 		{
 			buffer.__srcImage = __srcImage;
 		}
-		#elseif nodejs
-		if (data != null)
-		{
-			buffer.data = new UInt8Array(data.byteLength);
-			var copy = new UInt8Array(data);
-			buffer.data.set(copy);
-		}
-		buffer.__srcCustom = __srcCustom;
 		#else
 		if (data != null)
 		{

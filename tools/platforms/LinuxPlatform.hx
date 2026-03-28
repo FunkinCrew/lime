@@ -153,10 +153,6 @@ class LinuxPlatform extends PlatformTarget
 				}
 			}
 		}
-		else if (project.targetFlags.exists("nodejs"))
-		{
-			targetType = "nodejs";
-		}
 		else
 		{
 			targetType = "cpp";
@@ -236,12 +232,6 @@ class LinuxPlatform extends PlatformTarget
 				command.push("-lm");
 				System.runCommand("", command.shift(), command);
 			}
-		}
-		else if (targetType == "nodejs")
-		{
-			System.runCommand("", "haxe", [hxml]);
-			// NekoHelper.createExecutable (project.templatePaths, "linux" + (is64 ? "64" : ""), targetDirectory + "/obj/ApplicationMain.n", executablePath);
-			// NekoHelper.copyLibraries (project.templatePaths, "linux" + (is64 ? "64" : ""), applicationDirectory);
 		}
 		else
 		{
@@ -346,7 +336,7 @@ class LinuxPlatform extends PlatformTarget
 			}
 		}
 
-		if (System.hostPlatform != WINDOWS && (targetType != "nodejs"))
+		if (System.hostPlatform != WINDOWS)
 		{
 			System.runCommand("", "chmod", ["755", executablePath]);
 		}
@@ -414,8 +404,6 @@ class LinuxPlatform extends PlatformTarget
 					hxml.hl = "_.hl";
 				case "neko":
 					hxml.neko = "_.n";
-				case "nodejs":
-					hxml.js = "_.js";
 				default:
 					hxml.cpp = "_";
 			}
@@ -500,11 +488,7 @@ class LinuxPlatform extends PlatformTarget
 			arguments.push("-verbose");
 		}
 
-		if (targetType == "nodejs")
-		{
-			NodeJSHelper.run(project, targetDirectory + "/bin/ApplicationMain.js", arguments);
-		}
-		else if (project.target == System.hostPlatform)
+		if (project.target == System.hostPlatform)
 		{
 			arguments = arguments.concat(["-livereload"]);
 			System.runCommand(applicationDirectory, "./" + Path.withoutDirectory(executablePath), arguments);

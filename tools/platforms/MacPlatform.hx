@@ -141,10 +141,6 @@ class MacPlatform extends PlatformTarget
 				}
 			}
 		}
-		else if (project.targetFlags.exists("nodejs"))
-		{
-			targetType = "nodejs";
-		}
 		else
 		{
 			targetType = "cpp";
@@ -266,15 +262,6 @@ class MacPlatform extends PlatformTarget
 				System.runCommand("", "chmod", ["755", executablePath]);
 			}
 		}
-		else if (targetType == "nodejs")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			// NekoHelper.createExecutable (project.templatePaths, "Mac" + dirSuffix, targetDirectory + "/obj/ApplicationMain.n", executablePath);
-			// NekoHelper.copyLibraries (project.templatePaths, "Mac" + dirSuffix, executableDirectory);
-		}
 		else
 		{
 			var haxeArgs = [hxml, "-D", "HXCPP_CLANG"];
@@ -316,7 +303,7 @@ class MacPlatform extends PlatformTarget
 			}
 		}
 
-		if (System.hostPlatform != WINDOWS && targetType != "nodejs" && sys.FileSystem.exists(executablePath))
+		if (System.hostPlatform != WINDOWS && sys.FileSystem.exists(executablePath))
 		{
 			System.runCommand("", "chmod", ["755", executablePath]);
 		}
@@ -375,8 +362,6 @@ class MacPlatform extends PlatformTarget
 					hxml.hl = "_.hl";
 				case "neko":
 					hxml.neko = "_.n";
-				case "nodejs":
-					hxml.js = "_.js";
 				default:
 					hxml.cpp = "_";
 			}
@@ -446,11 +431,7 @@ class MacPlatform extends PlatformTarget
 			arguments.push("-verbose");
 		}
 
-		if (targetType == "nodejs")
-		{
-			NodeJSHelper.run(project, executableDirectory + "/ApplicationMain.js", arguments);
-		}
-		else if (project.target == System.hostPlatform)
+		if (project.target == System.hostPlatform)
 		{
 			arguments = arguments.concat(["-livereload"]);
 			System.runCommand(executableDirectory, "./" + Path.withoutDirectory(executablePath), arguments);

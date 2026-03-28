@@ -35,7 +35,7 @@ import lime.utils.DataPointer;
 	public static function fromImage(image:Image):CairoSurface
 	{
 		#if (lime_cffi && lime_cairo && !macro)
-		return create(#if nodejs image.data #else image.data.buffer #end, CairoFormat.ARGB32, image.width, image.height, image.buffer.stride);
+		return create(image.data.buffer, CairoFormat.ARGB32, image.width, image.height, image.buffer.stride);
 		#else
 		return null;
 		#end

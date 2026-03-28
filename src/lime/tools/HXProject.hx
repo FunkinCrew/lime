@@ -715,12 +715,6 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
-		else if (targetFlags.exists("nodejs"))
-		{
-			defines.set("targetType", "nodejs");
-			defines.set("native", "1");
-			defines.set("nodejs", "1");
-		}
 		else if (target == Platform.FIREFOX)
 		{
 			defines.set("targetType", "js");

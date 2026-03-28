@@ -139,30 +139,10 @@ class NativeApplication
 		#end
 		#end
 
-		#if (nodejs && lime_cffi)
-		NativeCFFI.lime_application_init(handle);
-
-		var eventLoop = function()
-		{
-			var active = NativeCFFI.lime_application_update(handle);
-
-			if (!active)
-			{
-				untyped process.exitCode = NativeCFFI.lime_application_quit(handle);
-				parent.onExit.dispatch(untyped process.exitCode);
-			}
-			else
-			{
-				untyped setImmediate(eventLoop);
-			}
-		}
-
-		untyped setImmediate(eventLoop);
-		return 0;
-		#elseif lime_cffi
+		#if lime_cffi
 		var result = NativeCFFI.lime_application_exec(handle);
 
-		#if (!webassembly && !ios && !nodejs)
+		#if (!webassembly && !ios)
 		parent.onExit.dispatch(result);
 		#end
 

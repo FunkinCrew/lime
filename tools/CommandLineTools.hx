@@ -248,10 +248,6 @@ class CommandLineTools
 							target = System.hostPlatform;
 							targetFlags.set("cppia", "");
 
-						case "nodejs":
-							target = System.hostPlatform;
-							targetFlags.set("nodejs", "");
-
 						case "iphone", "iphoneos":
 							target = Platform.IOS;
 
@@ -920,7 +916,6 @@ class CommandLineTools
 			Log.println("  \x1b[1mcpp\x1b[0m -- Alias for host platform (using \x1b[1m-cpp\x1b[0m)");
 			Log.println("  \x1b[1mneko\x1b[0m -- Alias for host platform (using \x1b[1m-neko\x1b[0m)");
 			Log.println("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
-			Log.println("  \x1b[1mnodejs\x1b[0m -- Alias for host platform (using \x1b[1m-nodejs\x1b[0m)");
 			Log.println("  \x1b[1mhl/hashlink\x1b[0m -- Alias for host platform (using \x1b[1m-hl\x1b[0m)");
 			Log.println("  \x1b[1mhlc\x1b[0m -- Alias for host platform (using \x1b[1m-hlc\x1b[0m)");
 			#if (lime >= "7.6.0")
@@ -1037,7 +1032,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println("  \x1b[1m-watch\x1b[0m -- Execute the current command when the source changes");
 			Log.println("  \x1b[3m(linux)\x1b[0m \x1b[1m-rpi\x1b[0m -- Build for Raspberry Pi");
-			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-nodejs\x1b[0m -- Build for Node.js instead of C++");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-hl\x1b[0m -- Build for HashLink/JIT instead of C++");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-hlc\x1b[0m -- Build for HashLink/C instead of C++");
 			#if (lime >= "7.6.0")
@@ -1515,10 +1509,6 @@ class CommandLineTools
 			case "cppia":
 				target = System.hostPlatform;
 				targetFlags.set("cppia", "");
-
-			case "nodejs":
-				target = System.hostPlatform;
-				targetFlags.set("nodejs", "");
 
 			case "iphone", "iphoneos":
 				target = Platform.IOS;

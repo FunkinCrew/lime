@@ -150,10 +150,6 @@ class WindowsPlatform extends PlatformTarget
 			targetType = "cppia";
 			is64 = true;
 		}
-		else if (project.targetFlags.exists("nodejs"))
-		{
-			targetType = "nodejs";
-		}
 		else
 		{
 			targetType = "cpp";
@@ -357,15 +353,6 @@ class WindowsPlatform extends PlatformTarget
 				System.runCommand("", System.findTemplate(templates, "bin/ReplaceVistaIcon.exe"), [executablePath, iconPath, "1"], true, true);
 			}
 		}
-		else if (targetType == "nodejs")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			// NekoHelper.createExecutable (project.templatePaths, "windows" + (is64 ? "64" : ""), targetDirectory + "/obj/ApplicationMain.n", executablePath);
-			// NekoHelper.copyLibraries (project.templatePaths, "windows" + (is64 ? "64" : ""), applicationDirectory);
-		}
 		else
 		{
 			var haxeArgs = [hxml, "-D", "resourceFile=ApplicationMain.rc"];
@@ -516,8 +503,6 @@ class WindowsPlatform extends PlatformTarget
 					hxml.neko = "_.n";
 				case "cppia":
 					hxml.cppia = "_.cppia";
-				case "nodejs":
-					hxml.js = "_.js";
 				default:
 					hxml.cpp = "_";
 			}
@@ -586,11 +571,7 @@ class WindowsPlatform extends PlatformTarget
 			arguments.push("-verbose");
 		}
 
-		if (targetType == "nodejs")
-		{
-			NodeJSHelper.run(project, targetDirectory + "/bin/ApplicationMain.js", arguments);
-		}
-		else if (targetType == "cppia")
+		if (targetType == "cppia")
 		{
 			// arguments = arguments.concat(["-livereload"]);
 			arguments = ["script.cppia"]; // .concat(arguments);

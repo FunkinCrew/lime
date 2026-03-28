@@ -391,7 +391,7 @@ class System
 	{
 		#if flash
 		return flash.Lib.getTimer();
-		#elseif ((js && !nodejs) || electron)
+		#elseif (js || electron)
 		return Std.int(Browser.window.performance.now());
 		#elseif (lime_cffi && !macro)
 		return cast NativeCFFI.lime_system_get_timer();
@@ -873,8 +873,6 @@ class System
 			__platformName = "tvOS";
 			#elseif firefox
 			__platformName = "Firefox";
-			#elseif nodejs
-			__platformName = "Node.js";
 			#elseif js
 			__platformName = "HTML5";
 			#end

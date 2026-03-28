@@ -633,7 +633,6 @@ class AssetHelper
 			if (isPackedLibrary(project, library))
 			{
 				// TODO
-				#if !nodejs
 				if (type == "zip") type = "deflate";
 
 				// TODO: Support library.embed=true by embedding all the assets instead of packing
@@ -706,7 +705,6 @@ class AssetHelper
 				{
 					library.preload = true;
 				}
-				#end
 			}
 		}
 

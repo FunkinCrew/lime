@@ -7,7 +7,7 @@
 
 	<set name="lime" />
 
-	<define name="native" if="cpp || neko || nodejs || hl" />
+	<define name="native" if="cpp || neko || hl" />
 	<define name="howlerjs" if="html5" />
 
 	<define name="lime-cairo" if="native" />
@@ -33,8 +33,6 @@
 	<source path="externs/air" if="air" />
 	<haxeflag name="--macro" value="allowPackage('sys')" if="air" />
 	<sample path="samples" unless="openfl" />
-
-	<haxelib name="nodejs" if="nodejs" />
 
 	<target name="ps3" handler="lime-ps3" />
 	<haxelib name="lime-ps3" if="ps3" />
