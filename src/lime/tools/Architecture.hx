@@ -3,8 +3,8 @@ package lime.tools;
 import haxe.macro.Expr;
 import hxp.HostArchitecture;
 
+@:forward
 enum abstract Architecture(String) to String
-
 {
 	var ARMV5 = "ARMV5";
 	var ARMV6 = "ARMV6";
