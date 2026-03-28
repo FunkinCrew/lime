@@ -1,0 +1,80 @@
+name: Mac CI
+on:
+  workflow_dispatch:
+  workflow_call:
+
+env:
+  HAXE_VERSION: 4.3.5
+
+jobs:
+  mac:
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+      - name: Install Haxe dependencies
+        run: |
+          haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib install format --quiet
+          haxelib install hxp --quiet
+      - name: Configure Lime
+        run: haxelib dev lime ${{ github.workspace }}
+      - name: Rebuild Lime
+        run: |
+          rm -rf ./ndll
+          mkdir ./ndll
+          haxelib run lime rebuild hxcpp
+          # haxelib run lime rebuild mac -32 -nocolor -nocffi -eval
+          haxelib run lime rebuild mac -64 -nocolor -nocffi -eval
+      # - name: Upload Artifact (x86)
+        # uses: actions/upload-artifact@v4
+        # with:
+          # name: Mac-NDLL
+          # path: |
+            # ndll/Mac/
+            # !**/.gitignore
+            # lime.png
+          # if-no-files-found: error
+      - name: Upload Artifact (x86_64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mac64-NDLL
+          path: ndll
+          if-no-files-found: error
+  macarm64:
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+      - name: Install Haxe dependencies
+        run: |
+          haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib install format --quiet
+          haxelib install hxp --quiet
+          haxelib dev lime $GITHUB_WORKSPACE
+      - name: Configure Lime
+        run: haxelib dev lime ${{ github.workspace }}
+      - name: Rebuild Lime
+        run: |
+          rm -rf ./ndll
+          mkdir ./ndll
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild mac -arm64 -nocolor -nocffi -eval -D HXCPP_ARM64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacArm64-NDLL
+          path: ndll
+          if-no-files-found: error

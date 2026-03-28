@@ -1,0 +1,49 @@
+name: Build and Release
+on: workflow_dispatch
+
+jobs:
+  android:
+    uses: ./.github/workflows/android.yml
+  ios:
+    uses: ./.github/workflows/ios.yml
+  linux:
+    uses: ./.github/workflows/linux.yml
+  mac:
+    uses: ./.github/workflows/mac.yml
+  windows:
+    uses: ./.github/workflows/windows.yml
+  # miscellaneous:
+    # uses: ./.github/workflows/miscellaneous.yml
+
+  releaser:
+    needs: [android, ios, linux, mac, windows]
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Delete old NDLL's
+        run: |
+          rm -rf ndll
+          mkdir ndll
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./ndll
+          merge-multiple: true
+
+      - name: ZIP Repo
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          zip -rv ../release.zip . -x ".git/*" ".git/**"
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ github.ref_name }}/${{ env.SHORT_SHA }}"
+          tag_name: "${{ github.ref_name }}${{'-'}}${{ env.SHORT_SHA }}"
+          files: ../release.zip
