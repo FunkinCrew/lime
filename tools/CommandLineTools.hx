@@ -952,7 +952,6 @@ class CommandLineTools
 			#if (lime >= "7.6.0")
 			// Log.println("  \x1b[1mcppia\x1b[0m -- Alias for host platform (using \x1b[1m-cppia\x1b[0m)");
 			#end
-			Log.println("  \x1b[1muwp\x1b[0;3m/\x1b[0m\x1b[1mwinjs\x1b[0m -- Alias for \x1b[1mwindows -uwp\x1b[0m");
 			// Log.println ("  \x1b[1miphone\x1b[0;3m/\x1b[0m\x1b[1miphoneos\x1b[0m -- \x1b[1mios\x1b[0m");
 			// Log.println ("  \x1b[1miphonesim\x1b[0m -- Alias for \x1b[1mios -simulator\x1b[0m");
 			// Log.println ("  \x1b[1mappletv\x1b[0;3m/\x1b[0m\x1b[1mappletvos\x1b[0m -- Alias for \x1b[1mtvos\x1b[0m");
@@ -1072,8 +1071,6 @@ class CommandLineTools
 			#if (lime >= "7.6.0")
 			// Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cppia\x1b[0m -- Build for CPPIA instead of C++");
 			#end
-			Log.println("  \x1b[3m(windows)\x1b[0m \x1b[1m-winjs\x1b[0m -- Build for WinJS instead of C++ (implies UWP)");
-			Log.println("  \x1b[3m(windows)\x1b[0m \x1b[1m-uwp\x1b[0m -- Build for Universal Windows Platform");
 			Log.println("  \x1b[3m(html5)\x1b[0m \x1b[1m-electron\x1b[0m -- Target Electron instead of the browser");
 
 			if (command != "run" && command != "trace")
@@ -1593,11 +1590,6 @@ class CommandLineTools
 			case "webassembly", "wasm", "emscripten":
 				target = Platform.WEB_ASSEMBLY;
 				targetFlags.set("webassembly", "");
-
-			case "winjs", "uwp":
-				target = Platform.WINDOWS;
-				targetFlags.set("uwp", "");
-				targetFlags.set("winjs", "");
 
 			case "winrt":
 				target = Platform.WINDOWS;
