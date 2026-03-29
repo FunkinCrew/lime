@@ -88,7 +88,7 @@ class AndroidPlatform extends PlatformTarget
 		}
 		else
 		{
-			defaults.architectures = [Architecture.ARMV7, Architecture.ARM64];
+			defaults.architectures = [Architecture.ARM64];
 		}
 
 		defaults.window.width = 0;
