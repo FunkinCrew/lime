@@ -2892,6 +2892,50 @@ namespace lime {
 	HL_PRIM int HL_NAME(hl_system_get_device_orientation) () {
 
 		return System::GetDeviceOrientation();
+	
+	}
+
+
+	int lime_system_get_first_gyroscope_sensor_id () {
+
+		#if defined(ANDROID) || defined (IPHONE)
+		return System::GetFirstGyroscopeSensorId ();
+		#else
+		return -1;
+		#endif
+
+	}
+
+
+	HL_PRIM int HL_NAME(hl_system_get_first_gyroscope_sensor_id) () {
+
+		#if defined(ANDROID) || defined (IPHONE)
+		return System::GetFirstGyroscopeSensorId ();
+		#else
+		return -1;
+		#endif
+
+	}
+
+
+	int lime_system_get_first_accelerometer_sensor_id () {
+
+		#if defined(ANDROID) || defined (IPHONE)
+		return System::GetFirstAccelerometerSensorId();
+		#else
+		return -1;
+		#endif
+
+	}
+
+
+	HL_PRIM int HL_NAME(hl_system_get_first_accelerometer_sensor_id) () {
+
+		#if defined(ANDROID) || defined (IPHONE)
+		return System::GetFirstAccelerometerSensorId ();
+		#else
+		return -1;
+		#endif
 
 	}
 
@@ -4080,6 +4124,8 @@ namespace lime {
 	DEFINE_PRIME0 (lime_system_get_ios_tablet);
 	DEFINE_PRIME0 (lime_system_get_num_displays);
 	DEFINE_PRIME0 (lime_system_get_device_orientation);
+	DEFINE_PRIME0 (lime_system_get_first_gyroscope_sensor_id);
+	DEFINE_PRIME0 (lime_system_get_first_accelerometer_sensor_id);
 	DEFINE_PRIME0 (lime_system_get_platform_label);
 	DEFINE_PRIME0 (lime_system_get_platform_name);
 	DEFINE_PRIME0 (lime_system_get_platform_version);
@@ -4276,6 +4322,8 @@ namespace lime {
 	DEFINE_HL_PRIM (_BOOL, hl_system_get_ios_tablet, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_num_displays, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_device_orientation, _NO_ARG);
+	DEFINE_HL_PRIM (_I32, hl_system_get_first_gyroscope_sensor_id, _NO_ARG);
+	DEFINE_HL_PRIM (_I32, hl_system_get_first_accelerometer_sensor_id, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_platform_label, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_platform_name, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_platform_version, _NO_ARG);

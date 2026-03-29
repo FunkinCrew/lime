@@ -11,7 +11,8 @@ namespace lime {
 
 	enum SensorEventType {
 
-		SENSOR_ACCELEROMETER
+		SENSOR_ACCELEROMETER,
+		SENSOR_GYROSCOPE
 
 	};
 

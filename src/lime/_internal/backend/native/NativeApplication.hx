@@ -85,10 +85,6 @@ class NativeApplication
 
 		AudioManager.init();
 
-		#if (ios || android || tvos)
-		Sensor.registerSensor(SensorType.ACCELEROMETER, 0);
-		#end
-
 		#if android
 		var setDeviceOrientationListener = JNI.createStaticMethod("org/haxe/lime/GameActivity", "setDeviceOrientationListener",
 			"(Lorg/haxe/lime/HaxeObject;)V");
@@ -98,6 +94,18 @@ class NativeApplication
 
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_application_create();
+		#end
+
+		#if (ios || android)
+		final gyroscopeID:Int = NativeCFFI.lime_system_get_first_gyroscope_sensor_id();
+
+		if (gyroscopeID > 0)
+			Sensor.registerSensor(SensorType.GYROSCOPE, gyroscopeID);
+
+		final accelerometerID:Int = NativeCFFI.lime_system_get_first_accelerometer_sensor_id();
+
+		if (accelerometerID > 0)
+			Sensor.registerSensor(SensorType.ACCELEROMETER, accelerometerID);
 		#end
 	}
 
@@ -133,8 +141,6 @@ class NativeApplication
 		NativeCFFI.lime_window_event_manager_register(handleWindowEvent, windowEventInfo);
 		#if (ios || android)
 		NativeCFFI.lime_orientation_event_manager_register(handleOrientationEvent, orientationEventInfo);
-		#end
-		#if (ios || android || tvos)
 		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
 		#end
 		#end
@@ -456,7 +462,7 @@ class NativeApplication
 
 	private function handleSensorEvent():Void
 	{
-		var sensor = Sensor.sensorByID.get(sensorEventInfo.id);
+		var sensor = Sensor.__sensorByID.get(sensorEventInfo.id);
 
 		if (sensor != null)
 		{
@@ -921,6 +927,7 @@ private enum abstract RenderEventType(Int)
 private enum abstract SensorEventType(Int)
 {
 	var ACCELEROMETER = 0;
+	var GYROSCOPE = 1;
 }
 
 @:keep /*private*/ class TextEventInfo
