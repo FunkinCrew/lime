@@ -123,6 +123,10 @@ class HashlinkHelper
 			appMainCText = appMainCText.substr(0, index) + "
 // --------- START LIME HL/C INJECTED CODE --------- //
 // undefine things to avoid Haxe field name conflicts
+#undef String
+#undef small
+#undef EFAULT
+#undef EINVAL
 #undef BIG_ENDIAN
 #undef LITTLE_ENDIAN
 #undef TRUE
