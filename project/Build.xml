@@ -1,12 +1,14 @@
 <xml>
 
-	<set name="HXCPP_CPP11" value="1" />
+	<set name="HXCPP_CPP20" value="1" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
+	<set name="HXCPP_IOS_MIN_VERSION" value="11.0" if="iphone" />
+	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.13" if="mac" />
+
 	<set name="ios" value="1" if="iphone" />
 	<set name="tvos" value="1" if="appletv" />
-
 	<set name="LIME_CAIRO" value="1" />
 	<set name="LIME_CURL" value="1" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
@@ -52,8 +54,6 @@
 
 	<files id="lime">
 
-		<!-- setting HXCPP_CPP11 doesn't seem to apply to .mm files -->
-        <compilerflag value="-std=c++11" unless="isMsvc" />
 		<compilerflag value="-Iinclude" />
 
 		<file name="src/ExternalInterface.cpp" />
@@ -432,6 +432,7 @@
 				<lib name="shell32.lib" />
 				<lib name="comdlg32.lib" />
 				<lib name="setupapi.lib" />
+				<lib name="avrt.lib" if="LIME_OPENALSOFT"/>
 
 				<lib name="bcrypt.lib" if="LIME_CURL" />
 
@@ -478,7 +479,6 @@
 				<vflag name="-framework" value="CoreAudio" />
 				<vflag name="-framework" value="CoreVideo" />
 				<vflag name="-framework" value="ForceFeedback" />
-				<vflag name="-framework" value="OpenAL" />
 				<vflag name="-framework" value="OpenGL" />
 				<vflag name="-framework" value="SystemConfiguration" />
 
@@ -521,7 +521,6 @@
 				<vflag name="-framework" value="CoreAudio" />
 				<vflag name="-framework" value="CoreVideo" />
 				<vflag name="-framework" value="GameController" />
-				<vflag name="-framework" value="OpenAL" />
 				<vflag name="-framework" value="OpenGLES" />
 				<!-- <vflag name="-framework" value="CoreBluetooth" /> -->
 
@@ -541,7 +540,6 @@
 				<vflag name="-framework" value="CoreMotion" />
 				<vflag name="-framework" value="CoreText" />
 				<vflag name="-framework" value="CoreVideo" />
-				<vflag name="-framework" value="OpenAL" />
 				<vflag name="-framework" value="OpenGLES" />
 				<!-- <vflag name="-framework" value="CoreBluetooth" /> -->
 

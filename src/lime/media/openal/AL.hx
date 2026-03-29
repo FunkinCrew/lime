@@ -242,6 +242,8 @@ class AL
 	/* AL_SOFT_source_latency extension */
 	public static inline var SAMPLE_OFFSET_LATENCY_SOFT = 0x1200;
 	public static inline var SEC_OFFSET_LATENCY_SOFT = 0x1201;
+	/* AL_SOFT_hold_on_disconnect */
+	public static inline var STOP_SOURCES_ON_DISCONNECT_SOFT:Int = 0x19AB;
 	#end
 
 	public static function removeDirectFilter(source:ALSource)

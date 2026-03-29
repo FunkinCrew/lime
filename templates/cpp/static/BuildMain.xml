@@ -72,7 +72,6 @@
 			<vflag name="-framework" value="ForceFeedback" />
 			<vflag name="-framework" value="Carbon" />
 			<vflag name="-framework" value="AppKit" />
-			<vflag name="-framework" value="OpenAL"/>
 			<vflag name="-framework" value="SystemConfiguration"/>
 
 			<lib name="/opt/local/lib/libgc.a" if="LIME_NEKO" />

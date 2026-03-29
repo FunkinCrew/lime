@@ -1585,8 +1585,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_bufferiv(buffer:CFFIPointer, param:Int, values:Dynamic):Void;
 
-	@:cffi private static function lime_al_cleanup():Void;
-
 	@:cffi private static function lime_al_delete_buffer(buffer:CFFIPointer):Void;
 
 	@:cffi private static function lime_al_delete_buffers(n:Int, buffers:Dynamic):Void;
@@ -1761,6 +1759,12 @@ class NativeCFFI
 
 	@:cffi private static function lime_alc_suspend_context(context:CFFIPointer):Void;
 
+	@:cffi private static function lime_alc_event_control_soft(count:Int, events:Array<Int>, enable:Bool):Void;
+
+	@:cffi private static function lime_alc_event_callback_soft(callback:Dynamic):Void;
+
+	@:cffi private static function lime_alc_reopen_device_soft(device:CFFIPointer, newdevicename:String, attributes:Array<Int>):Bool;
+
 	@:cffi private static function lime_alc_capture_open_device(devicename:String, frequency:Int, format:Int, buffersize:Int):CFFIPointer;
 
 	@:cffi private static function lime_alc_capture_close_device(device:CFFIPointer):Bool;
@@ -1822,7 +1826,6 @@ class NativeCFFI
 	private static var lime_al_bufferi = new cpp.Callable<cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_bufferi", "oiiv", false));
 	private static var lime_al_bufferiv = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_bufferiv", "oiov",
 		false));
-	private static var lime_al_cleanup = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_cleanup", "v", false));
 	private static var lime_al_delete_buffer = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_buffer", "ov", false));
 	private static var lime_al_delete_buffers = new cpp.Callable<Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_buffers", "iov",
 		false));
@@ -1943,6 +1946,12 @@ class NativeCFFI
 	private static var lime_alc_resume_device = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_resume_device", "ov", false));
 	private static var lime_alc_suspend_context = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_suspend_context", "ov",
 		false));
+	private static var lime_alc_event_control_soft = new cpp.Callable<Int->cpp.Object->Bool->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_event_control_soft",
+		"iobv", false));
+	private static var lime_alc_event_callback_soft = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_event_callback_soft",
+		"ov", false));
+	private static var lime_alc_reopen_device_soft = new cpp.Callable<cpp.Object->String->cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_alc_reopen_device_soft",
+		"osob", false));
 	private static var lime_alc_capture_open_device = new cpp.Callable<String->Int->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_alc_capture_open_device",
 		"siiio", false));
 	private static var lime_alc_capture_close_device = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_alc_capture_close_device", "ob",
@@ -1988,7 +1997,6 @@ class NativeCFFI
 	private static var lime_al_bufferfv = CFFI.load("lime", "lime_al_bufferfv", 3);
 	private static var lime_al_bufferi = CFFI.load("lime", "lime_al_bufferi", 3);
 	private static var lime_al_bufferiv = CFFI.load("lime", "lime_al_bufferiv", 3);
-	private static var lime_al_cleanup = CFFI.load("lime", "lime_al_cleanup", 0);
 	private static var lime_al_delete_buffer = CFFI.load("lime", "lime_al_delete_buffer", 1);
 	private static var lime_al_delete_buffers = CFFI.load("lime", "lime_al_delete_buffers", 2);
 	private static var lime_al_delete_source = CFFI.load("lime", "lime_al_delete_source", 1);
@@ -2076,6 +2084,9 @@ class NativeCFFI
 	private static var lime_alc_process_context = CFFI.load("lime", "lime_alc_process_context", 1);
 	private static var lime_alc_resume_device = CFFI.load("lime", "lime_alc_resume_device", 1);
 	private static var lime_alc_suspend_context = CFFI.load("lime", "lime_alc_suspend_context", 1);
+	private static var lime_alc_event_control_soft = CFFI.load("lime", "lime_alc_event_control_soft", 3);
+	private static var lime_alc_event_callback_soft = CFFI.load("lime", "lime_alc_event_callback_soft", 1);
+	private static var lime_alc_reopen_device_soft = CFFI.load("lime", "lime_alc_reopen_device_soft", 3);
 	private static var lime_alc_capture_open_device = CFFI.load("lime", "lime_alc_capture_open_device", 4);
 	private static var lime_alc_capture_close_device = CFFI.load("lime", "lime_alc_capture_close_device", 1);
 	private static var lime_alc_capture_start = CFFI.load("lime", "lime_alc_capture_start", 1);
@@ -2118,8 +2129,6 @@ class NativeCFFI
 	@:hlNative("lime", "hl_al_bufferi") private static function lime_al_bufferi(buffer:CFFIPointer, param:Int, value:Int):Void {}
 
 	@:hlNative("lime", "hl_al_bufferiv") private static function lime_al_bufferiv(buffer:CFFIPointer, param:Int, values:hl.NativeArray<Int>):Void {}
-
-	@:hlNative("lime", "hl_al_cleanup") private static function lime_al_cleanup():Void {}
 
 	@:hlNative("lime", "hl_al_delete_buffer") private static function lime_al_delete_buffer(buffer:CFFIPointer):Void {}
 
@@ -2451,6 +2460,15 @@ class NativeCFFI
 	@:hlNative("lime", "hl_alc_resume_device") private static function lime_alc_resume_device(device:ALDevice):Void {}
 
 	@:hlNative("lime", "hl_alc_suspend_context") private static function lime_alc_suspend_context(context:ALContext):Void {}
+
+	@:hlNative("lime", "hl_alc_event_control_soft") private static function lime_alc_event_control_soft(count:Int, events:hl.NativeArray<Int>, enable:Bool):Void {}
+
+	@:hlNative("lime", "hl_alc_event_callback_soft") private static function lime_alc_event_callback_soft(callback:Int->Int->CFFIPointer->hl.Bytes->Void):Void {}
+
+	@:hlNative("lime", "hl_alc_reopen_device_soft") private static function lime_alc_reopen_device_soft(device:ALDevice, newdevicename:String, attributes:hl.NativeArray<Int>):Bool
+	{
+		return false;
+	}
 
 	@:hlNative("lime", "hl_alc_capture_open_device") private static function lime_alc_capture_open_device(devicename:String, frequency:Int, format:Int, buffersize:Int):CFFIPointer
 	{

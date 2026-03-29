@@ -37,6 +37,20 @@ class ALC
 	public static inline var CAPTURE_DEVICE_SPECIFIER:Int = 0x310;
 	public static inline var CAPTURE_DEFAULT_DEVICE_SPECIFIER:Int = 0x311;
 	public static inline var CAPTURE_SAMPLES:Int = 0x312;
+	#if lime_openalsoft
+	/* ALC_SOFT_system_events */
+	public static inline var PLAYBACK_DEVICE_SOFT:Int = 0x19D4;
+	public static inline var CAPTURE_DEVICE_SOFT:Int = 0x19D5;
+	public static inline var EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT:Int = 0x19D6;
+	public static inline var EVENT_TYPE_DEVICE_ADDED_SOFT:Int = 0x19D7;
+	public static inline var EVENT_TYPE_DEVICE_REMOVED_SOFT:Int = 0x19D8;
+	public static inline var EVENT_SUPPORTED_SOFT:Int = 0x19D9;
+	public static inline var EVENT_NOT_SUPPORTED_SOFT:Int = 0x19DA;
+	/* ALC_SOFT_device_clock */
+	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
+	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
+	public static inline var DEVICE_CLOCK_LATENCY_SOFT:Int = 0x1602;
+	#end
 
 	public static function closeDevice(device:ALDevice):Bool
 	{
@@ -236,6 +250,49 @@ class ALC
 	{
 		#if (lime_cffi && lime_openal && !macro)
 		return NativeCFFI.lime_alc_is_extension_present(device, extname);
+		#else
+		return false;
+		#end
+	}
+
+	public static function eventControlSOFT(events:Array<Int>, enable:Bool):Void
+	{
+		#if (lime_cffi && lime_openalsoft && !macro)
+		#if hl
+		var _events = null;
+		if (events != null)
+		{
+			_events = new hl.NativeArray<Int>(events.length);
+			for (i in 0...events.length)
+				_events[i] = events[i];
+		}
+		var events = _events;
+		#end
+		NativeCFFI.lime_alc_event_control_soft(events.length, events, enable);
+		#end
+	}
+
+	public static function eventCallbackSOFT(callback:Dynamic):Void
+	{
+		#if (lime_cffi && lime_openalsoft && !macro)
+		NativeCFFI.lime_alc_event_callback_soft(callback);
+		#end
+	}
+
+	public static function reopenDeviceSOFT(device:ALDevice, newDeviceName:String, attributes:Array<Int>):Bool
+	{
+		#if (lime_cffi && lime_openalsoft && !macro)
+		#if hl
+		var _attributes = null;
+		if (attributes != null)
+		{
+			_attributes = new hl.NativeArray<Int>(attributes.length);
+			for (i in 0...attributes.length)
+				_attributes[i] = attributes[i];
+		}
+		var attributes = _attributes;
+		#end
+		return NativeCFFI.lime_alc_reopen_device_soft(device, newDeviceName, attributes);
 		#else
 		return false;
 		#end
