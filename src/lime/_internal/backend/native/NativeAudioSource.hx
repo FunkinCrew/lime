@@ -27,6 +27,8 @@ class NativeAudioSource
 	#end
 	private static var STREAM_TIMER_FREQUENCY = 100;
 
+	private static var hasDirectChannelsExt:Null<Bool>;
+
 	private var buffers:Array<ALBuffer>;
 	private var bufferTimeBlocks:Array<Float>;
 	private var completed:Bool;
@@ -143,6 +145,16 @@ class NativeAudioSource
 			{
 				AL.sourcei(handle, AL.BUFFER, parent.buffer.__srcBuffer);
 			}
+		}
+
+		if (hasDirectChannelsExt == null)
+		{
+			hasDirectChannelsExt = AL.isExtensionPresent("AL_SOFT_direct_channels") && AL.isExtensionPresent("AL_SOFT_direct_channels_remix");
+		}
+
+		if (hasDirectChannelsExt)
+		{
+			AL.sourcei(handle, AL.DIRECT_CHANNELS_SOFT, AL.REMIX_UNMATCHED_SOFT);
 		}
 
 		samples = Std.int((dataLength * 8.0) / (parent.buffer.channels * parent.buffer.bitsPerSample));
