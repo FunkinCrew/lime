@@ -56,18 +56,6 @@ public class GameActivity extends SDLActivity {
 
 	}
 
-	public static double getDisplayXDPI () {
-
-		if (metrics == null) {
-
-			metrics = Extension.mainContext.getResources ().getDisplayMetrics ();
-
-		}
-
-		return metrics.xdpi;
-
-	}
-
 	public static int[] getDisplaySafeAreaInsets () {
 
 		if (displayCutout == null) {
@@ -464,19 +452,21 @@ public class GameActivity extends SDLActivity {
 
 
 	@SuppressWarnings("deprecation")
-	public static void vibrate (int period, int duration) {
+	public static void vibrate (int period, int duration, int amplitude) {
 
-		if (vibrator == null || !vibrator.hasVibrator () || period < 0 || duration <= 0) {
+		if (vibrator == null || !vibrator.hasVibrator () || period < 0 || duration <= 0 || amplitude < 0) {
 
 			return;
 
 		}
 
+		int vibrationAmplitude = amplitude <= 0 ? VibrationEffect.DEFAULT_AMPLITUDE : Math.min(amplitude, 255);
+
 		if (period == 0) {
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-				vibrator.vibrate (VibrationEffect.createOneShot (duration, VibrationEffect.DEFAULT_AMPLITUDE));
+				vibrator.vibrate (VibrationEffect.createOneShot (duration, vibrationAmplitude));
 
 			} else {
 
@@ -490,17 +480,21 @@ public class GameActivity extends SDLActivity {
 			int periodMS = (int)Math.ceil (period / 2.0);
 			int count = (int)Math.ceil (duration / (double) periodMS);
 			long[] pattern = new long[count];
+			int[] amplitudes = new int[count];
 
-			// the first entry is the delay before vibration starts, so leave it as 0
-			for (int i = 1; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 
-				pattern[i] = periodMS;
+				// the first entry is the delay before vibration starts, so leave it as 0
+				if (i > 0)
+					pattern[i] = periodMS;
+
+				amplitudes[i] = vibrationAmplitude;
 
 			}
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-				vibrator.vibrate (VibrationEffect.createWaveform (pattern, -1));
+				vibrator.vibrate (VibrationEffect.createWaveform (pattern, amplitudes, -1));
 
 			} else {
 

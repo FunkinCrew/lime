@@ -746,7 +746,7 @@ class ThreadPool extends WorkOutput
 	/**
 		Processes the job queues, then processes incoming events.
 	**/
-	private function __update(deltaTime:Int):Void
+	private function __update(deltaTime:Float):Void
 	{
 		if (!isMainThread())
 		{

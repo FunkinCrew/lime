@@ -61,7 +61,7 @@ class FlashWindow
 		create();
 	}
 
-	public function alert(message:String, title:String):Void {}
+	public function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int { return -1; }
 
 	public function close():Void
 	{

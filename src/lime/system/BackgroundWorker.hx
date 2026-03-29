@@ -168,7 +168,7 @@ class BackgroundWorker
 		doWork.dispatch(__runMessage);
 	}
 
-	@:noCompletion private function __update(deltaTime:Int):Void
+	@:noCompletion private function __update(deltaTime:Float):Void
 	{
 		#if (cpp || hl)
 		var message = __messageQueue.pop(false);

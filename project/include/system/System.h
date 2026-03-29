@@ -30,7 +30,6 @@ namespace lime {
 			static void GCExitBlocking ();
 			static void GCTryEnterBlocking ();
 			static void GCTryExitBlocking ();
-			static int GetTicks ();
 			static bool GetAllowScreenTimeout ();
 			static std::wstring* GetDeviceModel ();
 			static std::wstring* GetDeviceVendor ();
@@ -38,15 +37,9 @@ namespace lime {
 			static void* GetDisplay (bool useCFFIValue, int id);
 			#ifdef IPHONE
 			static std::wstring* GetIOSDirectory (SystemDirectory type);
-			static bool GetIOSTablet ();
 			#endif
-			#if defined(ANDROID) || defined (IPHONE)
 			static int GetFirstGyroscopeSensorId ();
 			static int GetFirstAccelerometerSensorId ();
-			#endif
-			#if defined (IPHONE)
-			static void showIOSAlert (const char* message, const char* title);
-			#endif
 			static int GetNumDisplays ();
 			static int GetDeviceOrientation ();
 			static std::wstring* GetPlatformLabel ();
@@ -59,6 +52,7 @@ namespace lime {
 			static void OpenFile (const char* path);
 			static void OpenURL (const char* url, const char* target);
 			static std::wstring* GetHint (const char* key);
+			static void SetHint (const char* key, const char* value);
 			static bool SetAllowScreenTimeout (bool allow);
 			#if defined(HX_WINDOWS)
 			static bool SetWindowsConsoleMode (int handleType, int mode);
@@ -87,7 +81,7 @@ namespace lime {
 
 
 	extern int fclose (FILE_HANDLE *stream);
-	extern FILE_HANDLE *fdopen (int fd, const char *mode);
+	//extern FILE_HANDLE *fdopen (int fd, const char *mode);
 	extern FILE_HANDLE *fopen (const char *filename, const char *mode);
 	//extern FILE* freopen (const char *filename, const char *mode, FILE *stream);
 	extern size_t fread (void *ptr, size_t size, size_t count, FILE_HANDLE *stream);

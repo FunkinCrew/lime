@@ -23,6 +23,8 @@
 	<string>To play with controller accept bluetooth permission.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth is required to connect and use controllers.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>CFBundleDisplayName</key>
 	<string>::APP_TITLE::</string>
 	<key>CFBundleExecutable</key>

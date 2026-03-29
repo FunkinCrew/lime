@@ -81,6 +81,7 @@ class NativeWindow
 
 		if (Reflect.hasField(attributes, "allowHighDPI") && attributes.allowHighDPI) flags |= cast WindowFlags.WINDOW_FLAG_ALLOW_HIGHDPI;
 		if (Reflect.hasField(attributes, "alwaysOnTop") && attributes.alwaysOnTop) flags |= cast WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP;
+		if (Reflect.hasField(attributes, "transparent") && attributes.transparent) flags |= cast WindowFlags.WINDOW_FLAG_TRANSPARENT;
 		if (Reflect.hasField(attributes, "borderless") && attributes.borderless) flags |= cast WindowFlags.WINDOW_FLAG_BORDERLESS;
 		if (Reflect.hasField(attributes, "fullscreen") && attributes.fullscreen) flags |= cast WindowFlags.WINDOW_FLAG_FULLSCREEN;
 		if (Reflect.hasField(attributes, "hidden") && attributes.hidden) flags |= cast WindowFlags.WINDOW_FLAG_HIDDEN;
@@ -184,14 +185,26 @@ class NativeWindow
 		setTextInputEnabled(false);
 	}
 
-	public function alert(message:String, title:String):Void
+	public function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int
 	{
 		if (handle != null)
 		{
 			#if (!macro && lime_cffi)
-			NativeCFFI.lime_window_alert(handle, message, title);
+			if (buttons == null || buttons.length <= 0)
+			{
+				buttons = ["Ok"];
+			}
+			#if hl
+			var _buttons = new hl.NativeArray<String>(buttons.length);
+			for (i in 0...buttons.length)
+				_buttons[i] = buttons[i];
+			var buttons = _buttons;
+			#end
+			return NativeCFFI.lime_window_alert(handle, type, message, title, buttons);
 			#end
 		}
+
+		return -1;
 	}
 
 	public function close():Void
@@ -270,7 +283,7 @@ class NativeWindow
 			#if (!macro && lime_cffi)
 			var index = NativeCFFI.lime_window_get_display(handle);
 
-			if (index > -1)
+			if (index >= 1)
 			{
 				return System.getDisplay(index);
 			}
@@ -775,20 +788,21 @@ private enum abstract MouseCursorType(Int) from Int to Int
 private enum abstract WindowFlags(Int)
 {
 	var WINDOW_FLAG_FULLSCREEN = 0x00000001;
-	var WINDOW_FLAG_BORDERLESS = 0x00000002;
-	var WINDOW_FLAG_RESIZABLE = 0x00000004;
-	var WINDOW_FLAG_HARDWARE = 0x00000008;
-	var WINDOW_FLAG_VSYNC = 0x00000010;
-	var WINDOW_FLAG_HW_AA = 0x00000020;
-	var WINDOW_FLAG_HW_AA_HIRES = 0x00000060;
-	var WINDOW_FLAG_ALLOW_SHADERS = 0x00000080;
-	var WINDOW_FLAG_REQUIRE_SHADERS = 0x00000100;
-	var WINDOW_FLAG_DEPTH_BUFFER = 0x00000200;
-	var WINDOW_FLAG_STENCIL_BUFFER = 0x00000400;
-	var WINDOW_FLAG_ALLOW_HIGHDPI = 0x00000800;
-	var WINDOW_FLAG_HIDDEN = 0x00001000;
-	var WINDOW_FLAG_MINIMIZED = 0x00002000;
-	var WINDOW_FLAG_MAXIMIZED = 0x00004000;
-	var WINDOW_FLAG_ALWAYS_ON_TOP = 0x00008000;
-	var WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00010000;
+	var WINDOW_FLAG_TRANSPARENT = 0x00000002;
+	var WINDOW_FLAG_BORDERLESS = 0x00000004;
+	var WINDOW_FLAG_RESIZABLE = 0x00000008;
+	var WINDOW_FLAG_HARDWARE = 0x00000010;
+	var WINDOW_FLAG_VSYNC = 0x00000020;
+	var WINDOW_FLAG_HW_AA = 0x00000040;
+	var WINDOW_FLAG_HW_AA_HIRES = 0x000000C0;
+	var WINDOW_FLAG_ALLOW_SHADERS = 0x00000100;
+	var WINDOW_FLAG_REQUIRE_SHADERS = 0x00000200;
+	var WINDOW_FLAG_DEPTH_BUFFER = 0x00000400;
+	var WINDOW_FLAG_STENCIL_BUFFER = 0x00000800;
+	var WINDOW_FLAG_ALLOW_HIGHDPI = 0x00001000;
+	var WINDOW_FLAG_HIDDEN = 0x00002000;
+	var WINDOW_FLAG_MINIMIZED = 0x00004000;
+	var WINDOW_FLAG_MAXIMIZED = 0x00008000;
+	var WINDOW_FLAG_ALWAYS_ON_TOP = 0x00010000;
+	var WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00020000;
 }

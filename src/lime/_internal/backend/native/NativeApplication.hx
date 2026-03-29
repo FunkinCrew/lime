@@ -1,5 +1,6 @@
 package lime._internal.backend.native;
 
+import haxe.Int64;
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
@@ -66,7 +67,7 @@ class NativeApplication
 	private var deviceOrientationListener:OrientationChangeListener;
 	#end
 
-	private var pauseTimer:Int;
+	private var pauseTimer:Float;
 	private var parent:Application;
 	private var toggleFullscreen:Bool;
 
@@ -97,15 +98,9 @@ class NativeApplication
 		AudioManager.init();
 
 		#if (ios || android)
-		final gyroscopeID:Int = NativeCFFI.lime_system_get_first_gyroscope_sensor_id();
+		Sensor.registerSensor(SensorType.ACCELEROMETER, NativeCFFI.lime_system_get_first_accelerometer_sensor_id());
 
-		if (gyroscopeID > 0)
-			Sensor.registerSensor(SensorType.GYROSCOPE, gyroscopeID);
-
-		final accelerometerID:Int = NativeCFFI.lime_system_get_first_accelerometer_sensor_id();
-
-		if (accelerometerID > 0)
-			Sensor.registerSensor(SensorType.ACCELEROMETER, accelerometerID);
+		Sensor.registerSensor(SensorType.GYROSCOPE, NativeCFFI.lime_system_get_first_gyroscope_sensor_id());
 		#end
 	}
 
@@ -136,12 +131,12 @@ class NativeApplication
 		NativeCFFI.lime_key_event_manager_register(handleKeyEvent, keyEventInfo);
 		NativeCFFI.lime_mouse_event_manager_register(handleMouseEvent, mouseEventInfo);
 		NativeCFFI.lime_render_event_manager_register(handleRenderEvent, renderEventInfo);
+		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
 		NativeCFFI.lime_text_event_manager_register(handleTextEvent, textEventInfo);
 		NativeCFFI.lime_touch_event_manager_register(handleTouchEvent, touchEventInfo);
 		NativeCFFI.lime_window_event_manager_register(handleWindowEvent, windowEventInfo);
 		#if (ios || android)
 		NativeCFFI.lime_orientation_event_manager_register(handleOrientationEvent, orientationEventInfo);
-		NativeCFFI.lime_sensor_event_manager_register(handleSensorEvent, sensorEventInfo);
 		#end
 		#end
 
@@ -197,13 +192,22 @@ class NativeApplication
 
 	private function handleDropEvent():Void
 	{
-		for (window in parent.windows)
+		var window = #if mobile parent.window #else parent.__windowByID.get(dropEventInfo.windowID) #end;
+
+		if (window != null)
 		{
-			switch dropEventInfo.type {
-				case DROP_FILE: window.onDropFile.dispatch(CFFI.stringValue(dropEventInfo.file));
-				case DROP_TEXT: //window.onDropText.dispatch(CFFI.stringValue(dropEventInfo.file));
-				case DROP_BEGIN: window.onDropStart.dispatch();
-				case DROP_COMPLETE: window.onDropEnd.dispatch();
+			switch (dropEventInfo.type)
+			{
+				case DROP_FILE:
+					window.onDropFile.dispatch(CFFI.stringValue(dropEventInfo.data), CFFI.stringValue(dropEventInfo.source), dropEventInfo.x, dropEventInfo.y);
+				case DROP_TEXT:
+					window.onDropText.dispatch(CFFI.stringValue(dropEventInfo.data), CFFI.stringValue(dropEventInfo.source), dropEventInfo.x, dropEventInfo.y);
+				case DROP_BEGIN:
+					window.onDropBegin.dispatch();
+				case DROP_COMPLETE:
+					window.onDropComplete.dispatch(dropEventInfo.x, dropEventInfo.y);
+				case DROP_POSITION:
+					window.onDropPosition.dispatch(dropEventInfo.x, dropEventInfo.y);
 			}
 		}
 	}
@@ -217,7 +221,7 @@ class NativeApplication
 				if (gamepad != null)
 				{
 					gamepad.onAxisMove.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue);
-					gamepad.onAxisMovePrecise.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue, gamepadEventInfo.timestamp);
+					gamepad.onAxisMovePrecise.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case BUTTON_DOWN:
@@ -225,7 +229,7 @@ class NativeApplication
 				if (gamepad != null)
 				{
 					gamepad.onButtonDown.dispatch(gamepadEventInfo.button);
-					gamepad.onButtonDownPrecise.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
+					gamepad.onButtonDownPrecise.dispatch(gamepadEventInfo.button, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case BUTTON_UP:
@@ -233,7 +237,7 @@ class NativeApplication
 				if (gamepad != null)
 				{
 					gamepad.onButtonUp.dispatch(gamepadEventInfo.button);
-					gamepad.onButtonUpPrecise.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
+					gamepad.onButtonUpPrecise.dispatch(gamepadEventInfo.button, Int64.fromFloat(gamepadEventInfo.timestamp));
 				}
 
 			case CONNECT:
@@ -282,7 +286,7 @@ class NativeApplication
 			var int32:Float = keyEventInfo.keyCode;
 			var keyCode:KeyCode = Std.int(int32);
 			var modifier:KeyModifier = keyEventInfo.modifier;
-			var timestamp = keyEventInfo.timestamp;
+			var timestamp:Int64 = Int64.fromFloat(keyEventInfo.timestamp);
 
 			switch (type)
 			{
@@ -677,10 +681,10 @@ class NativeApplication
 
 @:keep /*private*/ class ApplicationEventInfo
 {
-	public var deltaTime:Int;
+	public var deltaTime:Float;
 	public var type:ApplicationEventType;
 
-	public function new(type:ApplicationEventType = null, deltaTime:Int = 0)
+	public function new(type:ApplicationEventType = null, deltaTime:Float = 0.0)
 	{
 		this.type = type;
 		this.deltaTime = deltaTime;
@@ -720,18 +724,26 @@ private enum abstract ClipboardEventType(Int)
 
 @:keep /*private*/ class DropEventInfo
 {
-	public var file:#if hl hl.Bytes #else String #end;
+	public var data:#if hl hl.Bytes #else String #end;
+	public var source:#if hl hl.Bytes #else String #end;
+	public var windowID:Int;
+	public var x:Float;
+	public var y:Float;
 	public var type:DropEventType;
 
-	public function new(type:DropEventType = null, file = null)
+	public function new(type:DropEventType = null, data = null, source = null, windowID:Int = 0, x:Float = 0, y:Float = 0)
 	{
 		this.type = type;
-		this.file = file;
+		this.data = data;
+		this.source = source;
+		this.windowID = 0;
+		this.x = x;
+		this.y = y;
 	}
 
 	public function clone():DropEventInfo
 	{
-		return new DropEventInfo(type, file);
+		return new DropEventInfo(type, data, source, windowID, x, y);
 	}
 }
 
@@ -741,6 +753,7 @@ private enum abstract DropEventType(Int)
 	var DROP_TEXT = 1;
 	var DROP_BEGIN = 2;
 	var DROP_COMPLETE = 3;
+	var DROP_POSITION = 4;
 }
 
 @:keep /*private*/ class GamepadEventInfo
@@ -750,9 +763,9 @@ private enum abstract DropEventType(Int)
 	public var id:Int;
 	public var type:GamepadEventType;
 	public var axisValue:Float;
-	public var timestamp:Int;
+	public var timestamp:Float;
 
-	public function new(type:GamepadEventType = null, id:Int = 0, button:Int = 0, axis:Int = 0, value:Float = 0, timestamp:Int = 0)
+	public function new(type:GamepadEventType = null, id:Int = 0, button:Int = 0, axis:Int = 0, value:Float = 0, timestamp:Float = 0)
 	{
 		this.type = type;
 		this.id = id;
@@ -818,9 +831,9 @@ private enum abstract JoystickEventType(Int)
 	public var modifier:Int;
 	public var type:KeyEventType;
 	public var windowID:Int;
-	public var timestamp:Int;
+	public var timestamp:Float;
 
-	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode:Float = 0, modifier:Int = 0, timestamp:Int = 0)
+	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode: Float = 0, modifier:Int = 0, timestamp:Float = 0)
 	{
 		this.type = type;
 		this.windowID = windowID;

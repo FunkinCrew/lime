@@ -247,41 +247,14 @@ class System
 			display.name = CFFI.stringValue(displayInfo.name);
 			display.bounds = new Rectangle(displayInfo.bounds.x, displayInfo.bounds.y, displayInfo.bounds.width, displayInfo.bounds.height);
 			display.orientation = displayInfo.orientation;
-
 			#if android
 			var getDisplaySafeArea = JNI.createStaticMethod("org/haxe/lime/GameActivity", "getDisplaySafeAreaInsets", "()[I");
 			var result = getDisplaySafeArea();
-			display.safeArea = new Rectangle(
-				display.bounds.x + result[0],
-				display.bounds.y + result[1],
-				display.bounds.width - result[0] - result[2],
-				display.bounds.height - result[1] - result[3]);
+			display.safeArea = new Rectangle(display.bounds.x + result[0], display.bounds.y + result[1], display.bounds.width - result[0] - result[2], display.bounds.height - result[1] - result[3]);
 			#else
-			display.safeArea = new Rectangle(
-				displayInfo.safeArea.x,
-				displayInfo.safeArea.y,
-				displayInfo.safeArea.width,
-				displayInfo.safeArea.height);
+			display.safeArea = new Rectangle(displayInfo.safeArea.x, displayInfo.safeArea.y, displayInfo.safeArea.width, displayInfo.safeArea.height);
 			#end
-
-			#if ios
-			var tablet = NativeCFFI.lime_system_get_ios_tablet();
-			var scale = Application.current.window.scale;
-			if (!tablet && scale > 2.46)
-			{
-				display.dpi = 401; // workaround for iPhone Plus
-			}
-			else
-			{
-				display.dpi = (tablet ? 132 : 163) * scale;
-			}
-			#elseif android
-			var getDisplayDPI = JNI.createStaticMethod("org/haxe/lime/GameActivity", "getDisplayXDPI", "()D");
-			display.dpi = Math.round(getDisplayDPI());
-			#else
 			display.dpi = displayInfo.dpi;
-			#end
-
 			display.supportedModes = [];
 
 			var displayMode;
@@ -387,18 +360,18 @@ class System
 	/**
 		The number of milliseconds since the application was initialized.
 	**/
-	public static function getTimer():Int
+	public static function getTimer():#if flash Int #else Float #end
 	{
 		#if flash
 		return flash.Lib.getTimer();
 		#elseif (js || electron)
-		return Std.int(Browser.window.performance.now());
-		#elseif (lime_cffi && !macro)
-		return cast NativeCFFI.lime_system_get_timer();
+		return Browser.window.performance.now();
+		#elseif (lime_cffi && !macro && !neko)
+		return NativeCFFI.lime_system_get_timer() / 1e+6;
 		#elseif cpp
-		return Std.int(untyped __global__.__time_stamp() * 1000);
+		return untyped __global__.__time_stamp() * 1000;
 		#elseif sys
-		return Std.int(Sys.time() * 1000);
+		return Sys.time() * 1000;
 		#else
 		return 0;
 		#end
@@ -464,15 +437,21 @@ class System
 		if (key != null)
 		{
 			#if (lime_cffi && !macro)
-			#if (ios || tvos)
-			return NativeCFFI.lime_system_get_hint(key);
-			#else
 			return CFFI.stringValue(NativeCFFI.lime_system_get_hint(key));
-			#end
 			#end
 		}
 
 		return null;
+	}
+
+	public static function setHint(key:String, value:String):Void
+	{
+		if (key != null && value != null)
+		{
+			#if (lime_cffi && !macro)
+			return NativeCFFI.lime_system_set_hint(key, value);
+			#end
+		}
 	}
 
 	@:noCompletion private static function __copyMissingFields(target:Dynamic, source:Dynamic):Void
@@ -609,6 +588,8 @@ class System
 							attributes.context.antialiasing = Std.parseInt(argValue);
 						case "background":
 							attributes.context.background = (argValue == "" || argValue == "null") ? null : Std.parseInt(argValue);
+						case "transparent":
+							attributes.transparent = __parseBool(argValue);
 						case "borderless":
 							attributes.borderless = __parseBool(argValue);
 						case "colorDepth":
