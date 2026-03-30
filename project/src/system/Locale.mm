@@ -12,10 +12,6 @@ namespace lime {
 
 	std::string* Locale::GetSystemLocale () {
 
-		#ifndef OBJC_ARC
-		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-		#endif
-
 		NSString* localeLanguage = [[NSLocale preferredLanguages] firstObject];
 		if (localeLanguage == nil) localeLanguage = @"en";
 
@@ -41,10 +37,6 @@ namespace lime {
 			result = new std::string (ptr);
 
 		}
-
-		#ifndef OBJC_ARC
-		[pool drain];
-		#endif
 
 		return result;
 

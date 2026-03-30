@@ -16,53 +16,41 @@
 @end
 
 @implementation OrientationObserver {
+
 }
 
-- (void) dealloc
-{
+- (void) dealloc {
 
-	UIDevice * device = [UIDevice currentDevice];
-	// [device endGeneratingDeviceOrientationNotifications];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[super dealloc];
-
 }
 
-- (id) init
-{
+- (id) init {
 
 	self = [super init];
+
 	if (!self)
 	{
 		return nil;
 	}
 
-	UIDevice * device = [UIDevice currentDevice];
-	// [device beginGeneratingDeviceOrientationNotifications];
-	[[NSNotificationCenter defaultCenter]
-		addObserver:self selector:@selector(orientationChanged:)
-		name:UIDeviceOrientationDidChangeNotification
-		object:device];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
 
 	return self;
 
 }
 
-- (void) dispatchEventForCurrentDevice
-{
+- (void) dispatchEventForCurrentDevice {
 
-	UIDevice * device = [UIDevice currentDevice];
-	[self dispatchEventForDevice:device];
+	[self dispatchEventForDevice:[UIDevice currentDevice]];
 
 }
 
-- (void) dispatchEventForDevice:(UIDevice *) device
-{
+- (void) dispatchEventForDevice:(UIDevice *) device {
 
 	int orientation = 0; // SDL_ORIENTATION_UNKNOWN
-	switch (device.orientation)
-	{
+
+	switch (device.orientation) {
 
 		case UIDeviceOrientationLandscapeLeft:
 
@@ -97,11 +85,9 @@
 
 }
 
-- (void) orientationChanged:(NSNotification *) notification
-{
+- (void) orientationChanged:(NSNotification *) notification {
 
-	UIDevice * device = notification.object;
-	[self dispatchEventForDevice:device];
+	[self dispatchEventForDevice:notification.object];
 
 }
 @end
@@ -135,10 +121,6 @@ namespace lime {
 
 	std::wstring* System::GetIOSDirectory (SystemDirectory type) {
 
-		#ifndef OBJC_ARC
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		#endif
-
 		NSSearchPathDirectory searchType = NSDocumentDirectory;
 
 		switch (type) {
@@ -169,10 +151,6 @@ namespace lime {
 			result = new std::wstring (path.begin (), path.end ());
 
 		}
-
-		#ifndef OBJC_ARC
-		[pool drain];
-		#endif
 
 		return result;
 
