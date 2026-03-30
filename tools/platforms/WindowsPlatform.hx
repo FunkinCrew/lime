@@ -472,45 +472,16 @@ class WindowsPlatform extends PlatformTarget
 
 	public override function rebuild():Void
 	{
-		// if (project.environment.exists ("VS110COMNTOOLS") && project.environment.exists ("VS100COMNTOOLS")) {
-
-		// project.environment.set ("HXCPP_MSVC", project.environment.get ("VS100COMNTOOLS"));
-		// Sys.putEnv ("HXCPP_MSVC", project.environment.get ("VS100COMNTOOLS"));
-
-		// }
-
 		var commands:Array<Array<String>> = [];
-		if (targetType == "hl")
+
+		if (!targetFlags.exists("32") && !targetFlags.exists("x86_32") && System.hostArchitecture == X64)
 		{
-			// default to 64 bit, just like upstream Hashlink releases
-			if (!targetFlags.exists("32") && !targetFlags.exists("x86_32")
-				&& (System.hostArchitecture == X64 || targetFlags.exists("64") || targetFlags.exists("x86_64")))
-			{
-				commands.push(["-Dwindows", "-DHXCPP_M64", "-Dhashlink"]);
-			}
-			else
-			{
-				commands.push(["-Dwindows", "-DHXCPP_M32", "-Dhashlink"]);
-			}
+			commands.push(targetType == "hl" ? ["-Dwindows", "-DHXCPP_M64", "-Dhashlink"] : ["-Dwindows", "-DHXCPP_M64"]);
 		}
-		else
+
+		if (!targetFlags.exists("64") && !targetFlags.exists("x86_64") && System.hostArchitecture == X86)
 		{
-			if (!targetFlags.exists("64") && !targetFlags.exists("x86_64")
-				&& (command == "rebuild" || System.hostArchitecture == X86 || targetType != "cpp"))
-			{
-				commands.push(["-Dwindows", "-DHXCPP_M32"]);
-			}
-
-			// TODO: Compiling with -Dfulldebug overwrites the same "-debug.pdb"
-			// as previous Windows builds. For now, force -64 to be done last
-			// so that it can be debugged in a default "rebuild"
-
-			if (!targetFlags.exists("32") && !targetFlags.exists("x86_32")
-				&& System.hostArchitecture == X64
-				&& (command != "rebuild" || targetType == "cpp"))
-			{
-				commands.push(["-Dwindows", "-DHXCPP_M64"]);
-			}
+			commands.push(targetType == "hl" ? ["-Dwindows", "-DHXCPP_M32", "-Dhashlink"] : ["-Dwindows", "-DHXCPP_M32"]);
 		}
 
 		if (targetFlags.exists("hl"))
@@ -585,8 +556,7 @@ class WindowsPlatform extends PlatformTarget
 
 				if (ndll.path == null || ndll.path == "")
 				{
-					context.ndlls[i].path = NDLL.getLibraryPath(ndll, "Windows" + (is64 ? "64" : ""), "lib", suffix,
-						project.debug);
+					context.ndlls[i].path = NDLL.getLibraryPath(ndll, "Windows" + (is64 ? "64" : ""), "lib", suffix, project.debug);
 				}
 			}
 		}
