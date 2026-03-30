@@ -240,11 +240,8 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		var valid_archs = new Array<String>();
-		var armv6 = false;
-		var armv7 = false;
-		var armv7s = false;
 		var arm64 = false;
-		var i386 = false;
+		var x64 = false;
 		var architectures = project.architectures;
 
 		if (architectures == null || architectures.length == 0)
@@ -252,65 +249,38 @@ class IOSPlatform extends PlatformTarget
 			architectures = [Architecture.ARM64];
 		}
 
-		if (project.config.getString("ios.device", "universal") == "universal" || project.config.getString("ios.device") == "iphone")
-		{
-			if (project.config.getFloat("ios.deployment", 13) < 5)
-			{
-				ArrayTools.addUnique(architectures, Architecture.ARMV6);
-			}
-		}
-
 		for (architecture in project.architectures)
 		{
 			switch (architecture)
 			{
-				case ARMV6:
-					valid_archs.push("armv6");
-					armv6 = true;
-				case ARMV7:
-					valid_archs.push("armv7");
-					armv7 = true;
-				case ARMV7S:
-					valid_archs.push("armv7s");
-					armv7s = true;
 				case ARM64:
 					valid_archs.push("arm64");
 					arm64 = true;
-				case X86:
-					valid_archs.push("i386");
-					i386 = true;
 				default:
 			}
 		}
 
 		context.CURRENT_ARCHS = "( " + valid_archs.join(",") + ") ";
 
-		valid_archs.push("x86_64");
+		if (System.hostArchitecture == X64)
+		{
+			valid_archs.push("x86_64");
+			x64 = true;
+		}
 
 		context.VALID_ARCHS = valid_archs.join(" ");
-		context.THUMB_SUPPORT = armv6 ? "GCC_THUMB_SUPPORT = NO;" : "";
+		context.THUMB_SUPPORT = "";
 
 		var requiredCapabilities:Array<{name:String, value:Bool}> = [];
 
-		if (!armv6 && armv7)
-		{
-			requiredCapabilities.push({name: "armv7", value: true});
-		}
-		else if (!armv6 && !armv7 && armv7s)
-		{
-			requiredCapabilities.push({name: "armv7s", value: true});
-		}
-		else if (!armv6 && !armv7 && !armv7s && arm64)
+		if (arm64)
 		{
 			requiredCapabilities.push({name: "arm64", value: true});
 		}
 
 		context.REQUIRED_CAPABILITY = requiredCapabilities;
-		context.ARMV6 = armv6;
-		context.ARMV7 = armv7;
-		context.ARMV7S = armv7s;
 		context.ARM64 = arm64;
-		context.I386 = i386;
+		context.X64 = x64;
 		context.TARGET_DEVICES = switch (project.config.getString("ios.device", "universal"))
 		{
 			case "iphone": "1";
@@ -494,23 +464,16 @@ class IOSPlatform extends PlatformTarget
 
 	public override function rebuild():Void
 	{
-		var armv6 = (project.architectures.indexOf(Architecture.ARMV6) > -1 && !project.targetFlags.exists("simulator"));
-		var armv7 = (project.architectures.indexOf(Architecture.ARMV7) > -1 && !project.targetFlags.exists("simulator"));
-		var armv7s = (project.architectures.indexOf(Architecture.ARMV7S) > -1 && !project.targetFlags.exists("simulator"));
-		var arm64 = (command == "rebuild"
-			|| (project.architectures.indexOf(Architecture.ARM64) > -1 && !project.targetFlags.exists("simulator")));
-		var i386 = (project.architectures.indexOf(Architecture.X86) > -1 && project.targetFlags.exists("simulator"));
-		var x86_64 = (command == "rebuild" || project.targetFlags.exists("simulator"));
+		var arm64 = (command == "rebuild" && !project.targetFlags.exists("simulator"));
+		var arm64sim = (command == "rebuild" && project.targetFlags.exists("simulator"));
+		var x86_64 = (command == "rebuild" || (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
 
 		var arc = (project.targetFlags.exists("arc"));
 
 		var commands:Array<Array<String>> = [];
 
-		if (armv6) commands.push(["-Dios", "-DHXCPP_ARMV6"]);
-		if (armv7) commands.push(["-Dios", "-DHXCPP_ARMV7"]);
-		if (armv7s) commands.push(["-Dios", "-DHXCPP_ARMV7S"]);
 		if (arm64) commands.push(["-Dios", "-DHXCPP_ARM64"]);
-		if (i386) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M32"]);
+		if (arm64sim) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_ARM64"]);
 		if (x86_64) commands.push(["-Dios", "-Dsimulator", "-DHXCPP_M64"]);
 
 		if (arc)
@@ -796,26 +759,19 @@ class IOSPlatform extends PlatformTarget
 
 		System.mkdir(projectDirectory + "/lib");
 
-		for (archID in 0...6)
+		for (archID in 0...3)
 		{
-			var arch = ["armv6", "armv7", "armv7s", "arm64", "i386", "x86_64"][archID];
+			var arch = ["arm64", "arm64-sim", "x86_64"][archID];
 
-			if (arch == "armv6" && !context.ARMV6) continue;
+			if (arch == "arm64" && (!context.ARM64 || project.targetFlags.exists("simulator"))) continue;
 
-			if (arch == "armv7" && !context.ARMV7) continue;
+			if (arch == "arm64-sim" && (!context.ARM64 || !project.targetFlags.exists("simulator"))) continue;
 
-			if (arch == "armv7s" && !context.ARMV7S) continue;
-
-			if (arch == "arm64" && !context.ARM64) continue;
-
-			if (arch == "i386" && !context.I386) continue;
+			if (arch == "x86_64" && (!context.X64 || !project.targetFlags.exists("simulator"))) continue;
 
 			var libExt = [
-				".iphoneos.a",
-				".iphoneos-v7.a",
-				".iphoneos-v7s.a",
 				".iphoneos-64.a",
-				".iphonesim.a",
+				".iphonesim-arm64.a",
 				".iphonesim-64.a"
 			][archID];
 

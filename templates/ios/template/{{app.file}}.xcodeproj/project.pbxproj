@@ -59,8 +59,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				::if ARMV6::1EF0A888121AE2F0003F2F59 /* lib/ApplicationMain.a in lib */,::end::
-				::if ARMV7::1EF0A888121AE2F0003F2F5A /* lib/ApplicationMain-v7.a in lib */,::end::
 				::ADDL_PBX_FRAMEWORKS_BUILD_PHASE::
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,27 +346,17 @@
 				INFOPLIST_FILE = "::APP_FILE::/::APP_FILE::-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = ::DEPLOYMENT::;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*][arch=arm64]" = (
 					"$(inherited)",
 					"\"$(SRCROOT)/::APP_FILE::/lib/arm64-debug\"",
 					"\"$(SRCROOT)/::APP_FILE::/lib/arm64\"",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=armv6]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*][arch=arm64]" = (
 					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv6-debug\"",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv6\"",
+					"\"$(SRCROOT)/::APP_FILE::/lib/arm64-sim-debug\"",
+					"\"$(SRCROOT)/::APP_FILE::/lib/arm64-sim\"",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=armv7]" = (
-					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv7-debug\"",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv7\"",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=i386]" = (
-					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/i386-debug\"",
-					"\"$(SRCROOT)/::APP_FILE::/lib/i386\"",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*][arch=x86_64]" = (
 					"$(inherited)",
 					"\"$(SRCROOT)/::APP_FILE::/lib/x86_64-debug\"",
 					"\"$(SRCROOT)/::APP_FILE::/lib/x86_64\"",
@@ -414,23 +402,15 @@
 				INFOPLIST_FILE = "::APP_FILE::/::APP_FILE::-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = ::DEPLOYMENT::;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*][arch=arm64]" = (
 					"$(inherited)",
 					"\"$(SRCROOT)/::APP_FILE::/lib/arm64\"",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=armv6]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*][arch=arm64]" = (
 					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv6\"",
+					"\"$(SRCROOT)/::APP_FILE::/lib/arm64-sim\"",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=armv7]" = (
-					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/armv7\"",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=i386]" = (
-					"$(inherited)",
-					"\"$(SRCROOT)/::APP_FILE::/lib/i386\"",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*][arch=x86_64]" = (
 					"$(inherited)",
 					"\"$(SRCROOT)/::APP_FILE::/lib/x86_64\"",
 				);
