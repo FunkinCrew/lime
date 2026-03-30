@@ -90,7 +90,7 @@ class AndroidPlatform extends PlatformTarget
 		}
 		else
 		{
-			defaults.architectures = [Architecture.ARM64];
+			defaults.architectures = [Architecture.ARM64, Architecture.ARMV7];
 		}
 
 		defaults.window.width = 0;
@@ -386,10 +386,10 @@ class AndroidPlatform extends PlatformTarget
 
 		var commands:Array<Array<String>> = [];
 
-		if (command == "rebuild" || arm64) commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine, platformNumberDefine]);
-		if (command == "rebuild" || armv7) commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine, platformNumberDefine]);
-		if (command == "rebuild" || x64) commands.push(["-Dandroid", "-DHXCPP_X86_64", platformDefine, platformNumberDefine]);
-		if (command == "rebuild" || x86) commands.push(["-Dandroid", "-DHXCPP_X86", platformDefine, platformNumberDefine]);
+		if (arm64) commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine, platformNumberDefine]);
+		if (armv7) commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine, platformNumberDefine]);
+		if (x64) commands.push(["-Dandroid", "-DHXCPP_X86_64", platformDefine, platformNumberDefine]);
+		if (x86) commands.push(["-Dandroid", "-DHXCPP_X86", platformDefine, platformNumberDefine]);
 
 		CPPHelper.rebuild(project, commands);
 	}
