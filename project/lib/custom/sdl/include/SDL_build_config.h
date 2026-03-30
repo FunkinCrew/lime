@@ -433,7 +433,6 @@
 # define SDL_FILESYSTEM_WINDOWS 1             /**< Windows filesystem operations */
 # define SDL_HAPTIC_DINPUT 1                  /**< DirectInput haptic (force feedback) support */
 # define SDL_JOYSTICK_DINPUT 1                /**< DirectInput joystick support */
-# define SDL_JOYSTICK_GAMEINPUT 1             /**< GameInput API joystick support */
 # ifdef HAVE_GAMEINPUT_H
 #  define SDL_JOYSTICK_GAMEINPUT 1            /**< GameInput API joystick support */
 # endif
