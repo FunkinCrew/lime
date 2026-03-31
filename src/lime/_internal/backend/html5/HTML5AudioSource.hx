@@ -227,10 +227,14 @@ class HTML5AudioSource
 
 	private function loadAudio():Bool
 	{
+		#if lime_howlerjs
 		if (length != 0) return true;
 
 		length = howl.duration() * 1000;
 		return length != 0;
+		#else
+		return false;
+		#end
 	}
 
 	public function pause():Void
@@ -402,11 +406,13 @@ class HTML5AudioSource
 
 	public function getLength():Float
 	{
+		#if lime_howlerjs
 		if (length == 0)
 		{
 			length = howl.duration() * 1000;
 			if (length == 0) return 0;
 		}
+		#end
 
 		if (length <= parent.offset) return 0;
 		return length - parent.offset;
@@ -649,6 +655,7 @@ class HTML5AudioSource
 
 	inline function updateAnalyserAudioNode():Void
 	{
+		#if lime_howlerjs
 		var previousAnalyserAudioNode = analyserAudioNode;
 		if (howlSound != null && (untyped howlSound._node))
 		{
@@ -692,11 +699,13 @@ class HTML5AudioSource
 				analyserAudioNode.connect(analyser);
 			}
 		}
+		#end
 	}
 
 	// Real-time audio effects
 	public function addEffect(index:Int):Void
 	{
+		#if lime_howlerjs
 		if (audioNode != null)
 		@:privateAccess
 		{
@@ -711,6 +720,7 @@ class HTML5AudioSource
 			}
 			lastAudioNode.connect(untyped Howler.masterGain);
 		}
+		#end
 	}
 
 	public function updateEffect(index:Int):Void
@@ -720,6 +730,7 @@ class HTML5AudioSource
 
 	public function removeEffect(index:Int):Void
 	{
+		#if lime_howlerjs
 		if (audioNode != null && lastAudioNode != null)
 		@:privateAccess
 		{
@@ -738,5 +749,6 @@ class HTML5AudioSource
 			}
 			lastAudioNode.connect(untyped Howler.masterGain);
 		}
+		#end
 	}
 }
