@@ -278,7 +278,15 @@ class HTML5Platform extends PlatformTarget
 	{
 		AssetHelper.processLibraries(project, targetDirectory);
 
-		// project = project.clone ();
+		if (project.targetFlags.exists("xml"))
+		{
+			project.haxeflags.push("--xml " + targetDirectory + "/types.xml");
+		}
+
+		if (project.targetFlags.exists("json"))
+		{
+			project.haxeflags.push("--json " + targetDirectory + "/types.json");
+		}
 
 		var destination = targetDirectory + "/bin/";
 		if (npm) destination += "dist/";
@@ -339,16 +347,6 @@ class HTML5Platform extends PlatformTarget
 					// project.haxeflags.push (HTML5Helper.generateFontData (project, asset));
 				}
 			}
-		}
-
-		if (project.targetFlags.exists("xml"))
-		{
-			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
-		}
-
-		if (project.targetFlags.exists("json"))
-		{
-			project.haxeflags.push("--json " + targetDirectory + "/types.json");
 		}
 
 		if (Log.verbose)

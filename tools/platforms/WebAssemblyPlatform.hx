@@ -387,34 +387,14 @@ class WebAssemblyPlatform extends PlatformTarget
 	{
 		AssetHelper.processLibraries(project, targetDirectory);
 
-		// project = project.clone ();
-
-		// for (asset in project.assets)
-		// {
-		// 	asset.resourceName = "assets/" + asset.resourceName;
-		// }
-
-		var destination = targetDirectory + "/bin/";
-		System.mkdir(destination);
-
-		// for (asset in project.assets) {
-		//
-		// if (asset.type == AssetType.FONT) {
-		//
-		// project.haxeflags.push (HTML5Helper.generateFontData (project, asset));
-		//
-		// }
-		//
-		// }
-
 		if (project.targetFlags.exists("xml"))
 		{
-			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
+			project.haxeflags.push("--xml " + targetDirectory + "/types.xml");
 		}
 
 		if (project.targetFlags.exists("json"))
 		{
-			project.haxeflags.push("-json " + targetDirectory + "/types.json");
+			project.haxeflags.push("--json " + targetDirectory + "/types.json");
 		}
 
 		var context = project.templateContext;
@@ -425,8 +405,6 @@ class WebAssemblyPlatform extends PlatformTarget
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.USE_COMPRESSION = project.targetFlags.exists("compress");
 
-		context.favicons = [];
-
 		var icons = project.icons;
 
 		if (icons.length == 0)
@@ -434,11 +412,11 @@ class WebAssemblyPlatform extends PlatformTarget
 			icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
 		}
 
-		// if (IconHelper.createWindowsIcon (icons, Path.combine (destination, "favicon.ico"))) {
-		//
-		// context.favicons.push ({ rel: "icon", type: "image/x-icon", href: "./favicon.ico" });
-		//
-		// }
+		var destination = targetDirectory + "/bin/";
+
+		System.mkdir(destination);
+
+		context.favicons = [];
 
 		if (IconHelper.createIcon(icons, 192, 192, Path.combine(destination, "favicon.png")))
 		{
@@ -466,7 +444,6 @@ class WebAssemblyPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "webassembly/template", destination, context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "webassembly/hxml", targetDirectory + "/haxe", context);
-		// ProjectHelper.recursiveSmartCopyTemplate(project, "webassembly/cpp", targetDirectory + "/obj", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/static", targetDirectory + "/obj", context);
 
 		copyProjectAssets(destination, targetDirectory + "/obj/assets");

@@ -119,11 +119,9 @@ class FlashPlatform extends PlatformTarget
 
 	private function generateContext():Dynamic
 	{
-		// project = project.clone ();
-
 		if (project.targetFlags.exists("xml"))
 		{
-			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
+			project.haxeflags.push("--xml " + targetDirectory + "/types.xml");
 		}
 
 		if (project.targetFlags.exists("json"))
@@ -246,8 +244,6 @@ class FlashPlatform extends PlatformTarget
 
 		var destination = targetDirectory + "/bin/";
 		System.mkdir(destination);
-
-		// project = project.clone ();
 
 		embedded = FlashHelper.embedAssets(project, targetDirectory);
 

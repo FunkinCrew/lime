@@ -113,8 +113,6 @@ class AndroidPlatform extends PlatformTarget
 
 		if (command != "display" && command != "clean")
 		{
-			// project = project.clone ();
-
 			if (!project.environment.exists("ANDROID_SETUP"))
 			{
 				Log.error("You need to run \"lime setup android\" before you can use the Android target");
@@ -413,9 +411,15 @@ class AndroidPlatform extends PlatformTarget
 	{
 		AssetHelper.processLibraries(project, targetDirectory);
 
-		// project = project.clone ();
+		if (project.targetFlags.exists("xml"))
+		{
+			project.haxeflags.push("--xml " + targetDirectory + "/types.xml");
+		}
 
-		// initialize (project);
+		if (project.targetFlags.exists("json"))
+		{
+			project.haxeflags.push("--json " + targetDirectory + "/types.json");
+		}
 
 		var destination = Path.combine(targetDirectory, project.config.getString("android.gradle-project-directory", "bin"));
 		var sourceSet = destination + "/app/src/main";
@@ -424,16 +428,6 @@ class AndroidPlatform extends PlatformTarget
 		System.mkdir(sourceSet + "/res/drawable-mdpi/");
 		System.mkdir(sourceSet + "/res/drawable-hdpi/");
 		System.mkdir(sourceSet + "/res/drawable-xhdpi/");
-
-		if (project.targetFlags.exists("xml"))
-		{
-			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
-		}
-
-		if (project.targetFlags.exists("json"))
-		{
-			project.haxeflags.push("--json " + targetDirectory + "/types.json");
-		}
 
 		var context = project.templateContext;
 

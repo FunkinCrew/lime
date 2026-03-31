@@ -150,15 +150,13 @@ class TVOSPlatform extends PlatformTarget
 
 	private function generateContext():Dynamic
 	{
-		// project = project.clone ();
-
 		project.sources.unshift("");
 		project.sources = Path.relocatePaths(project.sources, Path.combine(targetDirectory, project.app.file + "/haxe"));
 		// project.dependencies.push ("stdc++");
 
 		if (project.targetFlags.exists("xml"))
 		{
-			project.haxeflags.push("-xml " + targetDirectory + "/types.xml");
+			project.haxeflags.push("--xml " + targetDirectory + "/types.xml");
 		}
 
 		if (project.targetFlags.exists("json"))
@@ -449,15 +447,6 @@ class TVOSPlatform extends PlatformTarget
 	{
 		AssetHelper.processLibraries(project, targetDirectory);
 
-		// project = project.clone ();
-
-		// var manifest = new Asset ();
-		// manifest.id = "__manifest__";
-		// manifest.data = AssetHelper.createManifest (project).serialize ();
-		// manifest.resourceName = manifest.flatName = manifest.targetPath = "manifest";
-		// manifest.type = AssetType.TEXT;
-		// project.assets.push (manifest);
-
 		var context = generateContext();
 		context.OUTPUT_DIR = targetDirectory;
 
@@ -570,8 +559,6 @@ class TVOSPlatform extends PlatformTarget
 		System.copyFileTemplate(project.templatePaths, "tvos/PROJ/PROJ-Info.plist", projectDirectory + "/" + project.app.file + "-Info.plist", context);
 		System.copyFileTemplate(project.templatePaths, "tvos/PROJ/PROJ-Prefix.pch", projectDirectory + "/" + project.app.file + "-Prefix.pch", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "tvos/PROJ.xcodeproj", targetDirectory + "/" + project.app.file + ".xcodeproj", context);
-
-		// SWFHelper.generateSWFClasses (project, projectDirectory + "/haxe");
 
 		System.mkdir(projectDirectory + "/lib");
 

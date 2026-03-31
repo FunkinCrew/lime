@@ -252,11 +252,6 @@ class CPPHelper
 
 		}*/
 
-		if (project.targetFlags.exists("static"))
-		{
-			args.push("-Dstatic_link");
-		}
-
 		if (Log.verbose)
 		{
 			args.push("-verbose");

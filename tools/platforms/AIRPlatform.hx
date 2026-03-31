@@ -254,8 +254,6 @@ class AIRPlatform extends FlashPlatform
 		var destination = targetDirectory + "/bin/";
 		System.mkdir(destination);
 
-		// project = project.clone ();
-
 		embedded = FlashHelper.embedAssets(project, targetDirectory);
 
 		var context = generateContext();
