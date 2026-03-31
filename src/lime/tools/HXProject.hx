@@ -722,22 +722,6 @@ class HXProject extends Script
 			if (targetFlags.exists("ios")) defines.set("ios", "1");
 			if (targetFlags.exists("android")) defines.set("android", "1");
 		}
-		else if (platformType == DESKTOP && target != System.hostPlatform)
-		{
-			defines.set("native", "1");
-
-			if (target == Platform.LINUX && targetFlags.exists("cpp"))
-			{
-				defines.set("targetType", "cpp");
-				defines.set("cpp", "1");
-			}
-			else if (target == Platform.WINDOWS && (targetFlags.exists("cpp") || targetFlags.exists("mingw")))
-			{
-				defines.set("targetType", "cpp");
-				defines.set("cpp", "1");
-				defines.set("mingw", "1");
-			}
-		}
 		else if (target == Platform.WEB_ASSEMBLY)
 		{
 			defines.set("webassembly", "1");

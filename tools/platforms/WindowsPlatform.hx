@@ -319,7 +319,21 @@ class WindowsPlatform extends PlatformTarget
 			}
 			else
 			{
+				haxeArgs.push("-D");
+				haxeArgs.push("HXCPP_M32");
 				flags.push("-DHXCPP_M32");
+			}
+
+			if (project.targetFlags.exists("mingw"))
+			{
+				haxeArgs.push("-D");
+				haxeArgs.push("mingw");
+				flags.push("-Dmingw");
+
+				// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+				haxeArgs.push("-D");
+				haxeArgs.push("no_shared_libs");
+				flags.push("-Dno_shared_libs");
 			}
 
 			if (!project.environment.exists("SHOW_CONSOLE"))
@@ -338,24 +352,6 @@ class WindowsPlatform extends PlatformTarget
 			CPPHelper.compile(project, targetDirectory + "/obj", flags);
 
 			System.copyFile(targetDirectory + "/obj/ApplicationMain" + (project.debug ? "-debug" : "") + ".exe", executablePath);
-
-			if (project.defines.exists("mingw"))
-			{
-				var libraries = ["libwinpthread-1.dll", "libstdc++-6.dll"];
-				if (is64)
-				{
-					libraries.push("libgcc_s_seh-1.dll");
-				}
-				else
-				{
-					libraries.push("libgcc_s_dw2-1.dll");
-				}
-
-				for (library in libraries)
-				{
-					System.copyIfNewer(targetDirectory + "/obj/" + library, Path.combine(applicationDirectory, library));
-				}
-			}
 		}
 	}
 
@@ -451,12 +447,42 @@ class WindowsPlatform extends PlatformTarget
 
 		if (!targetFlags.exists("32") && !targetFlags.exists("x86_32") && System.hostArchitecture == X64)
 		{
-			commands.push(targetType == "hl" ? ["-Dwindows", "-DHXCPP_M64", "-Dhashlink"] : ["-Dwindows", "-DHXCPP_M64"]);
+			var args:Array<String> = ["-Dwindows", "-DHXCPP_M64"];
+
+			if (project.targetFlags.exists("mingw"))
+			{
+				args.push("-Dmingw");
+
+				// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+				args.push("-Dno_shared_libs");
+			}
+
+			if (targetType == "hl")
+			{
+				args.push("-Dhashlink");
+			}
+
+			commands.push(args);
 		}
 
 		if (!targetFlags.exists("64") && !targetFlags.exists("x86_64") && System.hostArchitecture == X86)
 		{
-			commands.push(targetType == "hl" ? ["-Dwindows", "-DHXCPP_M32", "-Dhashlink"] : ["-Dwindows", "-DHXCPP_M32"]);
+			var args:Array<String> = ["-Dwindows", "-DHXCPP_M32"];
+
+			if (project.targetFlags.exists("mingw"))
+			{
+				args.push("-Dmingw");
+
+				// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+				args.push("-Dno_shared_libs");
+			}
+
+			if (targetType == "hl")
+			{
+				args.push("-Dhashlink");
+			}
+
+			commands.push(args);
 		}
 
 		if (targetFlags.exists("hl"))

@@ -394,7 +394,11 @@ class PlatformSetup
 					setupElectron();
 
 				case "windows":
-					if (System.hostPlatform == WINDOWS)
+					if (targetFlags.exists("mingw"))
+					{
+						setupMinGW();
+					}
+					else if (System.hostPlatform == WINDOWS)
 					{
 						setupWindows();
 					}
@@ -1210,6 +1214,18 @@ class PlatformSetup
 		{
 			System.openURL(visualStudioURL);
 		}
+	}
+
+	public static function setupMinGW():Void
+	{
+		Log.println("\x1b[1mIn order to compile Windows applications with MinGW, you must download");
+		Log.println("and extract the MinGW toolchain on your system.");
+		Log.println("");
+
+		getDefineValue("MINGW_ROOT", "Absolute path to MinGW");
+
+		Log.println("");
+		Log.println("Setup complete.");
 	}
 
 	public static function setupHL():Void
