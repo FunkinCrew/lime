@@ -21,6 +21,7 @@
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src/" />
 
         <compilerflag value="-DSDL_DISABLE_ALLOCA" />
+        <compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
         <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/SDL.c" />
         <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/SDL_assert.c" />

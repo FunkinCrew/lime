@@ -220,36 +220,12 @@
 			<section unless="emscripten">
 
 				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/default/" unless="windows || mac || linux || rpi" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/linux/" if="linux" unless="rpi" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/windows/" if="windows" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/mac/" if="mac" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/configs/rpi/" if="rpi" />
-
-				<compilerflag value="-DHAVE_LIBC" />
-
-			</section>
-
-			<section if="rpi">
-
-				<compilerflag value="-I/usr/include/libdrm" />
-				<compilerflag value="-I/usr/include/dbus-1.0" />
-				<compilerflag value="-I/usr/lib/arm-linux-gnueabihf/dbus-1.0/include" unless="HXCPP_ARM64" />
-				<compilerflag value="-I/usr/lib/aarch64-linux-gnu/dbus-1.0/include" if="HXCPP_ARM64" />
-				<compilerflag value="-I/usr/local/include" />
-
-				<compilerflag value="-ldrm" />
-				<compilerflag value="-lgbm" />
-
-				<compilerflag value="-Wl,--no-undefined -lm -ldl -ldrm -lpthread -lrt" />
 
 			</section>
 
 			<compilerflag value="-DLIME_SDL" />
-			<compilerflag value="-D__IPHONEOS__" if="ios || tvos" />
-			<compilerflag value="-D__APPLETVOS__" if="tvos" />
-			<compilerflag value="-DAPPLETV" if="tvos" />
-			<compilerflag value="-DHAVE_STDIO_H" unless="windows" />
+			<compilerflag value="-DSDL_DISABLE_ALLOCA" />
+			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
 			<file name="src/backend/sdl/SDLApplication.cpp" />
 			<file name="src/backend/sdl/SDLGamepad.cpp" />
@@ -394,35 +370,63 @@
 
 			<section if="windows">
 
-				<lib name="gdi32.lib" />
-				<lib name="opengl32.lib" />
-				<lib name="user32.lib" />
-				<lib name="kernel32.lib" />
-				<lib name="advapi32.lib" />
-				<lib name="winmm.lib" />
-				<lib name="imm32.lib" />
-				<lib name="ole32.lib" />
-				<lib name="oleaut32.lib" />
-				<lib name="version.lib" />
-				<lib name="ws2_32.lib" />
-				<lib name="wldap32.lib" />
-				<lib name="shell32.lib" />
-				<lib name="comdlg32.lib" />
-				<lib name="setupapi.lib" />
-				<lib name="avrt.lib" if="LIME_OPENALSOFT"/>
+				<section unless="mingw">
 
-				<lib name="bcrypt.lib" if="LIME_CURL" />
+					<lib name="advapi32.lib" />
+					<lib name="avrt.lib" if="LIME_OPENALSOFT"/>
+					<lib name="bcrypt.lib" if="LIME_CURL" />
+					<lib name="comdlg32.lib" />
+					<lib name="comsuppw.lib" />
+					<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
+					<lib name="gdi32.lib" />
+					<lib name="imm32.lib" />
+					<lib name="kernel32.lib" />
+					<lib name="ole32.lib" />
+					<lib name="oleaut32.lib" />
+					<lib name="opengl32.lib" />
+					<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
+					<lib name="setupapi.lib" />
+					<lib name="shell32.lib" />
+					<lib name="user32.lib" />
+					<lib name="usp10.lib" if="LIME_HARFBUZZ" />
+					<lib name="version.lib" />
+					<lib name="wbemuuid.lib" />
+					<lib name="winmm.lib" />
+					<lib name="wldap32.lib" />
+					<lib name="ws2_32.lib" />
 
-				<lib name="usp10.lib" if="LIME_HARFBUZZ" />
-				<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
-				<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
+				</section>
 
-				<lib name="comsuppw.lib" unless="mingw" />
-				<lib name="wbemuuid.lib" />
+				<section if="mingw">
+
+					<lib name="-ladvapi32" />
+					<lib name="-lavrt" if="LIME_OPENALSOFT"/>
+					<lib name="-lbcrypt" if="LIME_CURL" />
+					<lib name="-lcomdlg32" />
+					<lib name="-ldwrite" if="LIME_HARFBUZZ" />
+					<lib name="-lgdi32" />
+					<lib name="-lhid" />
+					<lib name="-limm32" />
+					<lib name="-lkernel32" />
+					<lib name="-lole32" />
+					<lib name="-loleaut32" />
+					<lib name="-lopengl32" />
+					<lib name="-lrpcrt4" if="LIME_HARFBUZZ" />
+					<lib name="-lsetupapi" />
+					<lib name="-lshell32" />
+					<lib name="-luser32" />
+					<lib name="-lusp10" if="LIME_HARFBUZZ" />
+					<lib name="-luuid" />
+					<lib name="-lversion" />
+					<lib name="-lwbemuuid" />
+					<lib name="-lwinmm" />
+					<lib name="-lwldap32" />
+					<lib name="-lws2_32" />
+
+				</section>
 
 				<lib name="-libpath:../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
 				<lib name="libhl.lib" if="LIME_HASHLINK" />
-				<!-- <lib name="-delayload:libhl.dll" /> -->
 
 			</section>
 
