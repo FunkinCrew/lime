@@ -1192,7 +1192,7 @@ class PlatformSetup
 		Log.println("After install, the SDK path may be at \"emsdk/upstream/emscripten\"");
 		Log.println("");
 
-		getDefineValue("EMSCRIPTEN_SDK", "Absolute path to Emscripten SDK");
+		getDefineValue("EMSDK", "Absolute path to Emscripten SDK");
 
 		Log.println("");
 		Log.println("Setup complete.");
