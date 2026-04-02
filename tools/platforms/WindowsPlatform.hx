@@ -198,7 +198,6 @@ class WindowsPlatform extends PlatformTarget
 
 		for (ndll in project.ndlls)
 		{
-			// TODO: Support single binary for HashLink
 			if (targetType == "hl")
 			{
 				ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".hdll", applicationDirectory, project.debug,
@@ -211,8 +210,6 @@ class WindowsPlatform extends PlatformTarget
 				ProjectHelper.copyLibrary(project, ndll, "Windows" + (is64 ? "64" : ""), "", ".ndll", applicationDirectory, project.debug);
 			}
 		}
-
-		// IconHelper.createIcon (project.icons, 32, 32, Path.combine (applicationDirectory, "icon.png"));
 
 		if (targetType == "hl")
 		{

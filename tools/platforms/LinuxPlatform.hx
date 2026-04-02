@@ -174,7 +174,6 @@ class LinuxPlatform extends PlatformTarget
 
 		for (ndll in project.ndlls)
 		{
-			// TODO: Support single binary for HashLink
 			if (targetType == "hl")
 			{
 				ProjectHelper.copyLibrary(project, ndll, "Linux" + (is64 ? "64" : ""), "", ".hdll", applicationDirectory, project.debug, ".hdll");

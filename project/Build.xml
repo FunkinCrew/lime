@@ -364,8 +364,6 @@
 
 			<ext value=".so" />
 			<ext value=".ndll" if="windows || mac || linux" />
-
-			<!-- TODO: Support single binary -->
 			<ext value=".hdll" if="LIME_HASHLINK" />
 
 			<section if="windows">
@@ -425,8 +423,14 @@
 
 				</section>
 
-				<lib name="-libpath:../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
-				<lib name="libhl.lib" if="LIME_HASHLINK" />
+				<section if="LIME_HASHLINK">
+
+					<lib name="-libpath:../templates/bin/hl/${BINDIR}"  />
+
+					<lib name="libhl.lib" />
+
+				</section>
+
 
 			</section>
 
@@ -435,17 +439,17 @@
 				<lib name="-lpthread" />
 				<lib name="-lrt" />
 
-				<lib name="-L../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
-				<lib name="-lhl" if="LIME_HASHLINK" />
+				<section if="LIME_HASHLINK">
+
+					<lib name="-L../templates/bin/hl/${BINDIR}" />
+
+					<lib name="-lhl" />
+
+				</section>
 
 			</section>
 
 			<section if="mac">
-				<vflag name="-install_name" value="@executable_path/lime.hdll" if="LIME_HASHLINK"/>
-				<!--
-					starting in xcode 15, rpath doesn't automatically include
-					/usr/local/lib, but we need it for neko
-				-->
 				<vflag name="-rpath" value="/usr/local/lib" />
 				<vflag name="-rpath" value="/opt/homebrew/lib" if="HXCPP_ARM64"/>
 
@@ -469,8 +473,15 @@
 				<vflag name="-framework" value="SystemConfiguration" />
 				<vflag name="-framework" value="UniformTypeIdentifiers" />
 
-				<lib name="-L../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
-				<lib name="-lhl" if="LIME_HASHLINK" />
+				<section if="LIME_HASHLINK">
+
+					<vflag name="-install_name" value="@executable_path/lime.hdll" />
+
+					<lib name="-L../templates/bin/hl/${BINDIR}" />
+
+					<lib name="-lhl" />
+
+				</section>
 
 			</section>
 
@@ -542,6 +553,15 @@
 
 	</target>
 
-	<copyFile name="lime.lib" from="obj/lib/" overwrite="true" toolId="dll" if="windows LIME_HASHLINK" />
+	<section if="LIME_HASHLINK">
+
+		<section if="windows">
+
+			<copyFile name="lime.lib" from="obj/lib/" overwrite="true" toolId="dll" unless="debug" />
+			<copyFile name="lime-debug.lib" from="obj/lib/" overwrite="true" toolId="dll" if="debug" />
+
+		</section>
+
+	</section>
 
 </xml>

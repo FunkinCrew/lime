@@ -164,7 +164,6 @@ class MacPlatform extends PlatformTarget
 
 		for (ndll in project.ndlls)
 		{
-			// TODO: Support single binary for HashLink
 			if (targetType == "hl")
 			{
 				ProjectHelper.copyLibrary(project, ndll, "Mac" + dirSuffix, "", ".hdll", executableDirectory, project.debug, ".hdll");
