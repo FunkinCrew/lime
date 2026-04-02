@@ -29,14 +29,14 @@ jobs:
       - name: Rebuild Lime tools
         run: |
           haxelib dev lime $GITHUB_WORKSPACE
-          haxelib run lime setup -alias -y -nocffi
+          haxelib run lime setup -alias -y
 
       - name: Rebuild Lime (iOS)
         run: |
           rm -rf ./ndll
           mkdir ./ndll
           haxelib run lime rebuild hxcpp
-          lime rebuild ios -clean -eval -nocolor -nocffi -release
+          lime rebuild ios -clean -eval -nocolor -release
 
       - uses: actions/upload-artifact@v4
         with:

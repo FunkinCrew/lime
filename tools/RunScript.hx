@@ -1,93 +1,15 @@
 package;
 
 import hxp.*;
-import sys.io.File;
-import sys.io.Process;
 import sys.FileSystem;
 
 class RunScript
 {
-	private static function rebuildTools(limeDirectory:String, toolsDirectory:String, rebuildBinaries = true):Void
+	private static function rebuildTools(limeDirectory:String, toolsDirectory:String):Void
 	{
-		/*var extendedToolsDirectory = Haxelib.getPath (new Haxelib ("lime-extended"), false);
-
-			if (extendedToolsDirectory != null && extendedToolsDirectory != "") {
-
-				var buildScript = File.getContent (Path.combine (extendedToolsDirectory, "tools.hxml"));
-				buildScript = StringTools.replace (buildScript, "\r\n", "\n");
-				buildScript = StringTools.replace (buildScript, "\n", " ");
-
-				System.runCommand (toolsDirectory, "haxe", buildScript.split (" "));
-
-		} else {*/
-
 		System.runCommand(toolsDirectory, "haxe", ["tools.hxml"]);
-
-		// }
-
-		if (!rebuildBinaries) return;
-
-		var platforms = ["Windows", "Mac", "Mac64", "MacArm64", "Linux", "Linux64", "LinuxArm", "LinuxArm64"];
-
-		for (platform in platforms)
-		{
-			var source = Path.combine(limeDirectory, "ndll/" + platform + "/lime.ndll");
-			// var target = Path.combine (toolsDirectory, "ndll/" + platform + "/lime.ndll");
-
-			if (!FileSystem.exists(source))
-			{
-				var args = ["tools/tools.n", "rebuild", "lime", "-release", "-nocffi"];
-
-				if (Log.verbose)
-				{
-					args.push("-verbose");
-				}
-
-				if (!Log.enableColor)
-				{
-					args.push("-nocolor");
-				}
-
-				switch (platform)
-				{
-					case "Windows":
-						if (System.hostPlatform == WINDOWS)
-						{
-							System.runCommand(limeDirectory, "neko", args.concat(["windows", toolsDirectory]));
-						}
-
-					case "Mac", "Mac64", "MacArm64":
-						if (System.hostPlatform == MAC)
-						{
-							System.runCommand(limeDirectory, "neko", args.concat(["mac", toolsDirectory]));
-						}
-
-					case "Linux", "LinuxArm":
-						if (System.hostPlatform == LINUX && System.hostArchitecture != X64 && System.hostArchitecture != ARM64)
-						{
-							System.runCommand(limeDirectory, "neko", args.concat(["linux", "-32", toolsDirectory]));
-						}
-
-					case "Linux64", "LinuxArm64":
-						if (System.hostPlatform == LINUX && (System.hostArchitecture == X64 || System.hostArchitecture == ARM64))
-						{
-							System.runCommand(limeDirectory, "neko", args.concat(["linux", "-64", toolsDirectory]));
-						}
-				}
-			}
-
-			if (!FileSystem.exists(source))
-			{
-				if (Log.verbose)
-				{
-					Log.warn("", "Source path \"" + source + "\" does not exist");
-				}
-			}
-			else
-			{
-				// System.copyIfNewer (source, target);
-			}
-		}
+		System.runCommand(toolsDirectory, "haxe", ["svg.hxml"]);
+		System.runCommand(toolsDirectory, "haxe", ["run.hxml"]);
 	}
 
 	public static function runCommand(path:String, command:String, args:Array<String>, throwErrors:Bool = true):Int
@@ -158,8 +80,6 @@ class RunScript
 			// used for Path.tryFullPath when setting overrides
 			Sys.setCwd(Haxelib.workingDirectory);
 
-			var rebuildBinaries = true;
-
 			for (arg in args)
 			{
 				var equals = arg.indexOf("=");
@@ -185,15 +105,12 @@ class RunScript
 						case "-nocolor":
 							Log.enableColor = false;
 
-						case "-nocffi":
-							rebuildBinaries = false;
-
 						default:
 					}
 				}
 			}
 
-			rebuildTools(limeDirectory, toolsDirectory, rebuildBinaries);
+			rebuildTools(limeDirectory, toolsDirectory);
 
 			if (args.indexOf("-openfl") > -1)
 			{

@@ -45,7 +45,7 @@ jobs:
           rm -rf ./ndll
           mkdir ./ndll
           haxelib run lime rebuild hxcpp
-          lime rebuild android -eval -nocolor -nocffi -release
+          lime rebuild android -eval -nocolor -release
 
       - uses: actions/upload-artifact@v4
         with:

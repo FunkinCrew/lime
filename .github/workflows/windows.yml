@@ -27,8 +27,8 @@ jobs:
           rm -rf ./ndll
           mkdir ./ndll
           haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild windows -32 -nocolor -nocffi -eval
-          haxelib run lime rebuild windows -64 -nocolor -nocffi -eval
+          haxelib run lime rebuild windows -32 -nocolor -eval
+          haxelib run lime rebuild windows -64 -nocolor -eval
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
