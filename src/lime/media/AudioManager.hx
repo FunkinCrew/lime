@@ -54,15 +54,10 @@ class AudioManager
 						alc.makeContextCurrent(ctx);
 						alc.processContext(ctx);
 
-						#if (lime_openalsoft && !mobile)
-						if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
+						#if (lime_openalsoft)
+						if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
 						{
-							if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
-								alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
-
-							alc.eventControlSOFT([ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT, ALC.EVENT_TYPE_DEVICE_ADDED_SOFT, ALC.EVENT_TYPE_DEVICE_REMOVED_SOFT], true);
-
-							alc.eventCallbackSOFT(deviceEventCallback);
+							alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
 						}
 						#end
 					}
@@ -138,39 +133,6 @@ class AudioManager
 		}
 		#end
 	}
-
-	#if lime_openalsoft
-	@:noCompletion
-	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:#if hl hl.Bytes #else String #end):Void
-	{
-		#if !lime_doc_gen
-		if (eventType == ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT && deviceType == ALC.PLAYBACK_DEVICE_SOFT)
-		{
-			var device = new ALDevice(handle);
-
-			MainLoop.runInMainThread(function():Void
-			{
-				var alc = context.openal;
-
-				if (device == null)
-				{
-					var currentContext = alc.getCurrentContext();
-
-					var device = alc.getContextsDevice(currentContext);
-
-					if (device != null)
-						alc.reopenDeviceSOFT(device, null, null);
-				}
-				else
-				{
-					alc.reopenDeviceSOFT(device, null, null);
-				}
-
-			});
-		}
-		#end
-	}
-	#end
 
 	@:noCompletion
 	private static function setupConfig():Void
