@@ -7,9 +7,6 @@ package lime.media;
 class AudioContext
 {
 	public var custom:Dynamic;
-	#if (!lime_doc_gen || flash)
-	public var flash(default, null):FlashAudioContext;
-	#end
 	#if (!lime_doc_gen || (js && html5))
 	public var html5(default, null):HTML5AudioContext;
 	#end
@@ -42,9 +39,6 @@ class AudioContext
 				html5 = new HTML5AudioContext();
 				this.type = HTML5;
 			}
-			#elseif flash
-			flash = new FlashAudioContext();
-			this.type = FLASH;
 			#else
 			openal = new OpenALAudioContext();
 			this.type = OPENAL;

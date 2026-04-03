@@ -703,7 +703,6 @@ class HTML5Window
 						// mouse is outside the bounds of the parent element,
 						// then onMouseMove and onMouseUp don't need to be
 						// dispatched.
-						// Flash embedded in HTML worked similarly.
 						Browser.window.addEventListener("mouseup", handleMouseEvent);
 						Browser.window.addEventListener("mousemove", handleMouseEvent);
 					}

@@ -35,13 +35,6 @@ namespace lime {
 		int dataFormat;
 		int sampleRate;
 
-		vdynamic* __srcAudio;
-		vdynamic* __srcBuffer;
-		vdynamic* __srcCustom;
-		vdynamic* __srcHowl;
-		vdynamic* __srcSound;
-		vdynamic* __srcVorbisFile;
-
 		AudioBuffer (value audioBuffer);
 		~AudioBuffer ();
 		value Value (value audioBuffer);

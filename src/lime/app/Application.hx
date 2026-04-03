@@ -648,15 +648,12 @@ class Application extends Module
 
 	@:noCompletion private function __checkForAllWindowsClosed():Void
 	{
-		// air handles this automatically with NativeApplication.autoExit
-		#if !air
 		if (__windows.length == 0)
 		{
 			#if !lime_doc_gen
 			System.exit(0);
 			#end
 		}
-		#end
 	}
 
 	@:noCompletion private function __onGamepadConnect(gamepad:Gamepad):Void
@@ -744,11 +741,7 @@ class Application extends Module
 	}
 }
 
-#if air
-@:noCompletion private typedef ApplicationBackend = lime._internal.backend.air.AIRApplication;
-#elseif flash
-@:noCompletion private typedef ApplicationBackend = lime._internal.backend.flash.FlashApplication;
-#elseif (js && html5)
+#if (js && html5)
 @:noCompletion private typedef ApplicationBackend = lime._internal.backend.html5.HTML5Application;
 #else
 @:noCompletion private typedef ApplicationBackend = lime._internal.backend.native.NativeApplication;

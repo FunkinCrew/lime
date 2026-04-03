@@ -3,10 +3,6 @@ package lime._internal.format;
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.utils.UInt8Array;
-#if flash
-import flash.utils.CompressionAlgorithm;
-import flash.utils.ByteArray;
-#end
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
@@ -29,14 +25,6 @@ class LZMA
 		{
 			return Bytes.ofData(cast data);
 		}
-		#elseif flash
-		var byteArray:ByteArray = cast bytes.getData();
-
-		var data = new ByteArray();
-		data.writeBytes(byteArray);
-		data.compress(CompressionAlgorithm.LZMA);
-
-		return Bytes.ofData(data);
 		#else
 		return null;
 		#end
@@ -56,14 +44,6 @@ class LZMA
 		{
 			return Bytes.ofData(cast data);
 		}
-		#elseif flash
-		var byteArray:ByteArray = cast bytes.getData();
-
-		var data = new ByteArray();
-		data.writeBytes(byteArray);
-		data.uncompress(CompressionAlgorithm.LZMA);
-
-		return Bytes.ofData(data);
 		#else
 		return null;
 		#end

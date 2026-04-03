@@ -139,16 +139,13 @@ class HXProject extends Script
 
 		platformType = switch (target)
 		{
-			case AIR if (targetFlags.exists("ios") || targetFlags.exists("android")):
-				PlatformType.MOBILE;
-
-			case FLASH, HTML5, WEB_ASSEMBLY:
+			case HTML5, WEB_ASSEMBLY:
 				PlatformType.WEB;
 
 			case ANDROID, IOS, TVOS:
 				PlatformType.MOBILE;
 
-			case WINDOWS, MAC, LINUX, AIR:
+			case WINDOWS, MAC, LINUX:
 				PlatformType.DESKTOP;
 
 			default:
@@ -184,7 +181,7 @@ class HXProject extends Script
 		else
 		{
 			environment = Sys.environment();
-			for (conflict in ["air", "android", "cpp", "flash", "hl", "html5", "ios", "linux", "mac", "webassembly", "windows"])
+			for (conflict in ["android", "cpp", "hl", "html5", "ios", "linux", "mac", "webassembly", "windows"])
 			{
 				environment.remove(conflict);
 			}
@@ -715,13 +712,6 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
-		else if (target == Platform.AIR)
-		{
-			defines.set("targetType", "swf");
-			defines.set("flash", "1");
-			if (targetFlags.exists("ios")) defines.set("ios", "1");
-			if (targetFlags.exists("android")) defines.set("android", "1");
-		}
 		else if (target == Platform.WEB_ASSEMBLY)
 		{
 			defines.set("webassembly", "1");
@@ -737,10 +727,6 @@ class HXProject extends Script
 			defines.set("targetType", "cpp");
 			defines.set("native", "1");
 			defines.set("cpp", "1");
-		}
-		else if (target == Platform.FLASH)
-		{
-			defines.set("targetType", "swf");
 		}
 
 		if (debug)
@@ -1103,7 +1089,7 @@ class HXProject extends Script
 
 				if (asset.embed == null)
 				{
-					embeddedAsset.embed = (platformType == PlatformType.WEB || target == AIR);
+					embeddedAsset.embed = platformType == PlatformType.WEB;
 				}
 
 				embeddedAsset.type = Std.string(asset.type).toLowerCase();
@@ -1336,11 +1322,7 @@ class HXProject extends Script
 			}
 		}
 
-		if (target != Platform.FLASH)
-		{
-			compilerFlags.push("-D " + Std.string(target).toLowerCase());
-		}
-
+		compilerFlags.push("-D " + Std.string(target).toLowerCase());
 		compilerFlags.push("-D " + Std.string(platformType).toLowerCase());
 		compilerFlags = compilerFlags.concat(haxeflags);
 

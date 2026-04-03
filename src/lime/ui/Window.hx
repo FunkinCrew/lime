@@ -13,8 +13,6 @@ import js.html.Element;
 #end
 #if openfl
 import openfl.display.Stage;
-#elseif flash
-import flash.display.Stage;
 #else
 typedef Stage = Dynamic;
 #end
@@ -140,7 +138,7 @@ class Window
 	public var parameters:Dynamic;
 	public var resizable(get, set):Bool;
 	public var scale(get, null):Float;
-	#if (!lime_doc_gen || flash || openfl)
+	#if (!lime_doc_gen || openfl)
 	public var stage(default, null):Stage;
 	#end
 	public var textInputEnabled(get, set):Bool;
@@ -803,11 +801,7 @@ class Window
 	}
 }
 
-#if air
-@:noCompletion private typedef WindowBackend = lime._internal.backend.air.AIRWindow;
-#elseif flash
-@:noCompletion private typedef WindowBackend = lime._internal.backend.flash.FlashWindow;
-#elseif (js && html5)
+#if (js && html5)
 @:noCompletion private typedef WindowBackend = lime._internal.backend.html5.HTML5Window;
 #else
 @:noCompletion private typedef WindowBackend = lime._internal.backend.native.NativeWindow;
