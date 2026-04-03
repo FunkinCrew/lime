@@ -141,11 +141,6 @@ class WindowsPlatform extends PlatformTarget
 				}
 			}
 		}
-		else if (project.targetFlags.exists("cppia"))
-		{
-			targetType = "cppia";
-			is64 = true;
-		}
 		else
 		{
 			targetType = "cpp";
@@ -286,23 +281,6 @@ class WindowsPlatform extends PlatformTarget
 				System.runCommand("", System.findTemplate(templates, "bin/ReplaceVistaIcon.exe"), [executablePath, iconPath, "1"], true, true);
 			}
 		}
-		else if (targetType == "cppia")
-		{
-			System.runCommand("", "haxe", [hxml]);
-
-			if (noOutput) return;
-
-			System.copyFile(Path.combine(Haxelib.getPath(new Haxelib("hxcpp")), "bin/Windows64/Cppia.exe"), executablePath);
-			System.copyFile(targetDirectory + "/obj/ApplicationMain.cppia", Path.combine(applicationDirectory, "script.cppia"));
-
-			var iconPath = Path.combine(applicationDirectory, "icon.ico");
-
-			if (IconHelper.createWindowsIcon(icons, iconPath) && System.hostPlatform == WINDOWS)
-			{
-				var templates = [Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)) + "/templates"].concat(project.templatePaths);
-				System.runCommand("", System.findTemplate(templates, "bin/ReplaceVistaIcon.exe"), [executablePath, iconPath, "1"], true, true);
-			}
-		}
 		else
 		{
 			var haxeArgs = [hxml, "-D", "resourceFile=ApplicationMain.rc"];
@@ -399,7 +377,6 @@ class WindowsPlatform extends PlatformTarget
 		context.NEKO_FILE = targetDirectory + "/obj/ApplicationMain.n";
 		context.NODE_FILE = targetDirectory + "/bin/ApplicationMain.js";
 		context.HL_FILE = targetDirectory + "/obj/ApplicationMain" + (project.defines.exists("hlc") ? ".c" : ".hl");
-		context.CPPIA_FILE = targetDirectory + "/obj/ApplicationMain.cppia";
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.BUILD_DIR = project.app.path + "/windows" + (is64 ? "64" : "");
 
@@ -428,8 +405,6 @@ class WindowsPlatform extends PlatformTarget
 			{
 				case "hl":
 					hxml.hl = "_.hl";
-				case "cppia":
-					hxml.cppia = "_.cppia";
 				default:
 					hxml.cpp = "_";
 			}
@@ -499,13 +474,7 @@ class WindowsPlatform extends PlatformTarget
 			arguments.push("-verbose");
 		}
 
-		if (targetType == "cppia")
-		{
-			// arguments = arguments.concat(["-livereload"]);
-			arguments = ["script.cppia"]; // .concat(arguments);
-			System.runCommand(applicationDirectory, Path.withoutDirectory(executablePath), arguments);
-		}
-		else if (project.target == System.hostPlatform)
+		if (project.target == System.hostPlatform)
 		{
 			arguments = arguments.concat(["-livereload"]);
 			System.runCommand(applicationDirectory, Path.withoutDirectory(executablePath), arguments);
