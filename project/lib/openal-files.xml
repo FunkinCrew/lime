@@ -127,13 +127,15 @@
 
             <section>
 
-                <section>
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/null.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/base.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/loopback.cpp" />
 
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/base.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/loopback.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/null.cpp" />
+            </section>
 
-                </section>
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" if="NATIVE_TOOLKIT_HAVE_SDL" />
+
+            <section unless="NATIVE_TOOLKIT_HAVE_SDL" >
 
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/opensl.cpp" if="android" />
 
@@ -153,8 +155,6 @@
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
 
                 </section>
-
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" if="NATIVE_TOOLKIT_HAVE_SDL" />
 
             </section>
 
