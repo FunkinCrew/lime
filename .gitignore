@@ -22,10 +22,6 @@ project/vc*.pdb
 tools/*.exe
 tools/obj
 haxedoc.xml
-docs/*.xml
-docs/xml
-docs/pages*
-docs/dump
 .vscode/settings.json
 package-lock.json
 node_modules
