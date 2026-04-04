@@ -318,7 +318,12 @@ class IOSPlatform extends PlatformTarget
 
 		context.ADDL_PBX_BUILD_FILE = "";
 		context.ADDL_PBX_FILE_REFERENCE = "";
+
+		context.ADDL_PBX_RESOURCES_BUILD_PHASE = "";
 		context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE = "";
+		context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE = "";
+
+		context.ADDL_PBX_RESOURCE_GROUP = "";
 		context.ADDL_PBX_FRAMEWORK_GROUP = "";
 
 		context.frameworkSearchPaths = [];
@@ -383,7 +388,7 @@ class IOSPlatform extends PlatformTarget
 						context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Frameworks */,\n";
 						context.ADDL_PBX_FRAMEWORK_GROUP += "                " + fileID + " /* " + name + " */,\n";
 
-						if (embed == true)
+						if (embed)
 						{
 							context.ADDL_PBX_BUILD_FILE += "        " + embedFileID + " /* " + name + " in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy); }; };\n";
 							context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE += "                " + embedFileID + " /* " + name + " in Embed Frameworks */,\n";
