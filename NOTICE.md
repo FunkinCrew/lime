@@ -10,6 +10,9 @@ This product bundles cairo 1.15.2, which is available under an
 This product bundles libcurl 7.56.1, which is available under an
 "MIT/X derivate" license. For details, see [project/lib/curl/](project/lib).
 
+This product bundles dr_libs (dr_flac 0.13.3, dr_mp3 0.7.4, dr_wav 0.14.5), which is available under an
+"MIT No Attribution" license. For details, see [project/lib/dr_libs/](project/lib).
+
 This product bundles efsw, which is available under an
 "MIT" license. For details, see [project/lib/efsw/](project/lib).
 
@@ -29,13 +32,19 @@ This product bundles libogg 1.3.0, which is available under a
 "BSD" license. For details, see [project/lib/ogg/](project/lib).
 
 This product bundles LZMA SDK 4.65, which is available under
-public domain. For details, see [project/lib/lzma/](project/lzma).
+public domain. For details, see [project/lib/lzma/](project/lib).
 
 This product bundles mbedTLS 2.6.0, which is available under an
 "Apache 2.0" license. For details, see [project/lib/mbedtls/](project/lib).
 
 This product bundles OpenAL-Soft 1.25.1, which is available under an
 "LGPLv2" license. For details, see [project/lib/openal/](project/lib).
+
+This product bundles opus, which is available under a
+"BSD" license. For details, see [project/lib/opus/](project/lib).
+
+This product bundles opusfile, which is available under a
+"BSD" license. For details, see [project/lib/opusfile/](project/lib).
 
 This product bundles pixman 0.32.8, which is available under an
 "MIT" license. For details, see [project/lib/pixman/](project/lib).

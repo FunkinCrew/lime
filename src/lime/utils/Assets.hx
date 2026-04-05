@@ -15,6 +15,7 @@ import lime.utils.Log;
 #if !macro
 import haxe.Json;
 #end
+@:access(lime.media.AudioBuffer)
 
 /**
  * <p>The Assets class provides a cross-platform interface to access
@@ -181,7 +182,23 @@ class Assets
 	}
 
 	/**
-	 * Gets an instance of an embedded bitmap
+	 * Gets an instance of an embedded bitmap.
+	 *
+	 * _Note:_ This method may behave differently, depending on the target
+	 * platform. On targets that can quickly create a new image synchronously,
+	 * every call to `Assets.getImage()` with the same ID will return a new
+	 * `Image` instance. However, on other targets where creating images
+	 * synchronously is unacceptably slow, or where images may not be created
+	 * synchronously and must be created asynchronously, every call to
+	 * `Assets.getImage()` with the same ID may return a single, shared `Image`
+	 * instance.
+	 *
+	 * With that in mind, modifying or disposing the contents of the `Image`
+	 * returned by `Assets.getImage()` may affect the results of future calls to
+	 * Assets.getImage()` on some targets. To access an `Image` instance that
+	 * may be modified without affecting future calls to `Assets.getImage()`,
+	 * call the `Image` instance's `clone()` method to manually create a copy.
+	 *
 	 * @usage		var bitmap = new Bitmap(Assets.getBitmapData("image.jpg"));
 	 * @param	id		The ID or asset path for the bitmap
 	 * @param	useCache		(Optional) Whether to use BitmapData from the cache(Default: true)
@@ -271,9 +288,7 @@ class Assets
 
 	private static function isValidAudio(buffer:AudioBuffer):Bool
 	{
-		// TODO: Check disposed
-
-		return buffer != null;
+		return (buffer != null && !buffer.__isDisposed);
 	}
 
 	private static function isValidImage(image:Image):Bool
