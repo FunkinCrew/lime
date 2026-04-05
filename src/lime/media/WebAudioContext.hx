@@ -20,6 +20,16 @@ class WebAudioContext
 	}
 	#end
 
+	public function suspend():Dynamic /*Promise<Void>*/
+	{
+		return null;
+	}
+
+	public function close():Dynamic /*Promise<Void>*/
+	{
+		return null;
+	}
+
 	public function createAnalyser():Dynamic /*AnalyserNode*/
 	{
 		return null;
