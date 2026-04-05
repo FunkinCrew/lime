@@ -123,6 +123,12 @@
 			<dependency name="UIKit.framework" />
 		</section>
 
+		<section if="desktop">
+			<dependency path="dependencies/angle" name="d3dcompiler_47" if="windows" />
+			<dependency path="dependencies/angle" name="libEGL" />
+			<dependency path="dependencies/angle" name="libGLESv2" />
+		</section>
+
 		<define name="MACOSX_DEPLOYMENT_TARGET" value="10.9" if="mac" unless="MACOSX_DEPLOYMENT_TARGET" />
 		<setenv name="MACOSX_DEPLOYMENT_TARGET" value="${MACOSX_DEPLOYMENT_TARGET}" if="mac" />
 
