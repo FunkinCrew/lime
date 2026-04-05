@@ -31,6 +31,24 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
+		SDL_SetHint (SDL_HINT_AUDIO_FREQUENCY, "48000");
+		SDL_SetHint (SDL_HINT_AUDIO_CHANNELS, "2");
+		SDL_SetHint (SDL_HINT_AUDIO_FORMAT, "F32");
+
+		#ifdef IPHONE
+		SDL_SetHint (SDL_HINT_AUDIO_CATEGORY, "playback");
+		#endif
+
+		SDL_SetHint (SDL_HINT_AUDIO_DEVICE_STREAM_ROLE, "Game");
+
+		#ifdef ANDROID
+		if (SDL_GetAndroidSDKVersion () < 31) {
+
+			SDL_SetHint (SDL_HINT_AUDIO_DRIVER, "openslES");
+
+		}
+		#endif
+
 		SDL_SetHint (SDL_HINT_JOYSTICK_HIDAPI, "1");
 
 		#ifdef IPHONE
