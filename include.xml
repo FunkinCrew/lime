@@ -104,6 +104,7 @@
 			<dependency name="Metal.framework" />
 			<dependency name="OpenGLES.framework" />
 			<dependency name="QuartzCore.framework" />
+			<dependency name="Security.framework" />
 			<dependency name="UIKit.framework" />
 		</section>
 
@@ -118,6 +119,7 @@
 			<dependency name="MediaPlayer.framework" />
 			<dependency name="OpenGLES.framework" />
 			<dependency name="QuartzCore.framework" />
+			<dependency name="Security.framework" />
 			<dependency name="UIKit.framework" />
 		</section>
 
