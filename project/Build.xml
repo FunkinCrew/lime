@@ -167,10 +167,18 @@
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
 			<compilerflag value="-DLIME_OGG" />
 
-			<file name="src/media/containers/OGG.cpp" />
+			<section if="LIME_VORBIS">
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
+				<compilerflag value="-DLIME_VORBIS" />
+
+				<file name="src/media/codecs/vorbis/VorbisBindings.cpp" />
+				<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
+				<file name="src/media/containers/OGG.cpp" />
+
+			</section>
 
 		</section>
 
@@ -270,17 +278,6 @@
 			<file name="src/backend/sdl/SDLMutex.cpp" />
 			<file name="src/backend/sdl/SDLSystem.cpp" />
 			<file name="src/backend/sdl/SDLWindow.cpp" />
-
-		</section>
-
-		<section if="LIME_VORBIS">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
-			<compilerflag value="-DLIME_VORBIS" />
-
-			<file name="src/media/codecs/vorbis/VorbisBindings.cpp" />
-			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
 
 		</section>
 
