@@ -56,37 +56,6 @@ public class GameActivity extends SDLActivity {
 
 	}
 
-	public static int[] getDisplaySafeAreaInsets () {
-
-		if (displayCutout == null) {
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-
-				WindowInsets windowInsets = ((GameActivity)Extension.mainContext).getWindow().getDecorView().getRootWindowInsets();
-
-				if (windowInsets != null) {
-
-					displayCutout = windowInsets.getDisplayCutout();
-
-				}
-			}
-		}
-
-		int[] result = {0, 0, 0, 0};
-
-		if (displayCutout != null) {
-
-			result[0] = displayCutout.getSafeInsetLeft();
-			result[1] = displayCutout.getSafeInsetTop();
-			result[2] = displayCutout.getSafeInsetRight();
-			result[3] = displayCutout.getSafeInsetBottom();
-
-		}
-
-		return result;
-
-	}
-
 
 	protected String[] getLibraries () {
 

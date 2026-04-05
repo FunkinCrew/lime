@@ -238,13 +238,7 @@ class System
 			display.name = CFFI.stringValue(displayInfo.name);
 			display.bounds = new Rectangle(displayInfo.bounds.x, displayInfo.bounds.y, displayInfo.bounds.width, displayInfo.bounds.height);
 			display.orientation = displayInfo.orientation;
-			#if android
-			var getDisplaySafeArea = JNI.createStaticMethod("org/haxe/lime/GameActivity", "getDisplaySafeAreaInsets", "()[I");
-			var result = getDisplaySafeArea();
-			display.safeArea = new Rectangle(display.bounds.x + result[0], display.bounds.y + result[1], display.bounds.width - result[0] - result[2], display.bounds.height - result[1] - result[3]);
-			#else
 			display.safeArea = new Rectangle(displayInfo.safeArea.x, displayInfo.safeArea.y, displayInfo.safeArea.width, displayInfo.safeArea.height);
-			#end
 			display.dpi = displayInfo.dpi;
 			display.supportedModes = [];
 
