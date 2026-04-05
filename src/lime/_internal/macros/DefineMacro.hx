@@ -10,6 +10,8 @@ class DefineMacro
 	{
 		if (!Context.defined("tools"))
 		{
+			Compiler.define("lime-funkin");
+
 			if (Context.defined("js"))
 			{
 				Compiler.define("html5");
