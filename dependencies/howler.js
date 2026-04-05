@@ -638,7 +638,7 @@
       self._preload = (typeof o.preload === 'boolean' || o.preload === 'metadata') ? o.preload : true;
       self._rate = o.rate || 1;
       self._sprite = o.sprite || {};
-      self._src = (typeof o.src !== 'string') ? o.src : [o.src];
+      self._src = (o.src instanceof Array) ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
       self._xhr = {
         method: o.xhr && o.xhr.method ? o.xhr.method : 'GET',
@@ -706,6 +706,12 @@
     load: function() {
       var self = this;
       var url = null;
+      var arraybuffer = null;
+      var audiobuffer = null;
+
+      if (self._state === 'loaded' || self._state === 'loading') {
+      	return;
+      }
 
       // If no audio is available, quit immediately.
       if (Howler.noAudio) {
@@ -714,34 +720,45 @@
       }
 
       // Make sure our source is in an array.
-      if (typeof self._src === 'string') {
+      if (!(self._src instanceof Array)) {
         self._src = [self._src];
       }
 
       // Loop through the sources and pick the first one that is compatible.
       for (var i=0; i<self._src.length; i++) {
-        var ext, str;
+      	var src = self._src[i];
+        var ext;
+
+        var srcIsString = typeof src === 'string';
+        if (!srcIsString) {
+          if (ArrayBuffer.isView(src)) {
+            arraybuffer = src.buffer;
+            break;
+          } else if (src instanceof ArrayBuffer) {
+            arraybuffer = src;
+            break;
+          } else if (src instanceof AudioBuffer) {
+            audiobuffer = src;
+          	break;
+          }
+        }
 
         if (self._format && self._format[i]) {
           // If an extension was specified, use that instead.
           ext = self._format[i];
-        } else {
-          // Make sure the source is a string.
-          str = self._src[i];
-          if (typeof str !== 'string') {
-            self._emit('loaderror', null, 'Non-string found in selected audio sources - ignoring.');
-            continue;
-          }
-
+        } else if (srcIsString) {
           // Extract the file extension from the URL or base64 data URI.
-          ext = /^data:audio\/([^;,]+);/i.exec(str);
+          ext = /^data:audio\/([^;,]+);/i.exec(src);
           if (!ext) {
-            ext = /\.([^.]+)$/.exec(str.split('?', 1)[0]);
+            ext = /\.([^.]+)$/.exec(src.split('?', 1)[0]);
           }
 
           if (ext) {
             ext = ext[1].toLowerCase();
           }
+        } else {
+          self._emit('loaderror', null, 'Non-string found in selected audio sources - ignoring.');
+          continue;
         }
 
         // Log a warning if no extension was found.
@@ -756,28 +773,38 @@
         }
       }
 
-      if (!url) {
-        self._emit('loaderror', null, 'No codec support for selected audio sources.');
-        return;
+      if (url) {
+        self._src = url;
+      } else {
+        if (!self._webAudio) {
+          self._emit('loaderror', null, 'AudioBuffer or ArrayBuffer is incompatible with html5 audio.');
+          return;
+        } else if (arraybuffer) {
+          self._src = arraybuffer;
+        } else if (audiobuffer) {
+          self._src = audiobuffer;
+        } else {
+          self._emit('loaderror', null, 'No codec support for selected audio sources.');
+          return;
+        }
       }
 
-      self._src = url;
       self._state = 'loading';
 
       // If the hosting page is HTTPS and the source isn't,
       // drop down to HTML5 Audio to avoid Mixed Content errors.
-      if (window.location.protocol === 'https:' && url.slice(0, 5) === 'http:') {
+      if (window.location.protocol === 'https:' && url && url.slice(0, 5) === 'http:') {
         self._html5 = true;
         self._webAudio = false;
       }
 
-      // Create a new sound object and add it to the pool.
-      new Sound(self);
-
       // Load and decode the audio data for playback.
       if (self._webAudio) {
-        loadBuffer(self);
+      	loadBuffer(self);
       }
+
+      // Create a new sound object and add it to the pool.
+      new Sound(self);
 
       return self;
     },
@@ -1285,7 +1312,9 @@
 
       // Update the volume or return the current volume.
       var sound;
-      if (typeof vol !== 'undefined' && vol >= 0 && vol <= 1) {
+      if (typeof vol !== 'undefined') {
+        vol = Math.max(vol, 0);
+
         // If the sound hasn't loaded, add it to the load queue to change volume when capable.
         if (self._state !== 'loaded'|| self._playLock) {
           self._queue.push({
@@ -1508,6 +1537,26 @@
       } else if (args.length === 2) {
         loop = args[0];
         id = parseInt(args[1], 10);
+      } else if (args.length === 3) {
+        id = parseInt(args[2], 10);
+        sound = self._soundById(id);
+        if (sound) {
+          sound._loop = true;
+          sound._start = parseFloat(args[0]) || 0;
+          sound._stop = parseFloat(args[1]) || self._duration;
+          if (self._webAudio && sound._node && sound._node.bufferSource) {
+            sound._node.bufferSource.loop = true;
+            sound._node.bufferSource.loopStart = sound._start;
+            sound._node.bufferSource.loopEnd = sound._stop;
+
+            // If playing, restart playback to ensure looping updates.
+            if (self.playing(id)) {
+              self.pause(id, true);
+              self.play(id, true);
+            }
+          }
+        }
+        return;
       }
 
       // If no id is passed, get all ID's to be looped.
@@ -1835,7 +1884,7 @@
       // Delete this sound from the cache (if no other Howl is using it).
       var remCache = true;
       for (i=0; i<Howler._howls.length; i++) {
-        if (Howler._howls[i]._src === self._src || self._src.indexOf(Howler._howls[i]._src) >= 0) {
+        if (Howler._howls[i]._src === self._src || (typeof self._src === 'string' && self._src.indexOf(Howler._howls[i]._src) >= 0)) {
           remCache = false;
           break;
         }
@@ -2188,7 +2237,7 @@
 
       // Setup the buffer source for playback.
       sound._node.bufferSource = Howler.ctx.createBufferSource();
-      sound._node.bufferSource.buffer = cache[self._src];
+      sound._node.bufferSource.buffer = self._buffer;
 
       // Connect to the correct node.
       if (sound._panner) {
@@ -2431,22 +2480,27 @@
    * @param  {Howl} self
    */
   var loadBuffer = function(self) {
-    var url = self._src;
+    var src = self._src;
 
-    // Check if the buffer has already been cached and use it instead.
-    if (cache[url]) {
-      // Set the duration from the cache.
-      self._duration = cache[url].duration;
-
-      // Load the sound into this Howl.
-      loadSound(self);
-
+    // Check if the src is arraybuffer or audiobuffer.
+    // Disable caching if its not a url.
+    if (src instanceof ArrayBuffer) {
+      decodeAudioData(src, self);
+      return;
+    } else if (src instanceof AudioBuffer) {
+      loadSound(self, src);
       return;
     }
 
-    if (/^data:[^;]+;base64,/.test(url)) {
+    // Check if the buffer has already been cached and use it instead.
+    if (cache[src]) {
+      loadSound(self, cache[src]);
+      return;
+    }
+
+    if (/^data:[^;]+;base64,/.test(src)) {
       // Decode the base64 data URI without XHR, since some browsers don't support it.
-      var data = atob(url.split(',')[1]);
+      var data = atob(src.split(',')[1]);
       var dataView = new Uint8Array(data.length);
       for (var i=0; i<data.length; ++i) {
         dataView[i] = data.charCodeAt(i);
@@ -2456,7 +2510,7 @@
     } else {
       // Load the buffer from the URL.
       var xhr = new XMLHttpRequest();
-      xhr.open(self._xhr.method, url, true);
+      xhr.open(self._xhr.method, src, true);
       xhr.withCredentials = self._xhr.withCredentials;
       xhr.responseType = 'arraybuffer';
 
@@ -2483,7 +2537,7 @@
           self._html5 = true;
           self._webAudio = false;
           self._sounds = [];
-          delete cache[url];
+          //delete cache[src];
           self.load();
         }
       };
@@ -2516,7 +2570,7 @@
 
     // Load the sound on success.
     var success = function(buffer) {
-      if (buffer && self._sounds.length > 0) {
+      if (buffer) {
         cache[self._src] = buffer;
         loadSound(self, buffer);
       } else {
@@ -2539,7 +2593,8 @@
    */
   var loadSound = function(self, buffer) {
     // Set the duration.
-    if (buffer && !self._duration) {
+    if (buffer) {
+      self._buffer = buffer;
       self._duration = buffer.duration;
     }
 

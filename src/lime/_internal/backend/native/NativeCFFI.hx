@@ -69,12 +69,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_application_update(handle:Dynamic):Bool;
 
-	@:cffi private static function lime_audio_load(data:Dynamic, buffer:Dynamic):Dynamic;
-
-	@:cffi private static function lime_audio_load_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
-
-	@:cffi private static function lime_audio_load_file(path:Dynamic, buffer:Dynamic):Dynamic;
-
 	@:cffi private static function lime_bytes_from_data_pointer(data:Float, length:Int, bytes:Dynamic):Dynamic;
 
 	@:cffi private static function lime_bytes_get_data_pointer(data:Dynamic):Float;
@@ -390,11 +384,6 @@ class NativeCFFI
 	private static var lime_application_set_frame_rate = new cpp.Callable<cpp.Object->Float->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_application_set_frame_rate", "odv", false));
 	private static var lime_application_update = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_application_update", "ob", false));
-	private static var lime_audio_load = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load", "ooo", false));
-	private static var lime_audio_load_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_bytes",
-		"ooo", false));
-	private static var lime_audio_load_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_file", "ooo",
-		false));
 	private static var lime_bytes_from_data_pointer = new cpp.Callable<Float->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_bytes_from_data_pointer", "dioo", false));
 	private static var lime_bytes_get_data_pointer = new cpp.Callable<cpp.Object->Float>(cpp.Prime._loadPrime("lime", "lime_bytes_get_data_pointer", "od",
@@ -670,9 +659,6 @@ class NativeCFFI
 	private static var lime_application_quit = CFFI.load("lime", "lime_application_quit", 1);
 	private static var lime_application_set_frame_rate = CFFI.load("lime", "lime_application_set_frame_rate", 2);
 	private static var lime_application_update = CFFI.load("lime", "lime_application_update", 1);
-	private static var lime_audio_load = CFFI.load("lime", "lime_audio_load", 2);
-	private static var lime_audio_load_bytes = CFFI.load("lime", "lime_audio_load_bytes", 2);
-	private static var lime_audio_load_file = CFFI.load("lime", "lime_audio_load_file", 2);
 	private static var lime_bytes_from_data_pointer = CFFI.load("lime", "lime_bytes_from_data_pointer", 3);
 	private static var lime_bytes_get_data_pointer = CFFI.load("lime", "lime_bytes_get_data_pointer", 1);
 	private static var lime_bytes_get_data_pointer_offset = CFFI.load("lime", "lime_bytes_get_data_pointer_offset", 2);
@@ -852,17 +838,6 @@ class NativeCFFI
 	@:hlNative("lime", "hl_application_update") private static function lime_application_update(handle:CFFIPointer):Bool
 	{
 		return false;
-	}
-
-	// @:cffi private static function lime_audio_load (data:Dynamic, buffer:Dynamic):Dynamic;
-	@:hlNative("lime", "hl_audio_load_bytes") private static function lime_audio_load_bytes(data:Bytes, buffer:AudioBuffer):AudioBuffer
-	{
-		return null;
-	}
-
-	@:hlNative("lime", "hl_audio_load_file") private static function lime_audio_load_file(path:String, buffer:AudioBuffer):AudioBuffer
-	{
-		return null;
 	}
 
 	@:hlNative("lime", "hl_bytes_from_data_pointer") private static function lime_bytes_from_data_pointer(data:Float, length:Int, bytes:Bytes):Bytes
@@ -6878,6 +6853,8 @@ class NativeCFFI
 	@:cffi private static function lime_vorbis_file_read(vorbisFile:Dynamic, buffer:Dynamic, position:Int, length:Int, bigendianp:Bool, word:Int,
 		signed:Bool):Dynamic;
 
+	@:cffi private static function lime_vorbis_file_decode(vorbisFile:Dynamic, buffer:Dynamic, position:Int, length:Int, word:Int):Int;
+
 	@:cffi private static function lime_vorbis_file_read_float(vorbisFile:Dynamic, pcmChannels:Dynamic, samples:Int):Dynamic;
 
 	@:cffi private static function lime_vorbis_file_seekable(vorbisFile:Dynamic):Bool;
@@ -6935,6 +6912,8 @@ class NativeCFFI
 		"oio", false));
 	private static var lime_vorbis_file_read = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Bool->Int->Bool->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_vorbis_file_read", "ooiibibo", false));
+	private static var lime_vorbis_file_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_vorbis_file_decode", "ooiiii", false));
 	private static var lime_vorbis_file_read_float = new cpp.Callable<cpp.Object->cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_vorbis_file_read_float", "ooio", false));
 	private static var lime_vorbis_file_seekable = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_vorbis_file_seekable", "ob", false));
@@ -6975,6 +6954,7 @@ class NativeCFFI
 	private static var lime_vorbis_file_raw_tell = CFFI.load("lime", "lime_vorbis_file_raw_tell", 1);
 	private static var lime_vorbis_file_raw_total = CFFI.load("lime", "lime_vorbis_file_raw_total", 2);
 	private static var lime_vorbis_file_read = CFFI.load("lime", "lime_vorbis_file_read", -1);
+	private static var lime_vorbis_file_decode = CFFI.load("lime", "lime_vorbis_file_decode", 5);
 	private static var lime_vorbis_file_read_float = CFFI.load("lime", "lime_vorbis_file_read_float", 3);
 	private static var lime_vorbis_file_seekable = CFFI.load("lime", "lime_vorbis_file_seekable", 1);
 	private static var lime_vorbis_file_serial_number = CFFI.load("lime", "lime_vorbis_file_serial_number", 2);
@@ -7085,6 +7065,12 @@ class NativeCFFI
 		return null;
 	}
 
+	@:hlNative("lime", "hl_vorbis_file_decode") private static function lime_vorbis_file_decode(vorbisFile:CFFIPointer, buffer:Bytes, position:Int, length:Int,
+			word:Int):Int
+	{
+		return 0;
+	}
+
 	@:hlNative("lime", "hl_vorbis_file_read_float") private static function lime_vorbis_file_read_float(vorbisFile:CFFIPointer, pcmChannels:Bytes,
 			samples:Int):Dynamic
 	{
@@ -7134,6 +7120,335 @@ class NativeCFFI
 	@:hlNative("lime", "hl_vorbis_file_time_total") private static function lime_vorbis_file_time_total(vorbisFile:CFFIPointer, bitstream:Int):Float
 	{
 		return 0;
+	}
+	#end
+	#end
+	#if (lime_cffi && !macro && lime_drlibs)
+	#if (cpp && !cppia)
+	#if (disable_cffi || haxe_ver < "3.4.0")
+	@:cffi private static function lime_drlibs_flac_close(flac:Dynamic):Void;
+
+	@:cffi private static function lime_drlibs_flac_decode(flac:Dynamic, buffer:Dynamic, position:Int, length:Int, word:Int):Int;
+
+	@:cffi private static function lime_drlibs_flac_from_bytes(bytes:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_flac_from_file(path:String):Dynamic;
+
+	@:cffi private static function lime_drlibs_flac_info(flac:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_flac_seek(flac:Dynamic, posLow:Dynamic, posHigh:Dynamic):Int;
+
+	@:cffi private static function lime_drlibs_flac_tell(flac:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_flac_total(flac:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_decode(mp3:Dynamic, buffer:Dynamic, position:Int, length:Int):Int;
+
+	@:cffi private static function lime_drlibs_mp3_from_bytes(bytes:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_from_file(path:String):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_info(mp3:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_seek(mp3:Dynamic, posLow:Dynamic, posHigh:Dynamic):Int;
+
+	@:cffi private static function lime_drlibs_mp3_tell(mp3:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_total(mp3:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_mp3_uninit(mp3:Dynamic):Void;
+
+	@:cffi private static function lime_drlibs_wav_decode(wav:Dynamic, buffer:Dynamic, position:Int, length:Int, word:Int):Int;
+
+	@:cffi private static function lime_drlibs_wav_from_bytes(bytes:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_wav_from_file(path:String):Dynamic;
+
+	@:cffi private static function lime_drlibs_wav_info(wav:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_wav_seek(wav:Dynamic, posLow:Dynamic, posHigh:Dynamic):Int;
+
+	@:cffi private static function lime_drlibs_wav_tell(wav:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_wav_total(wav:Dynamic):Dynamic;
+
+	@:cffi private static function lime_drlibs_wav_uninit(wav:Dynamic):Void;
+	#else
+	private static var lime_drlibs_flac_close = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_close", "ov", false));
+	private static var lime_drlibs_flac_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_flac_decode", "ooiiii", false));
+	private static var lime_drlibs_flac_from_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_from_bytes",
+		"oo", false));
+	private static var lime_drlibs_flac_from_file = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_from_file", "so",
+		false));
+	private static var lime_drlibs_flac_info = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_info", "oo",
+		false));
+	private static var lime_drlibs_flac_seek = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_flac_seek", "oooi", false));
+	private static var lime_drlibs_flac_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_tell", "oo", false));
+	private static var lime_drlibs_flac_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_flac_total", "oo",
+		false));
+	private static var lime_drlibs_mp3_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_mp3_decode", "ooiii", false));
+	private static var lime_drlibs_mp3_from_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_from_bytes",
+		"oo", false));
+	private static var lime_drlibs_mp3_from_file = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_from_file", "so",
+		false));
+	private static var lime_drlibs_mp3_info = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_info", "oo",
+		false));
+	private static var lime_drlibs_mp3_seek = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_mp3_seek", "oooi", false));
+	private static var lime_drlibs_mp3_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_tell", "oo", false));
+	private static var lime_drlibs_mp3_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_total", "oo",
+		false));
+	private static var lime_drlibs_mp3_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_drlibs_mp3_uninit", "ov", false));
+	private static var lime_drlibs_wav_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_wav_decode", "ooiiii", false));
+	private static var lime_drlibs_wav_from_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_from_bytes",
+		"oo", false));
+	private static var lime_drlibs_wav_from_file = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_from_file", "so",
+		false));
+	private static var lime_drlibs_wav_info = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_info", "oo",
+		false));
+	private static var lime_drlibs_wav_seek = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int>(cpp.Prime._loadPrime("lime",
+		"lime_drlibs_wav_seek", "oooi", false));
+	private static var lime_drlibs_wav_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_tell", "oo", false));
+	private static var lime_drlibs_wav_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_total", "oo",
+		false));
+	private static var lime_drlibs_wav_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_drlibs_wav_uninit", "ov", false));
+	#end
+	#end
+	#if (neko || cppia)
+	private static var lime_drlibs_flac_close = CFFI.load("lime", "lime_drlibs_flac_close", 1);
+	private static var lime_drlibs_flac_decode = CFFI.load("lime", "lime_drlibs_flac_decode", 5);
+	private static var lime_drlibs_flac_from_bytes = CFFI.load("lime", "lime_drlibs_flac_from_bytes", 1);
+	private static var lime_drlibs_flac_from_file = CFFI.load("lime", "lime_drlibs_flac_from_file", 1);
+	private static var lime_drlibs_flac_info = CFFI.load("lime", "lime_drlibs_flac_info", 1);
+	private static var lime_drlibs_flac_seek = CFFI.load("lime", "lime_drlibs_flac_seek", 3);
+	private static var lime_drlibs_flac_tell = CFFI.load("lime", "lime_drlibs_flac_tell", 1);
+	private static var lime_drlibs_flac_total = CFFI.load("lime", "lime_drlibs_flac_total", 1);
+	private static var lime_drlibs_mp3_decode = CFFI.load("lime", "lime_drlibs_mp3_decode", 4);
+	private static var lime_drlibs_mp3_from_bytes = CFFI.load("lime", "lime_drlibs_mp3_from_bytes", 1);
+	private static var lime_drlibs_mp3_from_file = CFFI.load("lime", "lime_drlibs_mp3_from_file", 1);
+	private static var lime_drlibs_mp3_info = CFFI.load("lime", "lime_drlibs_mp3_info", 1);
+	private static var lime_drlibs_mp3_seek = CFFI.load("lime", "lime_drlibs_mp3_seek", 3);
+	private static var lime_drlibs_mp3_tell = CFFI.load("lime", "lime_drlibs_mp3_tell", 1);
+	private static var lime_drlibs_mp3_total = CFFI.load("lime", "lime_drlibs_mp3_total", 1);
+	private static var lime_drlibs_mp3_uninit = CFFI.load("lime", "lime_drlibs_mp3_uninit", 1);
+	private static var lime_drlibs_wav_decode = CFFI.load("lime", "lime_drlibs_wav_decode", 5);
+	private static var lime_drlibs_wav_from_bytes = CFFI.load("lime", "lime_drlibs_wav_from_bytes", 1);
+	private static var lime_drlibs_wav_from_file = CFFI.load("lime", "lime_drlibs_wav_from_file", 1);
+	private static var lime_drlibs_wav_info = CFFI.load("lime", "lime_drlibs_wav_info", 1);
+	private static var lime_drlibs_wav_seek = CFFI.load("lime", "lime_drlibs_wav_seek", 3);
+	private static var lime_drlibs_wav_tell = CFFI.load("lime", "lime_drlibs_wav_tell", 1);
+	private static var lime_drlibs_wav_total = CFFI.load("lime", "lime_drlibs_wav_total", 1);
+	private static var lime_drlibs_wav_uninit = CFFI.load("lime", "lime_drlibs_wav_uninit", 1);
+	#end
+	#if hl
+	@:hlNative("lime", "hl_drlibs_flac_close") private static function lime_drlibs_flac_close(flac:CFFIPointer):Void {}
+
+	@:hlNative("lime", "hl_drlibs_flac_decode") private static function lime_drlibs_flac_decode(flac:CFFIPointer, buffer:Bytes, position:Int, length:Int,
+			word:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_from_bytes") private static function lime_drlibs_flac_from_bytes(bytes:Bytes):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_from_file") private static function lime_drlibs_flac_from_file(path:String):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_info") private static function lime_drlibs_flac_info(flac:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_seek") private static function lime_drlibs_flac_seek(flac:CFFIPointer, posLow:Int, posHigh:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_tell") private static function lime_drlibs_flac_tell(flac:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_flac_total") private static function lime_drlibs_flac_total(flac:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_decode") private static function lime_drlibs_mp3_decode(mp3:CFFIPointer, buffer:Bytes, position:Int, length:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_from_bytes") private static function lime_drlibs_mp3_from_bytes(bytes:Bytes):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_from_file") private static function lime_drlibs_mp3_from_file(path:String):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_info") private static function lime_drlibs_mp3_info(mp3:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_seek") private static function lime_drlibs_mp3_seek(mp3:CFFIPointer, posLow:Int, posHigh:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_tell") private static function lime_drlibs_mp3_tell(mp3:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_total") private static function lime_drlibs_mp3_total(mp3:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_mp3_uninit") private static function lime_drlibs_mp3_uninit(mp3:CFFIPointer):Void {}
+
+	@:hlNative("lime", "hl_drlibs_wav_decode") private static function lime_drlibs_wav_decode(wav:CFFIPointer, buffer:Bytes, position:Int, length:Int,
+			word:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_from_bytes") private static function lime_drlibs_wav_from_bytes(bytes:Bytes):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_from_file") private static function lime_drlibs_wav_from_file(path:String):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_info") private static function lime_drlibs_wav_info(wav:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_seek") private static function lime_drlibs_wav_seek(wav:CFFIPointer, posLow:Int, posHigh:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_tell") private static function lime_drlibs_wav_tell(wav:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_total") private static function lime_drlibs_wav_total(wav:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_drlibs_wav_uninit") private static function lime_drlibs_wav_uninit(wav:CFFIPointer):Void {}
+	#end
+	#end
+	#if (lime_cffi && !macro && lime_opus)
+	#if (cpp && !cppia)
+	#if (disable_cffi || haxe_ver < "3.4.0")
+	@:cffi private static function lime_opus_file_channel_count(opusFile:Dynamic):Int;
+
+	@:cffi private static function lime_opus_file_decode(opusFile:Dynamic, buffer:Dynamic, position:Int, length:Int):Int;
+
+	@:cffi private static function lime_opus_file_free(opusFile:Dynamic):Void;
+
+	@:cffi private static function lime_opus_file_from_bytes(bytes:Dynamic):Dynamic;
+
+	@:cffi private static function lime_opus_file_from_file(path:String):Dynamic;
+
+	@:cffi private static function lime_opus_file_seek(opusFile:Dynamic, posLow:Dynamic, posHigh:Dynamic):Int;
+
+	@:cffi private static function lime_opus_file_seekable(opusFile:Dynamic):Bool;
+
+	@:cffi private static function lime_opus_file_tell(opusFile:Dynamic):Dynamic;
+
+	@:cffi private static function lime_opus_file_total(opusFile:Dynamic):Dynamic;
+	#else
+	private static var lime_opus_file_channel_count = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_opus_file_channel_count",
+		"oi", false));
+	private static var lime_opus_file_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_opus_file_decode", "ooiii", false));
+	private static var lime_opus_file_free = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_opus_file_free", "ov", false));
+	private static var lime_opus_file_from_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_opus_file_from_bytes",
+		"oo", false));
+	private static var lime_opus_file_from_file = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_opus_file_from_file", "so",
+		false));
+	private static var lime_opus_file_seek = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int>(cpp.Prime._loadPrime("lime",
+		"lime_opus_file_seek", "oooi", false));
+	private static var lime_opus_file_seekable = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_opus_file_seekable", "ob", false));
+	private static var lime_opus_file_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_opus_file_tell", "oo", false));
+	private static var lime_opus_file_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_opus_file_total", "oo",
+		false));
+	#end
+	#end
+	#if (neko || cppia)
+	private static var lime_opus_file_channel_count = CFFI.load("lime", "lime_opus_file_channel_count", 1);
+	private static var lime_opus_file_decode = CFFI.load("lime", "lime_opus_file_decode", 4);
+	private static var lime_opus_file_free = CFFI.load("lime", "lime_opus_file_free", 1);
+	private static var lime_opus_file_from_bytes = CFFI.load("lime", "lime_opus_file_from_bytes", 1);
+	private static var lime_opus_file_from_file = CFFI.load("lime", "lime_opus_file_from_file", 1);
+	private static var lime_opus_file_seek = CFFI.load("lime", "lime_opus_file_seek", 3);
+	private static var lime_opus_file_seekable = CFFI.load("lime", "lime_opus_file_seekable", 1);
+	private static var lime_opus_file_tell = CFFI.load("lime", "lime_opus_file_tell", 1);
+	private static var lime_opus_file_total = CFFI.load("lime", "lime_opus_file_total", 1);
+	#end
+	#if hl
+	@:hlNative("lime", "hl_opus_file_channel_count") private static function lime_opus_file_channel_count(opusFile:CFFIPointer):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_opus_file_decode") private static function lime_opus_file_decode(opusFile:CFFIPointer, buffer:Bytes, position:Int, length:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_opus_file_free") private static function lime_opus_file_free(opusFile:CFFIPointer):Void {}
+
+	@:hlNative("lime", "hl_opus_file_from_bytes") private static function lime_opus_file_from_bytes(bytes:Bytes):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_opus_file_from_file") private static function lime_opus_file_from_file(path:String):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_opus_file_seek") private static function lime_opus_file_seek(opusFile:CFFIPointer, posLow:Int, posHigh:Int):Int
+	{
+		return 0;
+	}
+
+	@:hlNative("lime", "hl_opus_file_seekable") private static function lime_opus_file_seekable(opusFile:CFFIPointer):Bool
+	{
+		return false;
+	}
+
+	@:hlNative("lime", "hl_opus_file_tell") private static function lime_opus_file_tell(opusFile:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_opus_file_total") private static function lime_opus_file_total(opusFile:CFFIPointer):Dynamic
+	{
+		return null;
 	}
 	#end
 	#end

@@ -45,6 +45,7 @@ class Howl
 	 * 	loop(id) -> Returns the sound id's loop value.
 	 * 	loop(loop) -> Sets the loop value for all sounds in this Howl group.
 	 * 	loop(loop, id) -> Sets the loop value of passed sound id.
+	 *  loop(loopStart, loopEnd, id) -> Sets the loop time points of passed sound id.
 	 * @return	Returns self or current loop value.
 	 */
 	public function loop(?loop:Dynamic, ?id:Int):Dynamic
@@ -269,6 +270,7 @@ extern class Howl
 	@:overload(function(id:Int):Bool {})
 	@:overload(function(loop:Bool):Howl {})
 	@:overload(function(loop:Bool, id:Int):Howl {})
+	@:overload(function(loopStart:Float, loopEnd:Float, id:Int):Howl {})
 	public function loop():Bool;
 	public function mute(muted:Bool, ?id:Int):Howl;
 	public function off(event:String, fn:Function, ?id:Int):Howl;
@@ -307,7 +309,7 @@ extern class Howl
 
 typedef HowlOptions =
 {
-	src:Array<String>,
+	src:Array<Dynamic/*String or ArrayBuffer or AudioBuffer*/>,
 	?volume:Float,
 	?html5:Bool,
 	?loop:Bool,

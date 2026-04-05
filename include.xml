@@ -16,6 +16,7 @@
 	<define name="lime-cffi" if="native" />
 	<define name="lime-curl" unless="lime-console || lime-switch || emscripten || html5" />
 	<define name="lime-dom" if="html5" />
+	<define name="lime-drlibs" if="native" />
 	<define name="lime-harfbuzz" if="native" />
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
@@ -24,6 +25,7 @@
 	<define name="lime-openal" if="emscripten || lime-openalsoft" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
 	<define name="lime-opengles" if="emscripten || mobile" />
+	<define name="lime-opus" if="native" />
 	<define name="lime-vorbis" if="native" />
 	<define name="lime-webgl" if="html5" />
 

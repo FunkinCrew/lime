@@ -15,6 +15,7 @@ import lime.utils.Log;
 #if !macro
 import haxe.Json;
 #end
+@:access(lime.media.AudioBuffer)
 
 /**
  * <p>The Assets class provides a cross-platform interface to access
@@ -287,9 +288,7 @@ class Assets
 
 	private static function isValidAudio(buffer:AudioBuffer):Bool
 	{
-		// TODO: Check disposed
-
-		return buffer != null;
+		return (buffer != null && !buffer.__isDisposed);
 	}
 
 	private static function isValidImage(image:Image):Bool
