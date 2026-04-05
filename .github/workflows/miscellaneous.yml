@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
@@ -22,8 +22,8 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib git openfl https://github.com/FunkinCrew/openfl --quiet
           haxelib install format --quiet
-          haxelib install openfl --quiet
           haxelib install svg --quiet
           haxelib install hxp --quiet
           haxelib dev lime $GITHUB_WORKSPACE
@@ -37,7 +37,7 @@ jobs:
           # haxe alias.hxml
           # cp obj/lime/AliasScript.exe ../templates/bin/lime.exe
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.0
         with:
           name: Miscellaneous
           path: |

@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
       - name: Setup Haxe
@@ -30,7 +30,7 @@ jobs:
           haxelib run lime rebuild windows -32 -nocolor -nocffi -eval
           haxelib run lime rebuild windows -64 -nocolor -nocffi -eval
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: Windows-NDLL
           path: ndll

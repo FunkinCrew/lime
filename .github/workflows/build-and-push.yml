@@ -22,12 +22,14 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.ref_name }}
 
       - name: Delete old NDLL's
-        run: rm -rf ndll
+        run: |
+          rm -rf ndll
+          mkdir ndll
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -37,7 +39,16 @@ jobs:
 
       - name: Push to GitHub
         run: |
-          USER_INFO=$(curl -s "https://api.github.com/users/${{ github.actor }}")
+          mv Android ndll/Android
+          mv iPhone ndll/iPhone
+          mv Linux64 ndll/Linux64
+          mv Mac64 ndll/Mac64
+          mv MacArm64 ndll/MacArm64
+          mv Windows ndll/Windows
+          mv Windows64 ndll/Windows64
+
+          USERACTOR=${{ github.actor }}
+          USER_INFO=$(curl -s "https://api.github.com/users/$USERACTOR")
           USERID=$(echo "$USER_INFO" | jq -r '.id')
           USERNAME=$(echo "$USER_INFO" | jq -r '.name')
           
@@ -48,7 +59,7 @@ jobs:
           git add run.n
           git add svg.n
           # git add templates/bin/lime.exe
-          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+          git commit --author="${USERNAME} <${USERID}+$(echo "$USERACTOR" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
               echo "Didn't commit anything, skipping git push."
               exit 0
           }
