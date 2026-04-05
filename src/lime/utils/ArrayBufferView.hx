@@ -480,7 +480,7 @@ abstract TypedArrayType(Int) from Int to Int
 	}
 
 	// 16
-	public static function getInt16(buffer:ArrayBuffer, byteOffset:Int):Int
+	public static inline extern function getInt16(buffer:ArrayBuffer, byteOffset:Int):Int
 	{
 		#if cpp
 		untyped return __global__.__hxcpp_memory_get_i16(buffer.getData(), byteOffset);
@@ -494,7 +494,7 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
-	public static function getInt16_BE(buffer:ArrayBuffer, byteOffset:Int):Int
+	public static inline extern function getInt16_BE(buffer:ArrayBuffer, byteOffset:Int):Int
 	{
 		#if cpp
 		var bufferData = buffer.getData();
@@ -510,7 +510,7 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
-	public static function setInt16(buffer:ArrayBuffer, byteOffset:Int, value:Int)
+	public static inline extern function setInt16(buffer:ArrayBuffer, byteOffset:Int, value:Int)
 	{
 		#if cpp
 		untyped __global__.__hxcpp_memory_set_i16(buffer.getData(), byteOffset, value);
@@ -520,7 +520,7 @@ abstract TypedArrayType(Int) from Int to Int
 		#end
 	}
 
-	public static function setInt16_BE(buffer:ArrayBuffer, byteOffset:Int, value:Int)
+	public static inline extern function setInt16_BE(buffer:ArrayBuffer, byteOffset:Int, value:Int)
 	{
 		#if cpp
 		var bufferData = buffer.getData();
@@ -530,7 +530,7 @@ abstract TypedArrayType(Int) from Int to Int
 		buffer.set(byteOffset, (value >> 8) & 0xFF);
 		buffer.set(byteOffset + 1, (value) & 0xFF);
 		#end
-	} // setInt16_BE
+	}
 
 	public static inline extern function getUint16(buffer:ArrayBuffer, byteOffset:Int):Null<UInt>
 	{
