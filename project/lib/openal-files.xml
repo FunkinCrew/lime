@@ -144,26 +144,11 @@
 
                 </section>
 
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/opensl.cpp" if="android" />
+                <section if="NATIVE_TOOLKIT_HAVE_SDL">
 
-                <section if="linux">
-
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/alsa.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pipewire.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/pulseaudio.cpp" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" />
 
                 </section>
-
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" if="apple" />
-
-                <section if="windows">
-
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/dsound.cpp" />
-                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/wasapi.cpp" />
-
-                </section>
-
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" if="NATIVE_TOOLKIT_HAVE_SDL" />
 
             </section>
 

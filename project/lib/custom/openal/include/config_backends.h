@@ -1,14 +1,32 @@
 /* Define to 1 if the given backend is enabled, else 0 */
 
-#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
-    #include "platforms/windows/config_backends.h"
-#elif defined(__APPLE__) || defined(__MACH__)
-    #include "platforms/apple/config_backends.h"
-#elif defined(__ANDROID__)
-    #include "platforms/android/config_backends.h"
-#elif defined(__linux__)
-    #include "platforms/linux/config_backends.h"
-#endif
+#define HAVE_ALSA 0
+
+#define HAVE_OSS 0
+
+#define HAVE_PIPEWIRE 0
+
+#define HAVE_SOLARIS 0
+
+#define HAVE_SNDIO 0
+
+#define HAVE_WASAPI 0
+
+#define HAVE_DSOUND 0
+
+#define HAVE_WINMM 0
+
+#define HAVE_PORTAUDIO 0
+
+#define HAVE_PULSEAUDIO 0
+
+#define HAVE_JACK 0
+
+#define HAVE_COREAUDIO 0
+
+#define HAVE_OPENSL 0
+
+#define HAVE_OBOE 0
 
 #define HAVE_WAVE 0
 
