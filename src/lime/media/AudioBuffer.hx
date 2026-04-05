@@ -68,7 +68,6 @@ class AudioBuffer
 	**/
 	public var src(get, set):Dynamic;
 
-	@:noCompletion private var __srcAudio:#if (js && html5) Audio #else Dynamic #end;
 	@:noCompletion private var __srcBuffer:#if lime_cffi ALBuffer #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
@@ -457,8 +456,6 @@ class AudioBuffer
 		#if (js && html5)
 		#if lime_howlerjs
 		return __srcHowl;
-		#else
-		return __srcAudio;
 		#end
 		#elseif flash
 		return __srcSound;
@@ -474,8 +471,6 @@ class AudioBuffer
 		#if (js && html5)
 		#if lime_howlerjs
 		return __srcHowl = value;
-		#else
-		return __srcAudio = value;
 		#end
 		#elseif flash
 		return __srcSound = value;
