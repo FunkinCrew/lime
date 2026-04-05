@@ -433,7 +433,7 @@ class NativeAudioSource
 		}
 		else
 		{
-			setCurrentTime((pauseSample * 1000.0 / parent.buffer.sampleRate) - parent.offset);
+			setCurrentSampleOffset(pauseSample);
 		}
 	}
 
@@ -571,7 +571,7 @@ class NativeAudioSource
 			inline function fallback()
 			{
 				playing = true;
-				setCurrentTime(loopPoints[0] * 1000.0 / parent.buffer.sampleRate - parent.offset);
+				setCurrentSampleOffset(loopPoints[0]);
 			}
 
 			if (streamed)
@@ -674,9 +674,13 @@ class NativeAudioSource
 	{
 		if (!loaded) return 0;
 
-		prepared = false;
-		pauseSample = Std.int((value + parent.offset) / 1000 * parent.buffer.sampleRate);
-		if (pauseSample < 0) pauseSample = 0;
+		setCurrentSampleOffset(Std.int((value + parent.offset) / 1000 * parent.buffer.sampleRate));
+		return value;
+	}
+
+	private function setCurrentSampleOffset(value:Int):Void
+	{
+		pauseSample = value > 0 ? value : 0;
 
 		if (streamed)
 		{
@@ -727,8 +731,6 @@ class NativeAudioSource
 				mutex.release();
 			}
 		}
-
-		return value;
 	}
 
 	public function getGain():Float
@@ -828,7 +830,6 @@ class NativeAudioSource
 		var shouldStop = playing && fixed;
 
 		if (fixed) sampleOffset = loopPoints[0];
-		var time = sampleOffset * 1000.0 / parent.buffer.sampleRate;
 
 		if (streamed)
 		{
@@ -871,7 +872,7 @@ class NativeAudioSource
 
 			AL.sourcei(source, AL.LOOPING, canLoop ? AL.TRUE : AL.FALSE);
 			if (shouldStop) stop();
-			else setCurrentTime(time);
+			else setCurrentSampleOffset(sampleOffset);
 		}
 	}
 

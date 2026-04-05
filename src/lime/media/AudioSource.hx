@@ -68,9 +68,11 @@ class AudioSource
 
 	/**
 		The offset within the audio buffer to start playback, in milliseconds.
+		Modifying this won't affect currentTime, but internally it affects the offset.
+
 		NOTE: The original documentation said it is in samples, but its actually in milliseconds.
 	**/
-	public var offset:Float;
+	public var offset(default, set):Float;
 
 	/**
 		The stereo pan of the audio source.
@@ -401,6 +403,17 @@ class AudioSource
 	@:noCompletion private inline function set_loops(value:Int):Int
 	{
 		return __backend.setLoops(value);
+	}
+
+	@:noCompletion private inline function set_offset(value:Float):Float
+	{
+		if (offset != value)
+		{
+			offset = 0;
+			__backend.setCurrentTime(__backend.getCurrentTime() + value);
+			offset = value;
+		}
+		return value;
 	}
 
 	@:noCompletion private inline function get_pan():Float
