@@ -73,6 +73,7 @@ extern class Howler
 	public static function mute(muted:Bool):Howler;
 	public static function unload():Howler;
 	public static function volume(?vol:Float):EitherType<Int, Howler>;
+	public static function _setupAudioContext():Void;
 }
 #end
 #end
