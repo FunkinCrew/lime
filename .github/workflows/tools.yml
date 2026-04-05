@@ -5,7 +5,7 @@ jobs:
   tools:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Haxe dependencies
         run: |
-          sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
+          sudo apt-get install g++ g++-multilib gcc-multilib
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
