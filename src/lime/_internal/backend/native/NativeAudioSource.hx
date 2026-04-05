@@ -953,6 +953,26 @@ class NativeAudioSource
 			anglesArray[1] = -Math.PI / 6;
 			AL.sourcefv(source, AL.STEREO_ANGLES, anglesArray);
 
+			#if (openfl && !openfl_funkin)
+			// This is for older openfl that sets position to 0, 0, -1 initially.
+			if (position.z == -1 && position.x == 0 && position.y == 0)
+			{
+				if (AudioManager.__directChannelsExtSupported)
+				{
+					AL.sourcei(source, AL.DIRECT_CHANNELS_SOFT, AL.REMIX_UNMATCHED_SOFT);
+				}
+
+				if (AudioManager.__spatializeSupported)
+				{
+					AL.sourcei(source, AL.SOURCE_SPATIALIZE_SOFT, AL.FALSE);
+				}
+
+				AL.source3f(source, AL.POSITION, 0, 0, 0);
+
+				return value;
+			}
+			#end
+
 			if (Math.abs(position.x) > 1e-04 || Math.abs(position.y) > 1e-04 || (Math.abs(position.z) > 1e-04))
 			{
 				if (AudioManager.__directChannelsExtSupported)
