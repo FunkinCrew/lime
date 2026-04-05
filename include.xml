@@ -10,6 +10,7 @@
 	<define name="native" if="cpp || hl" />
 	<define name="howlerjs" if="html5" />
 
+	<define name="lime-funkin" />
 	<define name="lime-cairo" if="native" />
 	<define name="lime-canvas" if="html5" />
 	<define name="lime-cffi" if="native" />
