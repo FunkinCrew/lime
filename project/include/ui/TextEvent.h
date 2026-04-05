@@ -1,5 +1,4 @@
-#ifndef LIME_UI_TEXT_EVENT_H
-#define LIME_UI_TEXT_EVENT_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -39,6 +38,3 @@ namespace lime {
 
 
 }
-
-
-#endif

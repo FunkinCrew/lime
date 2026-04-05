@@ -1,8 +1,9 @@
-#ifndef LIME_SDL_WINDOW_H
-#define LIME_SDL_WINDOW_H
+#pragma once
 
 
 #include <SDL3/SDL.h>
+
+
 #include <graphics/ImageBuffer.h>
 #include <ui/Cursor.h>
 #include <ui/Window.h>
@@ -69,6 +70,3 @@ namespace lime {
 
 
 }
-
-
-#endif

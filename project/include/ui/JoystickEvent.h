@@ -1,5 +1,4 @@
-#ifndef LIME_UI_JOYSTICK_EVENT_H
-#define LIME_UI_JOYSTICK_EVENT_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -42,6 +41,3 @@ namespace lime {
 
 
 }
-
-
-#endif

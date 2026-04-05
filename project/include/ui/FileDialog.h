@@ -1,6 +1,4 @@
-#ifndef LIME_UI_FILE_DIALOG_H
-#define LIME_UI_FILE_DIALOG_H
-
+#pragma once
 #include <ui/Window.h>
 #include <string>
 #include <vector>
@@ -19,5 +17,3 @@ namespace lime {
 	};
 
 }
-
-#endif

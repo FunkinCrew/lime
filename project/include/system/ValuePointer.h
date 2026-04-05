@@ -1,5 +1,4 @@
-#ifndef LIME_SYSTEM_VALUE_POINTER_H
-#define LIME_SYSTEM_VALUE_POINTER_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -41,6 +40,3 @@ namespace lime {
 
 
 }
-
-
-#endif

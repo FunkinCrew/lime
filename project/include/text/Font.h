@@ -1,5 +1,4 @@
-#ifndef LIME_TEXT_FONT_H
-#define LIME_TEXT_FONT_H
+#pragma once
 
 
 #include <graphics/ImageBuffer.h>
@@ -75,6 +74,3 @@ namespace lime {
 
 
 }
-
-
-#endif

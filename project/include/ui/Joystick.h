@@ -1,6 +1,4 @@
-#ifndef LIME_UI_JOYSTICK_H
-#define LIME_UI_JOYSTICK_H
-
+#pragma once
 
 namespace lime {
 
@@ -21,6 +19,3 @@ namespace lime {
 
 
 }
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LIME_MATH_COLOR_MATRIX_H
-#define LIME_MATH_COLOR_MATRIX_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -46,6 +45,3 @@ namespace lime {
 
 
 }
-
-
-#endif

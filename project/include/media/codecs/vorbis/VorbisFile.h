@@ -1,5 +1,4 @@
-#ifndef LIME_MEDIA_CODECS_VORBIS_VORBIS_FILE_H
-#define LIME_MEDIA_CODECS_VORBIS_VORBIS_FILE_H
+#pragma once
 
 
 #include <utils/Bytes.h>
@@ -22,6 +21,3 @@ namespace lime {
 
 
 }
-
-
-#endif

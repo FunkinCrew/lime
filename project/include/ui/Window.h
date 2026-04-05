@@ -1,6 +1,4 @@
-#ifndef LIME_UI_WINDOW_H
-#define LIME_UI_WINDOW_H
-
+#pragma once
 #include <app/Application.h>
 #include <graphics/ImageBuffer.h>
 #include <math/Rectangle.h>
@@ -102,6 +100,3 @@ namespace lime {
 	};
 
 }
-
-
-#endif

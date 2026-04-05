@@ -1,5 +1,4 @@
-#ifndef LIME_GRAPHICS_FORMAT_PNG_H
-#define LIME_GRAPHICS_FORMAT_PNG_H
+#pragma once
 
 
 #include <graphics/ImageBuffer.h>
@@ -23,6 +22,3 @@ namespace lime {
 
 
 }
-
-
-#endif

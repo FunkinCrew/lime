@@ -1,5 +1,4 @@
-#ifndef LIME_UI_KEY_CODE_H
-#define LIME_UI_KEY_CODE_H
+#pragma once
 
 
 #include <system/System.h>
@@ -19,6 +18,3 @@ namespace lime {
 
 
 }
-
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef LIME_SYSTEM_LOCALE_H
-#define LIME_SYSTEM_LOCALE_H
-
+#pragma once
 #include <string>
 
 
@@ -19,6 +17,3 @@ namespace lime {
 
 
 }
-
-
-#endif

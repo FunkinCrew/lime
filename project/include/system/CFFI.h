@@ -1,5 +1,4 @@
-#ifndef LIME_SYSTEM_CFFI_H
-#define LIME_SYSTEM_CFFI_H
+#pragma once
 
 
 #define HL_NAME(n) lime_##n
@@ -26,7 +25,4 @@ typedef vstring hl_vstring;
 
 #ifndef LIME_HASHLINK
 // define stubs in CFFI.cpp
-#endif
-
-
 #endif

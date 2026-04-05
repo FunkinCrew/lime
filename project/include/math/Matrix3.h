@@ -1,5 +1,4 @@
-#ifndef LIME_MATH_MATRIX_3_H
-#define LIME_MATH_MATRIX_3_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -29,6 +28,3 @@ namespace lime {
 
 
 }
-
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef LIME_SYSTEM_MUTEX_H
-#define LIME_SYSTEM_MUTEX_H
-
+#pragma once
 
 namespace lime {
 
@@ -26,6 +24,3 @@ namespace lime {
 
 
 }
-
-
-#endif

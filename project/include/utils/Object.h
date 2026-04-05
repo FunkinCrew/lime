@@ -1,6 +1,4 @@
-#ifndef LIME_UTILS_OBJECT_H
-#define LIME_UTILS_OBJECT_H
-
+#pragma once
 
 namespace lime {
 
@@ -60,6 +58,3 @@ namespace lime {
 
 
 }
-
-
-#endif

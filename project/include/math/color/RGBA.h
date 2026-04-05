@@ -1,5 +1,4 @@
-#ifndef LIME_MATH_COLOR_RGBA_H
-#define LIME_MATH_COLOR_RGBA_H
+#pragma once
 
 
 #include <graphics/PixelFormat.h>
@@ -216,6 +215,3 @@ namespace lime {
 
 
 }
-
-
-#endif

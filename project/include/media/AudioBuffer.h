@@ -1,5 +1,4 @@
-#ifndef LIME_MEDIA_AUDIO_BUFFER_H
-#define LIME_MEDIA_AUDIO_BUFFER_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -44,6 +43,3 @@ namespace lime {
 
 
 }
-
-
-#endif

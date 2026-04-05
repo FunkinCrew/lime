@@ -1,6 +1,4 @@
-#ifndef LIME_SYSTEM_CLIPBOARD_H
-#define LIME_SYSTEM_CLIPBOARD_H
-
+#pragma once
 #include <string>
 
 
@@ -21,6 +19,3 @@ namespace lime {
 
 
 }
-
-
-#endif

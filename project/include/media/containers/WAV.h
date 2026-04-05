@@ -1,5 +1,4 @@
-#ifndef LIME_MEDIA_CONTAINERS_WAV_H
-#define LIME_MEDIA_CONTAINERS_WAV_H
+#pragma once
 
 
 #include <media/AudioBuffer.h>
@@ -52,6 +51,3 @@ namespace lime {
 
 
 }
-
-
-#endif

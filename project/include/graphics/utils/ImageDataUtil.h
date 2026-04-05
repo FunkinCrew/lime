@@ -1,5 +1,4 @@
-#ifndef LIME_GRAPHICS_UTILS_IMAGE_DATA_UTIL_H
-#define LIME_GRAPHICS_UTILS_IMAGE_DATA_UTIL_H
+#pragma once
 
 
 #include <graphics/Image.h>
@@ -71,6 +70,3 @@ namespace lime {
 
 
 }
-
-
-#endif

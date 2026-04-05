@@ -1,5 +1,4 @@
-#ifndef LIME_UTILS_ARRAY_BUFFER_VIEW_H
-#define LIME_UTILS_ARRAY_BUFFER_VIEW_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -32,6 +31,3 @@ namespace lime {
 
 
 }
-
-
-#endif

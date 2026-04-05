@@ -1,6 +1,4 @@
-#ifndef LIME_SYSTEM_FILE_WATCHER_H
-#define LIME_SYSTEM_FILE_WATCHER_H
-
+#pragma once
 #include <system/CFFI.h>
 #include <system/Mutex.h>
 #include <map>
@@ -52,6 +50,3 @@ namespace lime {
 
 
 }
-
-
-#endif

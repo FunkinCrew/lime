@@ -1,6 +1,4 @@
-#ifndef LIME_SYSTEM_JNI_H
-#define LIME_SYSTEM_JNI_H
-
+#pragma once
 
 namespace lime {
 
@@ -17,6 +15,3 @@ namespace lime {
 
 
 }
-
-
-#endif

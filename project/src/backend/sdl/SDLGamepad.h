@@ -1,5 +1,4 @@
-#ifndef LIME_SDL_GAMEPAD_H
-#define LIME_SDL_GAMEPAD_H
+#pragma once
 
 
 #include <SDL3/SDL.h>
@@ -22,6 +21,3 @@ namespace lime {
 
 
 }
-
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef LIME_UI_HAPTIC_H
-#define LIME_UI_HAPTIC_H
-
+#pragma once
 
 namespace lime {
 
@@ -15,6 +13,3 @@ namespace lime {
 
 
 }
-
-
-#endif

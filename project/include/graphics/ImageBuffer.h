@@ -1,5 +1,4 @@
-#ifndef LIME_GRAPHICS_IMAGE_BUFFER_H
-#define LIME_GRAPHICS_IMAGE_BUFFER_H
+#pragma once
 
 
 #include <graphics/PixelFormat.h>
@@ -34,6 +33,3 @@ namespace lime {
 
 
 }
-
-
-#endif

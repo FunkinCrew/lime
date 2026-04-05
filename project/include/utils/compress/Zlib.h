@@ -1,5 +1,4 @@
-#ifndef LIME_UTILS_COMPRESS_ZLIB_H
-#define LIME_UTILS_COMPRESS_ZLIB_H
+#pragma once
 
 
 #include <utils/Bytes.h>
@@ -30,6 +29,3 @@ namespace lime {
 
 
 }
-
-
-#endif

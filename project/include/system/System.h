@@ -1,5 +1,4 @@
-#ifndef LIME_SYSTEM_SYSTEM_H
-#define LIME_SYSTEM_SYSTEM_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -86,4 +85,3 @@ namespace lime {
 
 
 }
-#endif

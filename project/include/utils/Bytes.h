@@ -1,5 +1,4 @@
-#ifndef LIME_UTILS_BYTES_H
-#define LIME_UTILS_BYTES_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -31,6 +30,3 @@ namespace lime {
 
 
 }
-
-
-#endif

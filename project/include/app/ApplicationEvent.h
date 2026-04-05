@@ -1,5 +1,4 @@
-#ifndef LIME_APP_APPLICATION_EVENT_H
-#define LIME_APP_APPLICATION_EVENT_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -34,6 +33,3 @@ namespace lime {
 
 
 }
-
-
-#endif

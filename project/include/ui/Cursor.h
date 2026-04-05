@@ -1,6 +1,4 @@
-#ifndef LIME_UI_CURSOR_H
-#define LIME_UI_CURSOR_H
-
+#pragma once
 
 namespace lime {
 
@@ -26,6 +24,3 @@ namespace lime {
 
 
 }
-
-
-#endif

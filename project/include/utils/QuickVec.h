@@ -1,5 +1,4 @@
-#ifndef LIME_UTILS_QUICK_VEC_H
-#define LIME_UTILS_QUICK_VEC_H
+#pragma once
 
 
 #include <algorithm>
@@ -488,6 +487,3 @@ namespace lime {
 
 
 }
-
-
-#endif

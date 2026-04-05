@@ -1,5 +1,4 @@
-#ifndef LIME_APP_APPLICATION_H
-#define LIME_APP_APPLICATION_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -31,6 +30,3 @@ namespace lime {
 
 
 }
-
-
-#endif

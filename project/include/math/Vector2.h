@@ -1,5 +1,4 @@
-#ifndef LIME_MATH_VECTOR2_H
-#define LIME_MATH_VECTOR2_H
+#pragma once
 
 
 #include <system/CFFI.h>
@@ -25,6 +24,3 @@ namespace lime {
 
 
 }
-
-
-#endif
