@@ -184,7 +184,7 @@
             <section>
 
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alc.cpp" />
-                <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alconfig.cpp" />
+                <file name="${NATIVE_TOOLKIT_PATH}/custom/openal/alc/alconfig.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/alu.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/context.cpp" />
                 <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/device.cpp" />
