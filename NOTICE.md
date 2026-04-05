@@ -34,11 +34,8 @@ public domain. For details, see [project/lib/lzma/](project/lzma).
 This product bundles mbedTLS 2.6.0, which is available under an
 "Apache 2.0" license. For details, see [project/lib/mbedtls/](project/lib).
 
-This product bundles OpenAL-Soft 1.19.0, which is available under an
+This product bundles OpenAL-Soft 1.25.1, which is available under an
 "LGPLv2" license. For details, see [project/lib/openal/](project/lib).
-
-_OpenAL-Soft is only included in dynamically-linked builds, it is excluded
-from Lime static builds in order to preserve Lime's permissive nature._
 
 This product bundles pixman 0.32.8, which is available under an
 "MIT" license. For details, see [project/lib/pixman/](project/lib).
