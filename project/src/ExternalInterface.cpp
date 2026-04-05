@@ -332,7 +332,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, &audioBuffer)) {
 
 			return audioBuffer.Value (buffer);
@@ -355,7 +355,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -382,7 +382,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, &audioBuffer)) {
 
 			return audioBuffer.Value (buffer);
@@ -405,7 +405,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, buffer)) {
 
 			return buffer;
