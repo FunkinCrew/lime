@@ -2,12 +2,6 @@ package lime.media;
 
 import lime.system.CFFIPointer;
 import haxe.MainLoop;
-#if (windows || mac || linux || android || ios)
-import haxe.io.Path;
-import lime.system.System;
-import sys.FileSystem;
-import sys.io.File;
-#end
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.media.openal.AL;
@@ -42,10 +36,6 @@ class AudioManager
 				#if !lime_doc_gen
 				if (context.type == OPENAL)
 				{
-					#if (windows || mac || linux || android || ios)
-					setupConfig();
-					#end
-
 					var alc = context.openal;
 					var device = alc.openDevice();
 					var ctx = alc.createContext(device);
@@ -168,46 +158,6 @@ class AudioManager
 
 			});
 		}
-		#end
-	}
-
-	@:noCompletion
-	private static function setupConfig():Void
-	{
-		#if (lime_openal && (windows || mac || linux || android || ios))
-		final alConfig:Array<String> = [];
-
-		alConfig.push('[general]');
-		alConfig.push('channels=stereo');
-		alConfig.push('sample-type=float32');
-		alConfig.push('stereo-mode=speakers');
-		alConfig.push('stereo-encoding=panpot');
-		alConfig.push('hrtf=false');
-		alConfig.push('cf_level=0');
-		alConfig.push('resampler=fast_bsinc24');
-		alConfig.push('front-stablizer=false');
-		alConfig.push('output-limiter=false');
-		alConfig.push('volume-adjust=0');
-		alConfig.push('period_size=441');
-
-		alConfig.push('[decoder]');
-		alConfig.push('hq-mode=false');
-		alConfig.push('distance-comp=false');
-		alConfig.push('nfc=false');
-
-		try
-		{
-			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
-			final path:String = Path.join([directory, #if windows 'audio-config.ini' #else 'audio-config.conf' #end]);
-			final content:String = alConfig.join('\n');
-
-			if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
-
-			if (!FileSystem.exists(path)) File.saveContent(path, content);
-
-			Sys.putEnv('ALSOFT_CONF', path);
-		}
-		catch (e:Dynamic) {}
 		#end
 	}
 }
