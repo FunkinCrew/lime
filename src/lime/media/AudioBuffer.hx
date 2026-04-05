@@ -307,6 +307,18 @@ class AudioBuffer
 	}
 
 	/**
+		NOTE: This is here solely because for Lime 8.4.0-dev compatibility.
+		Creates a streamed `AudioBuffer` from a `Bytes` object.
+
+		@param bytes The `Bytes` object containing the compressed audio data.
+		@return An `AudioBuffer` configured for streamed playback when supported.
+	**/
+	public inline static function fromBytesStream(bytes:Bytes):AudioBuffer
+	{
+		return fromBytes(bytes, true);
+	}
+
+	/**
 		Native target only.
 		Creates an 'AudioBuffer' from a 'AudioDecoder' object.
 
@@ -389,6 +401,18 @@ class AudioBuffer
 	}
 
 	/**
+		NOTE: This is here solely because for Lime 8.4.0-dev compatibility.
+		Creates a streamed `AudioBuffer` from a file.
+
+		@param path The file path to the audio data.
+		@return An `AudioBuffer` configured for streamed playback when supported.
+	**/
+	public inline static function fromFileStream(path:String):AudioBuffer
+	{
+		return fromFile(path, true);
+	}
+
+	/**
 		Creates an `AudioBuffer` from an array of file paths.
 
 		@param paths An array of file paths to search for audio data.
@@ -420,6 +444,18 @@ class AudioBuffer
 
 		return buffer;
 		#end
+	}
+
+	/**
+		NOTE: This is here solely because for Lime 8.4.0-dev compatibility.
+		Creates a streamed `AudioBuffer` from an array of file paths.
+
+		@param paths An array of file paths to search for audio data.
+		@return An `AudioBuffer` configured for streamed playback when supported.
+	**/
+	public inline static function fromFilesStream(paths:Array<String>):AudioBuffer
+	{
+		return fromFiles(paths, true);
 	}
 
 	/**
@@ -507,6 +543,29 @@ class AudioBuffer
 	}
 
 	/**
+		NOTE: This is here solely because for Lime 8.4.0-dev compatibility.
+		Asynchronously loads a streamed `AudioBuffer` from a file or URL.
+
+		@param path The file path or URL to the audio data.
+		@return A `Future` that resolves to the loaded `AudioBuffer`.
+	**/
+	public #if (!lime_cffi || macro) inline #end static function loadFromFileStream(path:String):Future<AudioBuffer>
+	{
+		#if (lime_cffi && !macro)
+		var decoder = AudioDecoder.fromFile(path);
+
+		if (decoder != null)
+		{
+			return Future.withValue(AudioBuffer.fromDecoder(decoder, true, true));
+		}
+
+		return cast Future.withError("");
+		#else
+		return loadFromFile(path);
+		#end
+	}
+
+	/**
 		Asynchronously loads an `AudioBuffer` from multiple files.
 
 		@param paths An array of file paths to search for audio data.
@@ -549,6 +608,32 @@ class AudioBuffer
 		return cast Future.withError("");
 		#else
 		return cast Future.withError("");
+		#end
+	}
+
+	/**
+		NOTE: This is here solely because for Lime 8.4.0-dev compatibility.
+		Asynchronously loads a streamed `AudioBuffer` from multiple files or URLs.
+
+		@param paths An array of file paths or URLs to search for audio data.
+		@return A `Future` that resolves to the loaded `AudioBuffer`.
+	**/
+	public #if (!lime_cffi || macro) inline #end static function loadFromFilesStream(paths:Array<String>):Future<AudioBuffer>
+	{
+		#if (lime_cffi && !macro)
+		for (path in paths)
+		{
+			var decoder = AudioDecoder.fromFile(path);
+
+			if (decoder != null)
+			{
+				return Future.withValue(AudioBuffer.fromDecoder(decoder, true, true));
+			}
+		}
+
+		return cast Future.withError("");
+		#else
+		return loadFromFiles(paths);
 		#end
 	}
 
@@ -720,6 +805,11 @@ class AudioBuffer
 		}
 
 		return null;
+	}
+
+	@:noCompletion private static function __isRemotePath(path:String):Bool
+	{
+		return path != null && (path.indexOf("http://") == 0 || path.indexOf("https://") == 0);
 	}
 
 	// Get & Set Methods
