@@ -26,18 +26,28 @@ class ALC
 	public static inline var INVALID_ENUM:Int = 0xA003;
 	public static inline var INVALID_VALUE:Int = 0xA004;
 	public static inline var OUT_OF_MEMORY:Int = 0xA005;
+	public static inline var MAJOR_VERSION:Int = 0x1000;
+	public static inline var MINOR_VERSION:Int = 0x1001;
 	public static inline var ATTRIBUTES_SIZE:Int = 0x1002;
 	public static inline var ALL_ATTRIBUTES:Int = 0x1003;
+	/* ALC_ENUMERATION_EXT */
 	public static inline var DEFAULT_DEVICE_SPECIFIER:Int = 0x1004;
 	public static inline var DEVICE_SPECIFIER:Int = 0x1005;
 	public static inline var EXTENSIONS:Int = 0x1006;
-	public static inline var ENUMERATE_ALL_EXT:Int = 1;
-	public static inline var DEFAULT_ALL_DEVICES_SPECIFIER:Int = 0x1012;
-	public static inline var ALL_DEVICES_SPECIFIER:Int = 0x1013;
+	/* ALC_EXT_CAPTURE */
 	public static inline var CAPTURE_DEVICE_SPECIFIER:Int = 0x310;
 	public static inline var CAPTURE_DEFAULT_DEVICE_SPECIFIER:Int = 0x311;
 	public static inline var CAPTURE_SAMPLES:Int = 0x312;
+	/* ALC_ENUMERATE_ALL_EXT */
+	public static inline var DEFAULT_ALL_DEVICES_SPECIFIER:Int = 0x1012;
+	public static inline var ALL_DEVICES_SPECIFIER:Int = 0x1013;
+	/* ALC_EXT_disconnect */
+	public static inline var CONNECTED:Int = 0x313;
 	#if lime_openalsoft
+	/* ALC_SOFT_device_clock */
+	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
+	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
+	public static inline var DEVICE_CLOCK_LATENCY_SOFT:Int = 0x1602;
 	/* ALC_SOFT_system_events */
 	public static inline var PLAYBACK_DEVICE_SOFT:Int = 0x19D4;
 	public static inline var CAPTURE_DEVICE_SOFT:Int = 0x19D5;
@@ -46,10 +56,6 @@ class ALC
 	public static inline var EVENT_TYPE_DEVICE_REMOVED_SOFT:Int = 0x19D8;
 	public static inline var EVENT_SUPPORTED_SOFT:Int = 0x19D9;
 	public static inline var EVENT_NOT_SUPPORTED_SOFT:Int = 0x19DA;
-	/* ALC_SOFT_device_clock */
-	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
-	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
-	public static inline var DEVICE_CLOCK_LATENCY_SOFT:Int = 0x1602;
 	#end
 
 	public static function closeDevice(device:ALDevice):Bool
@@ -142,10 +148,10 @@ class ALC
 		}
 	}
 
-	public static function getIntegerv(device:ALDevice, param:Int, size:Int):Array<Int>
+	public static function getIntegerv(device:ALDevice, param:Int, count:Int = 1):Array<Int>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_alc_get_integerv(device, param, size);
+		var result = NativeCFFI.lime_alc_get_integerv(device, param, count);
 		#if hl
 		if (result == null) return [];
 		var _result = [];
@@ -173,23 +179,16 @@ class ALC
 	public static function getStringList(device:ALDevice, param:Int):Array<String>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		if (param == DEVICE_SPECIFIER ||
-			param == ALL_DEVICES_SPECIFIER)
-		{
-			var result = NativeCFFI.lime_alc_get_string_list(device, param);
-			#if hl
-			if (result == null) return [];
-			var _result = [];
-			for (i in 0...result.length)
-				_result[i] = CFFI.stringValue(result[i]);
-			return _result;
-			#else
-			return result;
-			#end
-
-		}
-
-		return [getString(device, param)];
+		var result = NativeCFFI.lime_alc_get_string_list(device, param);
+		#if hl
+		if (result == null) return [];
+		var _result = [];
+		for (i in 0...result.length)
+			_result[i] = CFFI.stringValue(result[i]);
+		return _result;
+		#else
+		return result;
+		#end
 		#else
 		return null;
 		#end
@@ -339,6 +338,25 @@ class ALC
 	{
 		#if (lime_cffi && lime_openal && !macro)
 		NativeCFFI.lime_alc_capture_samples(device, buffer, samples);
+		#end
+	}
+	
+	// TODO: getInteger64vSOFT isn't possible for now, so just make it up as of now
+	public static function getDoublevSOFT(device:ALDevice, param:Int, count:Int = 1):Array<Float>
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		var result = NativeCFFI.lime_alc_get_doublev_soft(device, param, count);
+		#if hl
+		if (result == null) return [];
+		var _result:Array<Float> = [];
+		for (i in 0...result.length)
+			_result[i] = result[i];
+		return _result;
+		#else
+		return result;
+		#end
+		#else
+		return null;
 		#end
 	}
 }

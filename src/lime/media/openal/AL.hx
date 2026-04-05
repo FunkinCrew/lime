@@ -203,7 +203,6 @@ class AL
 	public static inline var EFFECT_VOCAL_MORPHER:Int = 0x0007;
 	public static inline var EFFECT_PITCH_SHIFTER:Int = 0x0008;
 	public static inline var EFFECT_RING_MODULATOR:Int = 0x0009;
-	public static inline var FFECT_AUTOWAH:Int = 0x000A; // TODO: deprecate and remove
 	public static inline var EFFECT_AUTOWAH:Int = 0x000A;
 	public static inline var EFFECT_COMPRESSOR:Int = 0x000B;
 	public static inline var EFFECT_EQUALIZER:Int = 0x000C;
@@ -233,15 +232,47 @@ class AL
 	public static inline var FILTER_LOWPASS:Int = 0x0001;
 	public static inline var FILTER_HIGHPASS:Int = 0x0002;
 	public static inline var FILTER_BANDPASS:Int = 0x0003;
+	/* AL_EXT_float32 */
+	public static inline var FORMAT_MONO_FLOAT32:Int = 0x10010;
+	public static inline var FORMAT_STEREO_FLOAT32:Int = 0x10011;
+	/* UNKNOWN */
+	public static inline var FORMAT_MONO32:Int = 0x1202;
+	public static inline var FORMAT_STEREO32:Int = 0x1203;
+	/* AL_EXT_MCFORMATS */
+	public static inline var FORMAT_QUAD8:Int = 0x1204;
+	public static inline var FORMAT_QUAD16:Int = 0x1205;
+	public static inline var FORMAT_QUAD32:Int = 0x1206;
+	public static inline var FORMAT_REAR8:Int = 0x1207;
+	public static inline var FORMAT_REAR16:Int = 0x1208;
+	public static inline var FORMAT_REAR32:Int = 0x1209;
+	public static inline var FORMAT_51CHN8:Int = 0x120A;
+	public static inline var FORMAT_51CHN16:Int = 0x120B;
+	public static inline var FORMAT_51CHN32:Int = 0x120C;
+	public static inline var FORMAT_61CHN8:Int = 0x120D;
+	public static inline var FORMAT_61CHN16:Int = 0x120E;
+	public static inline var FORMAT_61CHN32:Int = 0x120F;
+	public static inline var FORMAT_71CHN8:Int = 0x1210;
+	public static inline var FORMAT_71CHN16:Int = 0x1211;
+	public static inline var FORMAT_71CHN32:Int = 0x1212;
 	#if lime_openalsoft
 	/* AL_SOFT_direct_channels extension */
 	public static inline var DIRECT_CHANNELS_SOFT:Int = 0x1033;
 	/* AL_SOFT_direct_channels_remix extension */
 	public static inline var DROP_UNMATCHED_SOFT:Int = 0x0001;
 	public static inline var REMIX_UNMATCHED_SOFT:Int = 0x0002;
-	/* AL_SOFT_source_latency extension */
-	public static inline var SAMPLE_OFFSET_LATENCY_SOFT = 0x1200;
-	public static inline var SEC_OFFSET_LATENCY_SOFT = 0x1201;
+	/* AL_SOFT_loop_points */
+	public static inline var LOOP_POINTS_SOFT:Int = 0x2015;
+	/* AL_EXT_STEREO_ANGLES */
+	public static inline var STEREO_ANGLES:Int = 0x1030;
+	/* AL_SOFT_source_latency */
+	public static inline var SAMPLE_OFFSET_LATENCY_SOFT:Int = 0x1200;
+	public static inline var SEC_OFFSET_LATENCY_SOFT:Int = 0x1201;
+	/* AL_SOFT_source_spatialize */
+	public static inline var SOURCE_SPATIALIZE_SOFT:Int = 0x1214;
+	public static inline var AUTO_SOFT:Int = 0x0002;
+	/* ALC_SOFT_device_clock */
+	public static inline var SAMPLE_OFFSET_CLOCK_SOFT:Int = 0x1202;
+	public static inline var SEC_OFFSET_CLOCK_SOFT:Int = 0x1203;
 	/* AL_SOFT_hold_on_disconnect */
 	public static inline var STOP_SOURCES_ON_DISCONNECT_SOFT:Int = 0x19AB;
 	#end
@@ -443,6 +474,25 @@ class AL
 		var sources = _sources;
 		#end
 		NativeCFFI.lime_al_delete_sources(sources.length, sources);
+		#end
+	}
+
+	public static function deleteEffect(effect:ALEffect):Void
+	{
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_effect(effect);
+		#end
+	}
+
+	public static function deleteFilter(filter:ALFilter):Void {
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_filter(filter);
+		#end
+	}
+
+	public static function deleteAux(aux:ALAuxiliaryEffectSlot):Void {
+		#if (lime_cffi && lime_openal && !macro)
+		NativeCFFI.lime_al_delete_auxiliary_effect_slot(aux);
 		#end
 	}
 
@@ -737,16 +787,16 @@ class AL
 		#end
 	}
 
-	public static function getErrorString():String
+	public static function getErrorString(?error:Int):String
 	{
-		return switch (getError())
+		return switch (error != null ? error : getError())
 		{
 			case INVALID_NAME: "INVALID_NAME: Invalid parameter name";
 			case INVALID_ENUM: "INVALID_ENUM: Invalid enum value";
 			case INVALID_VALUE: "INVALID_VALUE: Invalid parameter value";
 			case INVALID_OPERATION: "INVALID_OPERATION: Illegal operation or call";
 			case OUT_OF_MEMORY: "OUT_OF_MEMORY: OpenAL has run out of memory";
-			default: "";
+			default: "Unknown Error Enum: " + error;
 		}
 	}
 
@@ -1160,7 +1210,7 @@ class AL
 		#end
 	}
 
-	public static function source3i(source:ALSource, param:Int, value1:Dynamic, value2:Int, value3:Int):Void
+	public static function source3i(source:ALSource, param:Int, value1:Dynamic, value2:Int, value3:Dynamic):Void
 	{
 		#if (lime_cffi && lime_openal && !macro)
 		NativeCFFI.lime_al_source3i(source, param, value1, value2, value3);

@@ -1563,6 +1563,12 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_delete_sources(n:Int, sources:Dynamic):Void;
 
+	@:cffi private static function lime_al_delete_effect(buffer:CFFIPointer):Void;
+
+	@:cffi private static function lime_al_delete_filter(buffer:CFFIPointer):Void;
+
+	@:cffi private static function lime_al_delete_auxiliary_effect_slot(slot:CFFIPointer):Void;
+
 	@:cffi private static function lime_al_disable(capability:Int):Void;
 
 	@:cffi private static function lime_al_distance_model(distanceModel:Int):Void;
@@ -1641,6 +1647,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_get_sourceiv(source:CFFIPointer, param:Int, count:Int):Array<Int>;
 
+	@:cffi private static function lime_al_get_sourcedv_soft(source:CFFIPointer, param:Int, count:Int):Array<Float>;
+
 	@:cffi private static function lime_al_get_string(param:Int):Dynamic;
 
 	@:cffi private static function lime_al_is_buffer(buffer:CFFIPointer):Bool;
@@ -1687,7 +1695,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_source3f(source:CFFIPointer, param:Int, value1:Float32, value2:Float32, value3:Float32):Void;
 
-	@:cffi private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int, value3:Int):Void;
+	@:cffi private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int, value3:Dynamic):Void;
 
 	@:cffi private static function lime_al_sourcef(source:CFFIPointer, param:Int, value:Float32):Void;
 
@@ -1711,7 +1719,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_alc_get_error(device:CFFIPointer):Int;
 
-	@:cffi private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, size:Int):Dynamic;
+	@:cffi private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, count:Int):Dynamic;
 
 	@:cffi private static function lime_alc_get_string(device:CFFIPointer, param:Int):Dynamic;
 
@@ -1744,6 +1752,8 @@ class NativeCFFI
 	@:cffi private static function lime_alc_capture_stop(device:CFFIPointer):Void;
 
 	@:cffi private static function lime_alc_capture_samples(device:CFFIPointer, buffer:Dynamic, samples:Int):Void;
+
+	@:cffi private static function lime_alc_get_doublev_soft(device:CFFIPointer, param:Int, count:Int):Array<Float>;
 
 	@:cffi private static function lime_al_gen_filter():CFFIPointer;
 
@@ -1802,6 +1812,10 @@ class NativeCFFI
 	private static var lime_al_delete_source = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_source", "ov", false));
 	private static var lime_al_delete_sources = new cpp.Callable<Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_sources", "iov",
 		false));
+	private static var lime_al_delete_effect = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_effect", "ov", false));
+	private static var lime_al_delete_filter = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_delete_filter", "ov", false));
+	private static var lime_al_delete_auxiliary_effect_slot = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
+		"lime_al_delete_auxiliary_effect_slot", "ov", false));
 	private static var lime_al_disable = new cpp.Callable<Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_disable", "iv", false));
 	private static var lime_al_distance_model = new cpp.Callable<Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_distance_model", "iv", false));
 	private static var lime_al_doppler_factor = new cpp.Callable<cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_doppler_factor", "fv", false));
@@ -1851,6 +1865,8 @@ class NativeCFFI
 	private static var lime_al_get_sourcei = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcei", "oio", false));
 	private static var lime_al_get_sourceiv = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourceiv", "oiio",
 		false));
+	private static var lime_al_get_sourcedv_soft = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_sourcedv_soft",
+		"oiio", false));
 	private static var lime_al_get_string = new cpp.Callable<Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_get_string", "io", false));
 	private static var lime_al_is_buffer = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_al_is_buffer", "ob", false));
 	private static var lime_al_is_enabled = new cpp.Callable<Int->Bool>(cpp.Prime._loadPrime("lime", "lime_al_is_enabled", "ib", false));
@@ -1882,8 +1898,8 @@ class NativeCFFI
 		"lime_al_source_unqueue_buffers", "oio", false));
 	private static var lime_al_source3f = new cpp.Callable<cpp.Object->Int->cpp.Float32->cpp.Float32->cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_al_source3f", "oifffv", false));
-	private static var lime_al_source3i = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_source3i",
-		"oioiiv", false));
+	private static var lime_al_source3i = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_source3i",
+		"oioiov", false));
 	private static var lime_al_sourcef = new cpp.Callable<cpp.Object->Int->cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_sourcef", "oifv",
 		false));
 	private static var lime_al_sourcefv = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_sourcefv", "oiov",
@@ -1932,6 +1948,8 @@ class NativeCFFI
 		false));
 	private static var lime_alc_capture_samples = new cpp.Callable<cpp.Object->cpp.Object->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_alc_capture_samples",
 		"ooiv", false));
+	private static var lime_alc_get_doublev_soft = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_alc_get_doublev_soft",
+		"oiio", false));
 	private static var lime_al_gen_filter = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_al_gen_filter", "o", false));
 	private static var lime_al_filteri = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_filteri", "oiov",
 		false));
@@ -1971,6 +1989,9 @@ class NativeCFFI
 	private static var lime_al_delete_buffers = CFFI.load("lime", "lime_al_delete_buffers", 2);
 	private static var lime_al_delete_source = CFFI.load("lime", "lime_al_delete_source", 1);
 	private static var lime_al_delete_sources = CFFI.load("lime", "lime_al_delete_sources", 2);
+	private static var lime_al_delete_effect = CFFI.load("lime", "lime_al_delete_effect", 1);
+	private static var lime_al_delete_filter = CFFI.load("lime", "lime_al_delete_filter", 1);
+	private static var lime_al_delete_auxiliary_effect_slot = CFFI.load("lime", "lime_al_delete_auxiliary_effect_slot", 1);
 	private static var lime_al_disable = CFFI.load("lime", "lime_al_disable", 1);
 	private static var lime_al_distance_model = CFFI.load("lime", "lime_al_distance_model", 1);
 	private static var lime_al_doppler_factor = CFFI.load("lime", "lime_al_doppler_factor", 1);
@@ -2010,6 +2031,7 @@ class NativeCFFI
 	private static var lime_al_get_sourcedv_soft = CFFI.load("lime", "lime_al_get_sourcedv_soft", 3);
 	private static var lime_al_get_sourcei = CFFI.load("lime", "lime_al_get_sourcei", 2);
 	private static var lime_al_get_sourceiv = CFFI.load("lime", "lime_al_get_sourceiv", 3);
+	private static var lime_al_get_sourcedv_soft = CFFI.load("lime", "lime_al_get_sourcedv_soft", 3);
 	private static var lime_al_get_string = CFFI.load("lime", "lime_al_get_string", 1);
 	private static var lime_al_is_buffer = CFFI.load("lime", "lime_al_is_buffer", 1);
 	private static var lime_al_is_enabled = CFFI.load("lime", "lime_al_is_enabled", 1);
@@ -2062,6 +2084,7 @@ class NativeCFFI
 	private static var lime_alc_capture_start = CFFI.load("lime", "lime_alc_capture_start", 1);
 	private static var lime_alc_capture_stop = CFFI.load("lime", "lime_alc_capture_stop", 1);
 	private static var lime_alc_capture_samples = CFFI.load("lime", "lime_alc_capture_samples", 3);
+	private static var lime_alc_get_doublev_soft = CFFI.load("lime", "lime_alc_get_doublev_soft", 3);
 	private static var lime_al_gen_filter = CFFI.load("lime", "lime_al_gen_filter", 0);
 	private static var lime_al_filteri = CFFI.load("lime", "lime_al_filteri", 3);
 	private static var lime_al_filterf = CFFI.load("lime", "lime_al_filterf", 3);
@@ -2107,6 +2130,12 @@ class NativeCFFI
 	@:hlNative("lime", "hl_al_delete_source") private static function lime_al_delete_source(source:CFFIPointer):Void {}
 
 	@:hlNative("lime", "hl_al_delete_sources") private static function lime_al_delete_sources(n:Int, sources:hl.NativeArray<CFFIPointer>):Void {}
+
+	@:hlNative("lime", "hl_al_delete_effect") private static function lime_al_delete_effect(buffer:CFFIPointer):Void {}
+
+	@:hlNative("lime", "hl_al_delete_filter") private static function lime_al_delete_filter(buffer:CFFIPointer):Void {}
+
+	@:hlNative("lime", "hl_al_delete_auxiliary_effect_slot") private static function lime_al_delete_auxiliary_effect_slot(slot:CFFIPointer):Void {}
 
 	@:hlNative("lime", "hl_al_disable") private static function lime_al_disable(capability:Int):Void {}
 
@@ -2288,6 +2317,11 @@ class NativeCFFI
 		return null;
 	}
 
+	@:hlNative("lime", "hl_al_get_sourcedv_soft") private static function lime_al_get_sourcedv_soft(source:CFFIPointer, param:Int, count:Int):hl.NativeArray<Float>
+	{
+		return null;
+	}
+
 	@:hlNative("lime", "hl_al_get_string") private static function lime_al_get_string(param:Int):hl.Bytes
 	{
 		return null;
@@ -2359,7 +2393,7 @@ class NativeCFFI
 		value3:hl.F32):Void {}
 
 	@:hlNative("lime", "hl_al_source3i") private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int,
-		value3:Int):Void {}
+		value3:Dynamic):Void {}
 
 	@:hlNative("lime", "hl_al_sourcef") private static function lime_al_sourcef(source:CFFIPointer, param:Int, value:hl.F32):Void {}
 
@@ -2398,7 +2432,7 @@ class NativeCFFI
 		return 0;
 	}
 
-	@:hlNative("lime", "hl_alc_get_integerv") private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, size:Int):hl.NativeArray<Int>
+	@:hlNative("lime", "hl_alc_get_integerv") private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, count:Int):hl.NativeArray<Int>
 	{
 		return null;
 	}
@@ -2455,6 +2489,11 @@ class NativeCFFI
 	@:hlNative("lime", "hl_alc_capture_stop") private static function lime_alc_capture_stop(device:ALDevice):Void {}
 
 	@:hlNative("lime", "hl_alc_capture_samples") private static function lime_alc_capture_samples(device:ALDevice, buffer:Bytes, samples:Int):Void {}
+	
+	@:hlNative("lime", "hl_alc_get_doublev_soft") private static function lime_alc_get_doublev_soft(device:CFFIPointer, param:Int, count:Int):hl.NativeArray<Float>
+	{
+		return null;
+	}
 
 	@:hlNative("lime", "hl_al_gen_filter") private static function lime_al_gen_filter():CFFIPointer
 	{
