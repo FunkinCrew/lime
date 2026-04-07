@@ -1,6 +1,8 @@
 package lime.media.howlerjs;
 
 #if (!lime_doc_gen || lime_howlerjs)
+import lime.media.WebAudioContext;
+
 #if (!lime_howlerjs || display)
 class Howler
 {
@@ -53,7 +55,6 @@ class Howler
 #else
 import haxe.extern.EitherType;
 import js.html.audio.GainNode;
-import lime.media.WebAudioContext;
 
 #if commonjs
 @:jsRequire("howler")
@@ -72,6 +73,7 @@ extern class Howler
 	public static function mute(muted:Bool):Howler;
 	public static function unload():Howler;
 	public static function volume(?vol:Float):EitherType<Int, Howler>;
+	public static function _setupAudioContext():Void;
 }
 #end
 #end

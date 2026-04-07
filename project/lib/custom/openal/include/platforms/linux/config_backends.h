@@ -1,8 +1,22 @@
+#ifdef NATIVE_TOOLKIT_HAVE_SDL
+
+#define HAVE_ALSA 0
+
+#define HAVE_PIPEWIRE 0
+
+#define HAVE_PULSEAUDIO 0
+
+#else
+
 #define HAVE_ALSA 1
 
-#define HAVE_OSS 0
-
 #define HAVE_PIPEWIRE 1
+
+#define HAVE_PULSEAUDIO 1
+
+#endif
+
+#define HAVE_OSS 0
 
 #define HAVE_SOLARIS 0
 
@@ -15,8 +29,6 @@
 #define HAVE_WINMM 0
 
 #define HAVE_PORTAUDIO 0
-
-#define HAVE_PULSEAUDIO 1
 
 #define HAVE_JACK 0
 

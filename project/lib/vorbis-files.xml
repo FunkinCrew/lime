@@ -11,11 +11,8 @@
 		<cache value="1" />
 		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
 
+		<depend files="native-toolkit-ogg-depends" />
 		<depend files="native-toolkit-vorbis-depends" />
-
-		<depend name="${NATIVE_TOOLKIT_PATH}/custom/ogg/include/ogg/config_types.h" />
-		<depend name="${NATIVE_TOOLKIT_PATH}/ogg/include/ogg/ogg.h" />
-		<depend name="${NATIVE_TOOLKIT_PATH}/ogg/include/ogg/os_types.h" />
 
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/backends.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/bitrate.h" />
@@ -37,10 +34,10 @@
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/smallft.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/window.h" />
 
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/lib/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/analysis.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/bitrate.c" />
