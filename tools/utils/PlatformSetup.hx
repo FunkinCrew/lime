@@ -805,6 +805,12 @@ class PlatformSetup
 			var batDestPath = haxePath + "\\lime.bat";
 			try
 			{
+				// To remove the old lime behaviour
+				if (FileSystem.exists(haxePath + "\\lime.exe"))
+				{
+					FileSystem.deleteFile(haxePath + "\\lime.exe");
+				}
+
 				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", batDestPath);
 			}
 			catch (e:Dynamic)
@@ -1055,12 +1061,24 @@ class PlatformSetup
 
 			try
 			{
+				// To remove the old lime behaviour
+				if (FileSystem.exists(haxePath + "\\lime.exe"))
+				{
+					FileSystem.deleteFile(haxePath + "\\lime.exe");
+				}
+
 				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", haxePath + "\\lime.bat");
 			}
 			catch (e:Dynamic) {}
 
 			try
 			{
+				// To remove the old lime behaviour
+				if (FileSystem.exists(haxePath + "\\openfl.exe"))
+				{
+					FileSystem.deleteFile(haxePath + "\\openfl.exe");
+				}
+
 				System.copyFileTemplate(project.templatePaths, "bin/openfl.bat", haxePath + "\\openfl.bat");
 			}
 			catch (e:Dynamic) {}
