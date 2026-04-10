@@ -484,7 +484,7 @@ class AndroidPlatform extends PlatformTarget
 			"android:name": "MainActivity",
 			"android:exported": "true",
 			"android:alwaysRetainTaskState": "true",
-			"android:launchMode": "singleInstance",
+			"android:launchMode": "singleTop",
 			"android:preferMinimalPostProcessing": "true",
 			"android:label": project.meta.title,
 			"android:resizeableActivity": project.window.resizable,
