@@ -244,10 +244,26 @@
 
 		</section>
 
-		<file name="src/app/ApplicationEvent.cpp" />
+		<section>
+
+			<file name="src/events/ApplicationEvent.cpp" />
+			<file name="src/events/ClipboardEvent.cpp" />
+			<file name="src/events/DropEvent.cpp" />
+			<file name="src/events/GamepadEvent.cpp" />
+			<file name="src/events/JoystickEvent.cpp" />
+			<file name="src/events/KeyEvent.cpp" />
+			<file name="src/events/MouseEvent.cpp" />
+			<file name="src/events/OrientationEvent.cpp" />
+			<file name="src/events/RenderEvent.cpp" />
+			<file name="src/events/SensorEvent.cpp" />
+			<file name="src/events/TextEvent.cpp" />
+			<file name="src/events/TouchEvent.cpp" />
+			<file name="src/events/WindowEvent.cpp" />
+
+		</section>
+
 		<file name="src/graphics/Image.cpp" />
 		<file name="src/graphics/ImageBuffer.cpp" />
-		<file name="src/graphics/RenderEvent.cpp" />
 		<file name="src/graphics/utils/ImageDataUtil.cpp" />
 		<file name="src/math/ColorMatrix.cpp" />
 		<file name="src/math/Matrix3.cpp" />
@@ -257,26 +273,15 @@
 		<file name="src/media/containers/WAV.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
-		<file name="src/system/ClipboardEvent.cpp" />
 		<file name="src/system/DisplayMode.cpp" />
 		<file name="src/system/JNI.cpp" if="android" />
 		<file name="src/system/Locale.cpp" unless="mac || ios" />
 		<file name="src/system/Locale.mm" if="mac || ios" />
-		<file name="src/system/OrientationEvent.cpp" />
-		<file name="src/system/SensorEvent.cpp" />
 		<file name="src/system/System.cpp" unless="ios" />
 		<file name="src/system/System.mm" if="ios" />
 		<file name="src/system/ValuePointer.cpp" />
-		<file name="src/ui/DropEvent.cpp" />
 		<file name="src/ui/FileDialog.cpp" />
-		<file name="src/ui/GamepadEvent.cpp" />
 		<file name="src/ui/Haptic.mm" if="ios" />
-		<file name="src/ui/JoystickEvent.cpp" />
-		<file name="src/ui/KeyEvent.cpp" />
-		<file name="src/ui/MouseEvent.cpp" />
-		<file name="src/ui/TextEvent.cpp" />
-		<file name="src/ui/TouchEvent.cpp" />
-		<file name="src/ui/WindowEvent.cpp" />
 		<file name="src/utils/ArrayBufferView.cpp" />
 		<file name="src/utils/Bytes.cpp" />
 
@@ -296,7 +301,6 @@
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
-	<include name="lib/faudio-files.xml" if="LIME_FAUDIO" />
 	<include name="lib/freetype-files.xml" />
 	<include name="lib/harfbuzz-files.xml" />
 	<include name="lib/glad-files.xml" />
@@ -325,7 +329,6 @@
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
 		<files id="native-toolkit-curl" if="LIME_CURL" />
 		<files id="native-toolkit-efsw" if="LIME_EFSW" />
-		<files id="native-toolkit-faudio" if="LIME_FAUDIO" />
 		<files id="native-toolkit-freetype" if="LIME_FREETYPE" />
 		<files id="native-toolkit-harfbuzz" if="LIME_HARFBUZZ" />
 		<files id="native-toolkit-jpeg" if="LIME_JPEG" />

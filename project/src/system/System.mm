@@ -4,7 +4,7 @@
 
 #import <sys/utsname.h>
 #include <system/System.h>
-#include <system/OrientationEvent.h>
+#include <events/OrientationEvent.h>
 
 
 #ifdef IPHONE

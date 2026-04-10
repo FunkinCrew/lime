@@ -1,5 +1,5 @@
 #include <system/CFFI.h>
-#include <system/SensorEvent.h>
+#include <events/SensorEvent.h>
 
 
 namespace lime {

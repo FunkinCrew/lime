@@ -1,5 +1,5 @@
 #include <system/CFFI.h>
-#include <ui/TextEvent.h>
+#include <events/TextEvent.h>
 
 
 namespace lime {

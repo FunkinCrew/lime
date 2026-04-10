@@ -3,19 +3,19 @@
 
 #include <SDL3/SDL.h>
 #include <app/Application.h>
-#include <app/ApplicationEvent.h>
-#include <graphics/RenderEvent.h>
-#include <system/ClipboardEvent.h>
-#include <system/OrientationEvent.h>
-#include <system/SensorEvent.h>
-#include <ui/DropEvent.h>
-#include <ui/GamepadEvent.h>
-#include <ui/JoystickEvent.h>
-#include <ui/KeyEvent.h>
-#include <ui/MouseEvent.h>
-#include <ui/TextEvent.h>
-#include <ui/TouchEvent.h>
-#include <ui/WindowEvent.h>
+#include <events/ApplicationEvent.h>
+#include <events/RenderEvent.h>
+#include <events/ClipboardEvent.h>
+#include <events/OrientationEvent.h>
+#include <events/SensorEvent.h>
+#include <events/DropEvent.h>
+#include <events/GamepadEvent.h>
+#include <events/JoystickEvent.h>
+#include <events/KeyEvent.h>
+#include <events/MouseEvent.h>
+#include <events/TextEvent.h>
+#include <events/TouchEvent.h>
+#include <events/WindowEvent.h>
 #include "SDLWindow.h"
 
 

@@ -1,5 +1,5 @@
 #include <system/CFFI.h>
-#include <ui/MouseEvent.h>
+#include <events/MouseEvent.h>
 
 
 namespace lime {

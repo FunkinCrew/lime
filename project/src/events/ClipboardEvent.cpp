@@ -1,5 +1,5 @@
 #include <system/CFFI.h>
-#include <system/ClipboardEvent.h>
+#include <events/ClipboardEvent.h>
 
 
 namespace lime {

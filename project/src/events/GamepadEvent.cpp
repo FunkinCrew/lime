@@ -1,5 +1,5 @@
 #include <system/CFFI.h>
-#include <ui/GamepadEvent.h>
+#include <events/GamepadEvent.h>
 
 
 namespace lime {
