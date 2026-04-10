@@ -232,9 +232,6 @@
 
 	</section>
 
-	<haxelib name="hxcpp" if="setup" />
-	<haxelib name="lime-samples" if="setup" />
-
 	<include haxelib="lime-samples" if="create" />
 
 	<section if="rebuild">
