@@ -22,10 +22,6 @@ namespace lime {
 	bool inBackground = false;
 
 
-	const int analogAxisDeadZone = 1000;
-	std::map<int, std::map<int, int> > gamepadsAxisMap;
-
-
 	SDL_SensorID accelerometerSensorID = -1;
 	SDL_Sensor* accelerometerSensor = nullptr;
 
@@ -365,35 +361,9 @@ namespace lime {
 
 				case SDL_EVENT_GAMEPAD_AXIS_MOTION:
 
-					if (gamepadsAxisMap[event->gaxis.which].empty ()) {
-
-						gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = event->gaxis.value;
-
-					} else if (gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] == event->gaxis.value) {
-
-						break;
-
-					}
-
 					gamepadEvent.type = GAMEPAD_AXIS_MOVE;
 					gamepadEvent.axis = event->gaxis.axis;
 					gamepadEvent.id = event->gaxis.which;
-
-					if (event->gaxis.value > -analogAxisDeadZone && event->gaxis.value < analogAxisDeadZone) {
-
-						if (gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] != 0) {
-
-							gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = 0;
-							gamepadEvent.axisValue = 0;
-							GamepadEvent::Dispatch (&gamepadEvent);
-
-						}
-
-						break;
-
-					}
-
-					gamepadsAxisMap[event->gaxis.which][event->gaxis.axis] = event->gaxis.value;
 					gamepadEvent.axisValue = event->gaxis.value / (event->gaxis.value > 0 ? 32767.0 : 32768.0);
 					gamepadEvent.timestamp = event->gaxis.timestamp;
 
