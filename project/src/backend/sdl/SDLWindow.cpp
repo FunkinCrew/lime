@@ -2,7 +2,7 @@
 #include "SDLCursor.h"
 #include "SDLApplication.h"
 #include "system/System.h"
-#include "../../graphics/opengl/OpenGLBindings.h"
+#include "../../bindings/opengl/OpenGLBindings.h"
 
 #include <vector>
 #include <cstring>

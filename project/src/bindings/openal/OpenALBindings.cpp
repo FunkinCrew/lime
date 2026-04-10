@@ -1,7 +1,6 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 #ifdef LIME_OPENALSOFT
-// TODO: Can we support EFX on macOS?
 #include "AL/alext.h"
 #endif
 

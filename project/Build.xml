@@ -59,7 +59,7 @@
 			<compilerflag value="-DCAIRO_WIN32_STATIC_BUILD" if="windows" />
 			<compilerflag value="-DCAIRO_HAS_FT_FONT" />
 
-			<file name="src/graphics/cairo/CairoBindings.cpp" />
+			<file name="src/bindings/cairo/CairoBindings.cpp" />
 
 		</section>
 
@@ -69,7 +69,7 @@
 			<compilerflag value="-DLIME_CURL" />
 			<compilerflag value="-DCURL_STATICLIB" />
 
-			<file name="src/net/curl/CURLBindings.cpp" />
+			<file name="src/bindings/curl/CURLBindings.cpp" />
 
 		</section>
 
@@ -100,7 +100,7 @@
 				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/harfbuzz/src" />
 				<compilerflag value="-DLIME_HARFBUZZ" />
 
-				<file name="src/text/harfbuzz/HarfbuzzBindings.cpp" />
+				<file name="src/bindings/harfbuzz/HarfbuzzBindings.cpp" />
 
 			</section>
 
@@ -163,7 +163,7 @@
 
 			<compilerflag value="-DLIME_OPENAL" />
 
-			<file name="src/media/openal/OpenALBindings.cpp" />
+			<file name="src/bindings/openal/OpenALBindings.cpp" />
 
 		</section>
 
@@ -180,7 +180,7 @@
 			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || emscripten || tizen || ios || tvos" />
 			<compilerflag value="-DLIME_OPENGL" />
 
-			<file name="src/graphics/opengl/OpenGLBindings.cpp" />
+			<file name="src/bindings/opengl/OpenGLBindings.cpp" />
 
 		</section>
 
@@ -230,7 +230,7 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
 			<compilerflag value="-DLIME_VORBIS" />
 
-			<file name="src/media/codecs/vorbis/VorbisBindings.cpp" />
+			<file name="src/bindings/vorbis/VorbisBindings.cpp" />
 			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
 
 		</section>

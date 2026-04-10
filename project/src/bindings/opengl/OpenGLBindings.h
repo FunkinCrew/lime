@@ -1,5 +1,4 @@
-#ifndef LIME_GRAPHICS_OPENGL_OPENGL_BINDINGS_H
-#define LIME_GRAPHICS_OPENGL_OPENGL_BINDINGS_H
+#pragma once
 
 
 #ifdef LIME_GLAD
@@ -27,15 +26,11 @@ namespace lime {
 
 		public:
 
+			static bool initialized;
 			static bool Init ();
 
 			static int defaultFramebuffer;
 			static int defaultRenderbuffer;
-
-		private:
-
-			static bool initialized;
-
 
 	};
 
@@ -59,6 +54,3 @@ namespace lime {
 
 
 }
-
-
-#endif
