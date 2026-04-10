@@ -723,102 +723,28 @@ namespace lime {
 	}
 
 
-	FILE* FILE_HANDLE::getFile () {
-
-		#ifndef HX_WINDOWS
-
-		SDL_PropertiesID properties = SDL_GetIOProperties((SDL_IOStream*)handle);
-
-		FILE* filePointer = (FILE*)SDL_GetPointerProperty(properties, SDL_PROP_IOSTREAM_STDIO_FILE_POINTER, NULL);
-
-		if(filePointer != NULL)
-			return filePointer;
-
-		#ifdef ANDROID
-			System::GCEnterBlocking ();
-			int fd;
-			off_t outStart;
-			off_t outLength;
-			fd = AAsset_openFileDescriptor ((AAsset*)SDL_GetPointerProperty(properties, SDL_PROP_IOSTREAM_ANDROID_AASSET_POINTER, NULL), &outStart, &outLength);
-			FILE* file = ::fdopen (fd, "rb");
-			::fseek (file, outStart, 0);
-			System::GCExitBlocking ();
-			return file;
-		#endif
-
-		return NULL;
-
-		#else
-
-		return (FILE*)handle;
-
-		#endif
-	}
-
-
-	int FILE_HANDLE::getLength () {
-
-		#ifndef HX_WINDOWS
-
-		System::GCEnterBlocking ();
-		int size = SDL_GetIOSize (((SDL_IOStream*)handle));
-		System::GCExitBlocking ();
-		return size;
-
-		#else
-
-		return 0;
-
-		#endif
-
-	}
-
-
-	bool FILE_HANDLE::isFile () {
-
-		return true;
-
-	}
-
-
 	int fclose (FILE_HANDLE *stream) {
 
-		#ifndef HX_WINDOWS
-
 		if (stream) {
 
 			System::GCEnterBlocking ();
+
 			int code = SDL_CloseIO ((SDL_IOStream*)stream->handle);
+
 			delete stream;
+
 			System::GCExitBlocking ();
+
 			return code;
 
 		}
 
 		return 0;
-
-		#else
-
-		if (stream) {
-
-			System::GCEnterBlocking ();
-			int code = ::fclose ((FILE*)stream->handle);
-			delete stream;
-			System::GCExitBlocking ();
-			return code;
-
-		}
-
-		return 0;
-
-		#endif
 
 	}
 
 
 	FILE_HANDLE *fopen (const char *filename, const char *mode) {
-
-		#ifndef HX_WINDOWS
 
 		System::GCEnterBlocking ();
 
@@ -854,53 +780,17 @@ namespace lime {
 
 		return NULL;
 
-		#else
-
-		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		std::wstring* wfilename = new std::wstring (converter.from_bytes (filename));
-		std::wstring* wmode = new std::wstring (converter.from_bytes (mode));
-
-		System::GCEnterBlocking ();
-
-		FILE* result = ::_wfopen (wfilename->c_str(), wmode->c_str());
-
-		System::GCExitBlocking ();
-
-		delete wfilename;
-		delete wmode;
-
-		if (result) {
-
-			return new FILE_HANDLE (result);
-
-		}
-
-		return NULL;
-
-		#endif
-
 	}
 
 
 	size_t fread (void *ptr, size_t size, size_t count, FILE_HANDLE *stream) {
 
-		size_t nmem;
 		System::GCEnterBlocking ();
 
-		#ifndef HX_WINDOWS
-
-        if(size > 0 && count > 0)
-	  	    nmem = SDL_ReadIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size;
-        else
-		    nmem = 0;
-
-		#else
-
-		nmem = ::fread (ptr, size, count, (FILE*)stream->handle);
-
-		#endif
+	  	size_t nmem = size > 0 && count > 0 ? SDL_ReadIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size : 0;
 
 		System::GCExitBlocking ();
+
 		return nmem;
 
 	}
@@ -908,20 +798,12 @@ namespace lime {
 
 	int fseek (FILE_HANDLE *stream, long int offset, int origin) {
 
-		int success;
 		System::GCEnterBlocking ();
 
-		#ifndef HX_WINDOWS
-
-		success = SDL_SeekIO (stream ? (SDL_IOStream*)stream->handle : NULL, offset, (SDL_IOWhence)origin);
-
-		#else
-
-		success = ::fseek ((FILE*)stream->handle, offset, origin);
-
-		#endif
+		int success = SDL_SeekIO (stream ? (SDL_IOStream*)stream->handle : NULL, offset, (SDL_IOWhence)origin);
 
 		System::GCExitBlocking ();
+
 		return success;
 
 	}
@@ -929,20 +811,12 @@ namespace lime {
 
 	long int ftell (FILE_HANDLE *stream) {
 
-		long int pos;
 		System::GCEnterBlocking ();
 
-		#ifndef HX_WINDOWS
-
-		pos = SDL_TellIO (stream ? (SDL_IOStream*)stream->handle : NULL);
-
-		#else
-
-		pos = ::ftell ((FILE*)stream->handle);
-
-		#endif
+		long int pos = SDL_TellIO (stream ? (SDL_IOStream*)stream->handle : NULL);
 
 		System::GCExitBlocking ();
+
 		return pos;
 
 	}
@@ -950,23 +824,12 @@ namespace lime {
 
 	size_t fwrite (const void *ptr, size_t size, size_t count, FILE_HANDLE *stream) {
 
-		size_t nmem;
 		System::GCEnterBlocking ();
 
-		#ifndef HX_WINDOWS
-
-  		if(size > 0 && count > 0)
-            nmem = SDL_WriteIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size;
-        else
-		    nmem = 0;
-
-		#else
-
-		nmem = ::fwrite (ptr, size, count, (FILE*)stream->handle);
-
-		#endif
+        size_t nmem = size > 0 && count > 0 ? SDL_WriteIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size : 0;
 
 		System::GCExitBlocking ();
+
 		return nmem;
 
 	}

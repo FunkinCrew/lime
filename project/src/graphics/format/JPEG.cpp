@@ -246,18 +246,10 @@ namespace lime {
 
 		if (file) {
 
-			if (file->isFile ()) {
-
-				jpeg_stdio_src (&cinfo, file->getFile ());
-
-			} else {
-
-				data = new Bytes ();
-				data->ReadFile (resource->path);
-				manager = new MySrcManager (data->b, data->length);
-				cinfo.src = &manager->pub;
-
-			}
+			data = new Bytes ();
+			data->ReadFile (resource->path);
+			manager = new MySrcManager (data->b, data->length);
+			cinfo.src = &manager->pub;
 
 		} else {
 

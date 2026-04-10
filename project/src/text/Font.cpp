@@ -360,23 +360,15 @@ namespace lime {
 
 					}
 
-					if (file->isFile ()) {
+					Bytes data;
+					data.ReadFile (resource->path);
+					faceMemory = (unsigned char*)malloc (data.length);
+					memcpy (faceMemory, data.b, data.length);
 
-						error = FT_New_Face (library, resource->path, faceIndex, &face);
+					lime::fclose (file);
+					file = 0;
 
-					} else {
-
-						Bytes data;
-						data.ReadFile (resource->path);
-						faceMemory = (unsigned char*)malloc (data.length);
-						memcpy (faceMemory, data.b, data.length);
-
-						lime::fclose (file);
-						file = 0;
-
-						error = FT_New_Memory_Face (library, faceMemory, data.length, faceIndex, &face);
-
-					}
+					error = FT_New_Memory_Face (library, faceMemory, data.length, faceIndex, &face);
 
 				} else {
 

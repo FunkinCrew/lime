@@ -139,22 +139,10 @@ namespace lime {
 
 		if (file) {
 
-			if (file->isFile ()) {
-
-				png_init_io (png_ptr, file->getFile ());
-
-				#ifndef ANDROID
-				png_set_sig_bytes (png_ptr, PNG_SIG_SIZE);
-				#endif
-
-			} else {
-
-				data = new Bytes ();
-				data->ReadFile (resource->path);
-				ReadBuffer buffer (data->b, data->length);
-				png_set_read_fn (png_ptr, &buffer, user_read_data_fn);
-
-			}
+			data = new Bytes ();
+			data->ReadFile (resource->path);
+			ReadBuffer buffer (data->b, data->length);
+			png_set_read_fn (png_ptr, &buffer, user_read_data_fn);
 
 		} else {
 
