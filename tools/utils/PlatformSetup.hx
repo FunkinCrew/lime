@@ -802,30 +802,17 @@ class PlatformSetup
 			}
 
 			var copyFailure = false;
-			var exeDestPath = haxePath + "\\lime.exe";
+			var batDestPath = haxePath + "\\lime.bat";
 			try
 			{
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.exe", exeDestPath);
+				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", batDestPath);
 			}
 			catch (e:Dynamic)
 			{
 				copyFailure = true;
 				if (Log.verbose)
 				{
-					Log.warn("Failed to copy lime.exe alias to destination: " + exeDestPath);
-				}
-			}
-			var shDestPath = haxePath + "\\lime";
-			try
-			{
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.sh", shDestPath);
-			}
-			catch (e:Dynamic)
-			{
-				copyFailure = true;
-				if (Log.verbose)
-				{
-					Log.warn("Failed to copy lime.sh alias to destination: " + shDestPath);
+					Log.warn("Failed to copy lime.bat alias to destination: " + batDestPath);
 				}
 			}
 			if (Log.verbose && copyFailure && usingDefaultHaxePath && !FileSystem.exists(haxePath))
@@ -1068,19 +1055,13 @@ class PlatformSetup
 
 			try
 			{
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.exe", haxePath + "\\lime.exe");
-			}
-			catch (e:Dynamic) {}
-			try
-			{
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.sh", haxePath + "\\lime");
+				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", haxePath + "\\lime.bat");
 			}
 			catch (e:Dynamic) {}
 
 			try
 			{
-				System.copyFileTemplate(project.templatePaths, "bin/openfl.exe", haxePath + "\\openfl.exe");
-				System.copyFileTemplate(project.templatePaths, "bin/openfl.sh", haxePath + "\\openfl");
+				System.copyFileTemplate(project.templatePaths, "bin/openfl.bat", haxePath + "\\openfl.bat");
 			}
 			catch (e:Dynamic) {}
 		}

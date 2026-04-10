@@ -1,10 +1,10 @@
 -main SVGExport
 -neko ../svg.n
--D lime=7.0.0
+-D lime-cairo
+-D lime-cffi
+-D lime
 -cp ../src
 -lib hxp
 -lib openfl
 -lib svg
--D lime-cairo
--D lime-cffi
 --remap flash:openfl
