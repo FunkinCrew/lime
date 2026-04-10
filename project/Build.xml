@@ -22,8 +22,8 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
 	<set name="LIME_OGG" value="1" />
-	<set name="LIME_OPENALSOFT" value="1" if="lime-openalsoft" />
-	<set name="LIME_OPENAL" value="1" if="lime-openal" />
+	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || ios || tvos" />
+	<set name="LIME_OPENAL" value="1" if="emscripten || LIME_OPENALSOFT" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
 	<set name="LIME_PIXMAN" value="1" />
