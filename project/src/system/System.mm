@@ -119,44 +119,6 @@ namespace lime {
 	}
 
 
-	std::wstring* System::GetIOSDirectory (SystemDirectory type) {
-
-		NSSearchPathDirectory searchType = NSDocumentDirectory;
-
-		switch (type) {
-
-			case DESKTOP:
-
-				searchType = NSDesktopDirectory;
-				break;
-
-			case USER:
-
-				//searchType = NSUserDirectory;
-				searchType = NSDocumentDirectory;
-				break;
-
-			default: break;
-
-		}
-
-		std::wstring* result = 0;
-
-		NSArray* paths = NSSearchPathForDirectoriesInDomains (searchType, NSUserDomainMask, YES);
-
-		if (paths && [paths count] > 0) {
-
-			NSString* basePath = paths.firstObject;
-			std::string path = std::string ([basePath UTF8String]);
-			result = new std::wstring (path.begin (), path.end ());
-
-		}
-
-		return result;
-
-	}
-
-
 	int System::GetDeviceOrientation () {
 
 		UIDevice * device = [UIDevice currentDevice];
@@ -195,14 +157,12 @@ namespace lime {
 	}
 
 
-	std::wstring* System::GetDeviceModel () {
+	char* System::GetDeviceModel () {
 
 		#ifdef IPHONE
 		struct utsname systemInfo;
 		uname (&systemInfo);
-
-		std::string model = std::string (systemInfo.machine);
-		return new std::wstring (model.begin (), model.end ());
+		return systemInfo.machine;
 		#else
 		return NULL;
 		#endif
@@ -210,33 +170,31 @@ namespace lime {
 	}
 
 
-	std::wstring* System::GetDeviceVendor () {
+	char* System::GetDeviceVendor () {
 
 		return NULL;
 
 	}
 
 
-	std::wstring* System::GetPlatformLabel () {
+	char* System::GetPlatformLabel () {
 
 		return NULL;
 
 	}
 
 
-	std::wstring* System::GetPlatformName () {
+	char* System::GetPlatformName () {
 
 		return NULL;
 
 	}
 
 
-	std::wstring* System::GetPlatformVersion () {
+	char* System::GetPlatformVersion () {
 
 		#ifdef IPHONE
-		NSString *versionString = [[UIDevice currentDevice] systemVersion];
-		std::string result = std::string ([versionString UTF8String]);
-		return new std::wstring (result.begin (), result.end ());
+		return [[[UIDevice currentDevice] systemVersion] UTF8String];
 		#else
 		return NULL;
 		#endif

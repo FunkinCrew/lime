@@ -31,27 +31,24 @@ namespace lime {
 			static void GCTryEnterBlocking ();
 			static void GCTryExitBlocking ();
 			static bool GetAllowScreenTimeout ();
-			static std::wstring* GetDeviceModel ();
-			static std::wstring* GetDeviceVendor ();
-			static std::wstring* GetDirectory (SystemDirectory type, const char* company, const char* title);
+			static char* GetDeviceModel ();
+			static char* GetDeviceVendor ();
+			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
 			static void* GetDisplay (bool useCFFIValue, int id);
-			#ifdef IPHONE
-			static std::wstring* GetIOSDirectory (SystemDirectory type);
-			#endif
 			static int GetFirstGyroscopeSensorId ();
 			static int GetFirstAccelerometerSensorId ();
 			static int GetNumDisplays ();
 			static int GetDeviceOrientation ();
-			static std::wstring* GetPlatformLabel ();
-			static std::wstring* GetPlatformName ();
-			static std::wstring* GetPlatformVersion ();
+			static char* GetPlatformLabel ();
+			static char* GetPlatformName ();
+			static char* GetPlatformVersion ();
 			static double GetTimer ();
 			#if defined(HX_WINDOWS)
 			static int GetWindowsConsoleMode (int handleType);
 			#endif
 			static void OpenFile (const char* path);
 			static void OpenURL (const char* url, const char* target);
-			static std::wstring* GetHint (const char* key);
+			static const char* GetHint (const char* key);
 			static void SetHint (const char* key, const char* value);
 			static bool SetAllowScreenTimeout (bool allow);
 			#if defined(HX_WINDOWS)

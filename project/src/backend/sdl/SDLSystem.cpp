@@ -5,43 +5,15 @@
 #include <system/JNI.h>
 #include <system/System.h>
 
-#ifdef HX_MACOS
-#include <CoreFoundation/CoreFoundation.h>
-#endif
+#include <SDL3/SDL.h>
 
 #ifdef HX_WINDOWS
 #include <shlobj.h>
-#include <stdio.h>
-//#include <io.h>
-//#include <fcntl.h>
-#ifdef __MINGW32__
-#ifndef CSIDL_MYDOCUMENTS
-#define CSIDL_MYDOCUMENTS CSIDL_PERSONAL
-#endif
-#ifndef SHGFP_TYPE_CURRENT
-#define SHGFP_TYPE_CURRENT 0
-#endif
-#endif
-#if UNICODE
-#define WIN_StringToUTF8(S) SDL_iconv_string("UTF-8", "UTF-16LE", (char *)(S), (SDL_wcslen(S)+1)*sizeof(WCHAR))
-#define WIN_UTF8ToString(S) (WCHAR *)SDL_iconv_string("UTF-16LE", "UTF-8", (char *)(S), SDL_strlen(S)+1)
-#else
-#define WIN_StringToUTF8(S) SDL_iconv_string("UTF-8", "ASCII", (char *)(S), (SDL_strlen(S)+1))
-#define WIN_UTF8ToString(S) SDL_iconv_string("ASCII", "UTF-8", (char *)(S), SDL_strlen(S)+1)
-#endif
 #endif
 
-#ifdef ANDROID
-#include <android/asset_manager_jni.h>
-#endif
-
-#include <SDL3/SDL.h>
 #include <string>
-
 #include <locale>
 #include <codecvt>
-
-using wstring_convert = std::wstring_convert<std::codecvt_utf8<wchar_t>>;
 
 
 namespace lime {
@@ -61,24 +33,15 @@ namespace lime {
 	static bool init = false;
 
 
-	std::wstring* Clipboard::GetText () {
+	char* Clipboard::GetText () {
 
-		std::wstring* result = 0;
 		System::GCEnterBlocking ();
 
 		char* text = (char*)SDL_GetClipboardText ();
 
-		#ifdef HX_WINDOWS
-		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		result = new std::wstring (converter.from_bytes(text));
-		#else
-		result = new std::wstring (text, text + strlen (text));
-		#endif
-
-		SDL_free (text);
-
 		System::GCExitBlocking ();
-		return result;
+
+		return text;
 
 	}
 
@@ -115,67 +78,34 @@ namespace lime {
 	}
 
 
-	std::wstring* System::GetDirectory (SystemDirectory type, const char* company, const char* title) {
+	char* System::GetDirectory (SystemDirectory type, const char* company, const char* title) {
 
-		std::wstring* result = 0;
+		char* result = nullptr;
+
 		System::GCEnterBlocking ();
 
 		switch (type) {
 
 			case APPLICATION: {
 
-				char* path = (char*)SDL_GetBasePath ();
-				#ifdef HX_WINDOWS
-				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-				result = new std::wstring (converter.from_bytes(path));
-				#else
-				result = new std::wstring (path, path + strlen (path));
-				#endif
-				SDL_free (path);
+				result = SDL_strdup (SDL_GetBasePath ());
 				break;
 
 			}
 
 			case APPLICATION_STORAGE: {
 
-				char* path = SDL_GetPrefPath (company, title);
-
-				if (path != nullptr) {
-
-        			wstring_convert converter;
-					result = new std::wstring (converter.from_bytes(path));
-					SDL_free (path);
-
-				}
-
+				result = SDL_GetPrefPath (company, title);
 				break;
 
 			}
 
 			case DESKTOP: {
 
-				#if defined (HX_WINDOWS)
-
-				WCHAR folderPath[MAX_PATH] = L"";
-				SHGetFolderPathW (NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, folderPath);
-				result = new std::wstring (folderPath);
-
-				#elif defined (IPHONE)
-
-				result = System::GetIOSDirectory (type);
-
-				#elif !defined (ANDROID)
-
-				char const* home = getenv ("HOME");
-
-				if (home != NULL) {
-
-					std::string path = std::string (home) + std::string ("/Desktop");
-					wstring_convert converter;
-					result = new std::wstring (converter.from_bytes(path));
-
-				}
-
+				#if defined (ANDROID)
+				result = SDL_strdup ("/mnt/sdcard/Desktop");
+				#else
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DESKTOP));
 				#endif
 				break;
 
@@ -183,32 +113,10 @@ namespace lime {
 
 			case DOCUMENTS: {
 
-				#if defined (HX_WINDOWS)
-
-				WCHAR folderPath[MAX_PATH] = L"";
-				SHGetFolderPathW (NULL, CSIDL_MYDOCUMENTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
-				result = new std::wstring (folderPath);
-
-				#elif defined (IPHONE)
-
-				result = System::GetIOSDirectory (type);
-
-				#elif defined (ANDROID)
-
-				result = new std::wstring (L"/mnt/sdcard/Documents");
-
+				#if defined (ANDROID)
+				result = SDL_strdup ("/mnt/sdcard/Documents");
 				#else
-
-				char const* home = getenv ("HOME");
-
-				if (home != NULL) {
-
-					std::string path = std::string (home) + std::string ("/Documents");
-					wstring_convert converter;
-					result = new std::wstring (converter.from_bytes(path));
-
-				}
-
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DOCUMENTS));
 				#endif
 				break;
 
@@ -219,59 +127,45 @@ namespace lime {
 				#if defined (HX_WINDOWS)
 
 				WCHAR folderPath[MAX_PATH] = L"";
+
 				SHGetFolderPathW (NULL, CSIDL_FONTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
-				result = new std::wstring (folderPath);
+
+				int size = WideCharToMultiByte(CP_UTF8, 0, folderPath, -1, NULL, 0, NULL, NULL);
+
+				result = (char*)malloc(size);
+
+				WideCharToMultiByte(CP_UTF8, 0, folderPath, -1, result, size, NULL, NULL);
 
 				#elif defined (HX_MACOS)
 
-				result = new std::wstring (L"/Library/Fonts");
+				result = SDL_strdup ("/Library/Fonts");
 
 				#elif defined (IPHONE)
 
-				result = new std::wstring (L"/System/Library/Fonts");
+				result = SDL_strdup ("/System/Library/Fonts");
 
 				#elif defined (ANDROID)
 
-				result = new std::wstring (L"/system/fonts");
+				result = SDL_strdup ("/system/fonts");
 
 				#else
 
-				result = new std::wstring (L"/usr/share/fonts/truetype");
+				result = SDL_strdup ("/usr/share/fonts/truetype");
 
 				#endif
+
 				break;
 
 			}
 
 			case USER: {
 
-				#if defined (HX_WINDOWS)
-
-				WCHAR folderPath[MAX_PATH] = L"";
-				SHGetFolderPathW (NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, folderPath);
-				result = new std::wstring (folderPath);
-
-				#elif defined (IPHONE)
-
-				result = System::GetIOSDirectory (type);
-
-				#elif defined (ANDROID)
-
-				result = new std::wstring (L"/mnt/sdcard");
-
+				#if defined (ANDROID)
+				result = SDL_strdup ("/mnt/sdcard");
 				#else
-
-				char const* home = getenv ("HOME");
-
-				if (home != NULL) {
-
-					std::string path = std::string (home);
-					wstring_convert converter;
-					result = new std::wstring (converter.from_bytes(path));
-
-				}
-
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_HOME));
 				#endif
+
 				break;
 
 			}
@@ -279,6 +173,7 @@ namespace lime {
 		}
 
 		System::GCExitBlocking ();
+
 		return result;
 
 	}
@@ -670,7 +565,7 @@ namespace lime {
 	}
 
 
-	std::wstring* System::GetHint (const char* key) {
+	const char* System::GetHint (const char* key) {
 
 		std::string hintKey (key);
 
@@ -680,17 +575,15 @@ namespace lime {
 
 		}
 
-		const char* raw = SDL_GetHint (hintKey.c_str ());
+		const char* hint = SDL_GetHint (hintKey.c_str ());
 
-		if (!raw) {
+		if (!hint) {
 
 			return nullptr;
 
 		}
 
-		std::string hint = std::string (raw);
-		std::wstring* _hint = new std::wstring (hint.begin (), hint.end ());
-		return _hint;
+		return hint;
 
 	}
 

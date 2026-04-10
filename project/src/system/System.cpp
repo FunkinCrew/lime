@@ -67,7 +67,7 @@ namespace lime {
 
 
 	#if defined (HX_WINDOWS)
-	std::wstring* GetWMIValue (BSTR query, BSTR field) {
+	char* GetWMIValue (BSTR query, BSTR field) {
 
 		HRESULT hres = 0;
 		IWbemLocator *pLoc = NULL;
@@ -75,30 +75,12 @@ namespace lime {
 		IEnumWbemClassObject* pEnumerator = NULL;
 		IWbemClassObject *pclsObj = NULL;
 		ULONG uReturn = 0;
-		std::wstring* result = NULL;
-
-		// hres = CoInitializeEx (0, COINIT_MULTITHREADED);
-
-		// if (FAILED (hres)) {
-
-		// 	return NULL;
-
-		// }
-
-		// hres = CoInitializeSecurity (NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_DEFAULT, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
-
-		// if (FAILED (hres)) {
-
-		// 	CoUninitialize ();
-		// 	NULL;
-
-		// }
+		char* result = NULL;
 
 		hres = CoCreateInstance (CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *) &pLoc);
 
 		if (FAILED (hres)) {
 
-			//CoUninitialize ();
 			return NULL;
 
 		}
@@ -108,7 +90,6 @@ namespace lime {
 		if (FAILED (hres)) {
 
 			pLoc->Release ();
-			// CoUninitialize ();
 			return NULL;
 
 		}
@@ -119,7 +100,6 @@ namespace lime {
 
 			pSvc->Release ();
 			pLoc->Release ();
-			// CoUninitialize ();
 			return NULL;
 
 		}
@@ -130,7 +110,6 @@ namespace lime {
 
 			pSvc->Release ();
 			pLoc->Release ();
-			// CoUninitialize ();
 			return NULL;
 
 		}
@@ -138,14 +117,19 @@ namespace lime {
 		while (pEnumerator) {
 
 			HRESULT hr = pEnumerator->Next (WBEM_INFINITE, 1, &pclsObj, &uReturn);
-			if (uReturn == 0) break;
+
+			if (uReturn == 0) {
+
+				break;
+
+			}
 
 			VARIANT vtProp;
-
 			hr = pclsObj->Get (field, 0, &vtProp, 0, 0);
+			int len = WideCharToMultiByte (CP_UTF8, 0, vtProp.bstrVal, -1, NULL, 0, NULL, NULL);
+			result = (char*)malloc(len);
+			WideCharToMultiByte (CP_UTF8, 0, vtProp.bstrVal, -1, result, len, NULL, NULL);
 			VariantClear (&vtProp);
-			result = new std::wstring (vtProp.bstrVal, SysStringLen (vtProp.bstrVal));
-
 			pclsObj->Release ();
 
 		}
@@ -153,61 +137,59 @@ namespace lime {
 		pSvc->Release ();
 		pLoc->Release ();
 		pEnumerator->Release ();
-		// CoUninitialize ();
 
 		return result;
-
 	}
 	#endif
 
 
-	std::wstring* System::GetDeviceModel () {
+	char* System::GetDeviceModel () {
 
 		#if defined (HX_WINDOWS)
 		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_ComputerSystemProduct"), _bstr_t(L"Version"));
-		#endif
-
+		#else
 		return NULL;
+		#endif
 
 	}
 
 
-	std::wstring* System::GetDeviceVendor () {
+	char* System::GetDeviceVendor () {
 
 		#if defined (HX_WINDOWS)
 		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_ComputerSystemProduct"), _bstr_t(L"Vendor"));
-		#endif
-
+		#else
 		return NULL;
+		#endif
 
 	}
 
 
-	std::wstring* System::GetPlatformLabel () {
+	char* System::GetPlatformLabel () {
 
 		#if defined (HX_WINDOWS)
 		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_OperatingSystem"), _bstr_t(L"Caption"));
+		#else
+		return NULL;
 		#endif
 
+	}
+
+
+	char* System::GetPlatformName () {
+
 		return NULL;
 
 	}
 
 
-	std::wstring* System::GetPlatformName () {
-
-		return NULL;
-
-	}
-
-
-	std::wstring* System::GetPlatformVersion () {
+	char* System::GetPlatformVersion () {
 
 		#if defined (HX_WINDOWS)
 		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_OperatingSystem"), _bstr_t(L"Version"));
-		#endif
-
+		#else
 		return NULL;
+		#endif
 
 	}
 
@@ -215,12 +197,13 @@ namespace lime {
 	#if defined (HX_WINDOWS)
 	int System::GetWindowsConsoleMode (int handleType) {
 
-		HANDLE handle = GetStdHandle ((DWORD)handleType);
 		DWORD mode = 0;
+
+		HANDLE handle = GetStdHandle ((DWORD)handleType);
 
 		if (handle) {
 
-			bool result = GetConsoleMode (handle, &mode);
+			GetConsoleMode (handle, &mode);
 
 		}
 

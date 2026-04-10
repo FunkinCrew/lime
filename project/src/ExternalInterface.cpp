@@ -583,12 +583,12 @@ namespace lime {
 
 		if (Clipboard::HasText ()) {
 
-			std::wstring* text = Clipboard::GetText ();
+			char* text = Clipboard::GetText ();
 
 			if (text) {
 
-				value result = alloc_wstring (text->c_str ());
-				delete text;
+				value result = alloc_string (text);
+				free (text);
 				return result;
 
 			}
@@ -604,12 +604,13 @@ namespace lime {
 
 		if (Clipboard::HasText ()) {
 
-			std::wstring* text = Clipboard::GetText ();
+			char* text = Clipboard::GetText ();
 
 			if (text) {
 
-				vbyte* const result = hl_wstring_to_utf8_bytes (*text);
-				delete text;
+				vbyte* result = hl_alloc_bytes (strlen (text) + 1);
+				std::memcpy (result, text, strlen (text) + 1);
+				free (text);
 				return result;
 
 			}
@@ -2809,12 +2810,12 @@ namespace lime {
 
 	value lime_system_get_device_model () {
 
-		std::wstring* model = System::GetDeviceModel ();
+		char* model = System::GetDeviceModel ();
 
 		if (model) {
 
-			value result = alloc_wstring (model->c_str ());
-			delete model;
+			value result = alloc_string (model);
+			free (model);
 			return result;
 
 		} else {
@@ -2828,19 +2829,16 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_model) () {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* model = System::GetDeviceModel ();
+		char* model = System::GetDeviceModel ();
 
 		if (model) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*model);
-			delete model;
+			vbyte* result = hl_alloc_bytes (strlen (model) + 1);
+			std::memcpy (result, model, strlen (model) + 1);
+			free (model);
 			return result;
 
 		}
-
-		#endif
 
 		return 0;
 
@@ -2849,12 +2847,12 @@ namespace lime {
 
 	value lime_system_get_device_vendor () {
 
-		std::wstring* vendor = System::GetDeviceVendor ();
+		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
 
-			value result = alloc_wstring (vendor->c_str ());
-			delete vendor;
+			value result = alloc_string (vendor);
+			free (vendor);
 			return result;
 
 		} else {
@@ -2868,33 +2866,29 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_vendor) () {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* vendor = System::GetDeviceVendor ();
+		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*vendor);
-			delete vendor;
+			vbyte* result = hl_alloc_bytes (strlen (vendor) + 1);
+			std::memcpy (result, vendor, strlen (vendor) + 1);
+			free (vendor);
 			return result;
 
 		}
-
-		#endif
 
 		return 0;
 
 	}
 
-
 	value lime_system_get_directory (int type, HxString company, HxString title) {
 
-		std::wstring* path = System::GetDirectory ((SystemDirectory)type, hxs_utf8 (company, nullptr), hxs_utf8 (title, nullptr));
+		char* path = System::GetDirectory ((SystemDirectory)type, hxs_utf8 (company, nullptr), hxs_utf8 (title, nullptr));
 
 		if (path) {
 
-			value result = alloc_wstring (path->c_str ());
-			delete path;
+			value result = alloc_string (path);
+			free (path);
 			return result;
 
 		} else {
@@ -2905,22 +2899,18 @@ namespace lime {
 
 	}
 
-
 	HL_PRIM vbyte* HL_NAME(hl_system_get_directory) (int type, hl_vstring* company, hl_vstring* title) {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* path = System::GetDirectory ((SystemDirectory)type, company ? (char*)hl_to_utf8 ((const uchar*)company->bytes) : NULL, title ? (char*)hl_to_utf8 ((const uchar*)title->bytes) : NULL);
+		char* path = System::GetDirectory ((SystemDirectory)type, company ? (char*)hl_to_utf8 ((const uchar*)company->bytes) : NULL, title ? (char*)hl_to_utf8 ((const uchar*)title->bytes) : NULL);
 
 		if (path) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*path);
-			delete path;
+			vbyte* result = hl_alloc_bytes (strlen (path) + 1);
+			std::memcpy (result, path, strlen (path) + 1);
+			free (path);
 			return result;
 
 		}
-
-		#endif
 
 		return 0;
 
@@ -2999,12 +2989,12 @@ namespace lime {
 
 	value lime_system_get_platform_label () {
 
-		std::wstring* label = System::GetPlatformLabel ();
+		char* label = System::GetPlatformLabel ();
 
 		if (label) {
 
-			value result = alloc_wstring (label->c_str ());
-			delete label;
+			value result = alloc_string (label);
+			free (label);
 			return result;
 
 		} else {
@@ -3018,19 +3008,16 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_label) () {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* label = System::GetPlatformLabel ();
+		char* label = System::GetPlatformLabel ();
 
 		if (label) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*label);
-			delete label;
+			vbyte* result = hl_alloc_bytes (strlen (label) + 1);
+			std::memcpy (result, label, strlen (label) + 1);
+			free (label);
 			return result;
 
 		}
-
-		#endif
 
 		return 0;
 
@@ -3039,17 +3026,17 @@ namespace lime {
 
 	value lime_system_get_platform_name () {
 
-		std::wstring* name = System::GetPlatformName ();
+		char* name = System::GetPlatformName ();
 
 		if (name) {
 
-			value result = alloc_wstring (name->c_str ());
-			delete name;
+			value result = alloc_string (name);
+			free (name);
 			return result;
 
 		} else {
 
-			return 0;
+			return alloc_null ();
 
 		}
 
@@ -3058,19 +3045,16 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_name) () {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* name = System::GetPlatformName ();
+		char* name = System::GetPlatformName ();
 
 		if (name) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*name);
-			delete name;
+			vbyte* result = hl_alloc_bytes (strlen (name) + 1);
+			std::memcpy (result, name, strlen (name) + 1);
+			free (name);
 			return result;
 
 		}
-
-		#endif
 
 		return 0;
 
@@ -3079,12 +3063,12 @@ namespace lime {
 
 	value lime_system_get_platform_version () {
 
-		std::wstring* version = System::GetPlatformVersion ();
+		char* version = System::GetPlatformVersion ();
 
 		if (version) {
 
-			value result = alloc_wstring (version->c_str ());
-			delete version;
+			value result = alloc_string (version);
+			free (version);
 			return result;
 
 		} else {
@@ -3098,18 +3082,16 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_version) () {
 
-		#ifndef EMSCRIPTEN
-
-		std::wstring* version = System::GetPlatformVersion ();
+		char* version = System::GetPlatformVersion ();
 
 		if (version) {
 
-			vbyte* const result = hl_wstring_to_utf8_bytes (*version);
-			delete version;
+			vbyte* result = hl_alloc_bytes (strlen (version) + 1);
+			std::memcpy (result, version, strlen (version) + 1);
+			free (version);
 			return result;
-		}
 
-		#endif
+		}
 
 		return 0;
 
@@ -3196,13 +3178,11 @@ namespace lime {
 
 	value lime_system_get_hint (HxString hintKey) {
 
-		std::wstring* hint = System::GetHint (hxs_utf8 (hintKey, nullptr));
+		const char* hint = System::GetHint (hxs_utf8 (hintKey, nullptr));
 
 		if (hint) {
 
-			value result = alloc_wstring (hint->c_str ());
-			delete hint;
-			return result;
+			return alloc_string (hint);
 
 		} else {
 
@@ -3214,16 +3194,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_hint) (hl_vstring* key) {
 
-		std::wstring* hint = System::GetHint (key ? hl_to_utf8(key->bytes) : nullptr);
-
-		if (hint) {
-
-			vbyte* const result = hl_wstring_to_utf8_bytes (*hint);
-			delete hint;
-			return result;
-		}
-
-		return 0;
+		return (vbyte*)System::GetHint (key ? hl_to_utf8(key->bytes) : nullptr);
 
 	}
 
