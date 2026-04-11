@@ -7,10 +7,6 @@
 
 #include <SDL3/SDL.h>
 
-#ifdef HX_WINDOWS
-#include <shlobj.h>
-#endif
-
 #include <string>
 #include <locale>
 #include <codecvt>
@@ -102,70 +98,21 @@ namespace lime {
 
 			case DESKTOP: {
 
-				#if defined (ANDROID)
-				result = SDL_strdup ("/mnt/sdcard/Desktop");
-				#else
 				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DESKTOP));
-				#endif
 				break;
 
 			}
 
 			case DOCUMENTS: {
 
-				#if defined (ANDROID)
-				result = SDL_strdup ("/mnt/sdcard/Documents");
-				#else
 				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DOCUMENTS));
-				#endif
-				break;
-
-			}
-
-			case FONTS: {
-
-				#if defined (HX_WINDOWS)
-
-				WCHAR folderPath[MAX_PATH] = L"";
-
-				SHGetFolderPathW (NULL, CSIDL_FONTS, NULL, SHGFP_TYPE_CURRENT, folderPath);
-
-				int size = WideCharToMultiByte(CP_UTF8, 0, folderPath, -1, NULL, 0, NULL, NULL);
-
-				result = (char*)malloc(size);
-
-				WideCharToMultiByte(CP_UTF8, 0, folderPath, -1, result, size, NULL, NULL);
-
-				#elif defined (HX_MACOS)
-
-				result = SDL_strdup ("/Library/Fonts");
-
-				#elif defined (IPHONE)
-
-				result = SDL_strdup ("/System/Library/Fonts");
-
-				#elif defined (ANDROID)
-
-				result = SDL_strdup ("/system/fonts");
-
-				#else
-
-				result = SDL_strdup ("/usr/share/fonts/truetype");
-
-				#endif
-
 				break;
 
 			}
 
 			case USER: {
 
-				#if defined (ANDROID)
-				result = SDL_strdup ("/mnt/sdcard");
-				#else
 				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_HOME));
-				#endif
-
 				break;
 
 			}

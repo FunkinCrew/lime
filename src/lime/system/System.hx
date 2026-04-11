@@ -1,5 +1,6 @@
 package lime.system;
 
+import haxe.io.Path;
 import haxe.Constraints;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
@@ -744,7 +745,17 @@ class System
 	{
 		if (__fontsDirectory == null)
 		{
-			__fontsDirectory = __getDirectory(FONTS);
+			#if windows
+			__fontsDirectory = Path.join([Sys.getEnv("WINDIR"), "Fonts"]);
+			#elseif mac
+			__fontsDirectory = "/Library/Fonts";
+			#elseif (ios || tvos)
+			__fontsDirectory = "/System/Library/Fonts";
+			#elseif android
+			__fontsDirectory = "/system/fonts";
+			#elseif linux
+			__fontsDirecory = "/usr/share/fonts";
+			#end
 		}
 
 		return __fontsDirectory;
@@ -842,6 +853,5 @@ private enum abstract SystemDirectory(Int) from Int to Int from UInt to UInt
 	var APPLICATION_STORAGE = 1;
 	var DESKTOP = 2;
 	var DOCUMENTS = 3;
-	var FONTS = 4;
-	var USER = 5;
+	var USER = 4;
 }
