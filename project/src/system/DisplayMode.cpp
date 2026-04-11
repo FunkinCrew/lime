@@ -4,13 +4,6 @@
 namespace lime {
 
 
-	static int id_height;
-	static int id_pixelFormat;
-	static int id_refreshRate;
-	static int id_width;
-	static bool init = false;
-
-
 	DisplayMode::DisplayMode () {
 
 		width = 0;
@@ -23,10 +16,10 @@ namespace lime {
 
 	DisplayMode::DisplayMode (value displayMode) {
 
-		width = val_int (val_field (displayMode, id_width));
-		height = val_int (val_field (displayMode, id_height));
-		pixelFormat = (PixelFormat)val_int (val_field (displayMode, id_pixelFormat));
-		refreshRate = val_int (val_field (displayMode, id_refreshRate));
+		width = val_int (val_field (displayMode, val_id ("width")));
+		height = val_int (val_field (displayMode, val_id ("height")));
+		pixelFormat = (PixelFormat)val_int (val_field (displayMode, val_id ("pixelFormat")));
+		refreshRate = val_int (val_field (displayMode, val_id ("refreshRate")));
 
 	}
 
@@ -53,34 +46,12 @@ namespace lime {
 
 	void* DisplayMode::Value () {
 
-		// if (_mode) {
-
-		// 	_mode->height = height;
-		// 	_mode->pixelFormat = pixelFormat;
-		// 	_mode->refreshRate = refreshRate;
-		// 	_mode->width = width;
-		// 	return _mode;
-
-		// } else {
-
-			if (!init) {
-
-				id_height = val_id ("height");
-				id_pixelFormat = val_id ("pixelFormat");
-				id_refreshRate = val_id ("refreshRate");
-				id_width = val_id ("width");
-				init = true;
-
-			}
-
-			value displayMode = alloc_empty_object ();
-			alloc_field (displayMode, id_height, alloc_int (height));
-			alloc_field (displayMode, id_pixelFormat, alloc_int (pixelFormat));
-			alloc_field (displayMode, id_refreshRate, alloc_int (refreshRate));
-			alloc_field (displayMode, id_width, alloc_int (width));
-			return displayMode;
-
-		// }
+		value displayMode = alloc_empty_object ();
+		alloc_field (displayMode, val_id ("height"), alloc_int (height));
+		alloc_field (displayMode, val_id ("pixelFormat"), alloc_int (pixelFormat));
+		alloc_field (displayMode, val_id ("refreshRate"), alloc_int (refreshRate));
+		alloc_field (displayMode, val_id ("width"), alloc_int (width));
+		return displayMode;
 
 	}
 

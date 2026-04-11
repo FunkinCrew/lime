@@ -8,9 +8,6 @@ namespace lime {
 	ValuePointer* ClipboardEvent::callback = 0;
 	ValuePointer* ClipboardEvent::eventObject = 0;
 
-	static int id_type;
-	static bool init = false;
-
 
 	ClipboardEvent::ClipboardEvent () {
 
@@ -25,16 +22,9 @@ namespace lime {
 
 			if (ClipboardEvent::eventObject->IsCFFIValue ()) {
 
-				if (!init) {
-
-					id_type = val_id ("type");
-					init = true;
-
-				}
-
 				value object = (value)ClipboardEvent::eventObject->Get ();
 
-				alloc_field (object, id_type, alloc_int (event->type));
+				alloc_field (object, val_id ("type"), alloc_int (event->type));
 
 			} else {
 

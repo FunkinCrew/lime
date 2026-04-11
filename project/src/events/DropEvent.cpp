@@ -8,14 +8,6 @@ namespace lime {
 	ValuePointer* DropEvent::callback = 0;
 	ValuePointer* DropEvent::eventObject = 0;
 
-	static int id_data;
-	static int id_source;
-	static int id_windowID;
-	static double id_x;
-	static double id_y;
-	static int id_type;
-	static bool init = false;
-
 
 	DropEvent::DropEvent () {
 
@@ -35,28 +27,16 @@ namespace lime {
 
 			if (DropEvent::eventObject->IsCFFIValue ()) {
 
-				if (!init) {
-
-					id_data = val_id ("data");
-					id_source = val_id ("source");
-					id_windowID = val_id ("windowID");
-					id_x = val_id ("x");
-					id_y = val_id ("y");
-					id_type = val_id ("type");
-					init = true;
-
-				}
-
 				value object = (value)DropEvent::eventObject->Get ();
 
-				alloc_field (object, id_type, alloc_int (event->type));
-				alloc_field (object, id_windowID, alloc_int (event->windowID));
+				alloc_field (object, val_id ("type"), alloc_int (event->type));
+				alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
 
-				alloc_field (object, id_x, alloc_float (event->x));
-				alloc_field (object, id_y, alloc_float (event->y));
+				alloc_field (object, val_id ("x"), alloc_float (event->x));
+				alloc_field (object, val_id ("y"), alloc_float (event->y));
 
-				alloc_field (object, id_data, event->data ? alloc_string ((const char*)event->data) : alloc_null ());
-				alloc_field (object, id_source, event->source ? alloc_string ((const char*)event->source) : alloc_null ());
+				alloc_field (object, val_id ("data"), event->data ? alloc_string ((const char*)event->data) : alloc_null ());
+				alloc_field (object, val_id ("source"), event->source ? alloc_string ((const char*)event->source) : alloc_null ());
 
 			} else {
 

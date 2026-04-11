@@ -2458,13 +2458,11 @@ namespace lime {
 	value lime_curl_multi_info_read (value multi_handle) {
 
 		int msgs_in_queue;
+
 		CURLMsg* msg = curl_multi_info_read ((CURLM*)val_data (multi_handle), &msgs_in_queue);
 
 		if (msg) {
 
-			//const field val_id ("msg");
-			const field id_curl = val_id ("curl");
-			const field id_result = val_id ("result");
 
 			CURL* curl = msg->easy_handle;
 			value result = alloc_empty_object ();
@@ -2472,16 +2470,17 @@ namespace lime {
 			if (curlObjects.find (curl) != curlObjects.end ()) {
 
 				value handle = (value)curlObjects[curl];
-				alloc_field (result, id_curl, (value)curlMultiObjects[handle]->Get ());
+
+				alloc_field (result, val_id ("curl"), (value)curlMultiObjects[handle]->Get ());
 
 			} else {
 
-				// TODO?
-				alloc_field (result, id_curl, alloc_null ());
+				alloc_field (result, val_id ("curl"), alloc_null ());
 
 			}
 
-			alloc_field (result, id_result, alloc_int (msg->data.result));
+			alloc_field (result, val_id ("result"), alloc_int (msg->data.result));
+
 			return result;
 
 		} else {
@@ -2496,29 +2495,26 @@ namespace lime {
 	HL_PRIM vdynamic* HL_NAME(hl_curl_multi_info_read) (HL_CFFIPointer* multi_handle, vdynamic* result) {
 
 		int msgs_in_queue;
+
 		CURLMsg* msg = curl_multi_info_read ((CURLM*)multi_handle->ptr, &msgs_in_queue);
 
 		if (msg) {
-
-			//const field val_id ("msg");
-			const int id_curl = hl_hash_utf8 ("curl");
-			const int id_result = hl_hash_utf8 ("result");
 
 			CURL* curl = msg->easy_handle;
 
 			if (curlObjects.find (curl) != curlObjects.end ()) {
 
 				HL_CFFIPointer* handle = (HL_CFFIPointer*)curlObjects[curl];
-				hl_dyn_setp (result, id_curl, &hlt_dyn, (vdynamic*)curlMultiObjects[handle]->Get ());
+				hl_dyn_setp (result, hl_hash_utf8 ("curl"), &hlt_dyn, (vdynamic*)curlMultiObjects[handle]->Get ());
 
 			} else {
 
-				// TODO?
-				hl_dyn_setp (result, id_curl, &hlt_dyn, NULL);
+				hl_dyn_setp (result, hl_hash_utf8 ("curl"), &hlt_dyn, NULL);
 
 			}
 
-			hl_dyn_seti (result, id_result, &hlt_i32, msg->data.result);
+			hl_dyn_seti (result, hl_hash_utf8 ("result"), &hlt_i32, msg->data.result);
+
 			return result;
 
 		} else {

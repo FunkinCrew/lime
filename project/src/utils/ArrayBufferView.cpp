@@ -4,28 +4,13 @@
 namespace lime {
 
 
-	static int id_buffer;
-	static int id_byteLength;
-	static int id_length;
-	static bool init = false;
-
-
 	ArrayBufferView::ArrayBufferView (value arrayBufferView) {
-
-		if (!init) {
-
-			id_buffer = val_id ("buffer");
-			id_byteLength = val_id ("byteLength");
-			id_length = val_id ("length");
-			init = true;
-
-		}
 
 		if (!val_is_null (arrayBufferView)) {
 
-			buffer = new Bytes (val_field (arrayBufferView, id_buffer));
-			byteLength = val_int (val_field (arrayBufferView, id_byteLength));
-			length = val_int (val_field (arrayBufferView, id_length));
+			buffer = new Bytes (val_field (arrayBufferView, val_id ("buffer")));
+			byteLength = val_int (val_field (arrayBufferView, val_id ("byteLength")));
+			length = val_int (val_field (arrayBufferView, val_id ("length")));
 
 		} else {
 
@@ -86,18 +71,10 @@ namespace lime {
 
 	value ArrayBufferView::Value (value arrayBufferView) {
 
-		if (!init) {
+		alloc_field (arrayBufferView, val_id ("buffer"), buffer ? buffer->Value (val_field (arrayBufferView, val_id ("buffer"))) : alloc_null ());
+		alloc_field (arrayBufferView, val_id ("byteLength"), alloc_int (byteLength));
+		alloc_field (arrayBufferView, val_id ("length"), alloc_int (length));
 
-			id_buffer = val_id ("buffer");
-			id_byteLength = val_id ("byteLength");
-			id_length = val_id ("length");
-			init = true;
-
-		}
-
-		alloc_field (arrayBufferView, id_buffer, buffer ? buffer->Value (val_field (arrayBufferView, id_buffer)) : alloc_null ());
-		alloc_field (arrayBufferView, id_byteLength, alloc_int (byteLength));
-		alloc_field (arrayBufferView, id_length, alloc_int (length));
 		return arrayBufferView;
 
 	}

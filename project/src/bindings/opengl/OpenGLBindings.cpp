@@ -1907,14 +1907,11 @@ namespace lime {
 		memcpy (_buffer, &buffer, outLen);
 		_buffer[outLen] = '\0';
 
-		const int id_size = hl_hash_utf8 ("size");
-		const int id_type = hl_hash_utf8 ("type");
-		const int id_name = hl_hash_utf8 ("name");
-
 		vdynamic *result = (vdynamic*)hl_alloc_dynobj();
-		hl_dyn_seti (result, id_size, &hlt_i32, size);
-		hl_dyn_seti (result, id_type, &hlt_i32, type);
-		hl_dyn_setp (result, id_name, &hlt_bytes, _buffer);
+
+		hl_dyn_seti (result, hl_hash_utf8 ("size"), &hlt_i32, size);
+		hl_dyn_seti (result, hl_hash_utf8 ("type"), &hlt_i32, type);
+		hl_dyn_setp (result, hl_hash_utf8 ("name"), &hlt_bytes, _buffer);
 
 		return result;
 
@@ -1955,14 +1952,10 @@ namespace lime {
 		memcpy (_buffer, &buffer, outLen);
 		_buffer[outLen] = '\0';
 
-		const int id_size = hl_hash_utf8 ("size");
-		const int id_type = hl_hash_utf8 ("type");
-		const int id_name = hl_hash_utf8 ("name");
-
 		vdynamic *result = (vdynamic*)hl_alloc_dynobj();
-		hl_dyn_seti (result, id_size, &hlt_i32, size);
-		hl_dyn_seti (result, id_type, &hlt_i32, type);
-		hl_dyn_setp (result, id_name, &hlt_bytes, _buffer);
+		hl_dyn_seti (result, hl_hash_utf8 ("size"), &hlt_i32, size);
+		hl_dyn_seti (result, hl_hash_utf8 ("type"), &hlt_i32, type);
+		hl_dyn_setp (result, hl_hash_utf8 ("name"), &hlt_bytes, _buffer);
 
 		return result;
 
@@ -2249,18 +2242,12 @@ namespace lime {
 
 	HL_PRIM vdynamic* HL_NAME(hl_gl_get_context_attributes) () {
 
-		const int id_alpha = hl_hash_utf8 ("alpha");
-		const int id_depth = hl_hash_utf8 ("depth");
-		const int id_stencil = hl_hash_utf8 ("stencil");
-		const int id_antialias = hl_hash_utf8 ("antialias");
-
-		// TODO: Handle if depth and stencil are disabled
-
 		vdynamic *result = (vdynamic*)hl_alloc_dynobj();
-		hl_dyn_seti (result, id_alpha, &hlt_bool, true);
-		hl_dyn_seti (result, id_depth, &hlt_bool, true);
-		hl_dyn_seti (result, id_stencil, &hlt_bool, true);
-		hl_dyn_seti (result, id_antialias, &hlt_bool, true);
+
+		hl_dyn_seti (result, hl_hash_utf8 ("alpha"), &hlt_bool, true);
+		hl_dyn_seti (result, hl_hash_utf8 ("depth"), &hlt_bool, true);
+		hl_dyn_seti (result, hl_hash_utf8 ("stencil"), &hlt_bool, true);
+		hl_dyn_seti (result, hl_hash_utf8 ("antialias"), &hlt_bool, true);
 
 		return result;
 
@@ -2967,14 +2954,10 @@ namespace lime {
 
 		glGetShaderPrecisionFormat (shadertype, precisiontype, range, &precision);
 
-		const int id_rangeMin = hl_hash_utf8 ("rangeMin");
-		const int id_rangeMax = hl_hash_utf8 ("rangeMax");
-		const int id_precision = hl_hash_utf8 ("precision");
-
 		vdynamic *result = (vdynamic*)hl_alloc_dynobj();
-		hl_dyn_seti (result, id_rangeMin, &hlt_i32, range[0]);
-		hl_dyn_seti (result, id_rangeMax, &hlt_i32, range[1]);
-		hl_dyn_seti (result, id_precision, &hlt_i32, precision);
+		hl_dyn_seti (result, hl_hash_utf8 ("rangeMin"), &hlt_i32, range[0]);
+		hl_dyn_seti (result, hl_hash_utf8 ("rangeMax"), &hlt_i32, range[1]);
+		hl_dyn_seti (result, hl_hash_utf8 ("precision"), &hlt_i32, precision);
 		return result;
 
 	}
@@ -3245,15 +3228,10 @@ namespace lime {
 		memcpy (_buffer, &buffer, outLen);
 		_buffer[outLen] = '\0';
 
-		const int id_size = hl_hash_utf8 ("size");
-		const int id_type = hl_hash_utf8 ("type");
-		const int id_name = hl_hash_utf8 ("name");
-
 		vdynamic *result = (vdynamic*)hl_alloc_dynobj();
-		hl_dyn_seti (result, id_size, &hlt_i32, size);
-		hl_dyn_seti (result, id_type, &hlt_i32, type);
-		hl_dyn_setp (result, id_name, &hlt_bytes, _buffer);
-
+		hl_dyn_seti (result, hl_hash_utf8 ("size"), &hlt_i32, size);
+		hl_dyn_seti (result, hl_hash_utf8 ("type"), &hlt_i32, type);
+		hl_dyn_setp (result, hl_hash_utf8 ("name"), &hlt_bytes, _buffer);
 		return result;
 
 	}

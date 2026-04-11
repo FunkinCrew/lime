@@ -13,10 +13,6 @@
 namespace lime {
 
 
-	static int id_index;
-	static int id_x;
-	static int id_y;
-	static bool init = false;
 	cairo_user_data_key_t userData;
 	std::map<void*, void*> cairoObjects;
 	Mutex cairoObjects_Mutex;
@@ -2039,14 +2035,6 @@ namespace lime {
 
 	void lime_cairo_show_glyphs (value handle, value glyphs) {
 
-		if (!init) {
-
-			id_index = val_id ("index");
-			id_x = val_id ("x");
-			id_y = val_id ("y");
-
-		}
-
 		int length = val_array_size (glyphs);
 		cairo_glyph_t* _glyphs = cairo_glyph_allocate (length);
 
@@ -2055,9 +2043,9 @@ namespace lime {
 		for (int i = 0; i < length; i++) {
 
 			glyph = val_array_i (glyphs, i);
-			_glyphs[i].index = val_int (val_field (glyph, id_index));
-			_glyphs[i].x = val_number (val_field (glyph, id_x));
-			_glyphs[i].y = val_number (val_field (glyph, id_y));
+			_glyphs[i].index = val_int (val_field (glyph, val_id ("index")));
+			_glyphs[i].x = val_number (val_field (glyph, val_id ("x")));
+			_glyphs[i].y = val_number (val_field (glyph, val_id ("y")));
 
 		}
 
@@ -2068,10 +2056,6 @@ namespace lime {
 
 
 	HL_PRIM void HL_NAME(hl_cairo_show_glyphs) (HL_CFFIPointer* handle, varray* glyphs) {
-
-		const int id_index = hl_hash_utf8 ("index");
-		const int id_x = hl_hash_utf8 ("x");
-		const int id_y = hl_hash_utf8 ("y");
 
 		int length = glyphs->size;
 		HL_CairoGlyph** glyphData = hl_aptr (glyphs, HL_CairoGlyph*);

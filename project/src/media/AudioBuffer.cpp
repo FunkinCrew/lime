@@ -4,34 +4,15 @@
 namespace lime {
 
 
-	static int id_bitsPerSample;
-	static int id_channels;
-	static int id_data;
-	static int id_dataFormat;
-	static int id_sampleRate;
-	static bool init = false;
-
-
 	AudioBuffer::AudioBuffer (value audioBuffer) {
-
-		if (!init) {
-
-			id_bitsPerSample = val_id ("bitsPerSample");
-			id_channels = val_id ("channels");
-			id_data = val_id ("data");
-			id_dataFormat = val_id ("dataFormat");
-			id_sampleRate = val_id ("sampleRate");
-			init = true;
-
-		}
 
 		if (!val_is_null (audioBuffer)) {
 
-			bitsPerSample = val_int (val_field (audioBuffer, id_bitsPerSample));
-			channels = val_int (val_field (audioBuffer, id_channels));
-			data = new ArrayBufferView (val_field (audioBuffer, id_data));
-			dataFormat = val_int (val_field (audioBuffer, id_dataFormat));
-			sampleRate = val_int (val_field (audioBuffer, id_sampleRate));
+			bitsPerSample = val_int (val_field (audioBuffer, val_id ("bitsPerSample")));
+			channels = val_int (val_field (audioBuffer, val_id ("channels")));
+			data = new ArrayBufferView (val_field (audioBuffer, val_id ("data")));
+			dataFormat = val_int (val_field (audioBuffer, val_id ("dataFormat")));
+			sampleRate = val_int (val_field (audioBuffer, val_id ("sampleRate")));
 
 		} else {
 
@@ -68,22 +49,12 @@ namespace lime {
 
 	value AudioBuffer::Value (value audioBuffer) {
 
-		if (!init) {
+		alloc_field (audioBuffer, val_id ("bitsPerSample"), alloc_int (bitsPerSample));
+		alloc_field (audioBuffer, val_id ("channels"), alloc_int (channels));
+		alloc_field (audioBuffer, val_id ("data"), data ? data->Value (val_field (audioBuffer, val_id ("data"))) : alloc_null ());
+		alloc_field (audioBuffer, val_id ("dataFormat"), alloc_int (dataFormat));
+		alloc_field (audioBuffer, val_id ("sampleRate"), alloc_int (sampleRate));
 
-			id_bitsPerSample = val_id ("bitsPerSample");
-			id_channels = val_id ("channels");
-			id_data = val_id ("data");
-			id_dataFormat = val_id ("dataFormat");
-			id_sampleRate = val_id ("sampleRate");
-			init = true;
-
-		}
-
-		alloc_field (audioBuffer, id_bitsPerSample, alloc_int (bitsPerSample));
-		alloc_field (audioBuffer, id_channels, alloc_int (channels));
-		alloc_field (audioBuffer, id_data, data ? data->Value (val_field (audioBuffer, id_data)) : alloc_null ());
-		alloc_field (audioBuffer, id_dataFormat, alloc_int (dataFormat));
-		alloc_field (audioBuffer, id_sampleRate, alloc_int (sampleRate));
 		return audioBuffer;
 
 	}

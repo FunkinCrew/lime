@@ -8,16 +8,6 @@ namespace lime {
 	ValuePointer* MouseEvent::callback = 0;
 	ValuePointer* MouseEvent::eventObject = 0;
 
-	static int id_button;
-	static int id_movementX;
-	static int id_movementY;
-	static int id_type;
-	static int id_windowID;
-	static int id_x;
-	static int id_y;
-	static int id_clickCount;
-	static bool init = false;
-
 
 	MouseEvent::MouseEvent () {
 
@@ -39,38 +29,16 @@ namespace lime {
 
 			if (MouseEvent::eventObject->IsCFFIValue ()) {
 
-				if (!init) {
-
-					id_button = val_id ("button");
-					id_movementX = val_id ("movementX");
-					id_movementY = val_id ("movementY");
-					id_type = val_id ("type");
-					id_windowID = val_id ("windowID");
-					id_x = val_id ("x");
-					id_y = val_id ("y");
-					id_clickCount = val_id ("clickCount");
-					init = true;
-
-				}
-
 				value object = (value)MouseEvent::eventObject->Get ();
 
-				if (event->type != MOUSE_WHEEL) {
-
-					alloc_field (object, id_button, alloc_int (event->button));
-				}
-
-				if (event->type != MOUSE_WHEEL && event->type != MOUSE_MOVE) {
-
-					alloc_field (object, id_clickCount, alloc_int (event->clickCount));
-				}
-
-				alloc_field (object, id_movementX, alloc_float (event->movementX));
-				alloc_field (object, id_movementY, alloc_float (event->movementY));
-				alloc_field (object, id_type, alloc_int (event->type));
-				alloc_field (object, id_windowID, alloc_int (event->windowID));
-				alloc_field (object, id_x, alloc_float (event->x));
-				alloc_field (object, id_y, alloc_float (event->y));
+				alloc_field (object, val_id ("button"), alloc_int (event->button));
+				alloc_field (object, val_id ("movementX"), alloc_float (event->movementX));
+				alloc_field (object, val_id ("movementY"), alloc_float (event->movementY));
+				alloc_field (object, val_id ("type"), alloc_int (event->type));
+				alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
+				alloc_field (object, val_id ("x"), alloc_float (event->x));
+				alloc_field (object, val_id ("y"), alloc_float (event->y));
+				alloc_field (object, val_id ("clickCount"), alloc_int (event->clickCount));
 
 			} else {
 

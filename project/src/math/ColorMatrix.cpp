@@ -5,10 +5,6 @@
 namespace lime {
 
 
-	static int id_buffer;
-	static bool init = false;
-
-
 	ColorMatrix::ColorMatrix () {
 
 		for (int i = 0; i < 20; i++) {
@@ -30,14 +26,7 @@ namespace lime {
 
 	ColorMatrix::ColorMatrix (value colorMatrix) {
 
-		if (!init) {
-
-			id_buffer = val_id ("buffer");
-			init = true;
-
-		}
-
-		value buffer_value = val_field (colorMatrix, id_buffer);
+		value buffer_value = val_field (colorMatrix, val_id ("buffer"));
 		Bytes bytes;
 		bytes.Set (buffer_value);
 		float* src = (float*)bytes.b;

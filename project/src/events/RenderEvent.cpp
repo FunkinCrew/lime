@@ -8,9 +8,6 @@ namespace lime {
 	ValuePointer* RenderEvent::callback = 0;
 	ValuePointer* RenderEvent::eventObject = 0;
 
-	static int id_type;
-	static bool init = false;
-
 
 	RenderEvent::RenderEvent () {
 
@@ -25,15 +22,9 @@ namespace lime {
 
 			if (RenderEvent::eventObject->IsCFFIValue ()) {
 
-				if (!init) {
-
-					id_type = val_id ("type");
-
-				}
-
 				value object = (value)RenderEvent::eventObject->Get ();
 
-				alloc_field (object, id_type, alloc_int (event->type));
+				alloc_field (object, val_id ("type"), alloc_int (event->type));
 
 			} else {
 

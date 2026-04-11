@@ -272,60 +272,6 @@ namespace {
 namespace lime {
 
 
-	static int id_buffer;
-	static int id_charCode;
-	static int id_codepoint;
-	static int id_height;
-	static int id_index;
-	static int id_horizontalAdvance;
-	static int id_horizontalBearingX;
-	static int id_horizontalBearingY;
-	static int id_image;
-	static int id_offset;
-	static int id_offsetX;
-	static int id_offsetY;
-	static int id_size;
-	static int id_verticalAdvance;
-	static int id_verticalBearingX;
-	static int id_verticalBearingY;
-	static int id_width;
-	static int id_x;
-	static int id_y;
-	static bool init = false;
-
-
-	static void initialize () {
-
-		if (!init) {
-
-			id_width = val_id ("width");
-			id_height = val_id ("height");
-			id_x = val_id ("x");
-			id_y = val_id ("y");
-			id_offset = val_id ("offset");
-			id_size = val_id ("size");
-			id_codepoint = val_id ("codepoint");
-
-			id_buffer = val_id ("buffer");
-			id_charCode = val_id ("charCode");
-			id_horizontalAdvance = val_id ("horizontalAdvance");
-			id_horizontalBearingX = val_id ("horizontalBearingX");
-			id_horizontalBearingY = val_id ("horizontalBearingY");
-			id_image = val_id ("image");
-			id_index = val_id ("index");
-			id_offsetX = val_id ("offsetX");
-			id_offsetY = val_id ("offsetY");
-			id_verticalAdvance = val_id ("verticalAdvance");
-			id_verticalBearingX = val_id ("verticalBearingX");
-			id_verticalBearingY = val_id ("verticalBearingY");
-
-			init = true;
-
-		}
-
-	}
-
-
 	Font::Font (Resource *resource, int faceIndex) {
 
 		this->library = 0;
@@ -1094,19 +1040,17 @@ namespace lime {
 
 		if (useCFFIValue) {
 
-			initialize ();
-
 			if (FT_Load_Glyph ((FT_Face)face, index, FT_LOAD_NO_BITMAP | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0) {
 
 				value metrics = alloc_empty_object ();
 
-				alloc_field (metrics, id_height, alloc_int (((FT_Face)face)->glyph->metrics.height));
-				alloc_field (metrics, id_horizontalBearingX, alloc_int (((FT_Face)face)->glyph->metrics.horiBearingX));
-				alloc_field (metrics, id_horizontalBearingY, alloc_int (((FT_Face)face)->glyph->metrics.horiBearingY));
-				alloc_field (metrics, id_horizontalAdvance, alloc_int (((FT_Face)face)->glyph->metrics.horiAdvance));
-				alloc_field (metrics, id_verticalBearingX, alloc_int (((FT_Face)face)->glyph->metrics.vertBearingX));
-				alloc_field (metrics, id_verticalBearingY, alloc_int (((FT_Face)face)->glyph->metrics.vertBearingY));
-				alloc_field (metrics, id_verticalAdvance, alloc_int (((FT_Face)face)->glyph->metrics.vertAdvance));
+				alloc_field (metrics, val_id ("height"), alloc_int (((FT_Face)face)->glyph->metrics.height));
+				alloc_field (metrics, val_id ("horizontalBearingX"), alloc_int (((FT_Face)face)->glyph->metrics.horiBearingX));
+				alloc_field (metrics, val_id ("horizontalBearingY"), alloc_int (((FT_Face)face)->glyph->metrics.horiBearingY));
+				alloc_field (metrics, val_id ("horizontalAdvance"), alloc_int (((FT_Face)face)->glyph->metrics.horiAdvance));
+				alloc_field (metrics, val_id ("verticalBearingX"), alloc_int (((FT_Face)face)->glyph->metrics.vertBearingX));
+				alloc_field (metrics, val_id ("verticalBearingY"), alloc_int (((FT_Face)face)->glyph->metrics.vertBearingY));
+				alloc_field (metrics, val_id ("verticalAdvance"), alloc_int (((FT_Face)face)->glyph->metrics.vertAdvance));
 
 				return metrics;
 
@@ -1118,23 +1062,15 @@ namespace lime {
 
 			if (FT_Load_Glyph ((FT_Face)face, index, FT_LOAD_NO_BITMAP | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0) {
 
-				const int id_height = hl_hash_utf8 ("height");
-				const int id_horizontalBearingX = hl_hash_utf8 ("horizontalBearingX");
-				const int id_horizontalBearingY = hl_hash_utf8 ("horizontalBearingY");
-				const int id_horizontalAdvance = hl_hash_utf8 ("horizontalAdvance");
-				const int id_verticalBearingX = hl_hash_utf8 ("verticalBearingX");
-				const int id_verticalBearingY = hl_hash_utf8 ("verticalBearingY");
-				const int id_verticalAdvance = hl_hash_utf8 ("verticalAdvance");
-
 				vdynamic* metrics = (vdynamic*)hl_alloc_dynobj ();
 
-				hl_dyn_seti (metrics, id_height, &hlt_i32, ((FT_Face)face)->glyph->metrics.height);
-				hl_dyn_seti (metrics, id_horizontalBearingX, &hlt_i32, ((FT_Face)face)->glyph->metrics.horiBearingX);
-				hl_dyn_seti (metrics, id_horizontalBearingY, &hlt_i32, ((FT_Face)face)->glyph->metrics.horiBearingY);
-				hl_dyn_seti (metrics, id_horizontalAdvance, &hlt_i32, ((FT_Face)face)->glyph->metrics.horiAdvance);
-				hl_dyn_seti (metrics, id_verticalBearingX, &hlt_i32, ((FT_Face)face)->glyph->metrics.vertBearingX);
-				hl_dyn_seti (metrics, id_verticalBearingY, &hlt_i32, ((FT_Face)face)->glyph->metrics.vertBearingY);
-				hl_dyn_seti (metrics, id_verticalAdvance, &hlt_i32, ((FT_Face)face)->glyph->metrics.vertAdvance);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("height"), &hlt_i32, ((FT_Face)face)->glyph->metrics.height);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("horizontalBearingX"), &hlt_i32, ((FT_Face)face)->glyph->metrics.horiBearingX);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("horizontalBearingY"), &hlt_i32, ((FT_Face)face)->glyph->metrics.horiBearingY);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("horizontalAdvance"), &hlt_i32, ((FT_Face)face)->glyph->metrics.horiAdvance);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("verticalBearingX"), &hlt_i32, ((FT_Face)face)->glyph->metrics.vertBearingX);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("verticalBearingY"), &hlt_i32, ((FT_Face)face)->glyph->metrics.vertBearingY);
+				hl_dyn_seti (metrics, hl_hash_utf8 ("verticalAdvance"), &hlt_i32, ((FT_Face)face)->glyph->metrics.vertAdvance);
 
 				return metrics;
 

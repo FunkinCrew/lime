@@ -609,15 +609,7 @@ namespace lime {
 
 		}
 
-		static int id__jobject = -1;
-
-		if (id__jobject < 0) {
-
-			id__jobject = val_id ("__jobject");
-
-		}
-
-		value jobj = val_field (inValue, id__jobject);
+		value jobj = val_field (inValue, val_id ("__jobject"));
 
 		if (val_is_null (jobj)) {
 

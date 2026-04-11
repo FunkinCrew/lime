@@ -8,13 +8,6 @@ namespace lime {
 	ValuePointer* SensorEvent::callback = 0;
 	ValuePointer* SensorEvent::eventObject = 0;
 
-	static int id_id;
-	static int id_type;
-	static double id_x;
-	static double id_y;
-	static double id_z;
-	static bool init = false;
-
 
 	SensorEvent::SensorEvent () {
 
@@ -33,24 +26,13 @@ namespace lime {
 
 			if (SensorEvent::eventObject->IsCFFIValue ()) {
 
-				if (!init) {
-
-					id_id = val_id ("id");
-					id_type = val_id ("type");
-					id_x = val_id ("x");
-					id_y = val_id ("y");
-					id_z = val_id ("z");
-					init = true;
-
-				}
-
 				value object = (value)SensorEvent::eventObject->Get ();
 
-				alloc_field (object, id_id, alloc_int (event->id));
-				alloc_field (object, id_type, alloc_int (event->type));
-				alloc_field (object, id_x, alloc_float (event->x));
-				alloc_field (object, id_y, alloc_float (event->y));
-				alloc_field (object, id_z, alloc_float (event->z));
+				alloc_field (object, val_id ("id"), alloc_int (event->id));
+				alloc_field (object, val_id ("type"), alloc_int (event->type));
+				alloc_field (object, val_id ("x"), alloc_float (event->x));
+				alloc_field (object, val_id ("y"), alloc_float (event->y));
+				alloc_field (object, val_id ("z"), alloc_float (event->z));
 
 			} else {
 

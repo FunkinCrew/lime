@@ -4,13 +4,6 @@
 namespace lime {
 
 
-	static int id_height;
-	static int id_width;
-	static int id_x;
-	static int id_y;
-	static bool init = false;
-
-
 	Rectangle::Rectangle () {
 
 		t = 0;
@@ -31,20 +24,10 @@ namespace lime {
 
 	Rectangle::Rectangle (value rect) {
 
-		if (!init) {
-
-			id_height = val_id ("height");
-			id_width = val_id ("width");
-			id_x = val_id ("x");
-			id_y = val_id ("y");
-			init = true;
-
-		}
-
-		width = val_number (val_field (rect, id_width));
-		height = val_number (val_field (rect, id_height));
-		x = val_number (val_field (rect, id_x));
-		y = val_number (val_field (rect, id_y));
+		width = val_number (val_field (rect, val_id ("width")));
+		height = val_number (val_field (rect, val_id ("height")));
+		x = val_number (val_field (rect, val_id ("x")));
+		y = val_number (val_field (rect, val_id ("y")));
 
 	}
 
@@ -87,20 +70,11 @@ namespace lime {
 
 	value Rectangle::Value (value rect) {
 
-		if (!init) {
+		alloc_field (rect, val_id ("height"), alloc_float (height));
+		alloc_field (rect, val_id ("width"), alloc_float (width));
+		alloc_field (rect, val_id ("x"), alloc_float (x));
+		alloc_field (rect, val_id ("y"), alloc_float (y));
 
-			id_height = val_id ("height");
-			id_width = val_id ("width");
-			id_x = val_id ("x");
-			id_y = val_id ("y");
-			init = true;
-
-		}
-
-		alloc_field (rect, id_height, alloc_float (height));
-		alloc_field (rect, id_width, alloc_float (width));
-		alloc_field (rect, id_x, alloc_float (x));
-		alloc_field (rect, id_y, alloc_float (y));
 		return rect;
 
 	}
