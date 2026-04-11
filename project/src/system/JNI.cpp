@@ -20,6 +20,17 @@
 namespace lime {
 
 
+	void *JNI::GetEnv () {
+
+		#ifdef ANDROID
+		return SDL_GetAndroidJNIEnv ();
+		#else
+		return 0;
+		#endif
+
+	}
+
+
 	vkind gObjectKind;
 
 

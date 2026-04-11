@@ -2679,7 +2679,6 @@ namespace lime {
 
 		OrientationEvent::callback = new ValuePointer (callback);
 		OrientationEvent::eventObject = new ValuePointer (eventObject);
-		System::EnableDeviceOrientationChange(true);
 
 	}
 
@@ -2810,6 +2809,7 @@ namespace lime {
 
 	value lime_system_get_device_model () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* model = System::GetDeviceModel ();
 
 		if (model) {
@@ -2818,17 +2818,17 @@ namespace lime {
 			free (model);
 			return result;
 
-		} else {
-
-			return alloc_null ();
-
 		}
+		#endif
+
+		return alloc_null ();
 
 	}
 
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_model) () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* model = System::GetDeviceModel ();
 
 		if (model) {
@@ -2839,6 +2839,7 @@ namespace lime {
 			return result;
 
 		}
+		#endif
 
 		return 0;
 
@@ -2847,6 +2848,7 @@ namespace lime {
 
 	value lime_system_get_device_vendor () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
@@ -2855,17 +2857,17 @@ namespace lime {
 			free (vendor);
 			return result;
 
-		} else {
-
-			return alloc_null ();
-
 		}
+		#endif
+
+		return alloc_null ();
 
 	}
 
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_vendor) () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
@@ -2876,6 +2878,7 @@ namespace lime {
 			return result;
 
 		}
+		#endif
 
 		return 0;
 
@@ -2945,20 +2948,6 @@ namespace lime {
 	}
 
 
-	int lime_system_get_device_orientation () {
-
-		return System::GetDeviceOrientation();
-
-	}
-
-
-	HL_PRIM int HL_NAME(hl_system_get_device_orientation) () {
-
-		return System::GetDeviceOrientation();
-
-	}
-
-
 	int lime_system_get_first_gyroscope_sensor_id () {
 
 		return System::GetFirstGyroscopeSensorId ();
@@ -2989,6 +2978,7 @@ namespace lime {
 
 	value lime_system_get_platform_label () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* label = System::GetPlatformLabel ();
 
 		if (label) {
@@ -2997,17 +2987,17 @@ namespace lime {
 			free (label);
 			return result;
 
-		} else {
-
-			return alloc_null ();
-
 		}
+		#endif
+
+		return alloc_null ();
 
 	}
 
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_label) () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* label = System::GetPlatformLabel ();
 
 		if (label) {
@@ -3018,6 +3008,7 @@ namespace lime {
 			return result;
 
 		}
+		#endif
 
 		return 0;
 
@@ -3026,6 +3017,7 @@ namespace lime {
 
 	value lime_system_get_platform_name () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* name = System::GetPlatformName ();
 
 		if (name) {
@@ -3034,17 +3026,17 @@ namespace lime {
 			free (name);
 			return result;
 
-		} else {
-
-			return alloc_null ();
-
 		}
+		#endif
+
+		return alloc_null ();
 
 	}
 
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_name) () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* name = System::GetPlatformName ();
 
 		if (name) {
@@ -3055,6 +3047,7 @@ namespace lime {
 			return result;
 
 		}
+		#endif
 
 		return 0;
 
@@ -3063,6 +3056,7 @@ namespace lime {
 
 	value lime_system_get_platform_version () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* version = System::GetPlatformVersion ();
 
 		if (version) {
@@ -3071,17 +3065,17 @@ namespace lime {
 			free (version);
 			return result;
 
-		} else {
-
-			return alloc_null ();
-
 		}
+		#endif
+
+		return alloc_null ();
 
 	}
 
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_version) () {
 
+		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 		char* version = System::GetPlatformVersion ();
 
 		if (version) {
@@ -3092,6 +3086,7 @@ namespace lime {
 			return result;
 
 		}
+		#endif
 
 		return 0;
 
@@ -4197,7 +4192,6 @@ namespace lime {
 	DEFINE_PRIME3 (lime_system_get_directory);
 	DEFINE_PRIME1 (lime_system_get_display);
 	DEFINE_PRIME0 (lime_system_get_num_displays);
-	DEFINE_PRIME0 (lime_system_get_device_orientation);
 	DEFINE_PRIME0 (lime_system_get_first_gyroscope_sensor_id);
 	DEFINE_PRIME0 (lime_system_get_first_accelerometer_sensor_id);
 	DEFINE_PRIME0 (lime_system_get_platform_label);
@@ -4396,7 +4390,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_directory, _I32 _STRING _STRING);
 	DEFINE_HL_PRIM (_DYN, hl_system_get_display, _I32);
 	DEFINE_HL_PRIM (_I32, hl_system_get_num_displays, _NO_ARG);
-	DEFINE_HL_PRIM (_I32, hl_system_get_device_orientation, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_first_gyroscope_sensor_id, _NO_ARG);
 	DEFINE_HL_PRIM (_I32, hl_system_get_first_accelerometer_sensor_id, _NO_ARG);
 	DEFINE_HL_PRIM (_BYTES, hl_system_get_platform_label, _NO_ARG);

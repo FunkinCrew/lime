@@ -27,33 +27,41 @@ namespace lime {
 
 			static void GCEnterBlocking ();
 			static void GCExitBlocking ();
+
 			static void GCTryEnterBlocking ();
 			static void GCTryExitBlocking ();
-			static bool GetAllowScreenTimeout ();
+
+			#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 			static char* GetDeviceModel ();
 			static char* GetDeviceVendor ();
-			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
-			static void* GetDisplay (bool useCFFIValue, int id);
-			static int GetFirstGyroscopeSensorId ();
-			static int GetFirstAccelerometerSensorId ();
-			static int GetNumDisplays ();
-			static int GetDeviceOrientation ();
 			static char* GetPlatformLabel ();
 			static char* GetPlatformName ();
 			static char* GetPlatformVersion ();
-			static double GetTimer ();
-			#if defined(HX_WINDOWS)
-			static int GetWindowsConsoleMode (int handleType);
 			#endif
+
+			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
+
+			static int GetNumDisplays ();
+			static void* GetDisplay (bool useCFFIValue, int id);
+
+			static int GetFirstGyroscopeSensorId ();
+			static int GetFirstAccelerometerSensorId ();
+
+			static double GetTimer ();
+
 			static void OpenFile (const char* path);
 			static void OpenURL (const char* url, const char* target);
+
 			static const char* GetHint (const char* key);
 			static void SetHint (const char* key, const char* value);
+
+			static bool GetAllowScreenTimeout ();
 			static bool SetAllowScreenTimeout (bool allow);
+
 			#if defined(HX_WINDOWS)
+			static int GetWindowsConsoleMode (int handleType);
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif
-			static void EnableDeviceOrientationChange(bool enable);
 
 		private:
 

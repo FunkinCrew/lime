@@ -215,7 +215,6 @@
 			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
 			<file name="src/backend/sdl/SDLApplication.cpp" />
-			<file name="src/backend/sdl/SDLSystem.cpp" />
 			<file name="src/backend/sdl/SDLWindow.cpp" />
 
 		</section>
@@ -269,13 +268,15 @@
 		<file name="src/media/containers/WAV.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
+		<file name="src/system/Clipboard.cpp" />
 		<file name="src/system/DisplayMode.cpp" />
 		<file name="src/system/JNI.cpp" if="android" />
 		<file name="src/system/Locale.cpp" unless="mac || ios" />
 		<file name="src/system/Locale.mm" if="mac || ios" />
 		<file name="src/system/Mutex.cpp" />
-		<file name="src/system/System.cpp" unless="ios" />
-		<file name="src/system/System.mm" if="ios" />
+		<file name="src/system/System.cpp" />
+		<file name="src/system/windows/System.cpp" if="windows" />
+		<file name="src/system/ios/System.mm" if="ios || tvos" />
 		<file name="src/system/ValuePointer.cpp" />
 		<file name="src/ui/Cursor.cpp" />
 		<file name="src/ui/FileDialog.cpp" />

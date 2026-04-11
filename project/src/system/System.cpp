@@ -1,13 +1,14 @@
-#ifdef HX_WINDOWS
-#define _WIN32_DCOM
-#include <iostream>
-#include <wbemidl.h>
-#include <comutil.h>
-#pragma comment(lib, "wbemuuid.lib")
-#include <windows.h>
-#endif
-
+#include <graphics/PixelFormat.h>
+#include <math/Rectangle.h>
+#include <system/DisplayMode.h>
+#include <system/JNI.h>
 #include <system/System.h>
+
+#include <SDL3/SDL.h>
+
+#include <string>
+#include <locale>
+#include <codecvt>
 
 
 namespace lime {
@@ -19,6 +20,19 @@ namespace lime {
 	bool System::_isHL = false;
 	#endif
 
+
+	static int id_bounds;
+	static int id_currentMode;
+	static int id_dpi;
+	static int id_height;
+	static int id_name;
+	static int id_orientation;
+	static int id_pixelFormat;
+	static int id_refreshRate;
+	static int id_supportedModes;
+	static int id_width;
+	static int id_safeArea;
+	static bool init = false;
 
 	void System::GCEnterBlocking () {
 
@@ -46,8 +60,7 @@ namespace lime {
 
 		if (!_isHL) {
 
-			// TODO: Only supported in HXCPP 4.3
-			// gc_try_blocking ();
+			gc_try_blocking ();
 
 		}
 
@@ -58,185 +71,610 @@ namespace lime {
 
 		if (!_isHL) {
 
-			// TODO: Only supported in HXCPP 4.3
-			//gc_try_unblocking ();
+			gc_try_unblocking ();
 
 		}
 
 	}
 
 
-	#if defined (HX_WINDOWS)
-	char* GetWMIValue (BSTR query, BSTR field) {
+	bool System::GetAllowScreenTimeout () {
 
-		HRESULT hres = 0;
-		IWbemLocator *pLoc = NULL;
-		IWbemServices *pSvc = NULL;
-		IEnumWbemClassObject* pEnumerator = NULL;
-		IWbemClassObject *pclsObj = NULL;
-		ULONG uReturn = 0;
-		char* result = NULL;
+		return SDL_ScreenSaverEnabled ();
 
-		hres = CoCreateInstance (CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *) &pLoc);
+	}
 
-		if (FAILED (hres)) {
 
-			return NULL;
+	bool System::SetAllowScreenTimeout (bool allow) {
 
-		}
+		if (allow) {
 
-		hres = pLoc->ConnectServer (_bstr_t (L"ROOT\\CIMV2"), NULL, NULL, 0, NULL, 0, 0, &pSvc);
+			SDL_EnableScreenSaver ();
 
-		if (FAILED (hres)) {
+		} else {
 
-			pLoc->Release ();
-			return NULL;
+			SDL_DisableScreenSaver ();
 
 		}
 
-		hres = CoSetProxyBlanket (pSvc, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
+		return allow;
 
-		if (FAILED (hres)) {
+	}
 
-			pSvc->Release ();
-			pLoc->Release ();
-			return NULL;
 
-		}
+	char* System::GetDirectory (SystemDirectory type, const char* company, const char* title) {
 
-		hres = pSvc->ExecQuery (bstr_t (L"WQL"), query, WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, NULL, &pEnumerator);
+		char* result = nullptr;
 
-		if (FAILED (hres)) {
+		System::GCEnterBlocking ();
 
-			pSvc->Release ();
-			pLoc->Release ();
-			return NULL;
+		switch (type) {
 
-		}
+			case APPLICATION: {
 
-		while (pEnumerator) {
-
-			HRESULT hr = pEnumerator->Next (WBEM_INFINITE, 1, &pclsObj, &uReturn);
-
-			if (uReturn == 0) {
-
+				result = SDL_strdup (SDL_GetBasePath ());
 				break;
 
 			}
 
-			VARIANT vtProp;
-			hr = pclsObj->Get (field, 0, &vtProp, 0, 0);
-			int len = WideCharToMultiByte (CP_UTF8, 0, vtProp.bstrVal, -1, NULL, 0, NULL, NULL);
-			result = (char*)malloc(len);
-			WideCharToMultiByte (CP_UTF8, 0, vtProp.bstrVal, -1, result, len, NULL, NULL);
-			VariantClear (&vtProp);
-			pclsObj->Release ();
+			case APPLICATION_STORAGE: {
+
+				result = SDL_GetPrefPath (company, title);
+				break;
+
+			}
+
+			case DESKTOP: {
+
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DESKTOP));
+				break;
+
+			}
+
+			case DOCUMENTS: {
+
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_DOCUMENTS));
+				break;
+
+			}
+
+			case USER: {
+
+				result = SDL_strdup (SDL_GetUserFolder (SDL_FOLDER_HOME));
+				break;
+
+			}
 
 		}
 
-		pSvc->Release ();
-		pLoc->Release ();
-		pEnumerator->Release ();
+		System::GCExitBlocking ();
 
 		return result;
-	}
-	#endif
-
-
-	char* System::GetDeviceModel () {
-
-		#if defined (HX_WINDOWS)
-		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_ComputerSystemProduct"), _bstr_t(L"Version"));
-		#else
-		return NULL;
-		#endif
 
 	}
 
 
-	char* System::GetDeviceVendor () {
+	int System::GetNumDisplays () {
 
-		#if defined (HX_WINDOWS)
-		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_ComputerSystemProduct"), _bstr_t(L"Vendor"));
-		#else
-		return NULL;
-		#endif
+		int numDisplays;
 
-	}
+		SDL_DisplayID *displays = SDL_GetDisplays (&numDisplays);
 
+		SDL_free (displays);
 
-	char* System::GetPlatformLabel () {
-
-		#if defined (HX_WINDOWS)
-		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_OperatingSystem"), _bstr_t(L"Caption"));
-		#else
-		return NULL;
-		#endif
+		return numDisplays;
 
 	}
 
+	void* System::GetDisplay (bool useCFFIValue, int id) {
 
-	char* System::GetPlatformName () {
+		if (id == 0)
+			id = SDL_GetPrimaryDisplay();
 
-		return NULL;
+		if (useCFFIValue) {
 
-	}
+			if (!init) {
 
+				id_bounds = val_id ("bounds");
+				id_currentMode = val_id ("currentMode");
+				id_dpi = val_id ("dpi");
+				id_height = val_id ("height");
+				id_name = val_id ("name");
+				id_orientation = val_id ("orientation");
+				id_pixelFormat = val_id ("pixelFormat");
+				id_refreshRate = val_id ("refreshRate");
+				id_supportedModes = val_id ("supportedModes");
+				id_width = val_id ("width");
+				id_safeArea = val_id ("safeArea");
+				init = true;
 
-	char* System::GetPlatformVersion () {
+			}
 
-		#if defined (HX_WINDOWS)
-		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_OperatingSystem"), _bstr_t(L"Version"));
-		#else
-		return NULL;
-		#endif
+			const char* displayName = SDL_GetDisplayName (id);
+			if (displayName == NULL) {
 
-	}
+				return alloc_null ();
 
+			}
 
-	#if defined (HX_WINDOWS)
-	int System::GetWindowsConsoleMode (int handleType) {
+			value display = alloc_empty_object ();
+			alloc_field (display, id_name, alloc_string (displayName));
 
-		DWORD mode = 0;
+			SDL_Rect bounds = { 0, 0, 0, 0 };
+			SDL_GetDisplayBounds (id, &bounds);
+			alloc_field (display, id_bounds, Rectangle (bounds.x, bounds.y, bounds.w, bounds.h).Value ());
 
-		HANDLE handle = GetStdHandle ((DWORD)handleType);
+			SDL_Rect usable = { 0, 0, 0, 0 };
+			SDL_GetDisplayUsableBounds(id, &usable);
+			alloc_field(display, id_safeArea, Rectangle (usable.x, usable.y, usable.w, usable.h).Value ());
 
-		if (handle) {
+			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
 
-			GetConsoleMode (handle, &mode);
+			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
+
+			float contentScale = SDL_GetDisplayContentScale (id);
+
+			if (contentScale == 0.0f) {
+
+				contentScale = 1.0f;
+
+			}
+
+			#if defined (ANDROID) || defined (__IPHONEOS__)
+			float dpi = pixelDensity * contentScale * 160.0f;
+			#else
+			float dpi = pixelDensity * contentScale * 96.0f;
+			#endif
+
+			alloc_field (display, id_dpi, alloc_float (dpi));
+
+			alloc_field (display, id_orientation, alloc_int ((int) SDL_GetCurrentDisplayOrientation (id)));
+
+			DisplayMode mode;
+
+			mode.height = displayMode->h;
+
+			switch (displayMode->format) {
+
+				case SDL_PIXELFORMAT_ARGB8888:
+
+					mode.pixelFormat = ARGB32;
+					break;
+
+				case SDL_PIXELFORMAT_BGRA8888:
+				case SDL_PIXELFORMAT_BGRX8888:
+
+					mode.pixelFormat = BGRA32;
+					break;
+
+				default:
+
+					mode.pixelFormat = RGBA32;
+
+			}
+
+			mode.refreshRate = displayMode->refresh_rate;
+			mode.width = displayMode->w;
+
+			alloc_field (display, id_currentMode, (value)mode.Value ());
+
+			int numDisplayModes;
+			SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes (id, &numDisplayModes);
+			value supportedModes = alloc_array (numDisplayModes);
+
+			for (int i = 0; i < numDisplayModes; i++) {
+
+				const SDL_DisplayMode *sdlDisplayMode = displayModes[i];
+
+				mode.height = sdlDisplayMode->h;
+
+				switch (sdlDisplayMode->format) {
+
+					case SDL_PIXELFORMAT_ARGB8888:
+
+						mode.pixelFormat = ARGB32;
+						break;
+
+					case SDL_PIXELFORMAT_BGRA8888:
+					case SDL_PIXELFORMAT_BGRX8888:
+
+						mode.pixelFormat = BGRA32;
+						break;
+
+					default:
+
+						mode.pixelFormat = RGBA32;
+
+				}
+
+				mode.refreshRate = sdlDisplayMode->refresh_rate;
+				mode.width = sdlDisplayMode->w;
+
+				val_array_set_i (supportedModes, i, (value)mode.Value ());
+
+			}
+
+			alloc_field (display, id_supportedModes, supportedModes);
+			return display;
+
+		} else {
+
+			const int id_bounds = hl_hash_utf8 ("bounds");
+			const int id_currentMode = hl_hash_utf8 ("currentMode");
+			const int id_dpi = hl_hash_utf8 ("dpi");
+			const int id_height = hl_hash_utf8 ("height");
+			const int id_name = hl_hash_utf8 ("name");
+			const int id_orientation = hl_hash_utf8 ("orientation");
+			const int id_pixelFormat = hl_hash_utf8 ("pixelFormat");
+			const int id_refreshRate = hl_hash_utf8 ("refreshRate");
+			const int id_supportedModes = hl_hash_utf8 ("supportedModes");
+			const int id_width = hl_hash_utf8 ("width");
+			const int id_safeArea = hl_hash_utf8 ("safeArea");
+			const int id_x = hl_hash_utf8 ("x");
+			const int id_y = hl_hash_utf8 ("y");
+
+			const char* displayName = SDL_GetDisplayName (id);
+			if (displayName == NULL) {
+
+				return 0;
+
+			}
+
+			vdynamic* display = (vdynamic*)hl_alloc_dynobj ();
+
+			char* _displayName = (char*)malloc(strlen(displayName) + 1);
+			strcpy (_displayName, displayName);
+			hl_dyn_setp (display, id_name, &hlt_bytes, _displayName);
+
+			SDL_Rect bounds = { 0, 0, 0, 0 };
+			SDL_GetDisplayBounds (id, &bounds);
+
+			vdynamic* _bounds = (vdynamic*)hl_alloc_dynobj ();
+			hl_dyn_seti (_bounds, id_x, &hlt_i32, bounds.x);
+			hl_dyn_seti (_bounds, id_y, &hlt_i32, bounds.y);
+			hl_dyn_seti (_bounds, id_width, &hlt_i32, bounds.w);
+			hl_dyn_seti (_bounds, id_height, &hlt_i32, bounds.h);
+
+			hl_dyn_setp (display, id_bounds, &hlt_dynobj, _bounds);
+
+			SDL_Rect usable = { 0, 0, 0, 0 };
+			SDL_GetDisplayUsableBounds(id, &usable);
+
+			vdynamic* _usable = (vdynamic*)hl_alloc_dynobj ();
+			hl_dyn_seti (_usable, id_x, &hlt_i32, usable.x);
+			hl_dyn_seti (_usable, id_y, &hlt_i32, usable.y);
+			hl_dyn_seti (_usable, id_width, &hlt_i32, usable.w);
+			hl_dyn_seti (_usable, id_height, &hlt_i32, usable.h);
+
+			hl_dyn_setp (display, id_safeArea, &hlt_dynobj, _usable);
+
+			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
+
+			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
+
+			float contentScale = SDL_GetDisplayContentScale (id);
+
+			if (contentScale == 0.0f) {
+
+				contentScale = 1.0f;
+
+			}
+
+			#if defined (ANDROID) || defined (__IPHONEOS__)
+			float dpi = pixelDensity * contentScale * 160.0f;
+			#else
+			float dpi = pixelDensity * contentScale * 96.0f;
+			#endif
+
+			hl_dyn_setf (display, id_dpi, dpi);
+
+			hl_dyn_seti (display, id_orientation, &hlt_i32, (int) SDL_GetCurrentDisplayOrientation (id));
+
+			DisplayMode mode;
+
+			mode.height = displayMode->h;
+
+			switch (displayMode->format) {
+
+				case SDL_PIXELFORMAT_ARGB8888:
+
+					mode.pixelFormat = ARGB32;
+					break;
+
+				case SDL_PIXELFORMAT_BGRA8888:
+				case SDL_PIXELFORMAT_BGRX8888:
+
+					mode.pixelFormat = BGRA32;
+					break;
+
+				default:
+
+					mode.pixelFormat = RGBA32;
+
+			}
+
+			mode.refreshRate = displayMode->refresh_rate;
+			mode.width = displayMode->w;
+
+			vdynamic* _displayMode = (vdynamic*)hl_alloc_dynobj ();
+			hl_dyn_seti (_displayMode, id_height, &hlt_i32, mode.height);
+			hl_dyn_seti (_displayMode, id_pixelFormat, &hlt_i32, mode.pixelFormat);
+			hl_dyn_seti (_displayMode, id_refreshRate, &hlt_i32, mode.refreshRate);
+			hl_dyn_seti (_displayMode, id_width, &hlt_i32, mode.width);
+			hl_dyn_setp (display, id_currentMode, &hlt_dynobj, _displayMode);
+
+			int numDisplayModes;
+			SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes (id, &numDisplayModes);
+
+			hl_varray* supportedModes = (hl_varray*)hl_alloc_array (&hlt_dynobj, numDisplayModes);
+			vdynamic** supportedModesData = hl_aptr (supportedModes, vdynamic*);
+
+			for (int i = 0; i < numDisplayModes; i++) {
+
+				const SDL_DisplayMode *sdlDisplayMode = displayModes[i];
+
+				mode.height = sdlDisplayMode->h;
+
+				switch (sdlDisplayMode->format) {
+
+					case SDL_PIXELFORMAT_ARGB8888:
+
+						mode.pixelFormat = ARGB32;
+						break;
+
+					case SDL_PIXELFORMAT_BGRA8888:
+					case SDL_PIXELFORMAT_BGRX8888:
+
+						mode.pixelFormat = BGRA32;
+						break;
+
+					default:
+
+						mode.pixelFormat = RGBA32;
+
+				}
+
+				mode.refreshRate = sdlDisplayMode->refresh_rate;
+				mode.width = sdlDisplayMode->w;
+
+				vdynamic* _displayMode = (vdynamic*)hl_alloc_dynobj ();
+				hl_dyn_seti (_displayMode, id_height, &hlt_i32, mode.height);
+				hl_dyn_seti (_displayMode, id_pixelFormat, &hlt_i32, mode.pixelFormat);
+				hl_dyn_seti (_displayMode, id_refreshRate, &hlt_i32, mode.refreshRate);
+				hl_dyn_seti (_displayMode, id_width, &hlt_i32, mode.width);
+
+				*supportedModesData++ = _displayMode;
+
+			}
+
+			hl_dyn_setp (display, id_supportedModes, &hlt_array, supportedModes);
+			return display;
 
 		}
 
-		return mode;
-
 	}
-	#endif
 
 
-	#if defined (HX_WINDOWS)
-	bool System::SetWindowsConsoleMode (int handleType, int mode) {
+	int System::GetFirstGyroscopeSensorId () {
 
-		HANDLE handle = GetStdHandle ((DWORD)handleType);
+		int count = 0;
 
-		if (handle) {
+		SDL_SensorID *sensors = SDL_GetSensors (&count);
 
-			return SetConsoleMode (handle, (DWORD)mode);
+		if (!sensors)
+			return -1;
+
+		for (int i = 0; i < count; i++)
+		{
+			if (SDL_GetSensorTypeForID (sensors[i]) == SDL_SENSOR_GYRO) {
+
+				SDL_free (sensors);
+				return sensors[i];
+
+			}
 
 		}
 
-		return false;
-
-	}
-	#endif
-
-	int System::GetDeviceOrientation () {
-
-		return 0; // SDL_ORIENTATION_UNKNOWN
+		SDL_free (sensors);
+		return -1;
 
 	}
 
-	void System::EnableDeviceOrientationChange (bool enable) {
+
+	int System::GetFirstAccelerometerSensorId () {
+
+		int count = 0;
+
+		SDL_SensorID *sensors = SDL_GetSensors(&count);
+
+		if (!sensors)
+			return -1;
+
+		for (int i = 0; i < count; i++) {
+
+			if (SDL_GetSensorTypeForID(sensors[i]) == SDL_SENSOR_ACCEL) {
+
+				SDL_free(sensors);
+				return sensors[i];
+
+			}
+
+		}
+
+		SDL_free (sensors);
+		return -1;
 
 	}
+
+
+	double System::GetTimer () {
+
+		return SDL_GetTicksNS ();
+
+	}
+
+
+	void System::OpenFile (const char* path) {
+
+		OpenURL (path, NULL);
+
+	}
+
+
+	void System::OpenURL (const char* url, const char* target) {
+
+		SDL_OpenURL (url);
+
+	}
+
+
+	const char* System::GetHint (const char* key) {
+
+		std::string hintKey (key);
+
+		if (hintKey.rfind ("SDL_", 0) != 0) {
+
+			hintKey = "SDL_" + hintKey;
+
+		}
+
+		const char* hint = SDL_GetHint (hintKey.c_str ());
+
+		if (!hint) {
+
+			return nullptr;
+
+		}
+
+		return hint;
+
+	}
+
+	void System::SetHint (const char* key, const char* value) {
+
+		std::string hintKey (key);
+
+		if (hintKey.rfind ("SDL_", 0) != 0) {
+
+			hintKey = "SDL_" + hintKey;
+
+		}
+
+		SDL_SetHint (hintKey.c_str (), value);
+
+	}
+
+
+	int fclose (FILE_HANDLE *stream) {
+
+		if (stream) {
+
+			System::GCEnterBlocking ();
+
+			int code = SDL_CloseIO ((SDL_IOStream*)stream->handle);
+
+			delete stream;
+
+			System::GCExitBlocking ();
+
+			return code;
+
+		}
+
+		return 0;
+
+	}
+
+
+	FILE_HANDLE *fopen (const char *filename, const char *mode) {
+
+		System::GCEnterBlocking ();
+
+		SDL_IOStream *result = SDL_IOFromFile (filename, mode);
+
+		if (!result) {
+
+			const char *base = SDL_GetBasePath ();
+
+			if (base) {
+
+				char *fullpath;
+
+				if (SDL_asprintf (&fullpath, "%s%s", base, filename) >= 0) {
+
+					result = SDL_IOFromFile (fullpath, mode);
+
+					SDL_free (fullpath);
+
+				}
+
+			}
+
+		}
+
+		System::GCExitBlocking ();
+
+		if (result) {
+
+			return new FILE_HANDLE (result);
+
+		}
+
+		return NULL;
+
+	}
+
+
+	size_t fread (void *ptr, size_t size, size_t count, FILE_HANDLE *stream) {
+
+		System::GCEnterBlocking ();
+
+	  	size_t nmem = size > 0 && count > 0 ? SDL_ReadIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size : 0;
+
+		System::GCExitBlocking ();
+
+		return nmem;
+
+	}
+
+
+	int fseek (FILE_HANDLE *stream, long int offset, int origin) {
+
+		System::GCEnterBlocking ();
+
+		int success = SDL_SeekIO (stream ? (SDL_IOStream*)stream->handle : NULL, offset, (SDL_IOWhence)origin);
+
+		System::GCExitBlocking ();
+
+		return success;
+
+	}
+
+
+	long int ftell (FILE_HANDLE *stream) {
+
+		System::GCEnterBlocking ();
+
+		long int pos = SDL_TellIO (stream ? (SDL_IOStream*)stream->handle : NULL);
+
+		System::GCExitBlocking ();
+
+		return pos;
+
+	}
+
+
+	size_t fwrite (const void *ptr, size_t size, size_t count, FILE_HANDLE *stream) {
+
+		System::GCEnterBlocking ();
+
+        size_t nmem = size > 0 && count > 0 ? SDL_WriteIO (stream ? (SDL_IOStream*)stream->handle : NULL, ptr, size * count) / size : 0;
+
+		System::GCExitBlocking ();
+
+		return nmem;
+
+	}
+
 
 }

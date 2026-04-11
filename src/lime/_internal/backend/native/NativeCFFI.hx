@@ -271,8 +271,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_system_get_num_displays():Int;
 
-	@:cffi private static function lime_system_get_device_orientation():Int;
-
 	@:cffi private static function lime_system_get_first_gyroscope_sensor_id():Int;
 
 	@:cffi private static function lime_system_get_first_accelerometer_sensor_id():Int;
@@ -569,7 +567,6 @@ class NativeCFFI
 		"isso", false));
 	private static var lime_system_get_display = new cpp.Callable<Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_display", "io", false));
 	private static var lime_system_get_num_displays = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_system_get_num_displays", "i", false));
-	private static var lime_system_get_device_orientation = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_system_get_device_orientation", "i", false));
 	private static var lime_system_get_first_gyroscope_sensor_id = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_system_get_first_gyroscope_sensor_id", "i", false));
 	private static var lime_system_get_first_accelerometer_sensor_id = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_system_get_first_accelerometer_sensor_id", "i", false));
 	private static var lime_system_get_platform_label = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_platform_label", "o",
@@ -769,7 +766,6 @@ class NativeCFFI
 	private static var lime_system_get_directory = CFFI.load("lime", "lime_system_get_directory", 3);
 	private static var lime_system_get_display = CFFI.load("lime", "lime_system_get_display", 1);
 	private static var lime_system_get_num_displays = CFFI.load("lime", "lime_system_get_num_displays", 0);
-	private static var lime_system_get_device_orientation = CFFI.load("lime", "lime_system_get_device_orientation", 0);
 	private static var lime_system_get_first_gyroscope_sensor_id = CFFI.load("lime", "lime_system_get_first_gyroscope_sensor_id", 0);
 	private static var lime_system_get_first_accelerometer_sensor_id = CFFI.load("lime", "lime_system_get_first_accelerometer_sensor_id", 0);
 	private static var lime_system_get_platform_label = CFFI.load("lime", "lime_system_get_platform_label", 0);
@@ -1254,11 +1250,6 @@ class NativeCFFI
 	}
 
 	@:hlNative("lime", "hl_system_get_num_displays") private static function lime_system_get_num_displays():Int
-	{
-		return 0;
-	}
-
-	@:hlNative("lime", "hl_system_get_device_orientation") private static function lime_system_get_device_orientation():Int
 	{
 		return 0;
 	}
