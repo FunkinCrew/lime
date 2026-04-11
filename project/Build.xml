@@ -215,9 +215,6 @@
 			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
 			<file name="src/backend/sdl/SDLApplication.cpp" />
-			<file name="src/backend/sdl/SDLGamepad.cpp" />
-			<file name="src/backend/sdl/SDLJoystick.cpp" />
-			<file name="src/backend/sdl/SDLKeyCode.cpp" />
 			<file name="src/backend/sdl/SDLSystem.cpp" />
 			<file name="src/backend/sdl/SDLWindow.cpp" />
 
@@ -282,7 +279,10 @@
 		<file name="src/system/ValuePointer.cpp" />
 		<file name="src/ui/Cursor.cpp" />
 		<file name="src/ui/FileDialog.cpp" />
+		<file name="src/ui/Gamepad.cpp" />
 		<file name="src/ui/Haptic.mm" if="ios" />
+		<file name="src/ui/Joystick.cpp" />
+		<file name="src/ui/KeyCode.cpp" />
 		<file name="src/utils/ArrayBufferView.cpp" />
 		<file name="src/utils/Bytes.cpp" />
 

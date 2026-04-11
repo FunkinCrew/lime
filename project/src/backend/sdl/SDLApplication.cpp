@@ -1,7 +1,7 @@
 #include "SDLApplication.h"
-#include "SDLGamepad.h"
-#include "SDLJoystick.h"
 #include <system/System.h>
+#include <ui/Gamepad.h>
+#include <ui/Joystick.h>
 
 #ifdef HX_MACOS
 #include <unistd.h>
@@ -391,10 +391,10 @@ namespace lime {
 
 				case SDL_EVENT_GAMEPAD_ADDED:
 
-					if (SDLGamepad::Connect (event->cdevice.which)) {
+					if (Gamepad::Connect (event->cdevice.which)) {
 
 						gamepadEvent.type = GAMEPAD_CONNECT;
-						gamepadEvent.id = SDLGamepad::GetInstanceID (event->cdevice.which);
+						gamepadEvent.id = Gamepad::GetInstanceID (event->cdevice.which);
 						gamepadEvent.timestamp = event->cdevice.timestamp;
 
 						GamepadEvent::Dispatch (&gamepadEvent);
@@ -410,7 +410,7 @@ namespace lime {
 					gamepadEvent.timestamp = event->cdevice.timestamp;
 
 					GamepadEvent::Dispatch (&gamepadEvent);
-					SDLGamepad::Disconnect (event->cdevice.which);
+					Gamepad::Disconnect (event->cdevice.which);
 					break;
 
 				}
@@ -468,10 +468,15 @@ namespace lime {
 
 				case SDL_EVENT_JOYSTICK_ADDED:
 
-					joystickEvent.type = JOYSTICK_CONNECT;
-					joystickEvent.id = SDLJoystick::GetInstanceID (event->jdevice.which);
+					if (Joystick::Connect (event->jdevice.which)) {
 
-					JoystickEvent::Dispatch (&joystickEvent);
+						joystickEvent.type = JOYSTICK_CONNECT;
+						joystickEvent.id = Joystick::GetInstanceID (event->jdevice.which);
+
+						JoystickEvent::Dispatch (&joystickEvent);
+
+					}
+
 					break;
 
 				case SDL_EVENT_JOYSTICK_REMOVED:
@@ -480,7 +485,7 @@ namespace lime {
 					joystickEvent.id = event->jdevice.which;
 
 					JoystickEvent::Dispatch (&joystickEvent);
-					SDLJoystick::Disconnect (event->jdevice.which);
+					Joystick::Disconnect (event->jdevice.which);
 					break;
 
 			}

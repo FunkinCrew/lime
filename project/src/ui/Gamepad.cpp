@@ -1,4 +1,6 @@
-#include "SDLGamepad.h"
+#include <SDL3/SDL.h>
+#include <ui/Gamepad.h>
+#include <map>
 
 
 namespace lime {
@@ -8,7 +10,7 @@ namespace lime {
 	std::map<int, int> gameControllerIDs;
 
 
-	bool SDLGamepad::Connect (int deviceID) {
+	bool Gamepad::Connect (int deviceID) {
 
 		if (!SDL_IsGamepad (deviceID))
 			return false;
@@ -26,7 +28,7 @@ namespace lime {
 	}
 
 
-	bool SDLGamepad::Disconnect (int id) {
+	bool Gamepad::Disconnect (int id) {
 
 		auto it = gameControllers.find (id);
 
@@ -53,7 +55,7 @@ namespace lime {
 	}
 
 
-	int SDLGamepad::GetInstanceID (int deviceID) {
+	int Gamepad::GetInstanceID (int deviceID) {
 
 		auto it = gameControllerIDs.find (deviceID);
 

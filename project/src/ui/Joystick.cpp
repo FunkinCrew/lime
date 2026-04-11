@@ -1,4 +1,6 @@
-#include "SDLJoystick.h"
+#include <SDL3/SDL.h>
+#include <ui/Joystick.h>
+#include <map>
 
 
 namespace lime {
@@ -8,7 +10,7 @@ namespace lime {
 	std::map<int, SDL_Joystick*> joysticks;
 
 
-	bool SDLJoystick::Connect (int deviceID) {
+	bool Joystick::Connect (int deviceID) {
 
 		SDL_Joystick* joystick = SDL_OpenJoystick (deviceID);
 
@@ -23,7 +25,7 @@ namespace lime {
 	}
 
 
-	bool SDLJoystick::Disconnect (int id) {
+	bool Joystick::Disconnect (int id) {
 
 		auto it = joysticks.find (id);
 
@@ -50,7 +52,7 @@ namespace lime {
 	}
 
 
-	int SDLJoystick::GetInstanceID (int deviceID) {
+	int Joystick::GetInstanceID (int deviceID) {
 
 		auto it = joystickIDs.find (deviceID);
 
