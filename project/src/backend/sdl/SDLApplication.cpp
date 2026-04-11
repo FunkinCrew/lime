@@ -909,8 +909,3 @@ namespace lime {
 
 
 }
-
-
-#ifdef ANDROID
-int SDL_main (int argc, char *argv[]) { return 0; }
-#endif
