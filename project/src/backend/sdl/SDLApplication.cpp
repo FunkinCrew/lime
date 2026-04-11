@@ -17,7 +17,6 @@
 namespace lime {
 
 
-	AutoGCRoot* Application::callback = 0;
 	SDLApplication* SDLApplication::currentApplication = 0;
 	bool inBackground = false;
 
