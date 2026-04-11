@@ -23,41 +23,31 @@ namespace lime {
 	}
 
 
-	bool Mutex::Lock () const {
+	void Mutex::Lock () const {
 
 		if (mutex) {
 
 			SDL_LockMutex ((SDL_Mutex*)mutex);
-			return true;
-		}
 
-		return false;
+		}
 
 	}
 
 
 	bool Mutex::TryLock () const {
 
-		if (mutex) {
-
-			return SDL_TryLockMutex ((SDL_Mutex*)mutex);
-
-		}
-
-		return false;
+		return mutex ? SDL_TryLockMutex ((SDL_Mutex*)mutex) : false;
 
 	}
 
 
-	bool Mutex::Unlock () const {
+	void Mutex::Unlock () const {
 
 		if (mutex) {
 
 			SDL_UnlockMutex ((SDL_Mutex*)mutex);
-			return true;
-		}
 
-		return false;
+		}
 
 	}
 

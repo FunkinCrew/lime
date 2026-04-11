@@ -218,7 +218,6 @@
 			<file name="src/backend/sdl/SDLGamepad.cpp" />
 			<file name="src/backend/sdl/SDLJoystick.cpp" />
 			<file name="src/backend/sdl/SDLKeyCode.cpp" />
-			<file name="src/backend/sdl/SDLMutex.cpp" />
 			<file name="src/backend/sdl/SDLSystem.cpp" />
 			<file name="src/backend/sdl/SDLWindow.cpp" />
 
@@ -277,6 +276,7 @@
 		<file name="src/system/JNI.cpp" if="android" />
 		<file name="src/system/Locale.cpp" unless="mac || ios" />
 		<file name="src/system/Locale.mm" if="mac || ios" />
+		<file name="src/system/Mutex.cpp" />
 		<file name="src/system/System.cpp" unless="ios" />
 		<file name="src/system/System.mm" if="ios" />
 		<file name="src/system/ValuePointer.cpp" />
