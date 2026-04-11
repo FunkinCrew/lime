@@ -1,5 +1,4 @@
 #include "SDLWindow.h"
-#include "SDLCursor.h"
 #include "SDLApplication.h"
 #include "system/System.h"
 #include "../../bindings/opengl/OpenGLBindings.h"
@@ -11,19 +10,8 @@
 namespace lime {
 
 
-	static Cursor currentCursor = DEFAULT;
+	static SystemCursor currentCursor = DEFAULT;
 
-	SDL_Cursor* SDLCursor::arrowCursor = 0;
-	SDL_Cursor* SDLCursor::crosshairCursor = 0;
-	SDL_Cursor* SDLCursor::moveCursor = 0;
-	SDL_Cursor* SDLCursor::pointerCursor = 0;
-	SDL_Cursor* SDLCursor::resizeNESWCursor = 0;
-	SDL_Cursor* SDLCursor::resizeNSCursor = 0;
-	SDL_Cursor* SDLCursor::resizeNWSECursor = 0;
-	SDL_Cursor* SDLCursor::resizeWECursor = 0;
-	SDL_Cursor* SDLCursor::textCursor = 0;
-	SDL_Cursor* SDLCursor::waitCursor = 0;
-	SDL_Cursor* SDLCursor::waitArrowCursor = 0;
 
 	SDLWindow::SDLWindow (Application* application, int width, int height, int flags, const char* title) {
 
@@ -511,7 +499,7 @@ namespace lime {
 	}
 
 
-	void SDLWindow::SetCursor (Cursor cursor) {
+	void SDLWindow::SetCursor (SystemCursor cursor) {
 
 		if (cursor != currentCursor) {
 
@@ -526,126 +514,11 @@ namespace lime {
 				case HIDDEN:
 
 					SDL_HideCursor ();
-
-				case CROSSHAIR:
-
-					if (!SDLCursor::crosshairCursor) {
-
-						SDLCursor::crosshairCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_CROSSHAIR);
-
-					}
-
-					SDL_SetCursor (SDLCursor::crosshairCursor);
-					break;
-
-				case MOVE:
-
-					if (!SDLCursor::moveCursor) {
-
-						SDLCursor::moveCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_MOVE);
-
-					}
-
-					SDL_SetCursor (SDLCursor::moveCursor);
-					break;
-
-				case POINTER:
-
-					if (!SDLCursor::pointerCursor) {
-
-						SDLCursor::pointerCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_POINTER);
-
-					}
-
-					SDL_SetCursor (SDLCursor::pointerCursor);
-					break;
-
-				case RESIZE_NESW:
-
-					if (!SDLCursor::resizeNESWCursor) {
-
-						SDLCursor::resizeNESWCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_NESW_RESIZE);
-
-					}
-
-					SDL_SetCursor (SDLCursor::resizeNESWCursor);
-					break;
-
-				case RESIZE_NS:
-
-					if (!SDLCursor::resizeNSCursor) {
-
-						SDLCursor::resizeNSCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_NS_RESIZE);
-
-					}
-
-					SDL_SetCursor (SDLCursor::resizeNSCursor);
-					break;
-
-				case RESIZE_NWSE:
-
-					if (!SDLCursor::resizeNWSECursor) {
-
-						SDLCursor::resizeNWSECursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_NWSE_RESIZE);
-
-					}
-
-					SDL_SetCursor (SDLCursor::resizeNWSECursor);
-					break;
-
-				case RESIZE_WE:
-
-					if (!SDLCursor::resizeWECursor) {
-
-						SDLCursor::resizeWECursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_EW_RESIZE);
-
-					}
-
-					SDL_SetCursor (SDLCursor::resizeWECursor);
-					break;
-
-				case TEXT:
-
-					if (!SDLCursor::textCursor) {
-
-						SDLCursor::textCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_TEXT);
-
-					}
-
-					SDL_SetCursor (SDLCursor::textCursor);
-					break;
-
-				case WAIT:
-
-					if (!SDLCursor::waitCursor) {
-
-						SDLCursor::waitCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_WAIT);
-
-					}
-
-					SDL_SetCursor (SDLCursor::waitCursor);
-					break;
-
-				case WAIT_ARROW:
-
-					if (!SDLCursor::waitArrowCursor) {
-
-						SDLCursor::waitArrowCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_PROGRESS);
-
-					}
-
-					SDL_SetCursor (SDLCursor::waitArrowCursor);
 					break;
 
 				default:
 
-					if (!SDLCursor::arrowCursor) {
-
-						SDLCursor::arrowCursor = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_DEFAULT);
-
-					}
-
-					SDL_SetCursor (SDLCursor::arrowCursor);
+					SDL_SetCursor ((SDL_Cursor*)Cursor::GetSystemCursor (cursor));
 					break;
 
 			}

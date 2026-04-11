@@ -3,7 +3,7 @@
 namespace lime {
 
 
-	enum Cursor {
+	enum SystemCursor {
 
 		HIDDEN,
 		ARROW,
@@ -19,6 +19,14 @@ namespace lime {
 		WAIT,
 		WAIT_ARROW,
 		CUSTOM
+
+	};
+
+	class Cursor {
+
+		public:
+
+			static void* GetSystemCursor (SystemCursor type);
 
 	};
 

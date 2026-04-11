@@ -3762,7 +3762,7 @@ namespace lime {
 	void lime_window_set_cursor (value window, int cursor) {
 
 		Window* targetWindow = (Window*)val_data (window);
-		targetWindow->SetCursor ((Cursor)cursor);
+		targetWindow->SetCursor ((SystemCursor)cursor);
 
 	}
 
@@ -3770,7 +3770,7 @@ namespace lime {
 	HL_PRIM void HL_NAME(hl_window_set_cursor) (HL_CFFIPointer* window, int cursor) {
 
 		Window* targetWindow = (Window*)window->ptr;
-		targetWindow->SetCursor ((Cursor)cursor);
+		targetWindow->SetCursor ((SystemCursor)cursor);
 
 	}
 
