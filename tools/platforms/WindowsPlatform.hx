@@ -416,7 +416,16 @@ class WindowsPlatform extends PlatformTarget
 	{
 		var commands:Array<Array<String>> = [];
 
-		if (!targetFlags.exists("32") && !targetFlags.exists("x86_32") && System.hostArchitecture == X64)
+		var x86_64:Bool = targetFlags.exists("64") || targetFlags.exists("x86_64");
+		var x86_32:Bool = targetFlags.exists("32") || targetFlags.exists("x86_32");
+
+		if (!x86_64 && !x86_32)
+		{
+			x86_64 = System.hostArchitecture == X64;
+			x86_32 = System.hostArchitecture == X86;
+		}
+
+		if (x86_64)
 		{
 			var args:Array<String> = ["-Dwindows", "-DHXCPP_M64"];
 
@@ -436,7 +445,7 @@ class WindowsPlatform extends PlatformTarget
 			commands.push(args);
 		}
 
-		if (!targetFlags.exists("64") && !targetFlags.exists("x86_64") && System.hostArchitecture == X86)
+		if (x86_32)
 		{
 			var args:Array<String> = ["-Dwindows", "-DHXCPP_M32"];
 

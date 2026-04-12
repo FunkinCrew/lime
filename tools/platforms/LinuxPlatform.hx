@@ -418,12 +418,21 @@ class LinuxPlatform extends PlatformTarget
 		}
 		else
 		{
-			if (!targetFlags.exists("32") && !targetFlags.exists("x86_32") && System.hostArchitecture == X64)
+			var x86_64:Bool = targetFlags.exists("64") || targetFlags.exists("x86_64");
+			var x86_32:Bool = targetFlags.exists("32") || targetFlags.exists("x86_32");
+
+			if (!x86_64 && !x86_32)
+			{
+				x86_64 = System.hostArchitecture == X64;
+				x86_32 = System.hostArchitecture == X86;
+			}
+
+			if (x86_64)
 			{
 				commands.push(["-Dlinux", "-DHXCPP_M64"]);
 			}
 
-			if (!targetFlags.exists("64") && !targetFlags.exists("x86_64") && System.hostArchitecture == X86)
+			if (x86_32)
 			{
 				commands.push(["-Dlinux", "-DHXCPP_M32"]);
 			}
