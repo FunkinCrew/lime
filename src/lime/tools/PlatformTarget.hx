@@ -153,7 +153,7 @@ class PlatformTarget
 
 	// Command implementations
 
-	@ignore public function build():Void {}
+	public function build():Void {}
 
 	public function clean():Void
 	{
@@ -163,21 +163,21 @@ class PlatformTarget
 		}
 	}
 
-	@ignore public function deploy():Void {}
+	public function deploy():Void {}
 
-	@ignore public function display():Void {}
+	public function display():Void {}
 
-	@ignore public function install():Void {}
+	public function install():Void {}
 
-	@ignore public function rebuild():Void {}
+	public function rebuild():Void {}
 
-	@ignore public function run():Void {}
+	public function run():Void {}
 
-	@ignore public function trace():Void {}
+	public function trace():Void {}
 
-	@ignore public function uninstall():Void {}
+	public function uninstall():Void {}
 
-	@ignore public function update():Void {}
+	public function update():Void {}
 
 	public function watch():Void
 	{

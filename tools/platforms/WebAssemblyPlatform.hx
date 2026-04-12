@@ -445,12 +445,12 @@ class WebAssemblyPlatform extends PlatformTarget
 		copyProjectAssets(destination, targetDirectory + "/obj/assets");
 	}
 
-	@ignore public override function install():Void {}
+	public override function install():Void {}
 
-	@ignore public override function trace():Void {}
+	public override function trace():Void {}
 
-	@ignore public override function uninstall():Void {}
+	public override function uninstall():Void {}
 
 	// TODO: remove this line to enable watching?
-	@ignore public override function watch():Void {}
+	public override function watch():Void {}
 }

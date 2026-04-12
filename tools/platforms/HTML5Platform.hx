@@ -572,11 +572,11 @@ class HTML5Platform extends PlatformTarget
 		super.watch();
 	}
 
-	@ignore public override function install():Void {}
+	public override function install():Void {}
 
-	@ignore public override function rebuild():Void {}
+	public override function rebuild():Void {}
 
-	@ignore public override function trace():Void {}
+	public override function trace():Void {}
 
-	@ignore public override function uninstall():Void {}
+	public override function uninstall():Void {}
 }
