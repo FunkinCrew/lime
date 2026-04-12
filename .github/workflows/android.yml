@@ -7,13 +7,24 @@ jobs:
   android:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@master
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: "zulu"
+          java-version: 17
+
+      - name: Set HAXEPATH
+        run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
 
       - name: Install Android NDK
         uses: nttld/setup-ndk@v1
@@ -21,34 +32,34 @@ jobs:
         with:
           ndk-version: r29
 
-      - name: Set HAXEPATH
-        run: |
-          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
-
       - name: Install Haxe dependencies
         run: |
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
-          haxelib dev lime $GITHUB_WORKSPACE
 
-      - name: Configure Android support
+      - name: Configure Lime & Android support
         run: |
-          haxelib run lime setup -alias -y
-          lime config ANDROID_SDK $ANDROID_HOME
-          lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
-          lime config JAVA_HOME $JAVA_HOME_17_arm64
-          lime config ANDROID_SETUP true
+          haxelib dev lime ${{ github.workspace }}
+          export ANDROID_SDK=$ANDROID_HOME
+          export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
+          export JAVA_HOME=$JAVA_HOME_17_arm64
+          export ANDROID_SETUP=true
+          haxelib run lime setup android -alias -y -nocffi -eval
 
-      - name: Rebuild Lime
+      - name: Remove Previous NDLLs
         run: |
           rm -rf ./ndll
           mkdir ./ndll
-          haxelib run lime rebuild hxcpp
-          lime rebuild android -eval -nocolor -release
 
-      - uses: actions/upload-artifact@v4
+      - name: Rebuild Lime
+        run: |
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild android -eval -nocolor -release
+
+      - name: Upload Artifact (ndll/Android)
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: Android-NDLL
-          path: ndll
+          path: ndll/Android
           if-no-files-found: error

@@ -22,32 +22,91 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Delete old NDLL's
-        run: rm -rf ndll
+      - name: Delete old NDLL's and Hashlink Templates
+        run: |
+          rm -rf ndll
+          mkdir ndll
+          rm -rf templates/bin/hl/*/
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - name: Download Android-NDLL artifact
+        uses: actions/download-artifact@v8
         with:
-          path: .
-          merge-multiple: true
+          name: Android-NDLL
+          path: ndll/Android
+
+      - name: Download iPhone-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: iPhone-NDLL
+          path: ndll/iPhone
+
+      - name: Download Linux64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-NDLL
+          path: ndll/Linux64
+
+      - name: Download Linux64-Hashlink artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-Hashlink
+          path: templates/bin/hl/Linux64
+
+      - name: Download Mac64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Mac64-NDLL
+          path: ndll/Mac64
+
+      - name: Download MacArm64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MacArm64-NDLL
+          path: ndll/MacArm64
+
+      - name: Download Windows64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-NDLL
+          path: ndll/Windows64
+
+      - name: Download Windows-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows-NDLL
+          path: ndll/Windows
+
+      - name: Download Windows64-Hashlink artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-Hashlink
+          path: templates/bin/hl/Windows64
+
+      - name: Download Miscellaneous artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Miscellaneous
+          path: ./
 
       - name: Push to GitHub
         run: |
-          USER_INFO=$(curl -s "https://api.github.com/users/${{ github.actor }}")
+          USERACTOR=${{ github.actor }}
+          USER_INFO=$(curl -s "https://api.github.com/users/$USERACTOR")
           USERID=$(echo "$USER_INFO" | jq -r '.id')
           USERNAME=$(echo "$USER_INFO" | jq -r '.name')
           
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add ndll
-          git add tools/tools.n
-          git add run.n
-          git add svg.n
-          git commit --author="${USERNAME} <${USERID}+$(echo "$USERNAME" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
+          git add -f ndll
+          git add -f tools/tools.n
+          git add -f run.n
+          git add -f svg.n
+          # git add -f templates/bin/lime.exe
+          git commit --author="${USERNAME} <${USERID}+$(echo "$USERACTOR" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
               echo "Didn't commit anything, skipping git push."
               exit 0
           }

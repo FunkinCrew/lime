@@ -5,38 +5,64 @@ on:
 
 jobs:
   linux:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@master
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
       - name: Set HAXEPATH
+        run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+
+      - name: Install Packages
         run: |
-          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -qq \
+          libegl1-mesa-dev libgl1-mesa-dev libibus-1.0-dev libdbus-1-dev libdecor-0-dev libudev-dev libgbm-dev libdrm-dev \
+          libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libglu1-mesa-dev libmbedtls-dev libuv1-dev libsqlite3-dev \
+          libx11-dev libxext-dev libxfixes-dev libxi-dev libxinerama-dev libxkbcommon-dev libxcursor-dev libxrandr-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxxf86vm-dev \
+          libpulse-dev libasound2-dev libpipewire-0.3-dev \
+          g++-multilib gcc-multilib
 
       - name: Install Haxe dependencies
         run: |
-          sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
-          haxelib dev lime $GITHUB_WORKSPACE
 
-      - name: Rebuild Lime
+      - name: Configure Lime
+        run: |
+          haxelib dev lime ${{ github.workspace }}
+          haxelib run lime setup -alias -y -nocffi
+          haxelib run lime rebuild hxcpp
+
+      - name: Remove Previous NDLLs
         run: |
           rm -rf ./ndll
           mkdir ./ndll
-          haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild linux -32 -eval -nocolor
-          haxelib run lime rebuild linux -64 -eval -nocolor
 
-      - uses: actions/upload-artifact@v4
+      - name: Rebuild Lime (x86_64)
+        run: haxelib run lime rebuild linux -64 -nocolor -eval
+
+      - name: Rebuild Lime (Hashlink)
+        run: haxelib run lime rebuild hl -nocolor
+
+      - name: Upload Artifact (ndll/Linux64)
+        uses: actions/upload-artifact@v7.0.0
         with:
-          name: Linux-NDLL
-          path: ndll
+          name: Linux64-NDLL
+          path: ndll/Linux64
+          if-no-files-found: error
+
+      - name: Upload Artifact (templates/bin/hl/Linux64)
+        uses: actions/upload-artifact@v7
+        with:
+          name: Linux64-Hashlink
+          path: templates/bin/hl/Linux64
           if-no-files-found: error

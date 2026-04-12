@@ -21,7 +21,7 @@ jobs:
     permissions: write-all
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.ref_name }}
 
@@ -30,11 +30,59 @@ jobs:
           rm -rf ndll
           mkdir ndll
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - name: Download Android-NDLL artifact
+        uses: actions/download-artifact@v8
         with:
-          path: ./ndll
-          merge-multiple: true
+          name: Android-NDLL
+          path: ndll/Android
+
+      - name: Download iPhone-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: iPhone-NDLL
+          path: ndll/iPhone
+
+      - name: Download Linux64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-NDLL
+          path: ndll/Linux64
+
+      - name: Download Linux64-Hashlink artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-Hashlink
+          path: templates/bin/hl/Linux64
+
+      - name: Download Mac64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Mac64-NDLL
+          path: ndll/Mac64
+
+      - name: Download MacArm64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MacArm64-NDLL
+          path: ndll/MacArm64
+
+      - name: Download Windows64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-NDLL
+          path: ndll/Windows64
+
+      - name: Download Windows-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows-NDLL
+          path: ndll/Windows
+
+      - name: Download Windows64-Hashlink artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-Hashlink
+          path: templates/bin/hl/Windows64
 
       - name: ZIP Repo
         run: |
