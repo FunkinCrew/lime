@@ -256,17 +256,6 @@ class ProjectXMLParser extends HXProject
 				case "path":
 					app.path = Path.combine(extensionPath, substitute(element.att.path));
 
-				case "min-swf-version":
-					var version = Std.parseFloat(substitute(element.att.resolve("min-swf-version")));
-
-					if (version > app.swfVersion)
-					{
-						app.swfVersion = version;
-					}
-
-				case "swf-version":
-					app.swfVersion = Std.parseFloat(substitute(element.att.resolve("swf-version")));
-
 				case "preloader":
 					app.preloader = substitute(element.att.preloader);
 
@@ -831,11 +820,6 @@ class ProjectXMLParser extends HXProject
 		{
 			app.path = Path.combine(extensionPath, substitute(element.att.path));
 		}
-
-		if (element.has.resolve("swf-version"))
-		{
-			app.swfVersion = Std.parseFloat(substitute(element.att.resolve("swf-version")));
-		}
 	}
 
 	private function parseXML(xml:Access, section:String, extensionPath:String = ""):Void
@@ -858,7 +842,6 @@ class ProjectXMLParser extends HXProject
 					switch (name)
 					{
 						case "BUILD_DIR": app.path = value;
-						case "SWF_VERSION": app.swfVersion = Std.parseFloat(value);
 						case "PRERENDERED_ICON": config.set("ios.prerenderedIcon", value);
 						case "ANDROID_INSTALL_LOCATION": config.set("android.install-location", value);
 					}

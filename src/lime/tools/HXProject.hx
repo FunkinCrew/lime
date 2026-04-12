@@ -1373,7 +1373,6 @@ class HXProject extends Script
 		context.RELEASE = (type == "release");
 		context.DEBUG = debug;
 		context.FINAL = (type == "final");
-		context.SWF_VERSION = app.swfVersion;
 		context.PRELOADER_NAME = app.preloader;
 
 		if (keystore != null)

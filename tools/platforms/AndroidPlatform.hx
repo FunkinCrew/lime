@@ -50,7 +50,6 @@ class AndroidPlatform extends PlatformTarget
 				file: "MyApplication",
 				path: "bin",
 				preloader: "",
-				swfVersion: 17,
 				url: "",
 				init: null
 			};
