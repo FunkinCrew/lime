@@ -69,7 +69,7 @@ class WindowsPlatform extends PlatformTarget
 				height: 600,
 				parameters: "{}",
 				background: 0xFFFFFF,
-				fps: 30,
+				fps: 60,
 				hardware: true,
 				display: 0,
 				resizable: true,
@@ -78,7 +78,7 @@ class WindowsPlatform extends PlatformTarget
 				orientation: Orientation.AUTO,
 				vsync: false,
 				fullscreen: false,
-				allowHighDPI: true,
+				allowHighDPI: false,
 				alwaysOnTop: false,
 				antialiasing: 0,
 				allowShaders: true,
@@ -105,8 +105,6 @@ class WindowsPlatform extends PlatformTarget
 			default:
 				defaults.architectures = [];
 		}
-
-		defaults.window.allowHighDPI = false;
 
 		for (i in 1...project.windows.length)
 		{

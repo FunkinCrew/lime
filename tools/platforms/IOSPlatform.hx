@@ -64,11 +64,11 @@ class IOSPlatform extends PlatformTarget
 
 		defaults.window =
 			{
-				width: 800,
-				height: 600,
+				width: 0,
+				height: 0,
 				parameters: "{}",
 				background: 0xFFFFFF,
-				fps: 30,
+				fps: 60,
 				hardware: true,
 				display: 0,
 				resizable: true,
@@ -76,12 +76,12 @@ class IOSPlatform extends PlatformTarget
 				borderless: false,
 				orientation: Orientation.AUTO,
 				vsync: false,
-				fullscreen: false,
+				fullscreen: true,
 				allowHighDPI: true,
 				alwaysOnTop: false,
 				antialiasing: 0,
 				allowShaders: true,
-				requireShaders: false,
+				requireShaders: true,
 				depthBuffer: true,
 				stencilBuffer: true,
 				colorDepth: 32,
@@ -92,10 +92,6 @@ class IOSPlatform extends PlatformTarget
 			};
 
 		defaults.architectures = [Architecture.ARM64];
-		defaults.window.width = 0;
-		defaults.window.height = 0;
-		defaults.window.fullscreen = true;
-		defaults.window.requireShaders = true;
 
 		for (i in 1...project.windows.length)
 		{

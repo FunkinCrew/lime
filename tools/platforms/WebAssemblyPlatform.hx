@@ -60,7 +60,7 @@ class WebAssemblyPlatform extends PlatformTarget
 				height: 600,
 				parameters: "{}",
 				background: 0xFFFFFF,
-				fps: 30,
+				fps: 60,
 				hardware: true,
 				display: 0,
 				resizable: true,
@@ -69,7 +69,7 @@ class WebAssemblyPlatform extends PlatformTarget
 				orientation: Orientation.AUTO,
 				vsync: false,
 				fullscreen: false,
-				allowHighDPI: true,
+				allowHighDPI: false,
 				alwaysOnTop: false,
 				antialiasing: 0,
 				allowShaders: true,
@@ -82,9 +82,6 @@ class WebAssemblyPlatform extends PlatformTarget
 				hidden: false,
 				title: ""
 			};
-
-		defaults.window.fps = 60;
-		defaults.window.allowHighDPI = false;
 
 		for (i in 1...project.windows.length)
 		{

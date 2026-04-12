@@ -66,7 +66,7 @@ class TVOSPlatform extends PlatformTarget
 				height: 600,
 				parameters: "{}",
 				background: 0xFFFFFF,
-				fps: 30,
+				fps: 60,
 				hardware: true,
 				display: 0,
 				resizable: true,

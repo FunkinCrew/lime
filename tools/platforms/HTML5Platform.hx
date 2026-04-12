@@ -59,11 +59,11 @@ class HTML5Platform extends PlatformTarget
 
 		defaults.window =
 			{
-				width: 800,
-				height: 600,
+				width: 0,
+				height: 0,
 				parameters: "{}",
 				background: 0xFFFFFF,
-				fps: 30,
+				fps: 60,
 				hardware: true,
 				display: 0,
 				resizable: true,
@@ -85,10 +85,6 @@ class HTML5Platform extends PlatformTarget
 				hidden: false,
 				title: ""
 			};
-
-		defaults.window.width = 0;
-		defaults.window.height = 0;
-		defaults.window.fps = 60;
 
 		for (i in 1...project.windows.length)
 		{
