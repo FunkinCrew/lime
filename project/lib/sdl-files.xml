@@ -21,6 +21,7 @@
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src/" />
 
         <compilerflag value="-DSDL_DISABLE_ALLOCA" />
+        <compilerflag value="-DSDL_DISABLE_STB" />
         <compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
         <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/SDL.c" />
@@ -430,7 +431,12 @@
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/SDL_tray_utils.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/cocoa/SDL_tray.m" if="macos" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/dummy/SDL_tray.c" if="android || iphone" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/unix/SDL_tray.c" unless="android || iphone || macos || windows" />
+
+            <section unless="android || iphone || macos || windows">
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/unix/SDL_tray.c"  />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/unix/SDL_dbustray.c"  />
+            </section>
+
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/tray/windows/SDL_tray.c" if="windows" />
         </section>
 

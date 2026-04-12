@@ -208,6 +208,12 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                                                WindowInsets.Type.displayCutout());
 
             SDLActivity.onNativeInsetsChanged(combined.left, combined.right, combined.top, combined.bottom);
+
+            if (insets.isVisible(WindowInsets.Type.ime())) {
+                SDLActivity.onNativeScreenKeyboardShown();
+            } else {
+                SDLActivity.onNativeScreenKeyboardHidden();
+            }
         }
 
         // Pass these to any child views in case they need them
@@ -280,6 +286,9 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 
                 // BUTTON_STYLUS_PRIMARY is 2^5, so shift by 4, and apply SDL_PEN_INPUT_DOWN/SDL_PEN_INPUT_ERASER_TIP
                 int buttonState = (event.getButtonState() >> 4) | (1 << (toolType == MotionEvent.TOOL_TYPE_STYLUS ? 0 : 30));
+                if ((event.getButtonState() & MotionEvent.BUTTON_TERTIARY) != 0) {
+                    buttonState |= 0x08;
+                }
 
                 SDLActivity.onNativePen(pointerId, SDLActivity.getMotionListener().getPenDeviceType(event.getDevice()), buttonState, action, x, y, p);
             } else { // MotionEvent.TOOL_TYPE_FINGER or MotionEvent.TOOL_TYPE_UNKNOWN

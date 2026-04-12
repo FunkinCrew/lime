@@ -571,7 +571,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static int getNaturalOrientation() {
         int result = SDL_ORIENTATION_UNKNOWN;
 
-        Activity activity = (Activity)getContext();
+        Activity activity = getContext();
         if (activity != null) {
             Configuration config = activity.getResources().getConfiguration();
             Display display = activity.getWindowManager().getDefaultDisplay();
@@ -591,7 +591,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static int getCurrentRotation() {
         int result = 0;
 
-        Activity activity = (Activity)getContext();
+        Activity activity = getContext();
         if (activity != null) {
             Display display = activity.getWindowManager().getDefaultDisplay();
             switch (display.getRotation()) {
@@ -1271,10 +1271,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (Build.MANUFACTURER.equals("MINIX") && Build.MODEL.equals("NEO-U1")) {
             return true;
         }
-        if (Build.MANUFACTURER.equals("Amlogic") && Build.MODEL.equals("X96-W")) {
-            return true;
-        }
-        if (Build.MANUFACTURER.equals("Amlogic") && Build.MODEL.startsWith("TV")) {
+        if (Build.MANUFACTURER.equals("Amlogic") &&
+            (Build.MODEL.startsWith("TV") ||
+             Build.MODEL.equals("X96-W") ||
+             Build.MODEL.equals("A95X-R1"))) {
             return true;
         }
         return false;
@@ -1293,7 +1293,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static double getDiagonal()
     {
         DisplayMetrics metrics = new DisplayMetrics();
-        Activity activity = (Activity)getContext();
+        Activity activity = getContext();
         if (activity == null) {
             return 0.0;
         }
@@ -1958,7 +1958,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             return;
         }
 
-        Activity activity = (Activity)getContext();
+        Activity activity = getContext();
         if (activity.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
             activity.requestPermissions(new String[]{permission}, requestCode);
         } else {
@@ -1981,7 +1981,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
 
-            int flags = Intent.FLAG_ACTIVITY_NO_HISTORY 
+            int flags = Intent.FLAG_ACTIVITY_NO_HISTORY
                       | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
                       | Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
             i.addFlags(flags);
