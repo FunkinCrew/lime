@@ -8,30 +8,59 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
+
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
+
       - name: Install Haxe dependencies
         run: |
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
           haxelib install format --quiet
           haxelib install hxp --quiet
+
+      - name: Configure Lime
+        run: |
           haxelib dev lime ${{ github.workspace }}
-      - name: Rebuild Lime
+          haxelib run lime setup -alias -y -nocffi
+          haxelib run lime rebuild hxcpp
+
+      - name: Remove Previous NDLLs
         shell: bash
         run: |
           rm -rf ./ndll
           mkdir ./ndll
-          haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild windows -32 -nocolor -eval
-          haxelib run lime rebuild windows -64 -nocolor -eval
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+
+      - name: Rebuild Lime (x86_64)
+        run: haxelib run lime rebuild windows -64 -nocolor -eval
+
+      - name: Rebuild Lime (x86)
+        run: haxelib run lime rebuild windows -32 -nocolor -eval
+
+      - name: Rebuild Lime (Hashlink)
+        run: haxelib run lime rebuild hl -nocolor -eval
+
+      - name: Upload Artifact (ndll/Windows64)
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: Windows64-NDLL
+          path: ndll/Windows64
+          if-no-files-found: error
+
+      - name: Upload Artifact (ndll/Windows)
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: Windows-NDLL
-          path: ndll
+          path: ndll/Windows
+          if-no-files-found: error
+
+      - name: Upload Artifact (templates/bin/hl/Windows64)
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: Windows64-Hashlink
+          path: templates/bin/hl/Windows64
           if-no-files-found: error

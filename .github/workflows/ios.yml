@@ -7,18 +7,18 @@ jobs:
   ios:
     runs-on: macos-26
     steps:
-
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@master
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
       - name: Set HAXEPATH
-        run: |
-          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+        run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
 
       - name: Install Haxe dependencies
         run: |
@@ -26,20 +26,22 @@ jobs:
           haxelib install format --quiet
           haxelib install hxp --quiet
 
-      - name: Rebuild Lime tools
-        run: |
-          haxelib dev lime $GITHUB_WORKSPACE
-          haxelib run lime setup -alias -y
+      - name: Configure Lime
+        run: haxelib dev lime ${{ github.workspace }}
 
-      - name: Rebuild Lime (iOS)
+      - name: Remove Previous NDLLs
         run: |
           rm -rf ./ndll
           mkdir ./ndll
-          haxelib run lime rebuild hxcpp
-          lime rebuild ios -clean -eval -nocolor -release
 
-      - uses: actions/upload-artifact@v4
+      - name: Rebuild Lime
+        run: |
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild ios -eval -nocolor -release
+
+      - name: Upload Artifact (ndll/iPhone)
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: iPhone-NDLL
-          path: ndll
+          path: ndll/iPhone
           if-no-files-found: error

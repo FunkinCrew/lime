@@ -4,34 +4,44 @@ on:
   workflow_call:
 
 jobs:
-  build:
+  miscellaneous:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@master
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
       - name: Set HAXEPATH
+        run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+
+      - name: Install Packages
         run: |
-          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+          sudo apt-get install g++ g++-multilib gcc-multilib
 
       - name: Install Haxe dependencies
         run: |
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
+          haxelib git openfl https://github.com/FunkinCrew/openfl --quiet
           haxelib install format --quiet
-          haxelib install openfl --quiet
           haxelib install svg --quiet
           haxelib install hxp --quiet
-          haxelib dev lime $GITHUB_WORKSPACE
+
+      - name: Configure Lime
+        run: haxelib dev lime ${{ github.workspace }}
 
       - name: Rebuild Miscellaneous
-        run: lime rebuild tools
+        run: |
+          haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild tools
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: Miscellaneous
           path: |
