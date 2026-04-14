@@ -4,11 +4,7 @@
 
 #ifdef LIME_GLAD
 
-#if defined (LIME_OPENGL_GL)
-#include <glad/gl.h>
-#elif defined (LIME_OPENGL_GLES2)
 #include <glad/gles2.h>
-#endif
 
 #else
 

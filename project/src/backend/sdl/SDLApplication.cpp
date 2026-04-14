@@ -36,6 +36,18 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
+		SDL_SetHint (SDL_HINT_OPENGL_ES_DRIVER, "1");
+
+		#ifdef HX_WINDOWS
+		SDL_SetHint (SDL_HINT_VIDEO_WIN_D3DCOMPILER, "d3dcompiler_47.dll");
+		#endif
+
+		SDL_SetHint (SDL_HINT_VIDEO_FORCE_EGL, "1");
+
+		#ifndef ANDROID
+		SDL_SetHint (SDL_HINT_VIDEO_EGL_ALLOW_GETDISPLAY_FALLBACK, "0");
+		#endif
+
 		SDL_SetHint (SDL_HINT_JOYSTICK_HIDAPI, "1");
 
 		#ifdef IPHONE

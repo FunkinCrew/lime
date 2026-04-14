@@ -189,8 +189,6 @@
 
 			</section>
 
-			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || emscripten || tizen || ios || tvos" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/graphics/opengl/OpenGLBindings.cpp" />
@@ -379,7 +377,6 @@
 					<lib name="kernel32.lib" />
 					<lib name="ole32.lib" />
 					<lib name="oleaut32.lib" />
-					<lib name="opengl32.lib" />
 					<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
 					<lib name="setupapi.lib" />
 					<lib name="shell32.lib" />
@@ -406,7 +403,6 @@
 					<lib name="-lkernel32" />
 					<lib name="-lole32" />
 					<lib name="-loleaut32" />
-					<lib name="-lopengl32" />
 					<lib name="-lrpcrt4" if="LIME_HARFBUZZ" />
 					<lib name="-lsetupapi" />
 					<lib name="-lshell32" />
@@ -433,6 +429,8 @@
 			</section>
 
 			<section if="linux">
+
+				<flag value="-Wl,-rpath,$ORIGIN"/>
 
 				<lib name="-lpthread" />
 				<lib name="-lrt" />
@@ -464,7 +462,6 @@
 				<vflag name="-framework" value="CoreMedia" />
 				<vflag name="-framework" value="CoreVideo" />
 				<vflag name="-framework" value="ForceFeedback" />
-				<vflag name="-framework" value="OpenGL" />
 				<vflag name="-framework" value="Foundation" />
 				<vflag name="-framework" value="GameController" />
 				<vflag name="-framework" value="IOKit" />

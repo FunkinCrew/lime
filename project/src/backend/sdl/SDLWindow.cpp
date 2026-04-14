@@ -25,6 +25,35 @@ namespace lime {
 	SDL_Cursor* SDLCursor::waitCursor = 0;
 	SDL_Cursor* SDLCursor::waitArrowCursor = 0;
 
+
+	static SDL_EGLAttrib *GetDefaultPlatformBackendAttribCallback (void *userdata)
+	{
+
+		std::vector<SDL_EGLAttrib> attribs;
+
+		attribs.push_back (0x3203 /* EGL_PLATFORM_ANGLE_TYPE_ANGLE */);
+		#if defined (HX_WINDOWS)
+		attribs.push_back (0x3208 /* EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE */);
+		#elif defined (HX_LINUX)
+		attribs.push_back (0x3450 /* EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE */);
+		#elif defined (HX_MACOS)
+		attribs.push_back (0x3489 /* EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE */);
+		#endif
+		attribs.push_back (0x3038 /* EGL_NONE */);
+
+		SDL_EGLAttrib *result = (SDL_EGLAttrib *)SDL_malloc (attribs.size () * sizeof (SDL_EGLAttrib));
+
+		if (result) {
+
+			std::memcpy (result, attribs.data (), attribs.size () * sizeof(SDL_EGLAttrib));
+
+		}
+
+		return result;
+
+	}
+
+
 	SDLWindow::SDLWindow (Application* application, int width, int height, int flags, const char* title) {
 
 		context = 0;
@@ -48,15 +77,18 @@ namespace lime {
 		if (flags & WINDOW_FLAG_ALWAYS_ON_TOP) sdlWindowFlags |= SDL_WINDOW_ALWAYS_ON_TOP;
 		#endif
 
-		#ifdef LIME_OPENGL_GLES2
+		#if defined (HX_WINDOWS) || defined (HX_MACOS) || defined (HX_LINUX)
+		const char* driver = SDL_GetCurrentVideoDriver ();
+
+		if (driver && SDL_strcmp (driver, "wayland") != 0 && SDL_strcmp (driver, "kmsdrm") != 0)
+		{
+			SDL_GL_SetAttribute (SDL_GL_EGL_PLATFORM, 0x3202);
+		}
+		#endif
+
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
-		#endif
-
-		#ifdef LIME_OPENGL_GL
-		// TODO: Use OpenGL 3.3 Core on Desktop
-		#endif
 
 		if (flags & WINDOW_FLAG_DEPTH_BUFFER) {
 
@@ -96,6 +128,10 @@ namespace lime {
 			SDL_GL_SetAttribute (SDL_GL_BLUE_SIZE, 5);
 
 		}
+
+		#if defined (HX_WINDOWS) || defined (HX_MACOS) || defined (HX_LINUX)
+		SDL_EGL_SetAttributeCallbacks (GetDefaultPlatformBackendAttribCallback, NULL, NULL, NULL);
+		#endif
 
 		sdlWindow = SDL_CreateWindow (title, width, height, sdlWindowFlags);
 
