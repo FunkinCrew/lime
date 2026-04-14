@@ -22,13 +22,10 @@ namespace lime {
 			virtual bool SetVSyncMode (int mode);
 			virtual void Close ();
 			virtual void ContextFlip ();
-			virtual void* ContextLock (bool useCFFIValue);
 			virtual void ContextMakeCurrent ();
-			virtual void ContextUnlock ();
 			virtual void Focus ();
 			virtual void* GetHandle ();
 			virtual void* GetContext ();
-			virtual const char* GetContextType ();
 			// virtual Cursor GetCursor ();
 			virtual int GetDisplay ();
 			virtual void GetDisplayMode (DisplayMode* displayMode);
@@ -62,15 +59,11 @@ namespace lime {
 			virtual bool SetVisible (bool visible);
 			virtual bool SetAlwaysOnTop (bool alwaysOnTop);
 			virtual void WarpMouse (int x, int y);
-			SDL_Renderer* sdlRenderer;
-			SDL_Texture* sdlTexture;
 			SDL_Window* sdlWindow;
 
 		private:
 
 			SDL_GLContext context;
-			int contextHeight;
-			int contextWidth;
 
 	};
 

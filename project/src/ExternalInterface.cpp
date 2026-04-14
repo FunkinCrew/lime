@@ -3395,20 +3395,6 @@ namespace lime {
 	}
 
 
-	value lime_window_context_lock (value window) {
-
-		return (value)((Window*)val_data (window))->ContextLock (true);
-
-	}
-
-
-	HL_PRIM vdynamic* HL_NAME(hl_window_context_lock) (HL_CFFIPointer* window) {
-
-		return (vdynamic*)((Window*)window->ptr)->ContextLock (false);
-
-	}
-
-
 	void lime_window_context_make_current (value window) {
 
 		((Window*)val_data (window))->ContextMakeCurrent ();
@@ -3419,20 +3405,6 @@ namespace lime {
 	HL_PRIM void HL_NAME(hl_window_context_make_current) (HL_CFFIPointer* window) {
 
 		((Window*)window->ptr)->ContextMakeCurrent ();
-
-	}
-
-
-	void lime_window_context_unlock (value window) {
-
-		((Window*)val_data (window))->ContextUnlock ();
-
-	}
-
-
-	HL_PRIM void HL_NAME(hl_window_context_unlock) (HL_CFFIPointer* window) {
-
-		((Window*)window->ptr)->ContextUnlock ();
 
 	}
 
@@ -3513,23 +3485,6 @@ namespace lime {
 
 		Window* targetWindow = (Window*)window->ptr;
 		return (uintptr_t)targetWindow->GetContext ();
-
-	}
-
-
-	value lime_window_get_context_type (value window) {
-
-		Window* targetWindow = (Window*)val_data (window);
-		const char* type = targetWindow->GetContextType ();
-		return type ? alloc_string (type) : alloc_null ();
-
-	}
-
-
-	HL_PRIM vbyte* HL_NAME(hl_window_get_context_type) (HL_CFFIPointer* window) {
-
-		Window* targetWindow = (Window*)window->ptr;
-		return (vbyte*)targetWindow->GetContextType ();
 
 	}
 
@@ -4292,15 +4247,12 @@ namespace lime {
 	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
 	DEFINE_PRIME1v (lime_window_context_flip);
-	DEFINE_PRIME1 (lime_window_context_lock);
 	DEFINE_PRIME1v (lime_window_context_make_current);
-	DEFINE_PRIME1v (lime_window_context_unlock);
 	DEFINE_PRIME5 (lime_window_create);
 	DEFINE_PRIME2v (lime_window_event_manager_register);
 	DEFINE_PRIME1v (lime_window_focus);
 	DEFINE_PRIME1 (lime_window_get_handle);
 	DEFINE_PRIME1 (lime_window_get_context);
-	DEFINE_PRIME1 (lime_window_get_context_type);
 	DEFINE_PRIME1 (lime_window_get_display);
 	DEFINE_PRIME1 (lime_window_get_display_mode);
 	DEFINE_PRIME1 (lime_window_get_height);
@@ -4494,15 +4446,12 @@ namespace lime {
 	DEFINE_HL_PRIM (_BOOL, hl_window_set_vsync_mode, _TCFFIPOINTER _I32);
 	DEFINE_HL_PRIM (_VOID, hl_window_close, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_flip, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_DYN, hl_window_context_lock, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_make_current, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_VOID, hl_window_context_unlock, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_window_create, _TCFFIPOINTER _I32 _I32 _I32 _STRING);
 	DEFINE_HL_PRIM (_VOID, hl_window_event_manager_register, _FUN (_VOID, _NO_ARG) _TWINDOW_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_window_focus, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_F64, hl_window_get_handle, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_F64, hl_window_get_context, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_BYTES, hl_window_get_context_type, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_I32, hl_window_get_display, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_get_display_mode, _TCFFIPOINTER _TDISPLAYMODE);
 	DEFINE_HL_PRIM (_I32, hl_window_get_height, _TCFFIPOINTER);

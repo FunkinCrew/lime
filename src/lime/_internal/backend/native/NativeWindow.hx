@@ -3,12 +3,7 @@ package lime._internal.backend.native;
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
-import lime.graphics.cairo.Cairo;
-import lime.graphics.cairo.CairoFormat;
-import lime.graphics.cairo.CairoImageSurface;
-import lime.graphics.cairo.CairoSurface;
 import lime.graphics.opengl.GL;
-import lime.graphics.CairoRenderContext;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.graphics.OpenGLRenderContext;
@@ -31,7 +26,6 @@ import lime.utils.UInt8Array;
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime._internal.backend.native.NativeOpenGLRenderContext)
 @:access(lime.app.Application)
-@:access(lime.graphics.cairo.Cairo)
 @:access(lime.graphics.opengl.GL)
 @:access(lime.graphics.OpenGLRenderContext)
 @:access(lime.graphics.RenderContext)
@@ -47,12 +41,6 @@ class NativeWindow
 	private var frameRate:Float;
 	private var mouseLock:Bool;
 	private var parent:Window;
-	private var useHardware:Bool;
-	#if lime_cairo
-	private var cacheLock:Dynamic;
-	private var cairo:Cairo;
-	private var primarySurface:CairoSurface;
-	#end
 
 	public function new(parent:Window)
 	{
@@ -70,14 +58,8 @@ class NativeWindow
 		if (!Reflect.hasField(contextAttributes, "background")) contextAttributes.background = 0;
 		if (!Reflect.hasField(contextAttributes, "colorDepth")) contextAttributes.colorDepth = 24;
 		if (!Reflect.hasField(contextAttributes, "depth")) contextAttributes.depth = true;
-		if (!Reflect.hasField(contextAttributes, "hardware")) contextAttributes.hardware = true;
 		if (!Reflect.hasField(contextAttributes, "stencil")) contextAttributes.stencil = true;
 		if (!Reflect.hasField(contextAttributes, "vsync")) contextAttributes.vsync = false;
-
-		#if (cairo || (!lime_opengl && !lime_opengles))
-		contextAttributes.type = CAIRO;
-		#end
-		if (Reflect.hasField(contextAttributes, "type") && contextAttributes.type == CAIRO) contextAttributes.hardware = false;
 
 		if (Reflect.hasField(attributes, "allowHighDPI") && attributes.allowHighDPI) flags |= cast WindowFlags.WINDOW_FLAG_ALLOW_HIGHDPI;
 		if (Reflect.hasField(attributes, "alwaysOnTop") && attributes.alwaysOnTop) flags |= cast WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP;
@@ -100,9 +82,10 @@ class NativeWindow
 
 		if (contextAttributes.colorDepth == 32) flags |= cast WindowFlags.WINDOW_FLAG_COLOR_DEPTH_32_BIT;
 		if (contextAttributes.depth) flags |= cast WindowFlags.WINDOW_FLAG_DEPTH_BUFFER;
-		if (contextAttributes.hardware) flags |= cast WindowFlags.WINDOW_FLAG_HARDWARE;
 		if (contextAttributes.stencil) flags |= cast WindowFlags.WINDOW_FLAG_STENCIL_BUFFER;
 		if (contextAttributes.vsync) flags |= cast WindowFlags.WINDOW_FLAG_VSYNC;
+
+		contextAttributes.hardware = true;
 
 		var width = Reflect.hasField(attributes, "width") ? attributes.width : #if desktop 800 #else 0 #end;
 		var height = Reflect.hasField(attributes, "height") ? attributes.height : #if desktop 600 #else 0 #end;
@@ -125,49 +108,26 @@ class NativeWindow
 		var context = new RenderContext();
 		context.window = parent;
 
-		var contextType:String = CFFI.stringValue(NativeCFFI.lime_window_get_context_type(handle));
+		var gl = new NativeOpenGLRenderContext();
 
-		switch (contextType)
+		#if lime_opengl
+		context.gl = gl;
+		#end
+
+		context.gles2 = gl;
+		context.webgl = gl;
+		context.type = gl.type;
+		context.version = Std.string(gl.version);
+
+		if (gl.type == OPENGLES && gl.version >= 3)
 		{
-			case "opengl":
-				var gl = new NativeOpenGLRenderContext();
+			context.gles3 = gl;
+			context.webgl2 = gl;
+		}
 
-				useHardware = true;
-				contextAttributes.hardware = true;
-
-				#if lime_opengl
-				context.gl = gl;
-				#end
-
-				context.gles2 = gl;
-				context.webgl = gl;
-				context.type = gl.type;
-				context.version = Std.string(gl.version);
-
-				if (gl.type == OPENGLES && gl.version >= 3)
-				{
-					context.gles3 = gl;
-					context.webgl2 = gl;
-				}
-
-				if (GL.context == null)
-				{
-					GL.context = gl;
-				}
-
-			default:
-				useHardware = false;
-				contextAttributes.hardware = false;
-
-				#if lime_cairo
-				context.cairo = cairo;
-				context.type = CAIRO;
-				context.version = "";
-
-				parent.context = context;
-				render();
-				#end
-				context.type = CAIRO;
+		if (GL.context == null)
+		{
+			GL.context = gl;
 		}
 
 		contextAttributes.type = context.type;
@@ -234,17 +194,6 @@ class NativeWindow
 	public function contextFlip():Void
 	{
 		#if (!macro && lime_cffi)
-		if (!useHardware)
-		{
-			#if lime_cairo
-			if (cairo != null)
-			{
-				primarySurface.flush();
-			}
-			#end
-			NativeCFFI.lime_window_context_unlock(handle);
-		}
-
 		NativeCFFI.lime_window_context_flip(handle);
 		#end
 	}
@@ -457,34 +406,6 @@ class NativeWindow
 	{
 		#if (!macro && lime_cffi)
 		NativeCFFI.lime_window_context_make_current(handle);
-
-		if (!useHardware)
-		{
-			#if lime_cairo
-			var lock:Dynamic = NativeCFFI.lime_window_context_lock(handle);
-
-			if (lock != null
-				&& (cacheLock == null || cacheLock.pixels != lock.pixels || cacheLock.width != lock.width || cacheLock.height != lock.height))
-			{
-				primarySurface = CairoImageSurface.create(lock.pixels, CairoFormat.ARGB32, lock.width, lock.height, lock.pitch);
-
-				if (cairo != null)
-				{
-					cairo.recreate(primarySurface);
-				}
-				else
-				{
-					cairo = new Cairo(primarySurface);
-				}
-
-				parent.context.cairo = cairo;
-			}
-
-			cacheLock = lock;
-			#else
-			parent.context = null;
-			#end
-		}
 		#end
 	}
 
@@ -791,18 +712,17 @@ private enum abstract WindowFlags(Int)
 	var WINDOW_FLAG_TRANSPARENT = 0x00000002;
 	var WINDOW_FLAG_BORDERLESS = 0x00000004;
 	var WINDOW_FLAG_RESIZABLE = 0x00000008;
-	var WINDOW_FLAG_HARDWARE = 0x00000010;
-	var WINDOW_FLAG_VSYNC = 0x00000020;
-	var WINDOW_FLAG_HW_AA = 0x00000040;
-	var WINDOW_FLAG_HW_AA_HIRES = 0x000000C0;
-	var WINDOW_FLAG_ALLOW_SHADERS = 0x00000100;
-	var WINDOW_FLAG_REQUIRE_SHADERS = 0x00000200;
-	var WINDOW_FLAG_DEPTH_BUFFER = 0x00000400;
-	var WINDOW_FLAG_STENCIL_BUFFER = 0x00000800;
-	var WINDOW_FLAG_ALLOW_HIGHDPI = 0x00001000;
-	var WINDOW_FLAG_HIDDEN = 0x00002000;
-	var WINDOW_FLAG_MINIMIZED = 0x00004000;
-	var WINDOW_FLAG_MAXIMIZED = 0x00008000;
-	var WINDOW_FLAG_ALWAYS_ON_TOP = 0x00010000;
-	var WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00020000;
+	var WINDOW_FLAG_VSYNC = 0x00000010;
+	var WINDOW_FLAG_HW_AA = 0x00000020;
+	var WINDOW_FLAG_HW_AA_HIRES = 0x00000060;
+	var WINDOW_FLAG_ALLOW_SHADERS = 0x00000080;
+	var WINDOW_FLAG_REQUIRE_SHADERS = 0x00000100;
+	var WINDOW_FLAG_DEPTH_BUFFER = 0x00000200;
+	var WINDOW_FLAG_STENCIL_BUFFER = 0x00000400;
+	var WINDOW_FLAG_ALLOW_HIGHDPI = 0x00000800;
+	var WINDOW_FLAG_HIDDEN = 0x00001000;
+	var WINDOW_FLAG_MINIMIZED = 0x00002000;
+	var WINDOW_FLAG_MAXIMIZED = 0x00004000;
+	var WINDOW_FLAG_ALWAYS_ON_TOP = 0x00008000;
+	var WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00010000;
 }
