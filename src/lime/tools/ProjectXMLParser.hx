@@ -1709,7 +1709,9 @@ class ProjectXMLParser extends HXProject
 
 					while (i-- > 0)
 					{
-						if ((name != "" && dependencies[i].name == name) || (path != "" && dependencies[i].path == path))
+						if ((name != "" && path != "" && dependencies[i].name == name && dependencies[i].path == path)
+							|| (name != "" && path == "" && dependencies[i].name == name)
+							|| (name == "" && path != "" && dependencies[i].path == path))
 						{
 							dependencies.splice(i, 1);
 						}

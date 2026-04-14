@@ -168,6 +168,18 @@ class LinuxPlatform extends PlatformTarget
 
 		System.mkdir(targetDirectory);
 
+		for (dependency in project.dependencies)
+		{
+			if (StringTools.endsWith(dependency.path, ".so"))
+			{
+				copyIfNewer(dependency.path, applicationDirectory + "/" + Path.withoutDirectory(dependency.path));
+			}
+			else
+			{
+				copyIfNewer(Path.combine(dependency.path, "Linux" + (( System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64)?"Arm":"") + (is64 ? "64" : "") + "/" + dependency.name + ".so"), applicationDirectory + "/" + dependency.name + ".so");
+			}
+		}
+
 		for (ndll in project.ndlls)
 		{
 			if (targetType == "hl")
