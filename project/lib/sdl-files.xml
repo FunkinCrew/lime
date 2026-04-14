@@ -351,16 +351,6 @@
         <section>
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/SDL_render.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/SDL_yuv_sw.c" />
-
-			<section>
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_blendfillrect.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_blendline.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_blendpoint.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_drawline.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_drawpoint.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_render_sw.c" />
-				<file name="${NATIVE_TOOLKIT_PATH}/sdl/src/render/software/SDL_triangle.c" />
-			</section>
         </section>
 
         <section>
