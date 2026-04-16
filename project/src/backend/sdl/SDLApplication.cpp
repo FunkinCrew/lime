@@ -753,11 +753,24 @@ namespace lime {
 					windowEvent.y = event->window.data2;
 					break;
 
-				case SDL_EVENT_WINDOW_RESIZED:
+				case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+				case SDL_EVENT_WINDOW_RESIZED: {
+
+					int width = event->window.data1;
+					int height = event->window.data2;
+
+					if (width == 0 && height == 0) {
+
+						SDL_GetWindowSizeInPixels (SDL_GetWindowFromID (event->window.windowID), &width, &height);
+
+					}
+
 					windowEvent.type = WINDOW_RESIZE;
-					windowEvent.width = event->window.data1;
-					windowEvent.height = event->window.data2;
+					windowEvent.width = width;
+					windowEvent.height = height;
 					break;
+
+				}
 
 				case SDL_EVENT_WINDOW_RESTORED: windowEvent.type = WINDOW_RESTORE; break;
 
