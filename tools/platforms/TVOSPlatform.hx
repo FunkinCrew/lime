@@ -625,6 +625,8 @@ class TVOSPlatform extends PlatformTarget
 			}
 		}
 
+		System.mkdir(projectDirectory + "/assets");
+
 		copyProjectAssets(projectDirectory, "assets");
 
 		if (project.targetFlags.exists("xcode") && System.hostPlatform == MAC && command == "update")
