@@ -34,17 +34,12 @@ class FileDialog
 		@param window        The parent window for the dialog.
 		@param title         The title for the dialog.
 		@param callback      Called with the list of selected directories when the dialog is confirmed, or an empty array if the user cancelled.
-		@param defaultPath   The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
+		@param defaultPath   The default folder or file to start the dialog at.
 		@param allowMultiple Whether the user can select multiple directories.
 	**/
-	public static function openDirectory(window:Window = null, title:String = null, callback:Array<String>->Void = null, defaultPath:String = null, allowMultiple:Bool = false):Void
+	public static function openDirectory(window:Window = null, title:String = null, callback:Array<String>->Void = null, ?defaultPath:String = null, allowMultiple:Bool = false):Void
 	{
 		#if (lime_cffi && !macro)
-		if (defaultPath == null)
-		{
-			defaultPath = Sys.getCwd();
-		}
-
 		#if hl
 		var dialogCallback = function(list:hl.NativeArray<hl.Bytes>):Void
 		{
@@ -73,18 +68,13 @@ class FileDialog
 		@param title         The title for the dialog.
 		@param callback      Called with the list of selected files and the active `FileDialogFilter` when the dialog is confirmed, or an empty array and `null` if the user cancelled.
 		@param filters       A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
-		@param defaultPath   The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
+		@param defaultPath   The default folder or file to start the dialog at.
 		@param allowMultiple Whether the user can select multiple files.
 	**/
 	public static function openFile(window:Window = null, title:String = null, callback:Array<String>->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			defaultPath:String = null, ?allowMultiple:Bool = false):Void
+			?defaultPath:String = null, ?allowMultiple:Bool = false):Void
 	{
 		#if (lime_cffi && !macro)
-		if (defaultPath == null)
-		{
-			defaultPath = Sys.getCwd();
-		}
-
 		var count = filters != null ? filters.length : 0;
 
 		#if hl
@@ -127,17 +117,12 @@ class FileDialog
 		@param title       The title for the dialog.
 		@param callback    Called with the selected save path and the active `FileDialogFilter` when the dialog is confirmed, or `null` if the user cancelled.
 		@param filters     A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
-		@param defaultPath The default folder or file to start the dialog at. Defaults to `Sys.getCwd()`.
+		@param defaultPath The default folder or file to start the dialog at.
 	**/
 	public static function saveFile(window:Window = null, title:String = null, callback:String->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			defaultPath:String = null):Void
+			?defaultPath:String = null):Void
 	{
 		#if (lime_cffi && !macro)
-		if (defaultPath == null)
-		{
-			defaultPath = Sys.getCwd();
-		}
-
 		var count = filters != null ? filters.length : 0;
 
 		#if hl
