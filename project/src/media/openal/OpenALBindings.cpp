@@ -2184,6 +2184,8 @@ namespace lime {
 	bool lime_alc_is_extension_present (value device, HxString extname) {
 
 		#ifdef LIME_OPENALSOFT
+		if (val_is_null (device)) return alcIsExtensionPresent (0, extname.__s);
+
 		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
 		return alcIsExtensionPresent (alcDevice, extname.__s);
 		#else
@@ -2196,6 +2198,8 @@ namespace lime {
 	HL_PRIM bool HL_NAME(hl_alc_is_extension_present) (HL_CFFIPointer* device, hl_vstring* extname) {
 
 		#ifdef LIME_OPENALSOFT
+		if (!device) return alcIsExtensionPresent (0, extname ? hl_to_utf8 (extname->bytes) : NULL);
+
 		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
 		return alcIsExtensionPresent (alcDevice, extname ? hl_to_utf8 (extname->bytes) : NULL);
 		#else
@@ -2781,50 +2785,92 @@ namespace lime {
 	}
 
 
-	void lime_al_source3i (value source, int param, value value1, int value2, int value3) {
+	void lime_al_source3i (value source, int param, value value1, int value2, value value3) {
 
 		ALuint id = (ALuint)(uintptr_t)val_data (source);
 		ALuint data1;
+		ALuint data3;
 
 		#ifdef LIME_OPENALSOFT
 		if (param == AL_AUXILIARY_SEND_FILTER) {
 
-			data1 = (ALuint)(uintptr_t)val_data (value1);
+			if (val_is_null (value1)) {
+
+				data1 = 0;
+			
+			} else {
+
+				data1 = (ALuint)(uintptr_t)val_data (value1);
+
+			}
+
+			if (val_is_null (value3)) {
+
+				data3 = 0;
+
+			} else {
+
+				data3 = (ALuint)(uintptr_t)val_data (value3);
+
+			}
 
 		} else {
 
 			data1 = val_int (value1);
+			data3 = val_int (value3);
 
 		}
 		#else
 		data1 = val_int (value1);
+		data3 = val_int (value3);
 		#endif
 
-		alSource3i (id, param, data1, value2, value3);
+		alSource3i (id, param, data1, value2, data3);
 
 	}
 
 
-	HL_PRIM void HL_NAME(hl_al_source3i) (HL_CFFIPointer* source, int param, vdynamic* value1, int value2, int value3) {
+	HL_PRIM void HL_NAME(hl_al_source3i) (HL_CFFIPointer* source, int param, vdynamic* value1, int value2, vdynamic* value3) {
 
 		ALuint id = (ALuint)(uintptr_t)source->ptr;
 		ALuint data1;
+		ALuint data3;
 
 		#ifdef LIME_OPENALSOFT
 		if (param == AL_AUXILIARY_SEND_FILTER) {
 
-			data1 = (ALuint)(uintptr_t)((HL_CFFIPointer*)value1)->ptr;
+			if (value1) {
+				
+				data1 = (ALuint)(uintptr_t)((HL_CFFIPointer*)value1)->ptr;
+
+			} else {
+
+				data1 = 0;
+
+			}
+
+			if (value3) {
+
+				data3 = (ALuint)(uintptr_t)((HL_CFFIPointer*)value3)->ptr;
+
+			} else {
+
+				data3 = 0;
+
+			}
 
 		} else {
 
 			data1 = value1->v.i;
+			data3 = value3->v.i;
 
 		}
 		#else
 		data1 = value1->v.i;
+		data3 = value3->v.i;
 		#endif
 
-		alSource3i (id, param, data1, value2, value3);
+		alSource3i (id, param, data1, value2, data3);
 
 	}
 
@@ -3007,6 +3053,8 @@ namespace lime {
 
 	bool lime_alc_close_device (value device) {
 
+		if (val_is_null (device)) return false;
+
 		al_gc_mutex.Lock ();
 		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
 		alcObjects.erase (alcDevice);
@@ -3018,6 +3066,8 @@ namespace lime {
 
 
 	HL_PRIM bool HL_NAME(hl_alc_close_device) (HL_CFFIPointer* device) {
+
+		if (!device) return false;
 
 		al_gc_mutex.Lock ();
 		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
@@ -3234,16 +3284,16 @@ namespace lime {
 	}
 
 
-	value lime_alc_get_integerv (value device, int param, int size) {
+	value lime_alc_get_integerv (value device, int param, int count) {
 
 		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
 
-		ALCint* values = new ALCint[size];
-		alcGetIntegerv (alcDevice, param, size, values);
+		ALCint* values = new ALCint[count];
+		alcGetIntegerv (alcDevice, param, count, values);
 
-		value result = alloc_array (size);
+		value result = alloc_array (count);
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < count; i++) {
 
 			val_array_set_i (result, i, alloc_int (values[i]));
 
@@ -3255,11 +3305,11 @@ namespace lime {
 	}
 
 
-	HL_PRIM varray* HL_NAME(hl_alc_get_integerv) (HL_CFFIPointer* device, int param, int size) {
+	HL_PRIM varray* HL_NAME(hl_alc_get_integerv) (HL_CFFIPointer* device, int param, int count) {
 
 		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
-		varray* result = hl_alloc_array (&hlt_i32, size);
-		alcGetIntegerv (alcDevice, param, size, hl_aptr (result, int));
+		varray* result = hl_alloc_array (&hlt_i32, count);
+		alcGetIntegerv (alcDevice, param, count, hl_aptr (result, int));
 		return result;
 
 	}
@@ -3288,67 +3338,70 @@ namespace lime {
 
 	value lime_alc_get_string_list (value device, int param) {
 
+		#ifdef ALC_ENUMERATE_ALL_EXT
 		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
-		const char* result = alcGetString (alcDevice, param);
+		const char* values = alcGetString (alcDevice, param);
 
-		if (!result || *result == '\0') {
-
-			return alloc_null ();
-
+		if (!values) {
+			return alloc_array (0);
 		}
 
-		value list = alloc_array (0);
-
-		while (*result != '\0') {
-
-			val_array_push (list, alloc_string (result));
-			result += strlen (result) + 1;
-
+		int count = 0;
+		const char* ptr = values;
+		while (*ptr) {
+			count++;
+			ptr += strlen (ptr) + 1;
 		}
 
-		return list;
+		value result = alloc_array (count);
+		ptr = values;
+		count = 0;
+		while (*ptr) {
+			val_array_set_i (result, count, alloc_string (ptr));
+			count++;
+			ptr += strlen (ptr) + 1;
+		}
+
+		return result;
+		#else
+		return alloc_array (0);
+		#endif
 
 	}
 
 
 	HL_PRIM varray* HL_NAME(hl_alc_get_string_list) (HL_CFFIPointer* device, int param) {
 
+		#ifdef ALC_ENUMERATE_ALL_EXT
 		ALCdevice* alcDevice = device ? (ALCdevice*)device->ptr : 0;
-		const char* result = alcGetString(alcDevice, param);
+		const char* values = alcGetString (alcDevice, param);
 
-		if (!result || *result == '\0') {
-
-			return 0;
-
+		if (!values) {
+			return hl_alloc_array (&hlt_bytes, 0);
 		}
 
 		int count = 0;
-		const char* temp = result;
-		while (*temp != '\0') {
-
+		const char* ptr = values;
+		while (*ptr) {
 			count++;
-			temp += strlen (temp) + 1;
-
+			ptr += strlen (ptr) + 1;
 		}
 
-		varray* list = hl_alloc_array (&hlt_bytes, count);
-		vbyte** listData = hl_aptr (list, vbyte*);
-
-		while (*result != '\0') {
-
-			int length = strlen (result) + 1;
-			char* _result = (char*)malloc (length);
-			strcpy (_result, result);
-
-			*listData = (vbyte*)_result;
-			listData++;
-
-			result += length;
-			free(_result);
-
+		varray* result = hl_alloc_array(&hlt_bytes, count);
+		ptr = values;
+		count = 0;
+		while (*ptr) {
+			char* _result = (char*)malloc (strlen (ptr) + 1);
+			strcpy (_result, ptr);
+			hl_aptr (result, vbyte*)[count] = (vbyte*)_result;
+			count++;
+			ptr += strlen (ptr) + 1;
 		}
 
-		return list;
+		return result;
+		#else
+		return hl_alloc_array (&hlt_bytes, 0);
+		#endif
 
 	}
 
@@ -3971,7 +4024,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_al_source_stopv, _I32 _ARR);
 	DEFINE_HL_PRIM (_ARR, hl_al_source_unqueue_buffers, _TCFFIPOINTER _I32);
 	DEFINE_HL_PRIM (_VOID, hl_al_source3f, _TCFFIPOINTER _I32 _F32 _F32 _F32);
-	DEFINE_HL_PRIM (_VOID, hl_al_source3i, _TCFFIPOINTER _I32 _DYN _I32 _I32);
+	DEFINE_HL_PRIM (_VOID, hl_al_source3i, _TCFFIPOINTER _I32 _DYN _I32 _DYN);
 	DEFINE_HL_PRIM (_VOID, hl_al_sourcef, _TCFFIPOINTER _I32 _F32);
 	DEFINE_HL_PRIM (_VOID, hl_al_sourcefv, _TCFFIPOINTER _I32 _ARR);
 	DEFINE_HL_PRIM (_VOID, hl_al_sourcei, _TCFFIPOINTER _I32 _DYN);
