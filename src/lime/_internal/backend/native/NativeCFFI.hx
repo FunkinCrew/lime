@@ -1693,7 +1693,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_al_source3f(source:CFFIPointer, param:Int, value1:Float32, value2:Float32, value3:Float32):Void;
 
-	@:cffi private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int, value3:Int):Void;
+	@:cffi private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int, value3:Dynamic):Void;
 
 	@:cffi private static function lime_al_sourcef(source:CFFIPointer, param:Int, value:Float32):Void;
 
@@ -1717,7 +1717,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_alc_get_error(device:CFFIPointer):Int;
 
-	@:cffi private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, size:Int):Dynamic;
+	@:cffi private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, count:Int):Dynamic;
 
 	@:cffi private static function lime_alc_get_string(device:CFFIPointer, param:Int):Dynamic;
 
@@ -1892,8 +1892,8 @@ class NativeCFFI
 		"lime_al_source_unqueue_buffers", "oio", false));
 	private static var lime_al_source3f = new cpp.Callable<cpp.Object->Int->cpp.Float32->cpp.Float32->cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_al_source3f", "oifffv", false));
-	private static var lime_al_source3i = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_source3i",
-		"oioiiv", false));
+	private static var lime_al_source3i = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_source3i",
+		"oioiov", false));
 	private static var lime_al_sourcef = new cpp.Callable<cpp.Object->Int->cpp.Float32->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_sourcef", "oifv",
 		false));
 	private static var lime_al_sourcefv = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_al_sourcefv", "oiov",
@@ -2378,7 +2378,7 @@ class NativeCFFI
 		value3:hl.F32):Void {}
 
 	@:hlNative("lime", "hl_al_source3i") private static function lime_al_source3i(source:CFFIPointer, param:Int, value1:Dynamic, value2:Int,
-		value3:Int):Void {}
+		value3:Dynamic):Void {}
 
 	@:hlNative("lime", "hl_al_sourcef") private static function lime_al_sourcef(source:CFFIPointer, param:Int, value:hl.F32):Void {}
 
@@ -2417,7 +2417,7 @@ class NativeCFFI
 		return 0;
 	}
 
-	@:hlNative("lime", "hl_alc_get_integerv") private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, size:Int):hl.NativeArray<Int>
+	@:hlNative("lime", "hl_alc_get_integerv") private static function lime_alc_get_integerv(device:CFFIPointer, param:Int, count:Int):hl.NativeArray<Int>
 	{
 		return null;
 	}

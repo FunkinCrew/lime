@@ -148,10 +148,10 @@ class ALC
 		}
 	}
 
-	public static function getIntegerv(device:ALDevice, param:Int, size:Int):Array<Int>
+	public static function getIntegerv(device:ALDevice, param:Int, count:Int = 1):Array<Int>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_alc_get_integerv(device, param, size);
+		var result = NativeCFFI.lime_alc_get_integerv(device, param, count);
 		#if hl
 		if (result == null) return [];
 		var _result = [];
@@ -179,23 +179,16 @@ class ALC
 	public static function getStringList(device:ALDevice, param:Int):Array<String>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		if (param == DEVICE_SPECIFIER ||
-			param == ALL_DEVICES_SPECIFIER)
-		{
-			var result = NativeCFFI.lime_alc_get_string_list(device, param);
-			#if hl
-			if (result == null) return [];
-			var _result = [];
-			for (i in 0...result.length)
-				_result[i] = CFFI.stringValue(result[i]);
-			return _result;
-			#else
-			return result;
-			#end
-
-		}
-
-		return [getString(device, param)];
+		var result = NativeCFFI.lime_alc_get_string_list(device, param);
+		#if hl
+		if (result == null) return [];
+		var _result = [];
+		for (i in 0...result.length)
+			_result[i] = CFFI.stringValue(result[i]);
+		return _result;
+		#else
+		return result;
+		#end
 		#else
 		return null;
 		#end
