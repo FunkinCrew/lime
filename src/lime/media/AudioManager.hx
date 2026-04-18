@@ -1,212 +1,262 @@
 package lime.media;
 
-import lime.system.CFFIPointer;
 import haxe.MainLoop;
+import lime.system.CFFIPointer;
+#if lime_openal
+import lime.media.openal.AL;
+import lime.media.openal.ALC;
+import lime.media.openal.ALContext;
+import lime.media.openal.ALDevice;
 #if (windows || mac || linux || android || ios)
 import haxe.io.Path;
 import lime.system.System;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import haxe.Timer;
-import lime._internal.backend.native.NativeCFFI;
-import lime.media.openal.AL;
-import lime.media.openal.ALC;
-import lime.media.openal.ALContext;
-import lime.media.openal.ALDevice;
-import lime.app.Application;
-#if (js && html5)
-import js.Browser;
+#elseif lime_howlerjs
+import lime.media.howlerjs.Howler;
 #end
 
-@:allow(lime._internal.backend.native.NativeApplication)
-@:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.media.openal.ALDevice)
 class AudioManager
 {
+	/**
+		The version of OpenAL Configuration.
+	**/
 	@:noCompletion
-	private static var AUDIO_CONFIG_VERSION:String = "1.1";
+	private static final AUDIO_CONFIG_VERSION:String = "1.1";
 
-	@:noCompletion
-	private static var resumeOnFocus:Bool = false;
+	/**
+		A read-only variable if the AudioManager is active or suspended.
+	**/
+	public static var active(default, null):Bool;
 
-	@:noCompletion
-	private static var active:Bool = true;
-
+	/**
+		The current used context to use for the audio manager.
+	**/
 	public static var context:AudioContext;
 
-	public static function init(context:AudioContext = null)
+	#if lime_openal
+	@:noCompletion private static var __disconnectExtSupported:Bool;
+	@:noCompletion private static var __resumeOnFocus:Bool;
+	@:noCompletion private static var __reopenDeviceSupported:Bool;
+	@:noCompletion private static var __systemEventsSupported:Bool;
+	#end
+
+	/**
+		Initializes an `AudioManager` to playback to and capture from audio devices.
+		Automatically dispatched when Application is constructed.
+
+		@param	context	Optional; An Audio Context to initalize the `AudioManager` with.
+	**/
+	public static function init(?context:AudioContext)
 	{
-		if (AudioManager.context == null)
+		if (AudioManager.context != null) return;
+
+		if (context == null)
 		{
-			if (context == null)
-			{
-				AudioManager.context = new AudioContext();
-
-				context = AudioManager.context;
-
-				#if !lime_doc_gen
-				if (context.type == OPENAL)
-				{
-					#if (windows || mac || linux || android || ios)
-					setupConfig();
-					#end
-
-					var alc = context.openal;
-					var device = alc.openDevice();
-					if (device != null)
-					{
-						var ctx = alc.createContext(device);
-						alc.makeContextCurrent(ctx);
-						alc.processContext(ctx);
-
-						if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
-						{
-							if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
-								alc.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
-
-							alc.eventControlSOFT([ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT, ALC.EVENT_TYPE_DEVICE_ADDED_SOFT, ALC.EVENT_TYPE_DEVICE_REMOVED_SOFT], true);
-
-							alc.eventCallbackSOFT(deviceEventCallback);
-						}
-					}
-				}
-				#end
-			}
-
-			AudioManager.context = context;
+			context = new AudioContext();
 		}
+
+		AudioManager.context = context;
+
+		#if lime_openal
+		if (context.type == OPENAL)
+		{
+			#if (windows || mac || linux || android || ios)
+			__setupConfig();
+			#end
+
+			refresh();
+
+			#if !mobile
+			if (__reopenDeviceSupported) AL.disable(AL.STOP_SOURCES_ON_DISCONNECT_SOFT);
+			#end
+		}
+		#end
 	}
 
-	public static function resume():Void
+	/**
+		Refresh the context with optionally to different device.
+
+		Only works on Native target.
+
+		@param	deviceName	Optional; The device name to use to for playbacking the audios.
+	**/
+	public static function refresh(?deviceName:String):Bool
 	{
-		if (active)
-			return;
+		#if (lime_openal && !lime_doc_gen)
+		if (context == null || context.type != OPENAL) return false;
 
-		#if !lime_doc_gen
-		if (context != null && context.type == OPENAL)
+		var currentContext = ALC.getCurrentContext();
+		var device = currentContext != null ? ALC.getContextsDevice(currentContext) : null;
+
+		#if !mobile
+		if (device != null && __reopenDeviceSupported && ALC.reopenDeviceSOFT(device, deviceName, null))
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-
-			if (currentContext != null)
-			{
-				var device = alc.getContextsDevice(currentContext);
-				alc.resumeDevice(device);
-				alc.processContext(currentContext);
-			}
+			__refresh();
+			return true;
 		}
 		#end
 
-		active = true;
+		if (currentContext != null)
+		{
+			ALC.destroyContext(currentContext);
+			currentContext = null;
+		}
+
+		if (device != null)
+		{
+			ALC.closeDevice(device);
+			device = null;
+		}
+
+		if ((device = ALC.openDevice()) == null || (currentContext = ALC.createContext(device)) == null
+			|| !ALC.makeContextCurrent(currentContext))
+		{
+			return false;
+		}
+
+		ALC.processContext(currentContext);
+		__refresh();
+		return true;
+		#else
+		return false;
+		#end
 	}
 
-	public static function shutdown():Void
+	/**
+		Resumes the current `AudioManager` context.
+	**/
+	public static function resume():Void
 	{
-		#if !lime_doc_gen
+		#if lime_openal
 		if (context != null && context.type == OPENAL)
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-			var device = alc.getContextsDevice(currentContext);
-
+			var currentContext = ALC.getCurrentContext();
 			if (currentContext != null)
 			{
-				alc.makeContextCurrent(null);
-				alc.destroyContext(currentContext);
+				var device = ALC.getContextsDevice(currentContext);
+				if (device != null) ALC.resumeDevice(device);
 
-				if (device != null)
-				{
-					alc.closeDevice(device);
-				}
+				ALC.processContext(currentContext);
 			}
+		}
+		#elseif (js && html5)
+		#if lime_howlerjs
+		if (untyped Howler.ctx)
+		{
+			Howler.ctx.resume();
+		}
+		#end
+		if (context != null && context.type == WEB)
+		{
+			context.web.resume();
+		}
+		#end
+	}
+
+	/**
+		Shutdowns the current `AudioManager` context.
+	**/
+	public static function shutdown():Void
+	{
+		#if lime_openal
+		if (context != null && context.type == OPENAL)
+		{
+			var currentContext = ALC.getCurrentContext();
+			if (currentContext != null)
+			{
+				ALC.makeContextCurrent(null);
+				ALC.destroyContext(currentContext);
+
+				var device = ALC.getContextsDevice(currentContext);
+				if (device != null) ALC.closeDevice(device);
+			}
+		}
+		#elseif (js && html5)
+		#if lime_howlerjs
+		if (untyped Howler.ctx)
+		{
+			Howler.ctx.unload();
+		}
+		#end
+		if (context != null && context.type == WEB)
+		{
+			context.web.close();
 		}
 		#end
 
 		context = null;
 	}
 
+	/**
+		Pauses the current `AudioManager` context.
+	**/
 	public static function suspend():Void
 	{
-		if (!active)
-			return;
-
-		#if !lime_doc_gen
+		#if lime_openal
 		if (context != null && context.type == OPENAL)
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-			var device = alc.getContextsDevice(currentContext);
-
+			var currentContext = ALC.getCurrentContext();
 			if (currentContext != null)
 			{
-				alc.suspendContext(currentContext);
+				ALC.suspendContext(currentContext);
 
-				if (device != null)
-				{
-					alc.pauseDevice(device);
-				}
+				var device = ALC.getContextsDevice(currentContext);
+				if (device != null) ALC.pauseDevice(device);
 			}
 		}
+		#elseif (js && html5)
+		#if lime_howlerjs
+		if (untyped Howler.ctx)
+		{
+			Howler.ctx.suspend();
+		}
 		#end
-
-		active = false;
+		if (context != null && context.type == WEB)
+		{
+			context.web.suspend();
+		}
+		#end
 	}
 
+	@:allow(lime._internal.backend.native.NativeApplication)
 	@:noCompletion
 	private static function onActivate():Void
 	{
-		if (resumeOnFocus)
+		if (__resumeOnFocus)
 		{
-			resumeOnFocus = false;
-
-			AudioManager.resume();
+			context.web.suspend();
 		}
 	}
 
+	@:allow(lime._internal.backend.native.NativeApplication)
 	@:noCompletion
 	private static function onDeactivate():Void
 	{
-		resumeOnFocus = resumeOnFocus || AudioManager.active;
-
+		__resumeOnFocus = __resumeOnFocus || AudioManager.active;
 		AudioManager.suspend();
 	}
 
-	@:noCompletion
-	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:#if hl hl.Bytes #else String #end):Void
+	#if (lime_openal && !lime_doc_gen)
+	@:noCompletion private static function __refresh():Void
 	{
-		#if !lime_doc_gen
-		if (eventType == ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT && deviceType == ALC.PLAYBACK_DEVICE_SOFT)
-		{
-			var device = new ALDevice(handle);
+		var currentContext = ALC.getCurrentContext();
+		if (currentContext == null) return;
 
-			MainLoop.runInMainThread(function():Void
-			{
-				var alc = context.openal;
+		var device = ALC.getContextsDevice(currentContext);
+		if (device == null) return;
 
-				if (device == null)
-				{
-					var currentContext = alc.getCurrentContext();
-
-					var device = alc.getContextsDevice(currentContext);
-
-					if (device != null)
-						alc.reopenDeviceSOFT(device, null, null);
-				}
-				else
-				{
-					alc.reopenDeviceSOFT(device, null, null);
-				}
-
-			});
-		}
-		#end
+		__disconnectExtSupported = ALC.isExtensionPresent(null, 'ALC_EXT_disconnect');
+		__reopenDeviceSupported = ALC.isExtensionPresent(null, 'ALC_SOFT_reopen_device');
+		__systemEventsSupported = ALC.isExtensionPresent(null, 'ALC_SOFT_system_events');
 	}
 
+	#if (windows || mac || linux || android || ios)
 	@:noCompletion
-	private static function setupConfig():Void
+	private static function __setupConfig():Void
 	{
-		#if (lime_openal && (windows || mac || linux || android || ios))
 		final alConfig:Array<String> = [];
 
 		alConfig.push('[general]');
@@ -242,6 +292,7 @@ class AudioManager
 			Sys.putEnv('ALSOFT_CONF', path);
 		}
 		catch (e:Dynamic) {}
-		#end
 	}
+	#end
+	#end
 }
