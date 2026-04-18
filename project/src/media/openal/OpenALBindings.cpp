@@ -132,33 +132,6 @@ namespace lime {
 
 	}
 
-	/*This has been removed after updating to openal 1.20.0+ since the cleanup functions involved
-	* lead to deadlocking. See https://github.com/openfl/lime/issues/1803 for more info.
-	* Developers should use lime.system.System.exit() instead of Sys.exit() to clean up any system
-	* resources
-	*/
-	/*
-	void lime_al_atexit () {
-
-		ALCcontext* alcContext = alcGetCurrentContext ();
-
-		if (alcContext) {
-
-			ALCdevice* alcDevice = alcGetContextsDevice (alcContext);
-
-			alcMakeContextCurrent (0);
-			alcDestroyContext (alcContext);
-
-			if (alcDevice) {
-
-				alcCloseDevice (alcDevice);
-
-			}
-
-		}
-
-	}
-	*/
 
 	void lime_al_auxf (value aux, int param, float value) {
 
@@ -2184,7 +2157,7 @@ namespace lime {
 	bool lime_alc_is_extension_present (value device, HxString extname) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = !val_is_null (device) ? (ALCdevice*)val_data (device) : NULL;
+		ALCdevice* alcDevice = val_is_null (device) ? NULL : (ALCdevice*)(uintptr_t)val_data (device);
 		return alcIsExtensionPresent (alcDevice, extname.__s);
 		#else
 		return false;
@@ -2196,7 +2169,7 @@ namespace lime {
 	HL_PRIM bool HL_NAME(hl_alc_is_extension_present) (HL_CFFIPointer* device, hl_vstring* extname) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = device ? (ALCdevice*)device->ptr : NULL;
+		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : NULL;
 		return alcIsExtensionPresent (alcDevice, extname ? hl_to_utf8 (extname->bytes) : NULL);
 		#else
 		return false;
@@ -3055,8 +3028,8 @@ namespace lime {
 
 		}
 
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 		al_gc_mutex.Lock ();
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
 		alcObjects.erase (alcDevice);
 		al_gc_mutex.Unlock ();
 
@@ -3073,8 +3046,8 @@ namespace lime {
 
 		}
 
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		al_gc_mutex.Lock ();
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
 		alcObjects.erase (alcDevice);
 		al_gc_mutex.Unlock ();
 
@@ -3085,7 +3058,7 @@ namespace lime {
 
 	value lime_alc_create_context (value device, value attrlist) {
 
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 		ALCint* list = NULL;
 
 		if (!val_is_null (attrlist)) {
@@ -3109,119 +3082,129 @@ namespace lime {
 
 		}
 
+		value ptr = CFFIPointer ((void*)(uintptr_t)alcContext, gc_alc_object);
 		al_gc_mutex.Lock ();
-		value object = CFFIPointer (alcContext, gc_alc_object);
-		alcObjects[alcContext] = object;
+		alcObjects[alcContext] = ptr;
 		al_gc_mutex.Unlock ();
-		return object;
+		return ptr;
 
 	}
 
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_alc_create_context) (HL_CFFIPointer* device, varray* attrlist) {
 
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		ALCcontext* alcContext = alcCreateContext (alcDevice, attrlist ? hl_aptr (attrlist, int) : NULL);
 
+		HL_CFFIPointer* ptr = HLCFFIPointer ((void*)(uintptr_t)alcContext, (hl_finalizer)gc_alc_object);
 		al_gc_mutex.Lock ();
-		HL_CFFIPointer* object = HLCFFIPointer (alcContext, (hl_finalizer)hl_gc_alc_object);
-		alcObjects[alcContext] = object;
+		alcObjects[alcContext] = ptr;
 		al_gc_mutex.Unlock ();
-		return object;
+		return ptr;
 
 	}
 
 
 	void lime_alc_destroy_context (value context) {
 
-		al_gc_mutex.Lock ();
-		ALCcontext* alcContext = (ALCcontext*)val_data (context);
+		if (!val_is_null (context)) {
 
-		if (alcObjects.find (alcContext) != alcObjects.end ()) {
+			ALCcontext* alcContext = (ALCcontext*)(uintptr_t)val_data (context);
 
+			al_gc_mutex.Lock ();
 			alcObjects.erase (alcContext);
+			al_gc_mutex.Unlock ();
+
+			if (alcContext == alcGetCurrentContext ()) {
+
+				alcMakeContextCurrent (0);
+
+			}
+
+			alcDestroyContext (alcContext);
 
 		}
-
-		if (alcContext == alcGetCurrentContext ()) {
-
-			alcMakeContextCurrent (0);
-
-		}
-
-		alcDestroyContext (alcContext);
-		al_gc_mutex.Unlock ();
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_alc_destroy_context) (HL_CFFIPointer* context) {
 
-		al_gc_mutex.Lock ();
-		ALCcontext* alcContext = (ALCcontext*)context->ptr;
+		if (context) {
 
-		if (alcObjects.find (alcContext) != alcObjects.end ()) {
+			ALCcontext* alcContext = (ALCcontext*)(uintptr_t)context->ptr;
 
+			al_gc_mutex.Lock ();
 			alcObjects.erase (alcContext);
+			al_gc_mutex.Unlock ();
+
+			if (alcContext == alcGetCurrentContext ()) {
+
+				alcMakeContextCurrent (0);
+
+			}
+
+			alcDestroyContext (alcContext);
 
 		}
-
-		if (alcContext == alcGetCurrentContext ()) {
-
-			alcMakeContextCurrent (0);
-
-		}
-
-		alcDestroyContext (alcContext);
-		al_gc_mutex.Unlock ();
 
 	}
 
 
 	value lime_alc_get_contexts_device (value context) {
 
-		ALCcontext* alcContext = (ALCcontext*)val_data (context);
+		if (val_is_null (context)) return alloc_null ();
+
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)val_data (context);
 		ALCdevice* alcDevice = alcGetContextsDevice (alcContext);
 
-		value result;
+		value ptr;
 		al_gc_mutex.Lock ();
+
 		if (alcObjects.find (alcDevice) != alcObjects.end ()) {
 
-			result = (value)alcObjects[alcDevice];
-
-		} else {
-
-			value object = CFFIPointer (alcDevice, gc_alc_object);
-			alcObjects[alcDevice] = object;
-			result = object;
+			ptr = (value)alcObjects[alcDevice];
 
 		}
+		else {
+
+			ptr = CFFIPointer ((void*)(uintptr_t)alcDevice, gc_alc_object);
+			alcObjects[alcDevice] = ptr;
+
+		}
+
 		al_gc_mutex.Unlock ();
-		return result;
+
+		return ptr;
 
 	}
 
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_alc_get_contexts_device) (HL_CFFIPointer* context) {
 
-		ALCcontext* alcContext = (ALCcontext*)context->ptr;
+		if (!context) return NULL;
+
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)context->ptr;
 		ALCdevice* alcDevice = alcGetContextsDevice (alcContext);
 
-		HL_CFFIPointer* result;
+		HL_CFFIPointer* ptr;
 		al_gc_mutex.Lock ();
+
 		if (alcObjects.find (alcDevice) != alcObjects.end ()) {
 
-			result = (HL_CFFIPointer*)alcObjects[alcDevice];
-
-		} else {
-
-			HL_CFFIPointer* object = HLCFFIPointer (alcDevice, (hl_finalizer)hl_gc_alc_object);
-			alcObjects[alcDevice] = object;
-			result = object;
+			ptr = (HL_CFFIPointer*)alcObjects[alcDevice];
 
 		}
+		else {
+
+			ptr = HLCFFIPointer ((void*)(uintptr_t)alcDevice, (hl_finalizer)gc_alc_object);
+			alcObjects[alcDevice] = ptr;
+
+		}
+
 		al_gc_mutex.Unlock ();
-		return result;
+
+		return ptr;
 
 	}
 
@@ -3229,22 +3212,26 @@ namespace lime {
 	value lime_alc_get_current_context () {
 
 		ALCcontext* alcContext = alcGetCurrentContext ();
+		if (!alcContext) return alloc_null ();
 
-		value result;
+		value ptr;
 		al_gc_mutex.Lock ();
+
 		if (alcObjects.find (alcContext) != alcObjects.end ()) {
 
-			result = (value)alcObjects[alcContext];
-
-		} else {
-
-			value object = CFFIPointer (alcContext, gc_alc_object);
-			alcObjects[alcContext] = object;
-			result = object;
+			ptr = (value)alcObjects[alcContext];
 
 		}
+		else {
+
+			ptr = CFFIPointer ((void*)(uintptr_t)alcContext, gc_alc_object);
+			alcObjects[alcContext] = ptr;
+
+		}
+
 		al_gc_mutex.Unlock ();
-		return result;
+
+		return ptr;
 
 	}
 
@@ -3252,29 +3239,33 @@ namespace lime {
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_alc_get_current_context) () {
 
 		ALCcontext* alcContext = alcGetCurrentContext ();
+		if (!alcContext) return NULL;
 
-		HL_CFFIPointer* result;
+		HL_CFFIPointer* ptr;
 		al_gc_mutex.Lock ();
+
 		if (alcObjects.find (alcContext) != alcObjects.end ()) {
 
-			result = (HL_CFFIPointer*)alcObjects[alcContext];
-
-		} else {
-
-			HL_CFFIPointer* object = HLCFFIPointer (alcContext, (hl_finalizer)hl_gc_alc_object);
-			alcObjects[alcContext] = object;
-			result = object;
+			ptr = (HL_CFFIPointer*)alcObjects[alcContext];
 
 		}
+		else {
+
+			ptr = HLCFFIPointer ((void*)(uintptr_t)alcContext, (hl_finalizer)gc_alc_object);
+			alcObjects[alcContext] = ptr;
+
+		}
+
 		al_gc_mutex.Unlock ();
-		return result;
+
+		return ptr;
 
 	}
 
 
 	int lime_alc_get_error (value device) {
 
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 		return alcGetError (alcDevice);
 
 	}
@@ -3282,7 +3273,7 @@ namespace lime {
 
 	HL_PRIM int HL_NAME(hl_alc_get_error) (HL_CFFIPointer* device) {
 
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		return alcGetError (alcDevice);
 
 	}
@@ -3290,7 +3281,7 @@ namespace lime {
 
 	value lime_alc_get_integerv (value device, int param, int count) {
 
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCdevice* alcDevice = val_is_null (device) ? 0 : (ALCdevice*)(uintptr_t)val_data (device);
 
 		ALCint* values = new ALCint[count];
 		alcGetIntegerv (alcDevice, param, count, values);
@@ -3311,7 +3302,7 @@ namespace lime {
 
 	HL_PRIM varray* HL_NAME(hl_alc_get_integerv) (HL_CFFIPointer* device, int param, int count) {
 
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
+		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : 0;
 		varray* result = hl_alloc_array (&hlt_i32, count);
 		alcGetIntegerv (alcDevice, param, count, hl_aptr (result, int));
 		return result;
@@ -3321,7 +3312,7 @@ namespace lime {
 
 	value lime_alc_get_string (value device, int param) {
 
-		ALCdevice* alcDevice = !val_is_null (device) ? (ALCdevice*)val_data (device) : NULL;
+		ALCdevice* alcDevice = val_is_null (device) ? NULL : (ALCdevice*)(uintptr_t)val_data (device);
 		const char* result = alcGetString (alcDevice, param);
 		return result ? alloc_string (result) : alloc_null ();
 
@@ -3330,7 +3321,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_alc_get_string) (HL_CFFIPointer* device, int param) {
 
-		ALCdevice* alcDevice = device ? (ALCdevice*)device->ptr : NULL;
+		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : NULL;
 		const char* result = alcGetString (alcDevice, param);
 		int length = strlen (result);
 		char* _result = (char*)malloc (length + 1);
@@ -3343,8 +3334,7 @@ namespace lime {
 	value lime_alc_get_string_list (value device, int param) {
 
 		#ifdef ALC_ENUMERATE_ALL_EXT
-		ALCdevice* alcDevice = !val_is_null (device) ? (ALCdevice*)val_data (device) : NULL;
-
+		ALCdevice* alcDevice = val_is_null (device) ? NULL : (ALCdevice*)(uintptr_t)val_data (device);
 		const char* values = alcGetString (alcDevice, param);
 
 		if (!values) {
@@ -3387,8 +3377,7 @@ namespace lime {
 	HL_PRIM varray* HL_NAME(hl_alc_get_string_list) (HL_CFFIPointer* device, int param) {
 
 		#ifdef ALC_ENUMERATE_ALL_EXT
-		ALCdevice* alcDevice = device ? (ALCdevice*)device->ptr : NULL;
-
+		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : NULL;
 		const char* values = alcGetString (alcDevice, param);
 
 		if (!values) {
@@ -3432,7 +3421,7 @@ namespace lime {
 
 	bool lime_alc_make_context_current (value context) {
 
-		ALCcontext* alcContext = (ALCcontext*)val_data (context);
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)val_data (context);
 		return alcMakeContextCurrent (alcContext);
 
 	}
@@ -3440,7 +3429,7 @@ namespace lime {
 
 	HL_PRIM bool HL_NAME(hl_alc_make_context_current) (HL_CFFIPointer* context) {
 
-		ALCcontext* alcContext = context ? (ALCcontext*)context->ptr : 0;
+		ALCcontext* alcContext = context ? (ALCcontext*)(uintptr_t)context->ptr : 0;
 		return alcMakeContextCurrent (alcContext);
 
 	}
@@ -3449,11 +3438,10 @@ namespace lime {
 	value lime_alc_open_device (HxString devicename) {
 
 		ALCdevice* alcDevice = alcOpenDevice (devicename.__s);
-		//TODO: Can we work out our own cleanup for openal?
-		//atexit (lime_al_atexit);
-
-		value ptr = CFFIPointer (alcDevice, gc_alc_object);
+		value ptr = (value)CFFIPointer ((void*)(uintptr_t)alcDevice, gc_alc_object);
+		al_gc_mutex.Lock ();
 		alcObjects[alcDevice] = ptr;
+		al_gc_mutex.Unlock ();
 		return ptr;
 
 	}
@@ -3462,11 +3450,10 @@ namespace lime {
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_alc_open_device) (hl_vstring* devicename) {
 
 		ALCdevice* alcDevice = alcOpenDevice (devicename ? (char*)hl_to_utf8 ((const uchar*)devicename->bytes) : 0);
-		//TODO: Can we work out our own cleanup for openal?
-		//atexit (lime_al_atexit);
-
-		HL_CFFIPointer* ptr = HLCFFIPointer (alcDevice, (hl_finalizer)hl_gc_alc_object);
+		HL_CFFIPointer* ptr = HLCFFIPointer ((void*)(uintptr_t)alcDevice, (hl_finalizer)gc_alc_object);
+		al_gc_mutex.Lock ();
 		alcObjects[alcDevice] = ptr;
+		al_gc_mutex.Unlock ();
 		return ptr;
 
 	}
@@ -3475,7 +3462,7 @@ namespace lime {
 	void lime_alc_pause_device (value device) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 		alcDevicePauseSOFT (alcDevice);
 		#endif
 
@@ -3485,7 +3472,7 @@ namespace lime {
 	HL_PRIM void HL_NAME(hl_alc_pause_device) (HL_CFFIPointer* device) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		alcDevicePauseSOFT (alcDevice);
 		#endif
 
@@ -3494,7 +3481,7 @@ namespace lime {
 
 	void lime_alc_process_context (value context) {
 
-		ALCcontext* alcContext = (ALCcontext*)val_data (context);
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)val_data (context);
 		alcProcessContext (alcContext);
 
 	}
@@ -3502,7 +3489,7 @@ namespace lime {
 
 	HL_PRIM void HL_NAME(hl_alc_process_context) (HL_CFFIPointer* context) {
 
-		ALCcontext* alcContext = (ALCcontext*)context->ptr;
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)context->ptr;
 		alcProcessContext (alcContext);
 
 	}
@@ -3511,7 +3498,7 @@ namespace lime {
 	void lime_alc_resume_device (value device) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = !val_is_null (device) ? (ALCdevice*)val_data (device) : NULL;
+		ALCdevice* alcDevice = val_is_null (device) ? NULL : (ALCdevice*)(uintptr_t)val_data (device);
 		alcDeviceResumeSOFT (alcDevice);
 		#endif
 
@@ -3521,7 +3508,7 @@ namespace lime {
 	HL_PRIM void HL_NAME(hl_alc_resume_device) (HL_CFFIPointer* device) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = device ? (ALCdevice*)device->ptr : NULL;
+		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : NULL;
 		alcDeviceResumeSOFT (alcDevice);
 		#endif
 
@@ -3530,7 +3517,7 @@ namespace lime {
 
 	void lime_alc_suspend_context (value context) {
 
-		ALCcontext* alcContext = (ALCcontext*)val_data (context);
+		ALCcontext* alcContext = (ALCcontext*)(uintptr_t)val_data (context);
 		alcSuspendContext (alcContext);
 
 	}
@@ -3538,7 +3525,7 @@ namespace lime {
 
 	HL_PRIM void HL_NAME(hl_alc_suspend_context) (HL_CFFIPointer* context) {
 
-		ALCcontext* alcContext = context ? (ALCcontext*)context->ptr : NULL;
+		ALCcontext* alcContext = context ? (ALCcontext*)(uintptr_t)context->ptr : NULL;
 		alcSuspendContext (alcContext);
 
 	}
@@ -3587,11 +3574,24 @@ namespace lime {
 
 		if (alSoftEventCallback) {
 
+			value ptrDevice;
 			al_gc_mutex.Lock ();
 
-			alSoftEventCallback->Call (alloc_int((int)eventType), alloc_int((int)deviceType), CFFIPointer (device), message ? alloc_string(message) : alloc_null());
+			if (alcObjects.find (device) != alcObjects.end ()) {
+
+				ptrDevice = (value)alcObjects[device];
+
+			}
+			else {
+
+				ptrDevice = CFFIPointer ((void*)(uintptr_t)device, gc_alc_object);
+				alcObjects[device] = ptrDevice;
+
+			}
 
 			al_gc_mutex.Unlock ();
+
+			alSoftEventCallback->Call (alloc_int ((int)eventType), alloc_int ((int)deviceType), ptrDevice, message ? alloc_string (message) : alloc_null ());
 
 		}
 
@@ -3615,7 +3615,22 @@ namespace lime {
 
 		if (alSoftEventCallback) {
 
+			HL_CFFIPointer* ptrDevice;
 			al_gc_mutex.Lock ();
+
+			if (alcObjects.find (device) != alcObjects.end ()) {
+
+				ptrDevice = (HL_CFFIPointer*)alcObjects[device];
+
+			}
+			else {
+
+				ptrDevice = HLCFFIPointer ((void*)(uintptr_t)device, (hl_finalizer)gc_alc_object);
+				alcObjects[device] = ptrDevice;
+
+			}
+
+			al_gc_mutex.Unlock ();
 
 			vdynamic* _eventType = hl_alloc_dynamic (&hlt_i32);
 			_eventType->v.i = (int)eventType;
@@ -3626,9 +3641,7 @@ namespace lime {
 			vdynamic* _message = hl_alloc_dynamic (&hlt_bytes);
 			_message->v.bytes = (vbyte*)message;
 
-			alSoftEventCallback->Call (_eventType, _deviceType, HLCFFIPointer(device), _message);
-
-			al_gc_mutex.Unlock ();
+			alSoftEventCallback->Call (_eventType, _deviceType, ptrDevice, _message);
 
 		}
 
@@ -3676,7 +3689,7 @@ namespace lime {
 	bool lime_alc_reopen_device_soft(value device, HxString devicename, value attributes) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = (ALCdevice*)val_data (device);
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 
 		if (!val_is_null (attributes)) {
 
@@ -3712,7 +3725,7 @@ namespace lime {
 	HL_PRIM bool HL_NAME(hl_alc_reopen_device_soft) (HL_CFFIPointer* device, hl_vstring* devicename, varray* attributes) {
 
 		#ifdef LIME_OPENALSOFT
-		ALCdevice* alcDevice = (ALCdevice*)device->ptr;
+		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		ALCboolean result = alcReopenDeviceSOFT (alcDevice, devicename ? hl_to_utf8 (devicename->bytes) : NULL, attributes ? hl_aptr (attributes, ALCint) : NULL);
 		return result == ALC_TRUE;
 		#else
