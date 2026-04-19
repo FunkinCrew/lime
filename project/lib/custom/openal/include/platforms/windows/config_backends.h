@@ -1,3 +1,17 @@
+#ifdef NATIVE_TOOLKIT_HAVE_SDL
+
+#define HAVE_WASAPI 0
+
+#define HAVE_DSOUND 0
+
+#else
+
+#define HAVE_WASAPI 1
+
+#define HAVE_DSOUND 1
+
+#endif
+
 #define HAVE_ALSA 0
 
 #define HAVE_OSS 0
@@ -7,10 +21,6 @@
 #define HAVE_SOLARIS 0
 
 #define HAVE_SNDIO 0
-
-#define HAVE_WASAPI 1
-
-#define HAVE_DSOUND 1
 
 #define HAVE_WINMM 0
 

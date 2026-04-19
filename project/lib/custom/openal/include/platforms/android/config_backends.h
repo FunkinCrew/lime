@@ -1,3 +1,13 @@
+#ifdef NATIVE_TOOLKIT_HAVE_SDL
+
+#define HAVE_OPENSL 0
+
+#else
+
+#define HAVE_OPENSL 1
+
+#endif
+
 #define HAVE_ALSA 0
 
 #define HAVE_OSS 0
@@ -21,7 +31,5 @@
 #define HAVE_JACK 0
 
 #define HAVE_COREAUDIO 0
-
-#define HAVE_OPENSL 1
 
 #define HAVE_OBOE 0
