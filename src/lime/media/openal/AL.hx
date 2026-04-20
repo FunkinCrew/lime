@@ -255,7 +255,6 @@ class AL
 	public static inline var FORMAT_71CHN8:Int = 0x1210;
 	public static inline var FORMAT_71CHN16:Int = 0x1211;
 	public static inline var FORMAT_71CHN32:Int = 0x1212;
-	#if lime_openalsoft
 	/* AL_SOFT_direct_channels extension */
 	public static inline var DIRECT_CHANNELS_SOFT:Int = 0x1033;
 	/* AL_SOFT_direct_channels_remix extension */
@@ -276,7 +275,6 @@ class AL
 	public static inline var SEC_OFFSET_CLOCK_SOFT:Int = 0x1203;
 	/* AL_SOFT_hold_on_disconnect */
 	public static inline var STOP_SOURCES_ON_DISCONNECT_SOFT:Int = 0x19AB;
-	#end
 
 	public static function removeDirectFilter(source:ALSource)
 	{
@@ -1036,7 +1034,7 @@ class AL
 
 	public static function getSourcedvSOFT(source:ALSource, param:Int, count:Int = 1):Array<Float>
 	{
-		#if (lime_cffi && lime_openalsoft && !macro)
+		#if (lime_cffi && lime_openal && !macro)
 		var result = NativeCFFI.lime_al_get_sourcedv_soft(source, param, count);
 		#if hl
 		if (result == null) return [];

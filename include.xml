@@ -20,8 +20,7 @@
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />
-	<define name="lime-openalsoft" if="windows || linux || mac || android || ios || tvos" />
-	<define name="lime-openal" if="lime-openalsoft" />
+	<define name="lime-openal" if="windows || linux || mac || android || ios || tvos" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
 	<define name="lime-opengles" if="mobile" />
 	<define name="lime-vorbis" if="native" />

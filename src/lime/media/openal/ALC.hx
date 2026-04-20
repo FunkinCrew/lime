@@ -43,7 +43,6 @@ class ALC
 	public static inline var ALL_DEVICES_SPECIFIER:Int = 0x1013;
 	/* ALC_EXT_disconnect */
 	public static inline var CONNECTED:Int = 0x313;
-	#if lime_openalsoft
 	/* ALC_SOFT_device_clock */
 	public static inline var DEVICE_CLOCK_SOFT:Int = 0x1600;
 	public static inline var DEVICE_LATENCY_SOFT:Int = 0x1601;
@@ -56,7 +55,6 @@ class ALC
 	public static inline var EVENT_TYPE_DEVICE_REMOVED_SOFT:Int = 0x19D8;
 	public static inline var EVENT_SUPPORTED_SOFT:Int = 0x19D9;
 	public static inline var EVENT_NOT_SUPPORTED_SOFT:Int = 0x19DA;
-	#end
 
 	public static function closeDevice(device:ALDevice):Bool
 	{
@@ -256,7 +254,7 @@ class ALC
 
 	public static function eventControlSOFT(events:Array<Int>, enable:Bool):Void
 	{
-		#if (lime_cffi && lime_openalsoft && !macro)
+		#if (lime_cffi && lime_openal && !macro)
 		#if hl
 		var _events = null;
 		if (events != null)
@@ -273,14 +271,14 @@ class ALC
 
 	public static function eventCallbackSOFT(callback:Dynamic):Void
 	{
-		#if (lime_cffi && lime_openalsoft && !macro)
+		#if (lime_cffi && lime_openal && !macro)
 		NativeCFFI.lime_alc_event_callback_soft(callback);
 		#end
 	}
 
 	public static function reopenDeviceSOFT(device:ALDevice, newDeviceName:String, attributes:Array<Int>):Bool
 	{
-		#if (lime_cffi && lime_openalsoft && !macro)
+		#if (lime_cffi && lime_openal && !macro)
 		#if hl
 		var _attributes = null;
 		if (attributes != null)

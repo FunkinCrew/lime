@@ -37,11 +37,7 @@ namespace lime {
 		SDL_SetHint (SDL_HINT_IOS_HIDE_HOME_INDICATOR, "3");
 		#endif
 
-		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
-
-		#ifdef LIME_OPENALSOFT
-		initFlags |= SDL_INIT_AUDIO;
-		#endif
+		Uint32 initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
 		if (!SDL_Init (initFlags)) {
 

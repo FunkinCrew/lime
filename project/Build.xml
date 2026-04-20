@@ -20,8 +20,7 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" />
 	<set name="LIME_OGG" value="1" />
-	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || ios || tvos" />
-	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT" />
+	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || ios || tvos" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -152,16 +151,10 @@
 
 		<section if="LIME_OPENAL">
 
-			<section if="LIME_OPENALSOFT">
-
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
-				<compilerflag value="-DLIME_OPENALSOFT"  />
-				<compilerflag value="-DAL_LIBTYPE_STATIC" />
-				<compilerflag value="-DAL_ALEXT_PROTOTYPES" />
-
-			</section>
-
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
 			<compilerflag value="-DLIME_OPENAL" />
+			<compilerflag value="-DAL_LIBTYPE_STATIC" />
+			<compilerflag value="-DAL_ALEXT_PROTOTYPES" />
 
 			<file name="src/bindings/openal/OpenALBindings.cpp" />
 
@@ -326,7 +319,7 @@
 		<files id="native-toolkit-lzma" if="LIME_LZMA" />
 		<files id="native-toolkit-mbedtls" if="LIME_MBEDTLS" unless="static_link" />
 		<files id="native-toolkit-ogg" if="LIME_OGG" />
-		<files id="native-toolkit-openal" if="LIME_OPENALSOFT" />
+		<files id="native-toolkit-openal" if="LIME_OPENAL" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-png" if="LIME_PNG" />
 		<files id="native-toolkit-wayland-protocols" if="linux" />
@@ -347,7 +340,7 @@
 				<section unless="mingw">
 
 					<lib name="advapi32.lib" />
-					<lib name="avrt.lib" if="LIME_OPENALSOFT"/>
+					<lib name="avrt.lib" if="LIME_OPENAL"/>
 					<lib name="bcrypt.lib" if="LIME_CURL" />
 					<lib name="comdlg32.lib" />
 					<lib name="comsuppw.lib" />
@@ -374,7 +367,7 @@
 				<section if="mingw">
 
 					<lib name="-ladvapi32" />
-					<lib name="-lavrt" if="LIME_OPENALSOFT"/>
+					<lib name="-lavrt" if="LIME_OPENAL"/>
 					<lib name="-lbcrypt" if="LIME_CURL" />
 					<lib name="-lcomdlg32" />
 					<lib name="-ldwrite" if="LIME_HARFBUZZ" />

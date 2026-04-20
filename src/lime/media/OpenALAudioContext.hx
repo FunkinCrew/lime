@@ -394,11 +394,7 @@ class OpenALAudioContext
 
 	public function getSourcedvSOFT(source:ALSource, param:Int, count:Int = 1):Array<Float>
 	{
-		#if lime_openalsoft
 		return AL.getSourcedvSOFT(source, param, count);
-		#else
-		return null;
-		#end
 	}
 
 	public function getSourcei(source:ALSource, param:Int):Dynamic
@@ -637,25 +633,17 @@ class OpenALAudioContext
 
 	public function eventControlSOFT(events:Array<Int>, enable:Bool):Void
 	{
-		#if lime_openalsoft
 		ALC.eventControlSOFT(events, enable);
-		#end
 	}
 
 	public function eventCallbackSOFT(callback:Dynamic):Void
 	{
-		#if lime_openalsoft
 		ALC.eventCallbackSOFT(callback);
-		#end
 	}
 
 	public function reopenDeviceSOFT(device:ALDevice, newDeviceName:String, attributes:Array<Int>):Bool
 	{
-		#if lime_openalsoft
 		return ALC.reopenDeviceSOFT(device, newDeviceName, attributes);
-		#else
-		return false;
-		#end
 	}
 }
 #end

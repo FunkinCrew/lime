@@ -54,7 +54,6 @@ class AudioManager
 						alc.makeContextCurrent(ctx);
 						alc.processContext(ctx);
 
-						#if (lime_openalsoft && !mobile)
 						if (alc.isExtensionPresent('ALC_SOFT_system_events', device) && alc.isExtensionPresent('ALC_SOFT_reopen_device', device))
 						{
 							if (alc.isExtensionPresent('AL_SOFT_hold_on_disconnect'))
@@ -64,7 +63,6 @@ class AudioManager
 
 							alc.eventCallbackSOFT(deviceEventCallback);
 						}
-						#end
 					}
 				}
 				#end
@@ -139,7 +137,6 @@ class AudioManager
 		#end
 	}
 
-	#if lime_openalsoft
 	@:noCompletion
 	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:#if hl hl.Bytes #else String #end):Void
 	{
@@ -170,7 +167,6 @@ class AudioManager
 		}
 		#end
 	}
-	#end
 
 	@:noCompletion
 	private static function setupConfig():Void
