@@ -698,14 +698,6 @@ class AssetLibrary
 			if (Reflect.hasField(asset, "className"))
 			{
 				classRef = Type.resolveClass(Reflect.field(asset, "className"));
-
-				#if (js && html5 && modular)
-				if (classRef == null)
-				{
-					classRef = untyped $hx_exports[asset.className];
-				}
-				#end
-
 				classTypes.set(id, classRef);
 			}
 		}
