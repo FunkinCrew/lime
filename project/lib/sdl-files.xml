@@ -357,7 +357,7 @@
         <section>
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/SDL_sensor.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/android/SDL_androidsensor.c" if="android" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/coremotion/SDL_coremotionsensor.m" if="apple" unless="tvos" />
+            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/coremotion/SDL_coremotionsensor.m" if="apple" unless="appletv" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/dummy/SDL_dummysensor.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/sensor/windows/SDL_windowssensor.c" if="windows" />
         </section>

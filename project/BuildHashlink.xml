@@ -5,9 +5,6 @@
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
-	<set name="ios" value="1" if="iphone" />
-	<set name="tvos" value="1" if="appletv" />
-
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH"/>
 	<set name="HASHLINK_PATH" value="lib/hashlink" unless="HASHLINK_PATH" />
 
@@ -56,7 +53,7 @@
 		<file name="${HASHLINK_PATH}/src/std/process.c" />
 		<file name="${HASHLINK_PATH}/src/std/regexp.c" />
 		<file name="${HASHLINK_PATH}/src/std/sys_android.c" if="android" />
-		<file name="${HASHLINK_PATH}/src/std/sys_ios.m " if="ios" />
+		<file name="${HASHLINK_PATH}/src/std/sys_ios.m " if="iphone" />
 		<file name="${HASHLINK_PATH}/src/std/track.c" />
 		<file name="${HASHLINK_PATH}/src/std/ucs2.c" />
 
@@ -297,7 +294,7 @@
 		</section>
 	</files>
 	<set name="LIBSUFFIX" value="dll" if="windows" />
-	<set name="LIBSUFFIX" value="dylib" if="mac || ios || tvos" />
+	<set name="LIBSUFFIX" value="dylib" if="apple" />
 	<set name="LIBSUFFIX" value="so" unless="LIBSUFFIX" />
 	<!-- <set name="BINDIR" value="linux" if="linux" />
 	<set name="BINDIR" value="mac" if="mac" />
@@ -336,8 +333,10 @@
 		<lib name="Crypt32.lib" if="windows" />
 		<lib name="ws2_32.lib" if="windows" />
 
-		<vflag name="-framework" value="Security" if="mac || ios || tvos" />
-		<vflag name="-framework" value="CoreFoundation" if="mac || ios || tvos" />
+		<section if="apple">
+			<vflag name="-framework" value="Security" />
+			<vflag name="-framework" value="CoreFoundation" />
+		</section>
 	</target>
 
 	<target id="mysql" output="mysql" tool="linker" toolid="dll">

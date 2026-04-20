@@ -8,8 +8,6 @@
 	<set name="HXCPP_IOS_MIN_VERSION" value="11.0" if="iphone" />
 	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.13" if="mac" />
 
-	<set name="ios" value="1" if="iphone" />
-	<set name="tvos" value="1" if="appletv" />
 	<set name="LIME_CAIRO" value="1" />
 	<set name="LIME_CURL" value="1" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
@@ -20,9 +18,9 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_MBEDTLS" value="1" />
 	<set name="LIME_OGG" value="1" />
-	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || ios || tvos" />
+	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone || appletv" />
 	<set name="LIME_OPENGL" value="1" />
-	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
+	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone || appletv" />
 	<set name="LIME_PIXMAN" value="1" />
 	<set name="LIME_PNG" value="1" />
 	<set name="LIME_SDL" value="1" />
@@ -170,7 +168,7 @@
 			</section>
 
 			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || ios || tvos" />
+			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || iphone || appletv" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/bindings/opengl/OpenGLBindings.cpp" />
@@ -213,7 +211,7 @@
 
 		<section if="LIME_ZLIB">
 
-			<compilerflag value="-DSTATIC_LINK" if="ios || tvos" />
+			<compilerflag value="-DSTATIC_LINK" if="iphone || appletv" />
 			<compilerflag value="-DLIME_ZLIB" />
 
 			<file name="src/utils/compress/Zlib.cpp" />
@@ -252,17 +250,17 @@
 		<file name="src/system/Clipboard.cpp" />
 		<file name="src/system/DisplayMode.cpp" />
 		<file name="src/system/JNI.cpp" if="android" />
-		<file name="src/system/Locale.cpp" unless="mac || ios" />
-		<file name="src/system/Locale.mm" if="mac || ios" />
+		<file name="src/system/Locale.cpp" unless="apple" />
+		<file name="src/system/Locale.mm" if="apple" />
 		<file name="src/system/Mutex.cpp" />
 		<file name="src/system/System.cpp" />
 		<file name="src/system/windows/System.cpp" if="windows" />
-		<file name="src/system/ios/System.mm" if="ios || tvos" />
+		<file name="src/system/ios/System.mm" if="iphone || appletv" />
 		<file name="src/system/ValuePointer.cpp" />
 		<file name="src/ui/Cursor.cpp" />
 		<file name="src/ui/FileDialog.cpp" />
 		<file name="src/ui/Gamepad.cpp" />
-		<file name="src/ui/Haptic.mm" if="ios" />
+		<file name="src/ui/Haptic.mm" if="iphone" />
 		<file name="src/ui/Joystick.cpp" />
 		<file name="src/ui/KeyCode.cpp" />
 		<file name="src/utils/ArrayBufferView.cpp" />
@@ -475,40 +473,6 @@
 				<lib name="-lm" />
 				<lib name="-lEGL" />
 				<lib name="-lGLESv2" />
-
-			</section>
-
-			<section if="tvos">
-
-				<vflag name="-framework" value="AudioToolbox" />
-				<vflag name="-framework" value="AudioUnit" />
-				<vflag name="-framework" value="CoreAudio" />
-				<vflag name="-framework" value="CoreBluetooth" />
-				<vflag name="-framework" value="CoreVideo" />
-				<vflag name="-framework" value="Foundation" />
-				<vflag name="-framework" value="GameController" />
-				<vflag name="-framework" value="OpenGLES" />
-				<vflag name="-framework" value="UIKit" />
-
-				<lib name="-ldl" />
-
-			</section>
-
-			<section if="ios">
-
-				<vflag name="-framework" value="AudioToolbox" />
-				<vflag name="-framework" value="AudioUnit" />
-				<vflag name="-framework" value="CoreAudio" />
-				<vflag name="-framework" value="CoreBluetooth" />
-				<vflag name="-framework" value="CoreMedia" />
-				<vflag name="-framework" value="CoreMotion" />
-				<vflag name="-framework" value="CoreText" />
-				<vflag name="-framework" value="CoreVideo" />
-				<vflag name="-framework" value="Foundation" />
-				<vflag name="-framework" value="OpenGLES" />
-				<vflag name="-framework" value="UIKit" />
-
-				<lib name="-ldl" />
 
 			</section>
 

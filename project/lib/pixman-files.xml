@@ -1,7 +1,7 @@
 <xml>
 
 	<!-- <set name="PIXMAN_ARM_SIMD" value="1" if="android || rpi" unless="HXCPP_ARMV7 || HXCPP_ARMV7S || HXCPP_ARM64 || HXCPP_X86" /> -->
-	<set name="PIXMAN_ARM_NEON" value="1" if="HXCPP_ARMV7 || HXCPP_ARMV7S || rpi" unless="ios || HXCPP_ARM64" />
+	<set name="PIXMAN_ARM_NEON" value="1" if="HXCPP_ARMV7 || HXCPP_ARMV7S || rpi" unless="iphone || HXCPP_ARM64" />
 	<set name="PIXMAN_ARM_A64_NEON" value="1" if="HXCPP_ARM64"/>
 
 	<files id="native-toolkit-pixman">
@@ -30,7 +30,7 @@
 		<compilerflag value="-mssse3" if="linux || mac || mingw" unless="rpi || HXCPP_ARM64" />
 
 		<compilerflag value="-Wno-attributes" if="android" />
-		<compilerflag value="-Wno-tautological-constant-out-of-range-compare" if="mac || ios || tvos" />
+		<compilerflag value="-Wno-tautological-constant-out-of-range-compare" if="apple" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-access-accessors.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-access.c" />
