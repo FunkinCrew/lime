@@ -265,10 +265,6 @@ class CommandLineTools
 							target = Platform.LINUX;
 							targetFlags.set("rpi", "");
 
-						case "webassembly", "wasm", "emscripten":
-							target = Platform.WEB_ASSEMBLY;
-							targetFlags.set("webassembly", "");
-
 						default:
 							target = cast targetName.toLowerCase();
 					}
@@ -575,9 +571,6 @@ class CommandLineTools
 				case HTML5:
 					platform = new HTML5Platform(command, project, targetFlags);
 
-				case WEB_ASSEMBLY:
-					platform = new WebAssemblyPlatform(command, project, targetFlags);
-
 				case TVOS:
 					platform = new TVOSPlatform(command, project, targetFlags);
 
@@ -881,7 +874,6 @@ class CommandLineTools
 			Log.println("  \x1b[1mhlc\x1b[0m -- Alias for host platform (using \x1b[1m-hlc\x1b[0m)");
 			Log.println("  \x1b[1mrpi\x1b[0;3m/\x1b[0m\x1b[1mraspberrypi\x1b[0m -- Alias for \x1b[1mlinux -rpi\x1b[0m");
 			Log.println("  \x1b[1melectron\x1b[0m -- Alias for \x1b[1mhtml5 -electron\x1b[0m");
-			Log.println("  \x1b[1mwasm/emscripten\x1b[0m -- Alias for \x1b[1mwebassembly\x1b[0m");
 		}
 
 		Log.println("");
@@ -1441,10 +1433,6 @@ class CommandLineTools
 			case "rpi", "raspberrypi":
 				target = Platform.LINUX;
 				targetFlags.set("rpi", "");
-
-			case "webassembly", "wasm", "emscripten":
-				target = Platform.WEB_ASSEMBLY;
-				targetFlags.set("webassembly", "");
 
 			default:
 				target = cast targetName.toLowerCase();

@@ -11,11 +11,9 @@ enum abstract Platform(String) from hxp.HostPlatform
 	var PS3 = "ps3";
 	var PS4 = "ps4";
 	var VITA = "vita";
-	var WEB_ASSEMBLY = "webassembly";
 	var WINDOWS = "windows";
 	var WIIU = "wiiu";
 	var XBOX1 = "xbox1";
-	var EMSCRIPTEN = "emscripten";
 	var TVOS = "tvos";
 	var CUSTOM = null;
 

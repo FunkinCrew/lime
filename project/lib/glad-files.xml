@@ -6,7 +6,7 @@
 
 		<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gl.c" if="windows || mac || linux" />
 
-		<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gles2.c" if="android || rpi || emscripten || tizen" />
+		<file name="${NATIVE_TOOLKIT_PATH}/glad/src/gles2.c" if="android || rpi || tizen" />
 
 	</files>
 

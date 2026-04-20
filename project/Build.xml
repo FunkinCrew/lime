@@ -18,10 +18,10 @@
 	<set name="LIME_HARFBUZZ" value="1" />
 	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
-	<set name="LIME_MBEDTLS" value="1" unless="emscripten" />
+	<set name="LIME_MBEDTLS" value="1" />
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPENALSOFT" value="1" if="windows || linux || mac || android || ios || tvos" />
-	<set name="LIME_OPENAL" value="1" if="emscripten || LIME_OPENALSOFT" />
+	<set name="LIME_OPENAL" value="1" if="LIME_OPENALSOFT" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="ios || tvos" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -154,7 +154,7 @@
 
 			<section if="LIME_OPENALSOFT">
 
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" unless="emscripten" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
 				<compilerflag value="-DLIME_OPENALSOFT"  />
 				<compilerflag value="-DAL_LIBTYPE_STATIC" />
 				<compilerflag value="-DAL_ALEXT_PROTOTYPES" />
@@ -177,7 +177,7 @@
 			</section>
 
 			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || emscripten || tizen || ios || tvos" />
+			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || ios || tvos" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/bindings/opengl/OpenGLBindings.cpp" />
@@ -197,19 +197,7 @@
 
 		<section if="LIME_SDL">
 
-			<section if="emscripten">
-
-				<compilerflag value="-s" />
-				<compilerflag value="USE_SDL=2" />
-
-			</section>
-
-			<section unless="emscripten">
-
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-
-			</section>
-
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
 			<compilerflag value="-DLIME_SDL" />
 			<compilerflag value="-DSDL_DISABLE_ALLOCA" />
 			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
@@ -232,7 +220,7 @@
 
 		<section if="LIME_ZLIB">
 
-			<compilerflag value="-DSTATIC_LINK" if="emscripten || ios || tvos" />
+			<compilerflag value="-DSTATIC_LINK" if="ios || tvos" />
 			<compilerflag value="-DLIME_ZLIB" />
 
 			<file name="src/utils/compress/Zlib.cpp" />
@@ -342,7 +330,7 @@
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-png" if="LIME_PNG" />
 		<files id="native-toolkit-wayland-protocols" if="linux" />
-		<files id="native-toolkit-sdl" if="LIME_SDL" unless="emscripten" />
+		<files id="native-toolkit-sdl" if="LIME_SDL" />
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
 		<files id="native-toolkit-vorbis" if="LIME_VORBIS" />
 		<files id="native-toolkit-webm" if="LIME_WEBM" />
