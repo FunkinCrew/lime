@@ -313,6 +313,7 @@
 	<include name="lib/openal-files.xml" />
 	<include name="lib/pixman-files.xml" />
 	<include name="lib/png-files.xml" />
+	<include name="lib/wayland-protocols-files.xml" if="linux" />
 	<include name="lib/sdl-files.xml" />
 	<include name="lib/vorbis-files.xml" />
 	<include name="lib/zlib-files.xml" />
@@ -340,6 +341,7 @@
 		<files id="native-toolkit-openal" if="LIME_OPENALSOFT" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-png" if="LIME_PNG" />
+		<files id="native-toolkit-wayland-protocols" if="linux" />
 		<files id="native-toolkit-sdl" if="LIME_SDL" unless="emscripten" />
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
 		<files id="native-toolkit-vorbis" if="LIME_VORBIS" />

@@ -349,6 +349,70 @@ class LinuxPlatform extends PlatformTarget
 		return context;
 	}
 
+	private function generateWaylandProtocols():Void
+	{
+		var projectPath:String = project.config.get("project.rebuild.path");
+		var waylandOutputPath:String = Path.combine(projectPath, "lib/sdl/wayland-generated-protocols");
+		var waylandProtocolsPath:String = Path.combine(projectPath, "lib/sdl/wayland-protocols");
+
+		if (project.targetFlags.exists("clean"))
+		{
+			// If we're doing a clean build,
+			// remove the generated Wayland protocol files so they get regenerated
+			System.removeDirectory(waylandOutputPath);
+		}
+
+		if (!FileSystem.exists(waylandOutputPath))
+		{
+			FileSystem.createDirectory(waylandOutputPath);
+		}
+
+		if (FileSystem.exists(waylandProtocolsPath))
+		{
+			var xmls:Array<String> = FileSystem.readDirectory(waylandProtocolsPath);
+
+			xmls = xmls.filter(function(xml:String):Bool
+			{
+				if (haxe.io.Path.extension(xml) != "xml")
+				{
+					return false;
+				}
+
+				var output:String = Path.combine(waylandOutputPath, '${haxe.io.Path.withoutExtension(xml)}-client-protocol');
+
+				if (FileSystem.exists(haxe.io.Path.withExtension(output, "h")) && FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
+				{
+					return false;
+				}
+
+				return true;
+			});
+
+			if (xmls.length > 0)
+			{
+				Log.println('\x1b[1;33mGenerating Wayland Protocols (${xmls.length > 1 ? xmls.length + " files" : "1 file"})\x1b[0m');
+
+				for (xml in xmls)
+				{
+					var output:String = Path.combine(waylandOutputPath, '${haxe.io.Path.withoutExtension(xml)}-client-protocol');
+
+					if (FileSystem.exists(haxe.io.Path.withExtension(output, "h")) && FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
+					{
+						continue;
+					}
+
+					var file:String = Path.combine(StringTools.replace(waylandOutputPath, haxe.io.Path.addTrailingSlash(projectPath), ''), xml);
+
+					Log.println(' - \x1b[1;33m$file\x1b[0m');
+
+					System.runCommand("", "wayland-scanner", ["client-header", Path.combine(waylandProtocolsPath, xml), haxe.io.Path.withExtension(output, "h")]);
+
+					System.runCommand("", "wayland-scanner", ["private-code", Path.combine(waylandProtocolsPath, xml), haxe.io.Path.withExtension(output, "c")]);
+				}
+			}
+		}
+	}
+
 	private override function getDisplayHXML():HXML
 	{
 		var path = targetDirectory + "/haxe/" + buildType + ".hxml";
@@ -379,37 +443,14 @@ class LinuxPlatform extends PlatformTarget
 		}
 	}
 
-	/**
-	 * Generates the Wayland Protocols into the project obj folder before rebuild.
-	 */
-	private function generateWaylandProtocols():Void
-	{
-		Log.println("Generating Wayland Protocols");
-		var outputDir = project.config.get("project.rebuild.path") + "/obj/generated/wayland";
-		var sdlPath = project.config.get("project.rebuild.path") + "/lib/sdl/wayland-protocols";
-
-		if (!FileSystem.exists(outputDir)) FileSystem.createDirectory(outputDir);
-
-		if (FileSystem.exists(sdlPath))
-		{
-			var xmls:Array<String> = FileSystem.readDirectory(sdlPath);
-			for (xml in xmls)
-			{
-				if (!StringTools.endsWith(xml, ".xml")) continue;
-
-				var name = xml.substring(0, xml.lastIndexOf("."));
-				var xmlPath = '$sdlPath/$xml';
-
-				Log.println(' - obj/generated/wayland/$xml');
-				System.runCommand("", "wayland-scanner", ["client-header", xmlPath, '$outputDir/$name-client-protocol.h']);
-				System.runCommand("", "wayland-scanner", ["private-code", xmlPath, '$outputDir/$name-client-protocol.c']);
-			}
-		}
-	}
-
 	public override function rebuild():Void
 	{
-		generateWaylandProtocols();
+		if (project.haxelibs.length == 0)
+		{
+			// If there are no haxelibs, we know its only lime that is being rebuilt (weird hack but works),
+			// Wayland shoudnt be rebuilt for anything else other than lime!
+			generateWaylandProtocols();
+		}
 
 		var commands:Array<Array<String>> = [];
 
