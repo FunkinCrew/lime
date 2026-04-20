@@ -14,7 +14,7 @@
 	<define name="lime-cairo" if="native" />
 	<define name="lime-canvas" if="html5" />
 	<define name="lime-cffi" if="native" />
-	<define name="lime-curl" unless="lime-console || lime-switch || html5" />
+	<define name="lime-curl" unless="html5" />
 	<define name="lime-dom" if="html5" />
 	<define name="lime-harfbuzz" if="native" />
 	<define name="lime-howlerjs" if="html5" />
@@ -30,28 +30,8 @@
 	<haxedef name="no-compilation" />
 
 	<templatePath name="templates" />
+
 	<sample path="samples" unless="openfl" />
-
-	<target name="ps3" handler="lime-ps3" />
-	<haxelib name="lime-ps3" if="ps3" />
-
-	<target name="ps4" handler="lime-ps4" />
-	<haxelib name="lime-ps4" if="ps4" />
-
-	<target name="vita" handler="lime-vita" />
-	<haxelib name="lime-vita" if="vita" />
-
-	<target name="switch" handler="lime-switch" />
-	<haxelib name="lime-switch" if="switch" />
-
-	<target name="wiiu" handler="lime-wiiu" />
-	<haxelib name="lime-wiiu" if="wiiu" />
-
-	<target name="xbox1" handler="lime-xbox1" />
-	<haxelib name="lime-xbox1" if="xbox1" />
-
-	<target name="console-pc" handler="lime-console-pc" />
-	<haxelib name="lime-console-pc" if="console-pc" />
 
 	<section if="hxp" unless="lime-tools">
 
@@ -76,7 +56,7 @@
 			<haxedef name="lime-threads-deque" if="cpp || python || hl" />
 		</section>
 
-		<ndll name="lime" if="native" unless="lime-console static_link || lime-switch static_link" />
+		<ndll name="lime" if="native" unless="static_link" />
 
 		<dependency name="extension-api" path="dependencies/extension-api" if="android" />
 

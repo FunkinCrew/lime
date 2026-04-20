@@ -3,17 +3,11 @@ package lime.tools;
 enum abstract Platform(String) from hxp.HostPlatform
 {
 	var ANDROID = "android";
-	var CONSOLE_PC = "console-pc";
 	var HTML5 = "html5";
 	var IOS = "ios";
 	var LINUX = "linux";
 	var MAC = "mac";
-	var PS3 = "ps3";
-	var PS4 = "ps4";
-	var VITA = "vita";
 	var WINDOWS = "windows";
-	var WIIU = "wiiu";
-	var XBOX1 = "xbox1";
 	var TVOS = "tvos";
 	var CUSTOM = null;
 
