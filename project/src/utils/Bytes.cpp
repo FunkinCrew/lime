@@ -16,6 +16,7 @@ namespace lime {
 
 	inline void _initializeBytes () {
 
+		#ifndef LIME_HASHLINK
 		if (!init) {
 
 			buffer _buffer = alloc_buffer_len (1);
@@ -29,6 +30,7 @@ namespace lime {
 			init = true;
 
 		}
+		#endif
 
 	}
 
