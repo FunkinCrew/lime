@@ -754,7 +754,7 @@ class System
 			#elseif android
 			__fontsDirectory = "/system/fonts";
 			#elseif linux
-			__fontsDirecory = "/usr/share/fonts";
+			__fontsDirectory = "/usr/share/fonts";
 			#end
 		}
 
