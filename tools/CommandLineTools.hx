@@ -1515,9 +1515,8 @@ class CommandLineTools
 			process.close();
 
 			environment.set("haxe", haxeVersion);
-			environment.set("haxe_ver", haxeVersion);
-
 			environment.set("haxe" + haxeVersion.split(".")[0], "1");
+			environment.set("haxe_ver", haxeVersion);
 		}
 		catch (e:Dynamic) {}
 

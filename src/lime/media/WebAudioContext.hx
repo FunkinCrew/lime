@@ -13,12 +13,10 @@ class WebAudioContext
 
 	public function new() {}
 
-	#if (haxe_ver >= 4.2)
 	public function resume():Dynamic /*Promise<Void>*/
 	{
 		return null;
 	}
-	#end
 
 	public function createAnalyser():Dynamic /*AnalyserNode*/
 	{

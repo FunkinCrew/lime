@@ -129,7 +129,7 @@ class WorkOutput
 		}
 	}
 
-	private function sendUncaughtError(message:#if (haxe_ver >= 4.1) haxe.Exception #else Dynamic #end):Void
+	private function sendUncaughtError(message:haxe.Exception):Void
 	{
 		if (!__jobComplete.value)
 		{

@@ -466,7 +466,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 		// Skip `null` for obvious reasons.
 		return object == null
 			// No need to preserve a primitive type.
-			|| !#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (object, Object)
+			|| !Std.isOfType(object, Object)
 			// Objects with this field have been deliberately excluded.
 			|| Reflect.field(object, SKIP_FIELD) == true
 			// A `Uint8Array` (the type used by `haxe.io.Bytes`) can have
@@ -474,7 +474,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 			// enumerate. This also applies to `Int8Array`, `Float64Array`, etc.
 			|| object.byteLength != null && object.byteOffset != null
 				&& object.buffer != null
-				&& #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (object.buffer, js.lib.ArrayBuffer);
+				&& Std.isOfType(object.buffer, js.lib.ArrayBuffer);
 	}
 	#end
 
@@ -510,7 +510,7 @@ abstract Message(Dynamic) from Dynamic to Dynamic
 		}
 
 		// Preserve this object's class.
-		if (!#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (this, Array))
+		if (!Std.isOfType(this, Array))
 		{
 			try
 			{

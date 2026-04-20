@@ -1,11 +1,7 @@
 package lime.tools;
 
 import hxp.*;
-#if (haxe_ver >= 4)
 import haxe.xml.Access;
-#else
-import haxe.xml.Fast as Access;
-#end
 
 abstract ConfigData(Dynamic) to Dynamic from Dynamic
 {
@@ -237,7 +233,7 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 				continue;
 			}
 
-			if (valueSource != valueDest && valueDest != null && typeSource != "TObject" && !#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(valueSource, Array))
+			if (valueSource != valueDest && valueDest != null && typeSource != "TObject" && !Std.isOfType(valueSource, Array))
 			{
 				if (!Reflect.hasField(destination, ARRAY + field))
 				{
@@ -264,7 +260,7 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 			{
 				mergeValues(valueSource, valueDest);
 			}
-			else if (typeDest == "TClass" && #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (valueSource, Array) && #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(valueDest, Array))
+			else if (typeDest == "TClass" && Std.isOfType(valueSource, Array) && Std.isOfType(valueDest, Array))
 			{
 				for (item in (cast valueSource:Array<Dynamic>))
 				{

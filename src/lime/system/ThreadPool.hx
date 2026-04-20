@@ -18,9 +18,7 @@ import lime._internal.backend.html5.HTML5Thread.Transferable;
 #error "lime_threads_deque is not yet supported in HTML5"
 #end
 #end
-#if (haxe_ver >= 4.1)
 import haxe.Exception;
-#end
 
 /**
 	A thread pool executes one or more functions asynchronously.
@@ -177,7 +175,6 @@ class ThreadPool extends WorkOutput
 	**/
 	public var onRun(default, null) = new Event<State->Void>();
 
-	#if (haxe_ver >= 4.1)
 	/**
 		Dispatched on the main thread when `doWork` throws an error. Dispatched
 		at most once per job.
@@ -185,7 +182,6 @@ class ThreadPool extends WorkOutput
 		If no listeners have been added, instead the error will be rethrown.
 	**/
 	public var onUncaughtError(default, null) = new Event<Exception->Void>();
-	#end
 
 	/**
 		How important this pool's single-threaded jobs are, relative to other
@@ -501,7 +497,6 @@ class ThreadPool extends WorkOutput
 			case UNCAUGHT_ERROR:
 				var message:String;
 
-				#if (haxe_ver >= 4.1)
 				if (Std.isOfType(event.message, Exception))
 				{
 					if (onUncaughtError.__listeners.length > 0)
@@ -515,7 +510,6 @@ class ThreadPool extends WorkOutput
 					}
 				}
 				else
-				#end
 				{
 					message = Std.string(event.message);
 				}
@@ -708,7 +702,7 @@ class ThreadPool extends WorkOutput
 						event.doWork.dispatch(event.state, output);
 					}
 				}
-				catch (e:#if (haxe_ver >= 4.1) Exception #else Dynamic #end)
+				catch (e:Exception)
 				{
 					output.sendUncaughtError(e);
 				}
@@ -793,7 +787,7 @@ class ThreadPool extends WorkOutput
 				}
 				while (!__jobComplete.value && timestamp() < endTime);
 			}
-			catch (e:#if (haxe_ver >= 4.1) Exception #else Dynamic #end)
+			catch (e:Exception)
 			{
 				__jobComplete.value = true;
 				__dispatchJobOutput({event: UNCAUGHT_ERROR, message: e, jobID: activeJob.id});
