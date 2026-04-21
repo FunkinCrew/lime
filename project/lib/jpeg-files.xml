@@ -6,8 +6,8 @@
 
 		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/jpeg/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/jpeg/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/jpeg" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/jpeg" />
 
 		<depend name="${NATIVE_TOOLKIT_PATH}/jpeg/cderror.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/jpeg/cdjpeg.h" />

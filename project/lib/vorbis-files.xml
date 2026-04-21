@@ -37,10 +37,10 @@
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/smallft.h" />
 		<depend name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/window.h" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/lib/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/lib" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/analysis.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/vorbis/lib/bitrate.c" />

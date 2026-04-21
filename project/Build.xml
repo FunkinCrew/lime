@@ -45,12 +45,12 @@
 
 		<section if="LIME_CAIRO">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/src/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/src" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/configs/default/" unless="windows || mac || linux" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/configs/linux/" if="linux" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/configs/windows/" if="windows" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/cairo/configs/mac/" if="mac" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/cairo/src/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/cairo/src" />
 			<compilerflag value="-DLIME_CAIRO" />
 			<compilerflag value="-DHAVE_CONFIG_H" />
 			<compilerflag value="-DCAIRO_WIN32_STATIC_BUILD" if="windows" />
@@ -62,7 +62,7 @@
 
 		<section if="LIME_CURL">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/include" />
 			<compilerflag value="-DLIME_CURL" />
 			<compilerflag value="-DCURL_STATICLIB" />
 
@@ -72,7 +72,7 @@
 
 		<section if="LIME_EFSW">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/efsw/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/efsw/include" />
 			<compilerflag value="-DLIME_EFSW" />
 
 			<file name="src/system/FileWatcher.cpp" />
@@ -119,8 +119,8 @@
 
 		<section if="LIME_JPEG">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/jpeg/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/jpeg/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/jpeg" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/jpeg" />
 			<compilerflag value="-DLIME_JPEG" />
 
 			<file name="src/graphics/format/JPEG.cpp" />
@@ -138,9 +138,9 @@
 
 		<section if="LIME_OGG">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 			<compilerflag value="-DLIME_OGG" />
 
 			<file name="src/media/containers/OGG.cpp" />
@@ -149,7 +149,7 @@
 
 		<section if="LIME_OPENAL">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include" />
 			<compilerflag value="-DLIME_OPENAL" />
 			<compilerflag value="-DAL_LIBTYPE_STATIC" />
 			<compilerflag value="-DAL_ALEXT_PROTOTYPES" />
@@ -162,7 +162,7 @@
 
 			<section if="LIME_GLAD">
 
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/glad/include/" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/glad/include" />
 				<compilerflag value="-DLIME_GLAD" />
 
 			</section>
@@ -177,9 +177,9 @@
 
 		<section if="LIME_PNG">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 			<compilerflag value="-DLIME_PNG" />
 
 			<file name="src/graphics/format/PNG.cpp" />
@@ -188,7 +188,7 @@
 
 		<section if="LIME_SDL">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include" />
 			<compilerflag value="-DLIME_SDL" />
 			<compilerflag value="-DSDL_DISABLE_ALLOCA" />
 			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
@@ -200,8 +200,8 @@
 
 		<section if="LIME_VORBIS">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 			<compilerflag value="-DLIME_VORBIS" />
 
 			<file name="src/bindings/vorbis/VorbisBindings.cpp" />
@@ -338,7 +338,7 @@
 				<section unless="mingw">
 
 					<lib name="advapi32.lib" />
-					<lib name="avrt.lib" if="LIME_OPENAL"/>
+					<lib name="avrt.lib" if="LIME_OPENAL" />
 					<lib name="bcrypt.lib" if="LIME_CURL" />
 					<lib name="comdlg32.lib" />
 					<lib name="comsuppw.lib" />
@@ -365,7 +365,7 @@
 				<section if="mingw">
 
 					<lib name="-ladvapi32" />
-					<lib name="-lavrt" if="LIME_OPENAL"/>
+					<lib name="-lavrt" if="LIME_OPENAL" />
 					<lib name="-lbcrypt" if="LIME_CURL" />
 					<lib name="-lcomdlg32" />
 					<lib name="-ldwrite" if="LIME_HARFBUZZ" />
@@ -418,7 +418,7 @@
 
 			<section if="mac">
 				<vflag name="-rpath" value="/usr/local/lib" />
-				<vflag name="-rpath" value="/opt/homebrew/lib" if="HXCPP_ARM64"/>
+				<vflag name="-rpath" value="/opt/homebrew/lib" if="HXCPP_ARM64" />
 
 				<vflag name="-l" value="iconv" />
 				<vflag name="-framework" value="AppKit" />
@@ -490,8 +490,8 @@
 
 		<section if="windows">
 
-			<copyFile name="lime.lib" from="obj/lib/" overwrite="true" toolId="dll" unless="debug" />
-			<copyFile name="lime-debug.lib" from="obj/lib/" overwrite="true" toolId="dll" if="debug" />
+			<copyFile name="lime.lib" from="obj/lib" overwrite="true" toolId="dll" unless="debug" />
+			<copyFile name="lime-debug.lib" from="obj/lib" overwrite="true" toolId="dll" if="debug" />
 
 		</section>
 

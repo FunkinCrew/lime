@@ -1,7 +1,7 @@
 <xml>
 	<include name="${HXCPP}/project/thirdparty/mbedtls-files.xml" noerror="true" if="static_link" />
 	<set name="HAS_HXCPP_MBEDTLS_FLAGS" value="1" if="MBEDTLS_DIR" />
-	<include name="${HXCPP}/src/hx/libs/ssl/Build.xml" unless="MBEDTLS_DIR"/>
+	<include name="${HXCPP}/src/hx/libs/ssl/Build.xml" unless="MBEDTLS_DIR" />
 
 	<files id="native-toolkit-curl-depends"  >
 		<depend name="${NATIVE_TOOLKIT_PATH}/curl/include/curl/curl.h" />
@@ -20,14 +20,14 @@
 		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
 		<depend files="native-toolkit-curl-depends" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/curl/lib/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/include/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/lib/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/curl/lib" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/include" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/lib" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/axtls" if="NATIVE_TOOLKIT_HAVE_AXTLS" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/mbedtls/include" if="NATIVE_TOOLKIT_HAVE_MBEDTLS"  unless="static_link"/>
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/mbedtls/include" if="NATIVE_TOOLKIT_HAVE_MBEDTLS"  unless="static_link" />
 		<section if="static_link">
 
 			<include name="${HXCPP}/project/thirdparty/mbedtls-flags.xml" if="HAS_HXCPP_MBEDTLS_FLAGS" />

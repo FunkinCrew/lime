@@ -9,9 +9,9 @@
 		<cache value="1" />
 		<tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png/" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
 		<depend files="native-toolkit-png-depends" />
 

@@ -1,7 +1,7 @@
 <xml>
 
 	<files id="native-toolkit-wayland-protocols">
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols" />
 
 		<section>
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/alpha-modifier-v1-client-protocol.c" />

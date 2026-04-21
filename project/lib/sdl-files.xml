@@ -16,9 +16,9 @@
             <compilerflag value="-I/usr/include/libdrm" />
         </section>
 
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/sdl/include/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src/" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/sdl/include" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src" />
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/" if="linux" />
 
         <compilerflag value="-DSDL_DISABLE_ALLOCA" />

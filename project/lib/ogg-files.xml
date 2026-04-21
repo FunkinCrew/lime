@@ -8,8 +8,8 @@
 
     <files id="native-toolkit-ogg" tags="">
 
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include/" />
-        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include/" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
         <cache value="1" />
 
         <tag value="${NATIVE_TOOLKIT_OPTIM_TAG}" if="NATIVE_TOOLKIT_OPTIM_TAG" />

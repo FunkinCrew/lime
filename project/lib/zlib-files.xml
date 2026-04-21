@@ -2,7 +2,7 @@
 
 	<files id="native-toolkit-zlib">
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib/" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
 		<!-- Use unistd.h anywhere except Win32. -->
 		<compilerflag value="-DZ_HAVE_UNISTD_H" unless="windows" />
