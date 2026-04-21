@@ -23,7 +23,7 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/png/pngwtran.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/png/pngwutil.c" />
 
-		<section if="HXCPP_ARMV7 || HXCPP_ARMV7S || HXCPP_ARM64">
+		<section if="HXCPP_ARMV7 || HXCPP_ARM64">
 
 			<file name="${NATIVE_TOOLKIT_PATH}/png/arm/arm_init.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/png/arm/filter_neon_intrinsics.c" />
