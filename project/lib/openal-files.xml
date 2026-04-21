@@ -201,6 +201,7 @@
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/almalloc.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/alstring.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/althrd_setname.cpp" />
+            <file name="${NATIVE_TOOLKIT_PATH}/openal/common/altypes.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/dynload.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/filesystem.cpp" />
             <file name="${NATIVE_TOOLKIT_PATH}/openal/common/pffft.cpp" />
