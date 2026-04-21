@@ -5,14 +5,11 @@
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/efsw/include" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/efsw/src" />
 
-		<!-- Define for macOS <= 10.6 support -->
-		<!-- <compilerflag value="-DEFSW_FSEVENTS_NOT_SUPPORTED" if="mac" /> -->
+		<section if="windows">
 
-		<!-- Define if sys/inotify.h doesn't exist -->
-		<!-- <compilerflag value="-DEFSW_INOTIFY_NOSYS" if="linux" /> -->
+			<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" />
 
-		<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" if="windows" />
-		<compilerflag value="-DNDEBUG" unless="debug" />
+		</section>
 
 		<file name="${NATIVE_TOOLKIT_PATH}/efsw/src/efsw/Debug.cpp" />
 		<file name="${NATIVE_TOOLKIT_PATH}/efsw/src/efsw/DirectorySnapshot.cpp" />

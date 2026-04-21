@@ -4,9 +4,11 @@
 
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
-		<!-- Use unistd.h anywhere except Win32. -->
-		<compilerflag value="-DZ_HAVE_UNISTD_H" unless="windows" />
-		<compilerflag value="-DZ_HAVE_UNISTD_H" if="windows HXCPP_X86_64" />
+		<section unless="isMsvc">
+
+			<compilerflag value="-DHAVE_UNISTD_H" />
+
+		</section>
 
 		<file name="${NATIVE_TOOLKIT_PATH}/zlib/adler32.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/zlib/compress.c" />

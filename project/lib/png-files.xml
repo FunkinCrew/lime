@@ -2,10 +2,14 @@
 
 	<files id="native-toolkit-png">
 
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
+
+		</section>
 
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" />
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/png/png.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/png/pngerror.c" />
