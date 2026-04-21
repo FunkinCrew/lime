@@ -2,18 +2,36 @@
 
 	<files id="native-toolkit-freetype">
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/freetype/include" />
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/harfbuzz/src" />
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" />
+
+			</section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
+
+		</section>
+
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/freetype/include" />
-		<compilerflag value="-DFT2_BUILD_LIBRARY" />
 
-		<compilerflag value="-DNATIVE_TOOLKIT_HAVE_HARFBUZZ" if="NATIVE_TOOLKIT_HAVE_HARFBUZZ" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/harfbuzz/src" if="NATIVE_TOOLKIT_HAVE_HARFBUZZ" />
+		<section>
 
-		<compilerflag value="-DNATIVE_TOOLKIT_HAVE_PNG" if="NATIVE_TOOLKIT_HAVE_PNG" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" if="NATIVE_TOOLKIT_HAVE_PNG" />
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" if="NATIVE_TOOLKIT_HAVE_PNG" />
+			<compilerflag value="-DFT2_BUILD_LIBRARY" />
 
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" /> <!-- To go with FT_CONFIG_OPTION_SYSTEM_ZLIB -->
+			<section>
+
+				<compilerflag value="-DFT_CONFIG_OPTION_USE_HARFBUZZ" />
+				<compilerflag value="-DFT_CONFIG_OPTION_USE_PNG" />
+				<compilerflag value="-DFT_CONFIG_OPTION_SYSTEM_ZLIB" />
+
+			</section>
+
+		</section>
 
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/autofit/autofit.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/freetype/src/base/ftadvanc.c" />

@@ -4,11 +4,14 @@
 
 		<section>
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/freetype/include" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/freetype/include" />
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/pixman/pixman" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/pixman/pixman" />
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/pixman/pixman" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/pixman/pixman" />
+
+			</section>
 
 		</section>
 
