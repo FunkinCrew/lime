@@ -53,7 +53,7 @@
 
         <section>
 
-            <section if="windows" unless="mingw">
+            <section if="isMsvc">
 
                 <compilerflag value="-DNOMINMAX" />
 
@@ -63,9 +63,9 @@
 
             </section>
 
-            <compilerflag value="-Wno-switch" if="android" />
+            <section unless="isMsvc">
 
-            <section if="linux || mingw">
+                <compilerflag value="-Wno-switch" if="android" />
 
                 <compilerflag value="-Wno-interference-size" />
 
