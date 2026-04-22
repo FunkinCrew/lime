@@ -3,10 +3,13 @@ package lime._internal.backend.html5;
 import js.html.DeviceMotionEvent;
 import js.html.DeviceOrientationEvent;
 import js.html.KeyboardEvent;
+import js.html.MediaQueryList;
+import js.html.MediaQueryListEvent;
 import js.Browser;
 import lime.app.Application;
 import lime.media.AudioManager;
 import lime.system.Orientation;
+import lime.system.Theme;
 import lime.system.Sensor;
 import lime.system.SensorType;
 import lime.ui.GamepadAxis;
@@ -27,6 +30,7 @@ class HTML5Application
 {
 	private var accelerometer:Sensor;
 	private var gyroscope:Sensor;
+	private var systemThemeQuery:MediaQueryList;
 	private var currentUpdate:Float;
 	private var deltaTime:Float;
 	private var framePeriod:Float;
@@ -262,6 +266,10 @@ class HTML5Application
 			Browser.window.addEventListener("deviceorientation", handleGyroEvent, false);
 		}
 
+		systemThemeQuery = Browser.window.matchMedia("(prefers-color-scheme: dark)");
+
+		systemThemeQuery.addEventListener("change", handleSystemThemeChange);
+
 		#if stats
 		stats = untyped js.Syntax.code("new Stats ()");
 		stats.domElement.style.position = "absolute";
@@ -394,6 +402,11 @@ class HTML5Application
 		}
 
 		Browser.window.requestAnimationFrame(cast handleApplicationEvent);
+	}
+
+	private function handleSystemThemeChange(event:MediaQueryListEvent):Void
+	{
+		parent.onThemeChange.dispatch();
 	}
 
 	private function handleKeyEvent(event:KeyboardEvent):Void

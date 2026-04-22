@@ -19,6 +19,14 @@ namespace lime {
 
 	};
 
+	enum SystemTheme {
+
+		UNKNOWN,
+		LIGHT,
+		DARK
+
+	};
+
 
 	class System {
 
@@ -48,6 +56,8 @@ namespace lime {
 			static int GetFirstAccelerometerSensorId ();
 
 			static double GetTimer ();
+
+			static SystemTheme GetTheme ();
 
 			static void OpenFile (const char* path);
 			static void OpenURL (const char* url, const char* target);

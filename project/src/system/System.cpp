@@ -454,6 +454,12 @@ namespace lime {
 
 	}
 
+	SystemTheme System::GetTheme () {
+
+		return (SystemTheme)SDL_GetSystemTheme ();
+
+	}
+
 
 	void System::OpenFile (const char* path) {
 

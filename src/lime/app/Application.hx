@@ -52,6 +52,11 @@ class Application extends Module
 	public var modules(default, null):Array<IModule>;
 
 	/**
+		Dispatched when the application theme changes
+	**/
+	public var onThemeChange = new Event<Void->Void>();
+
+	/**
 		Update events are dispatched each frame (usually just before rendering)
 	**/
 	public var onUpdate = new Event<Float->Void>();

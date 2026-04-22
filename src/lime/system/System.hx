@@ -333,6 +333,29 @@ class System
 		#end
 	}
 
+	/**
+		The system theme, if it can be detected.
+	**/
+	public static function getTheme():Theme
+	{
+		#if (js || electron)
+		if (Browser.window.matchMedia('(prefers-color-scheme: dark)').matches)
+		{
+			return DARK;
+		}
+		else if (Browser.window.matchMedia('(prefers-color-scheme: light)').matches)
+		{
+			return LIGHT;
+		}
+
+		return UNKNOWN;
+		#elseif (lime_cffi && !macro)
+		return cast NativeCFFI.lime_system_get_theme();
+		#else
+		return UNKNOWN;
+		#end
+	}
+
 	#if (!lime_doc_gen || lime_cffi)
 	public static inline function load(library:String, method:String, args:Int = 0, lazy:Bool = false):Dynamic
 	{

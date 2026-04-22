@@ -10,6 +10,7 @@ namespace lime {
 
 	enum ApplicationEventType {
 
+		THEME_CHANGE,
 		UPDATE,
 		EXIT
 

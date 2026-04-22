@@ -15,6 +15,7 @@ import lime.system.Display;
 import lime.system.DisplayMode;
 import lime.system.JNI;
 import lime.system.Orientation;
+import lime.system.Theme;
 import lime.system.Sensor;
 import lime.system.SensorType;
 import lime.system.System;
@@ -161,6 +162,9 @@ class NativeApplication
 	{
 		switch (applicationEventInfo.type)
 		{
+			case THEME_CHANGE:
+				parent.onThemeChange.dispatch();
+
 			case UPDATE:
 				updateTimer();
 
@@ -663,8 +667,9 @@ class NativeApplication
 
 private enum abstract ApplicationEventType(Int)
 {
-	var UPDATE = 0;
-	var EXIT = 1;
+	var THEME_CHANGE = 0;
+	var UPDATE = 1;
+	var EXIT = 2;
 }
 
 @:keep /*private*/ class ClipboardEventInfo
