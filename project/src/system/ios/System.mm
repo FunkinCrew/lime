@@ -1,5 +1,8 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
+
+#include <SDL3/SDL.h>
+
 #include <system/System.h>
 
 
@@ -10,7 +13,7 @@ namespace lime {
 
 		struct utsname systemInfo;
 		uname (&systemInfo);
-		return systemInfo.machine;
+		return SDL_strdup (systemInfo.machine);
 
 	}
 
@@ -38,7 +41,7 @@ namespace lime {
 
 	char* System::GetPlatformVersion () {
 
-		return [[[UIDevice currentDevice] systemVersion] UTF8String];
+		return SDL_strdup([[[UIDevice currentDevice] systemVersion] UTF8String]);
 
 	}
 
