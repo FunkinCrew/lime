@@ -14,53 +14,38 @@
 namespace lime {
 
 
-	#ifdef LIME_HASHLINK
-	bool System::_isHL = (hl_nan () != 0);
-	#else
-	bool System::_isHL = false;
-	#endif
-
-
 	void System::GCEnterBlocking () {
 
-		if (!_isHL) {
-
-			gc_enter_blocking ();
-
-		}
+		#ifndef LIME_HASHLINK
+		gc_enter_blocking ();
+		#endif
 
 	}
 
 
 	void System::GCExitBlocking () {
 
-		if (!_isHL) {
-
-			gc_exit_blocking ();
-
-		}
+		#ifndef LIME_HASHLINK
+		gc_exit_blocking ();
+		#endif
 
 	}
 
 
 	void System::GCTryEnterBlocking () {
 
-		if (!_isHL) {
-
-			gc_try_blocking ();
-
-		}
+		#ifndef LIME_HASHLINK
+		gc_try_blocking ();
+		#endif
 
 	}
 
 
 	void System::GCTryExitBlocking () {
 
-		if (!_isHL) {
-
-			gc_try_unblocking ();
-
-		}
+		#ifndef LIME_HASHLINK
+		gc_try_unblocking ();
+		#endif
 
 	}
 

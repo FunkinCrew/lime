@@ -63,10 +63,6 @@ namespace lime {
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif
 
-		private:
-
-			static bool _isHL;
-
 
 	};
 
