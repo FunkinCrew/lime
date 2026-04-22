@@ -35,7 +35,8 @@
 		<section unless="isMsvc">
 
 			<compilerflag value="-Wno-attributes" />
-			<compilerflag value="-Wno-stringop-overflow" />
+			<compilerflag value="-Wno-stringop-overflow" if="linux || mingw" />
+			<compilerflag value="-Wno-deprecated-declarations" if="apple" />
 			<compilerflag value="-Wno-enum-conversion" />
 
 		</section>

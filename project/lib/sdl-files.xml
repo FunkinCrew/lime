@@ -38,6 +38,12 @@
             <compilerflag value="-DSDL_DISABLE_STB" />
             <compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
 
+            <section>
+
+                <compilerflag value="-Wno-deprecated-declarations" if="macos || android" />
+
+            </section>
+
         </section>
 
         <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/SDL.c" />

@@ -15,7 +15,8 @@
 			<section unless="isMsvc">
 
 				<compilerflag value="-DHAVE_UNISTD_H" />
-				<compilerflag value="-DHAVE_SYS_MMAN_H" />
+
+				<compilerflag value="-DHAVE_SYS_MMAN_H" unless="mingw" />
 
 			</section>
 
@@ -53,7 +54,8 @@
 
 			<section unless="isMsvc">
 
-				<compilerflag value="-Wno-nontrivial-memcall" />
+				<compilerflag value="-Wno-nontrivial-memcall" unless="mingw" />
+				<compilerflag value="-Wno-format" if="apple" />
 
 			</section>
 

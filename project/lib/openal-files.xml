@@ -67,9 +67,14 @@
 
                 <compilerflag value="-Wno-switch" if="android" />
 
-                <compilerflag value="-Wno-interference-size" />
+                <section if="linux || mingw">
 
-                <compilerflag value="-Wno-stringop-overflow" />
+                    <compilerflag value="-Wno-stringop-overflow" />
+                    <compilerflag value="-Wno-interference-size" />
+
+                </section>
+
+                <compilerflag value="-Wno-deprecated-anon-enum-enum-conversion" if="apple" />
 
             </section>
 

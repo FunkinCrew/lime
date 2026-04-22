@@ -72,6 +72,13 @@
 
 			<file name="src/bindings/curl/CURLBindings.cpp" />
 
+			<section unless="isMsvc">
+
+				<compilerflag value="-Wno-switch" />
+				<compilerflag value="-Wno-deprecated-declarations" />
+
+			</section>
+
 		</section>
 
 		<section if="LIME_EFSW">
@@ -221,6 +228,8 @@
 			<file name="src/utils/compress/Zlib.cpp" />
 
 		</section>
+
+		<compilerflag value="-Wno-conversion-null" if="mingw" />
 
 		<section>
 
