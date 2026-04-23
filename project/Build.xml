@@ -278,6 +278,7 @@
 		<file name="src/ui/KeyCode.cpp" />
 		<file name="src/utils/ArrayBufferView.cpp" />
 		<file name="src/utils/Bytes.cpp" />
+		<file name="src/utils/File.cpp" />
 
 	</files>
 
