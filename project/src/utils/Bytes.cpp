@@ -1,6 +1,7 @@
 #include <system/Mutex.h>
 #include <system/System.h>
 #include <utils/Bytes.h>
+#include <utils/File.h>
 #include <map>
 
 
@@ -86,38 +87,38 @@ namespace lime {
 
 	void Bytes::ReadFile (const char* path) {
 
-		FILE_HANDLE *file = lime::fopen (path, "rb");
+		File file (path, "rb");
 
-		if (!file) {
+		if (!file.handle) {
 
 			return;
 
 		}
 
-		lime::fseek (file, 0, SEEK_END);
+		file.Seek (0, SEEK_END);
 
-		int size = lime::ftell (file);
+		int size = (int)file.Tell ();
 
-		lime::fseek (file, 0, SEEK_SET);
+		file.Seek (0, SEEK_SET);
 
 		if (size > 0) {
 
 			Resize (size);
 
-			lime::fread (b, 1, size, file);
+			file.Read (b, size);
 
 		}
 
-		lime::fclose (file);
+		file.Close ();
 
 	}
 
 
 	void Bytes::WriteFile (const char* path) {
 
-		FILE_HANDLE *file = lime::fopen (path, "wb");
+		File file (path, "wb");
 
-		if (!file) {
+		if (!file.handle) {
 
 			return;
 
@@ -125,11 +126,12 @@ namespace lime {
 
 		if (length > 0) {
 
-			lime::fwrite (b, 1, length, file);
+			file.Write (b, length);
+			file.Flush ();
 
 		}
 
-		lime::fclose (file);
+		file.Close ();
 
 	}
 
