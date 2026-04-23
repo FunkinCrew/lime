@@ -92,11 +92,7 @@
 /* #undef HAVE_LIBPIXMAN_1 */
 
 /* Whether we have libpng */
-#ifdef NATIVE_TOOLKIT_HAVE_PNG
-#define HAVE_LIBPNG 1
-#else
 /* #undef HAVE_LIBPNG */
-#endif
 
 /* Whether we have mmap() */
 #ifdef HX_LINUX

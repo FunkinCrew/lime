@@ -1,213 +1,66 @@
-extern "C" {
-
-	#include <png.h>
-	#include <pngstruct.h>
-	#define PNG_SIG_SIZE 8
-
-}
-
-#include <setjmp.h>
-#include <graphics/format/PNG.h>
-#include <graphics/ImageBuffer.h>
 #include <system/System.h>
-#include <utils/Bytes.h>
-#include <utils/QuickVec.h>
+#include <graphics/ImageBuffer.h>
+#include <graphics/PixelFormat.h>
+#include <graphics/format/PNG.h>
+#include <utils/File.h>
 
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 
 namespace lime {
 
 
-	struct ReadBuffer {
+	bool PNG::Decode (Resource *resource, ImageBuffer *imageBuffer) {
 
-		ReadBuffer (const unsigned char* data, int length) : data (data), length (length), position (0) {}
+		File file = resource->path ? File (resource->path, "rb") : File (resource->data);
 
-		bool Read (unsigned char* out, int count) {
+		if (!file.handle) {
 
-			if (position >= length) return false;
-
-			if (count > length - position) {
-
-				memcpy (out, data + position, length - position);
-				position = length;
-
-			} else {
-
-				memcpy (out, data + position, count);
-				position += count;
-
-			}
-
-			return true;
-
-		}
-
-		char unused; // the first byte gets corrupted when passed to libpng?
-		const unsigned char* data;
-		int length;
-		int position;
-
-	};
-
-
-	static void user_error_fn (png_structp png_ptr, png_const_charp error_msg) {
-
-		longjmp (png_ptr->jmp_buf_local, 1);
-
-	}
-
-
-	static void user_read_data_fn (png_structp png_ptr, png_bytep data, png_size_t length) {
-
-		ReadBuffer* buffer = (ReadBuffer*)png_get_io_ptr (png_ptr);
-		if (!buffer->Read (data, length)) {
-			png_error (png_ptr, "Read Error");
-		}
-
-	}
-
-	static void user_warning_fn (png_structp png_ptr, png_const_charp warning_msg) {}
-
-
-	void user_write_data (png_structp png_ptr, png_bytep data, png_size_t length) {
-
-		QuickVec<unsigned char> *buffer = (QuickVec<unsigned char> *)png_get_io_ptr (png_ptr);
-		buffer->append ((unsigned char *)data,(int)length);
-
-	}
-
-
-	void user_flush_data (png_structp png_ptr) {}
-
-
-	bool PNG::Decode (Resource *resource, ImageBuffer *imageBuffer, bool decodeData) {
-
-		png_structp png_ptr;
-		png_infop info_ptr;
-		png_uint_32 width, height;
-		int bit_depth, color_type, interlace_type;
-
-		FILE_HANDLE* file = NULL;
-		Bytes* data = NULL;
-
-		if (resource->path) {
-
-			file = lime::fopen (resource->path, "rb");
-			if (!file) return false;
-
-			unsigned char png_sig[PNG_SIG_SIZE];
-			int read = lime::fread (&png_sig, PNG_SIG_SIZE, 1, file);
-			if (png_sig_cmp (png_sig, 0, PNG_SIG_SIZE)) {
-
-				lime::fclose (file);
-				return false;
-
-			}
-
-		} else {
-
-			if (png_sig_cmp (resource->data->b, 0, PNG_SIG_SIZE)) {
-
-				return false;
-
-			}
-
-		}
-
-		if ((png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)) == NULL) {
-
-			if (file) lime::fclose (file);
 			return false;
 
 		}
 
-		if ((info_ptr = png_create_info_struct (png_ptr)) == NULL) {
+		if (!IMG_isPNG ((SDL_IOStream *)file.handle)) {
 
-			png_destroy_read_struct (&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-			if (file) lime::fclose (file);
+			file.Close ();
+
 			return false;
 
 		}
 
-		// sets the point which libpng will jump back to in the case of an error
-		if (setjmp (png_jmpbuf (png_ptr))) {
+		SDL_Surface *surface = IMG_LoadPNG_IO ((SDL_IOStream *)file.handle);
 
-			png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
-			if (file) lime::fclose (file);
+		if (!surface) {
+
+			file.Close ();
+
 			return false;
 
 		}
 
-		if (file) {
+		if (surface->format != SDL_PIXELFORMAT_RGBA32) {
 
-			data = new Bytes ();
-			data->ReadFile (resource->path);
-			ReadBuffer buffer (data->b, data->length);
-			png_set_read_fn (png_ptr, &buffer, user_read_data_fn);
-
-		} else {
-
-			ReadBuffer buffer (resource->data->b, resource->data->length);
-			png_set_read_fn (png_ptr, &buffer, user_read_data_fn);
+			SDL_Surface *old_surface = surface;
+			surface = SDL_ConvertSurface (old_surface, SDL_PIXELFORMAT_RGBA32);
+			SDL_DestroySurface (old_surface);
 
 		}
 
-		png_read_info (png_ptr, info_ptr);
-		png_get_IHDR (png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+		if (!surface) {
 
-		if (decodeData) {
+			file.Close ();
 
-			//bool has_alpha = (color_type == PNG_COLOR_TYPE_GRAY_ALPHA || color_type == PNG_COLOR_TYPE_RGB_ALPHA || png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS));
-
-			png_set_expand (png_ptr);
-
-			png_set_filler (png_ptr, 0xff, PNG_FILLER_AFTER);
-			//png_set_gray_1_2_4_to_8 (png_ptr);
-			png_set_palette_to_rgb (png_ptr);
-			png_set_gray_to_rgb (png_ptr);
-
-			if (bit_depth < 8) {
-
-				png_set_packing (png_ptr);
-
-			} else if (bit_depth == 16) {
-
-				png_set_scale_16 (png_ptr);
-
-			}
-
-			//png_set_bgr (png_ptr);
-
-			imageBuffer->Resize (width, height, 32);
-
-			const unsigned int stride = imageBuffer->Stride ();
-			unsigned char *bytes = imageBuffer->data->buffer->b;
-
-			int number_of_passes = png_set_interlace_handling (png_ptr);
-
-			for (int pass = 0; pass < number_of_passes; pass++) {
-
-				for (int i = 0; i < height; i++) {
-
-					png_bytep anAddr = (png_bytep)(bytes + i * stride);
-					png_read_rows (png_ptr, (png_bytepp) &anAddr, NULL, 1);
-
-				}
-
-			}
-
-			png_read_end (png_ptr, NULL);
-
-		} else {
-
-			imageBuffer->width = width;
-			imageBuffer->height = height;
+			return false;
 
 		}
 
-		png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
+		imageBuffer->Resize (surface->w, surface->h, 32);
 
-		if (file) lime::fclose (file);
-		if (data) delete data;
+		memcpy (imageBuffer->data->buffer->b, surface->pixels, surface->h * surface->pitch);
+
+		SDL_DestroySurface (surface);
+
+		file.Close ();
 
 		return true;
 
@@ -216,96 +69,58 @@ namespace lime {
 
 	bool PNG::Encode (ImageBuffer *imageBuffer, Bytes* bytes) {
 
-		png_structp png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, user_error_fn, user_warning_fn);
+		SDL_Surface *surface = SDL_CreateSurfaceFrom(imageBuffer->width, imageBuffer->height, SDL_PIXELFORMAT_RGBA32, imageBuffer->data->buffer->b, imageBuffer->Stride ());
 
-		if (!png_ptr) {
-
-			return false;
-
-		}
-
-		png_infop info_ptr = png_create_info_struct (png_ptr);
-
-		if (!info_ptr) {
-
-			png_destroy_write_struct (&png_ptr, NULL);
+		if (!surface) {
 
 			return false;
 
 		}
 
-		if (setjmp (png_jmpbuf (png_ptr))) {
+		SDL_IOStream *dst = SDL_IOFromDynamicMem ();
 
-			png_destroy_write_struct (&png_ptr, &info_ptr);
+		if (!dst) {
+
+			SDL_DestroySurface (surface);
+
 			return false;
 
 		}
 
-		QuickVec<unsigned char> out_buffer;
+		bool success;
 
-		png_set_write_fn (png_ptr, &out_buffer, user_write_data, user_flush_data);
+		if (bytes) {
 
-		int w = imageBuffer->width;
-		int h = imageBuffer->height;
+			success = IMG_SavePNG_IO (surface, dst, false);
 
-		int bit_depth = 8;
-		//int color_type = (inSurface->Format () & pfHasAlpha) ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
-		int color_type = PNG_COLOR_TYPE_RGB_ALPHA;
-		png_set_IHDR (png_ptr, info_ptr, w, h, bit_depth, color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+			if (success) {
 
-		png_write_info (png_ptr, info_ptr);
+				int64_t size = SDL_TellIO(dst);
 
-		bool do_alpha = (color_type == PNG_COLOR_TYPE_RGBA);
-		unsigned char* imageData = imageBuffer->data->buffer->b;
-		int stride = imageBuffer->Stride ();
+				if (size <= 0 || size > INT_MAX) {
 
-		{
-			QuickVec<unsigned char> row_data (w * 4);
-			png_bytep row = &row_data[0];
+					success = false;
 
-			for (int y = 0; y < h; y++) {
+				} else {
 
-				unsigned char *buf = &row_data[0];
-				const unsigned char *src = (const unsigned char *)(imageData + (stride * y));
-
-				for (int x = 0; x < w; x++) {
-
-					buf[0] = src[0];
-					buf[1] = src[1];
-					buf[2] = src[2];
-					src += 3;
-					buf += 3;
-
-					if (do_alpha) {
-
-						*buf++ = *src;
-
-					}
-
-					src++;
+					SDL_SeekIO (dst, 0, SDL_IO_SEEK_SET);
+					bytes->Resize ((int)size);
+					SDL_ReadIO (dst, bytes->b, (size_t)size);
 
 				}
 
-				png_write_rows (png_ptr, &row, 1);
-
 			}
 
-		}
+		} else {
 
-		png_write_end (png_ptr, NULL);
-
-		int size = out_buffer.size ();
-
-		if (size > 0) {
-
-			bytes->Resize (size);
-			memcpy (bytes->b, &out_buffer[0], size);
+			success = false;
 
 		}
 
-		png_destroy_write_struct (&png_ptr, &info_ptr);
+		SDL_CloseIO(dst);
+		SDL_DestroySurface (surface);
 
-		return true;
+		return success;
 
 	}
 
