@@ -27,6 +27,8 @@ import js.Browser;
 @:access(lime.media.openal.ALDevice)
 class AudioManager
 {
+	private static var AUDIO_CONFIG_VERSION:String = "1.1";
+
 	public static var context:AudioContext;
 
 	public static function init(context:AudioContext = null)
@@ -175,17 +177,19 @@ class AudioManager
 		final alConfig:Array<String> = [];
 
 		alConfig.push('[general]');
-		alConfig.push('channels=stereo');
+		alConfig.push('frequency=48000');
 		alConfig.push('sample-type=float32');
 		alConfig.push('stereo-mode=speakers');
-		alConfig.push('stereo-encoding=panpot');
-		alConfig.push('hrtf=false');
+		alConfig.push('stereo-encoding=basic');
 		alConfig.push('cf_level=0');
-		alConfig.push('resampler=fast_bsinc24');
-		alConfig.push('front-stablizer=false');
 		alConfig.push('output-limiter=false');
-		alConfig.push('volume-adjust=0');
-		alConfig.push('period_size=441');
+		alConfig.push('front-stablizer=false');
+		alConfig.push('volume-adjust=0')
+		alConfig.push('period_size=480');
+		alConfig.push('periods=4');
+		alConfig.push('sends=64');
+		alConfig.push('dither=false');
+		alConfig.push('dither-depth=0');
 
 		alConfig.push('[decoder]');
 		alConfig.push('hq-mode=false');
@@ -195,8 +199,7 @@ class AudioManager
 		try
 		{
 			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
-			final path:String = Path.join([directory, #if windows 'audio-config.ini' #else 'audio-config.conf' #end]);
-			final content:String = alConfig.join('\n');
+			final path:String = Path.withExtension(Path.join([directory, 'audio-config-${AUDIO_CONFIG_VERSION}']), #if windows 'ini' #else 'conf' #end);
 
 			if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
 
