@@ -5,14 +5,6 @@
 		<section>
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/harfbuzz/src" />
-
-			<section>
-
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/png" />
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/png" />
-
-			</section>
-
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
 
 		</section>
@@ -26,7 +18,6 @@
 			<section>
 
 				<compilerflag value="-DFT_CONFIG_OPTION_USE_HARFBUZZ" />
-				<compilerflag value="-DFT_CONFIG_OPTION_USE_PNG" />
 				<compilerflag value="-DFT_CONFIG_OPTION_SYSTEM_ZLIB" />
 
 			</section>

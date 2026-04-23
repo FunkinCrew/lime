@@ -26,10 +26,10 @@ import haxe.io.BytesOutput;
 @:access(lime.graphics.ImageBuffer)
 class JPEG
 {
-	public static function decodeBytes(bytes:Bytes, decodeData:Bool = true):Image
+	public static function decodeBytes(bytes:Bytes):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_jpeg_decode_bytes(bytes, decodeData, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer = NativeCFFI.lime_jpeg_decode_bytes(bytes, true, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
 
 		if (buffer != null)
 		{
@@ -40,10 +40,10 @@ class JPEG
 		return null;
 	}
 
-	public static function decodeFile(path:String, decodeData:Bool = true):Image
+	public static function decodeFile(path:String):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_jpeg_decode_file(path, decodeData, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer = NativeCFFI.lime_jpeg_decode_file(path, true, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
 
 		if (buffer != null)
 		{
