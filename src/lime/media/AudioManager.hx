@@ -184,7 +184,7 @@ class AudioManager
 		alConfig.push('cf_level=0');
 		alConfig.push('output-limiter=false');
 		alConfig.push('front-stablizer=false');
-		alConfig.push('volume-adjust=0')
+		alConfig.push('volume-adjust=0');
 		alConfig.push('period_size=480');
 		alConfig.push('periods=4');
 		alConfig.push('sends=64');
@@ -200,6 +200,7 @@ class AudioManager
 		{
 			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
 			final path:String = Path.withExtension(Path.join([directory, 'audio-config-${AUDIO_CONFIG_VERSION}']), #if windows 'ini' #else 'conf' #end);
+			final content:String = alConfig.join('\n');
 
 			if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
 
