@@ -1833,6 +1833,7 @@ namespace lime {
 
 	value lime_image_encode (value buffer, int type, int quality, value bytes) {
 
+		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
 		Bytes data = Bytes (bytes);
 
@@ -1840,29 +1841,26 @@ namespace lime {
 
 			case 0:
 
-				#ifdef LIME_PNG
 				if (PNG::Encode (&imageBuffer, &data)) {
 
 					return data.Value (bytes);
 
 				}
-				#endif
 				break;
 
 			case 1:
 
-				#ifdef LIME_JPEG
 				if (JPEG::Encode (&imageBuffer, &data, quality)) {
 
 					return data.Value (bytes);
 
 				}
-				#endif
 				break;
 
 			default: break;
 
 		}
+		#endif
 
 		return alloc_null ();
 
@@ -1871,33 +1869,31 @@ namespace lime {
 
 	HL_PRIM Bytes* HL_NAME(hl_image_encode) (ImageBuffer* buffer, int type, int quality, Bytes* bytes) {
 
+		#ifdef LIME_SDL_IMAGE
 		switch (type) {
 
 			case 0:
 
-				#ifdef LIME_PNG
 				if (PNG::Encode (buffer, bytes)) {
 
 					return bytes;
 
 				}
-				#endif
 				break;
 
 			case 1:
 
-				#ifdef LIME_JPEG
 				if (JPEG::Encode (buffer, bytes, quality)) {
 
 					return bytes;
 
 				}
-				#endif
 				break;
 
 			default: break;
 
 		}
+		#endif
 
 		return 0;
 
@@ -1914,15 +1910,13 @@ namespace lime {
 		bytes.Set (data);
 		resource = Resource (&bytes);
 
-		#ifdef LIME_PNG
+		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
-		#ifdef LIME_JPEG
 		if (JPEG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
@@ -1939,15 +1933,13 @@ namespace lime {
 
 		Resource resource = Resource (data);
 
-		#ifdef LIME_PNG
+		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
 
 		}
-		#endif
 
-		#ifdef LIME_JPEG
 		if (JPEG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -1965,15 +1957,13 @@ namespace lime {
 		Resource resource = Resource (val_string (data));
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
 
-		#ifdef LIME_PNG
+		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
-		#ifdef LIME_JPEG
 		if (JPEG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
@@ -1990,15 +1980,13 @@ namespace lime {
 
 		Resource resource = Resource (data);
 
-		#ifdef LIME_PNG
+		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
 
 		}
-		#endif
 
-		#ifdef LIME_JPEG
 		if (JPEG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -2433,13 +2421,12 @@ namespace lime {
 
 	value lime_jpeg_decode_bytes (value data, bool decodeData, value buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
-
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
 
-		#ifdef LIME_JPEG
-		if (JPEG::Decode (&resource, &imageBuffer, decodeData)) {
+		if (JPEG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -2453,10 +2440,10 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_bytes) (Bytes* data, bool decodeData, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (data);
 
-		#ifdef LIME_JPEG
-		if (JPEG::Decode (&resource, buffer, decodeData)) {
+		if (JPEG::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -2470,11 +2457,11 @@ namespace lime {
 
 	value lime_jpeg_decode_file (HxString path, bool decodeData, value buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
-		#ifdef LIME_JPEG
-		if (JPEG::Decode (&resource, &imageBuffer, decodeData)) {
+		if (JPEG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -2488,10 +2475,10 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_file) (hl_vstring* path, bool decodeData, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (path);
 
-		#ifdef LIME_JPEG
-		if (JPEG::Decode (&resource, buffer, decodeData)) {
+		if (JPEG::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -2679,12 +2666,12 @@ namespace lime {
 
 	value lime_png_decode_bytes (value data, bool decodeData, value buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
 
-		#ifdef LIME_PNG
-		if (PNG::Decode (&resource, &imageBuffer, decodeData)) {
+		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -2698,10 +2685,10 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_png_decode_bytes) (Bytes* data, bool decodeData, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (data);
 
-		#ifdef LIME_PNG
-		if (PNG::Decode (&resource, buffer, decodeData)) {
+		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -2715,11 +2702,11 @@ namespace lime {
 
 	value lime_png_decode_file (HxString path, bool decodeData, value buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
-		#ifdef LIME_PNG
-		if (PNG::Decode (&resource, &imageBuffer, decodeData)) {
+		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -2733,10 +2720,10 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_png_decode_file) (hl_vstring* path, bool decodeData, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (path);
 
-		#ifdef LIME_PNG
-		if (PNG::Decode (&resource, buffer, decodeData)) {
+		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
 
