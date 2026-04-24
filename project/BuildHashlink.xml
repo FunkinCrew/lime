@@ -12,6 +12,7 @@
 
 	<files id="hl">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
+		<compilerflag value="-municode" if="mingw" />
 
 		<file name="src/hashlink_main.c" tag="main" />
 		<file name="${HASHLINK_PATH}/src/code.c" />
@@ -26,6 +27,8 @@
 		<compilerflag value="-DLIBHL_EXPORTS" />
 		<compilerflag value="-DHAVE_CONFIG_H" />
 		<compilerflag value="-DPCRE2_CODE_UNIT_WIDTH=16" />
+		<compilerflag value="-DPCRE2_STATIC" />
+		<compilerflag value="-municode" if="mingw" />
 
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
 		<compilerflag value="-I${HASHLINK_PATH}/include" />
@@ -58,7 +61,7 @@
 		<file name="${HASHLINK_PATH}/src/std/ucs2.c" />
 
 		<!-- PCRE -->
-		 <file name="${HASHLINK_PATH}/include/pcre/pcre2_auto_possess.c" />
+		<file name="${HASHLINK_PATH}/include/pcre/pcre2_auto_possess.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_chartables.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_compile.c" />
 		<file name="${HASHLINK_PATH}/include/pcre/pcre2_config.c" />
@@ -102,7 +105,9 @@
 		<compilerflag value="-DMBEDTLS_THREADING_C" />
 		<compilerflag value="-DMBEDTLS_THREADING_PTHREAD" unless="windows" />
 		<compilerflag value="-DMBEDTLS_THREADING_ALT" if="windows" />
-		<compilerflag value="/std:c11" if="windows" />
+		<compilerflag value="/std:c11" if="isMsvc" />
+		<compilerflag value="-municode" if="mingw" />
+
 		<file name="${HASHLINK_PATH}/libs/ssl/ssl.c" />
 	</files>
 
@@ -127,6 +132,7 @@
 		<compilerflag value="-I/usr/local/opt/jpeg-turbo/include" if="mac" />
 		<compilerflag value="-I/usr/local/opt/libvorbis/include" if="mac" />
 
+		<compilerflag value="-municode" if="mingw" />
 
 		<file name="${HASHLINK_PATH}/libs/fmt/fmt.c" />
 		<file name="${HASHLINK_PATH}/libs/fmt/sha1.c" />
@@ -246,6 +252,7 @@
 	</files>
 	<files id="ui">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
+		<compilerflag value="-municode" if="mingw" />
 
 		<file name="${HASHLINK_PATH}/libs/ui/ui_stub.c" unless="windows" />
 		<file name="${HASHLINK_PATH}/libs/ui/ui_win.c" if="windows" />
@@ -253,20 +260,26 @@
 	<files id="uv">
 		<compilerflag value="-I${HASHLINK_PATH}/src" />
 		<compilerflag value="-I/usr/local/include" if="mac" />
+		<compilerflag value="-municode" if="mingw" />
 
 		<file name="${HASHLINK_PATH}/libs/uv/uv.c" />
 
 		<section if="windows">
 			<compilerflag value="-I${HASHLINK_PATH}/include/libuv/include" />
+			<compilerflag value="-I${HASHLINK_PATH}/include/libuv/src" />
 			<compilerflag value="-DUV_EXPORTS" />
 			<compilerflag value="-DBUILDING_UV_SHARED" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/fs-poll.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/idna.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/inet.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/strscpy.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/threadpool.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/timer.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/uv-common.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/version.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/async.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/core.c" />
+			<file name="${HASHLINK_PATH}/include/libuv/src/win/detect-wakeup.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/dl.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/error.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/fs-event.c" />
@@ -279,13 +292,10 @@
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/poll.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/process-stdio.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/process.c" />
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/req.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/signal.c" />
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/snprintf.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/stream.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/tcp.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/thread.c" />
-			<file name="${HASHLINK_PATH}/include/libuv/src/win/timer.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/tty.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/udp.c" />
 			<file name="${HASHLINK_PATH}/include/libuv/src/win/util.c" />
@@ -313,6 +323,7 @@
 		<section if="windows">
 			<lib name="user32.lib" />
 			<lib name="ws2_32.lib" />
+			<lib name="winmm.lib" />
 		</section>
 	</target>
 
@@ -325,8 +336,7 @@
 		<vflag name="-install_name" value="@executable_path/ssl.hdll" if="mac" />
 
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
-		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<lib name="libhl.lib" if="windows" />
 
 		<lib name="Advapi32.lib" if="windows" />
@@ -347,8 +357,7 @@
 		<vflag name="-install_name" value="@executable_path/mysql.hdll" if="mac" />
 
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
-		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<lib name="libhl.lib" if="windows" />
 		<lib name="ws2_32.lib" if="windows" />
 	</target>
@@ -373,8 +382,7 @@
 		<lib name="-lturbojpeg" unless="windows" />
 
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
-		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<lib name="libhl.lib" if="windows" />
 		<lib name="${HASHLINK_PATH}/include/turbojpeg/x64/simd.lib" if="windows HXCPP_M64" />
 		<lib name="${HASHLINK_PATH}/include/turbojpeg/x86/simd.lib" if="windows" unless="HXCPP_M64" />
@@ -388,9 +396,8 @@
 		<vflag name="-install_name" value="@executable_path/ui.hdll" if="mac" />
 
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<section if="windows">
-			<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" />
 			<lib name="libhl.lib" />
 			<lib name="user32.lib" />
 			<lib name="gdi32.lib" />
@@ -409,15 +416,17 @@
 
 		<lib name="-luv" unless="windows" />
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<section if="windows">
-			<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" />
+			<lib name="ole32.lib" />
+			<lib name="shell32.lib" />
+			<lib name="dbghelp.lib" />
 			<lib name="libhl.lib" />
 			<lib name="psapi.lib" />
 			<lib name="iphlpapi.lib" />
 			<lib name="userenv.lib" />
-			<lib name="advapi32.lib" if="windows" />
-			<lib name="ws2_32.lib" if="windows" />
+			<lib name="advapi32.lib" />
+			<lib name="ws2_32.lib" />
 		</section>
 	</target>
 
@@ -429,10 +438,10 @@
 
 		<!-- Make hashlink pick up binaries in the same directory as itself -->
 		<lib name="-Wl,-rpath=$ORIGIN" if="linux" />
+		<flag value="-municode" if="mingw" />
 
 		<lib name="-lhl" unless="windows" />
-		<lib name="-L${OUTPUT_DIR}/${BINDIR}" unless="windows" />
-		<lib name="-libpath:${OUTPUT_DIR}/${BINDIR}" if="windows" />
+		<libpath name="${OUTPUT_DIR}/${BINDIR}" />
 		<lib name="libhl.lib" if="windows" />
 	</target>
 
@@ -448,10 +457,12 @@
 		<target id="uv" />
 	</target>
 
-	<copyFile name="libhl.lib" from="obj/lib" overwrite="true" toolId="dll" if="windows" />
-	<copyFile name="ssl.lib" from="obj/lib" allowMissing="true" overwrite="true" toolid="dll" if="windows" />
-	<copyFile name="mysql.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" if="windows" />
-	<copyFile name="fmt.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" if="windows" />
-	<copyFile name="ui.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" if="windows" />
-	<copyFile name="uv.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" if="windows" />
+	<section if="windows">
+		<copyFile name="libhl.lib" from="obj/lib" overwrite="true" toolId="dll" if="isMsvc" />
+		<copyFile name="ssl.lib" from="obj/lib" allowMissing="true" overwrite="true" toolid="dll" />
+		<copyFile name="mysql.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" />
+		<copyFile name="fmt.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" />
+		<copyFile name="ui.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" />
+		<copyFile name="uv.lib" from="obj/lib" allowMissing="true" overwrite="true" toolId="dll" />
+	</section>
 </xml>

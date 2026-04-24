@@ -338,6 +338,8 @@
 			<ext value=".ndll" if="windows || mac || linux" />
 			<ext value=".hdll" if="LIME_HASHLINK" />
 
+			<libpath name="../templates/bin/hl/${BINDIR}" if="LIME_HASHLINK" />
+
 			<section if="windows">
 
 				<section unless="mingw">
@@ -397,8 +399,6 @@
 
 				<section if="LIME_HASHLINK">
 
-					<lib name="-libpath:../templates/bin/hl/${BINDIR}"  />
-
 					<lib name="libhl.lib" />
 
 				</section>
@@ -412,8 +412,6 @@
 				<lib name="-lrt" />
 
 				<section if="LIME_HASHLINK">
-
-					<lib name="-L../templates/bin/hl/${BINDIR}" />
 
 					<lib name="-lhl" />
 
@@ -448,8 +446,6 @@
 				<section if="LIME_HASHLINK">
 
 					<vflag name="-install_name" value="@executable_path/lime.hdll" />
-
-					<lib name="-L../templates/bin/hl/${BINDIR}" />
 
 					<lib name="-lhl" />
 
@@ -493,7 +489,7 @@
 
 	<section if="LIME_HASHLINK">
 
-		<section if="windows">
+		<section if="isMsvc">
 
 			<copyFile name="lime.lib" from="obj/lib" overwrite="true" toolId="dll" unless="debug" />
 			<copyFile name="lime-debug.lib" from="obj/lib" overwrite="true" toolId="dll" if="debug" />
