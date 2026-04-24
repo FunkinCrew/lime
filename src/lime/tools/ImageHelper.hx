@@ -2,6 +2,7 @@ package lime.tools;
 
 import hxp.*;
 #if (lime && lime_cffi && !macro)
+import lime._internal.format.SVG;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.utils.UInt8Array;
@@ -13,120 +14,16 @@ import sys.FileSystem;
 
 class ImageHelper
 {
-	public static function rasterizeSVG(path:String, width:Int, height:Int,
-			backgroundColor:Int = null):#if (lime && lime_cffi && !macro) Image #else Dynamic #end
+	public static function rasterizeSVG(path:String, width:Int, height:Int):#if (lime && lime_cffi && !macro) Image #else Dynamic #end
 	{
-		// public static function rasterizeSVG (svg:Dynamic /*SVG*/, width:Int, height:Int, backgroundColor:Int = null):Image {
-
 		#if (lime && lime_cffi && !macro)
 		if (path == null) return null;
 
-		var temp = System.getTemporaryFile(".png");
+		var image = SVG.decodeFileSized(path, width, height);
 
-		try
+		if (image.buffer != null)
 		{
-			System.runCommand("", "neko", [
-				Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), "svg.n"),
-				"process",
-				path,
-				Std.string(width),
-				Std.string(height),
-				temp
-			], true, true);
-
-			if (FileSystem.exists(temp))
-			{
-				var image = Image.fromFile(temp);
-
-				try
-				{
-					FileSystem.deleteFile(temp);
-				}
-				catch (e:Dynamic) {}
-
-				if (image.buffer != null)
-				{
-					return image;
-				}
-			}
-		}
-		catch (e:Dynamic) {}
-
-		var rasterizer = Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/batik/batik-rasterizer.jar";
-		var args = [
-			"-Dapple.awt.UIElement=true",
-			"-jar",
-			rasterizer,
-			"-d",
-			temp,
-			"-w",
-			Std.string(width),
-			"-h",
-			Std.string(height)
-		];
-
-		if (backgroundColor != null)
-		{
-			var a:Int = ((backgroundColor >> 24) & 0xFF);
-			var r:Int = ((backgroundColor >> 16) & 0xFF);
-			var g:Int = ((backgroundColor >> 8) & 0xFF);
-			var b:Int = (backgroundColor & 0xFF);
-
-			args.push("-bg");
-			args.push(a + "." + r + "." + g + "." + b);
-		}
-
-		args.push(path);
-
-		if (System.hostPlatform == MAC)
-		{
-			try
-			{
-				var found = false;
-
-				if (FileSystem.exists("/System/Library/Java/JavaVirtualMachines"))
-				{
-					found = (FileSystem.readDirectory("/System/Library/Java/JavaVirtualMachines").length > 0);
-				}
-
-				if (!found && FileSystem.exists("/Library/Java/JavaVirtualMachines"))
-				{
-					found = (FileSystem.readDirectory("/Library/Java/JavaVirtualMachines").length > 0);
-				}
-
-				if (!found)
-				{
-					if (Log.verbose) Log.warn("Skipping SVG to PNG rasterization step, no Java runtime detected");
-
-					return null;
-				}
-			}
-			catch (e:Dynamic) {}
-		}
-
-		if (Log.verbose)
-		{
-			System.runCommand("", "java", args, true, true);
-		}
-		else
-		{
-			System.runProcess("", "java", args, true, true, true);
-		}
-
-		if (FileSystem.exists(temp))
-		{
-			var image = Image.fromFile(temp);
-
-			try
-			{
-				FileSystem.deleteFile(temp);
-			}
-			catch (e:Dynamic) {}
-
-			if (image.buffer != null)
-			{
-				return image;
-			}
+			return image;
 		}
 		#end
 
