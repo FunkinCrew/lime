@@ -2,20 +2,12 @@ package lime._internal.format;
 
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
-import lime._internal.graphics.ImageCanvasUtil;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
-import lime.system.CFFI;
 import lime.utils.UInt8Array;
 #if (js && html5)
+import lime._internal.graphics.ImageCanvasUtil;
 import js.Browser;
-#end
-#if format
-import format.jpg.Data;
-import format.jpg.Writer;
-import format.tools.Deflate;
-import haxe.io.Bytes;
-import haxe.io.BytesOutput;
 #end
 
 #if !lime_debug
@@ -65,39 +57,9 @@ class JPEG
 			image.format = RGBA32;
 		}
 
-		#if (sys && lime_cffi && (!disable_cffi || !format) && !macro)
-		if (CFFI.enabled)
-		{
-			return NativeCFFI.lime_image_encode(image.buffer, 1, quality, Bytes.alloc(0));
-		}
-		#end
-
-		#if ((!js || !html5) && format)
-		#if (sys && (!disable_cffi || !format) && !macro)
-		else
-		#end
-		{
-			try
-			{
-				var buffer = image.buffer.data.buffer;
-
-				var data:Data =
-					{
-						width: image.width,
-						height: image.height,
-						quality: quality,
-						pixels: #if js Bytes.ofData(buffer) #else buffer #end
-					};
-
-				var output = new BytesOutput();
-				var jpeg = new Writer(output);
-				jpeg.write(data);
-
-				return output.getBytes();
-			}
-			catch (e:Dynamic) {}
-		}
-		#elseif js
+		#if (lime_cffi && !macro)
+		return NativeCFFI.lime_image_encode(image.buffer, 1, quality, Bytes.alloc(0));
+		#elseif (js && html5)
 		ImageCanvasUtil.convertToCanvas(image, false);
 
 		if (image.buffer.__srcCanvas != null)

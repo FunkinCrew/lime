@@ -454,9 +454,14 @@ class Image
 	**/
 	public function encode(format:ImageFileFormat = null, quality:Int = 90):Bytes
 	{
+		if (format == null)
+		{
+			format = ImageFileFormat.PNG;
+		}
+
 		switch (format)
 		{
-			case null, ImageFileFormat.PNG:
+			case ImageFileFormat.PNG:
 				return PNG.encode(this);
 
 			case ImageFileFormat.JPEG:

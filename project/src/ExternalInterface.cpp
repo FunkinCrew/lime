@@ -20,6 +20,7 @@
 #include <events/TextEvent.h>
 #include <events/TouchEvent.h>
 #include <events/WindowEvent.h>
+#include <graphics/format/BMP.h>
 #include <graphics/format/JPEG.h>
 #include <graphics/format/PNG.h>
 #include <graphics/Image.h>
@@ -413,21 +414,6 @@ namespace lime {
 		#endif
 
 		return 0;
-
-	}
-
-
-	value lime_audio_load (value data, value buffer) {
-
-		if (val_is_string (data)) {
-
-			return lime_audio_load_file (data, buffer);
-
-		} else {
-
-			return lime_audio_load_bytes (data, buffer);
-
-		}
 
 	}
 
@@ -1511,21 +1497,6 @@ namespace lime {
 	}
 
 
-	value lime_font_load (value data) {
-
-		if (val_is_string (data)) {
-
-			return lime_font_load_file (data);
-
-		} else {
-
-			return lime_font_load_bytes (data);
-
-		}
-
-	}
-
-
 	value lime_font_outline_decompose (value fontHandle, int size) {
 
 		#ifdef LIME_FREETYPE
@@ -1857,6 +1828,15 @@ namespace lime {
 				}
 				break;
 
+			case 2:
+
+				if (BMP::Encode (&imageBuffer, &data)) {
+
+					return data.Value (bytes);
+
+				}
+				break;
+
 			default: break;
 
 		}
@@ -1890,6 +1870,15 @@ namespace lime {
 				}
 				break;
 
+			case 2:
+
+				if (BMP::Encode (buffer, bytes)) {
+
+					return bytes;
+
+				}
+				break;
+
 			default: break;
 
 		}
@@ -1902,15 +1891,11 @@ namespace lime {
 
 	value lime_image_load_bytes (value data, value buffer) {
 
-		Resource resource;
-		Bytes bytes;
-
-		ImageBuffer imageBuffer = ImageBuffer (buffer);
-
-		bytes.Set (data);
-		resource = Resource (&bytes);
-
 		#ifdef LIME_SDL_IMAGE
+		Bytes bytes = Bytes (data);
+		ImageBuffer imageBuffer = ImageBuffer (buffer);
+		Resource resource = Resource (&bytes);
+
 		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
@@ -1918,6 +1903,12 @@ namespace lime {
 		}
 
 		if (JPEG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+
+		if (BMP::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -1931,9 +1922,9 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_image_load_bytes) (Bytes* data, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (data);
 
-		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -1941,6 +1932,12 @@ namespace lime {
 		}
 
 		if (JPEG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+
+		if (BMP::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -1954,10 +1951,11 @@ namespace lime {
 
 	value lime_image_load_file (value data, value buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (val_string (data));
+
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
 
-		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
@@ -1965,6 +1963,12 @@ namespace lime {
 		}
 
 		if (JPEG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+
+		if (BMP::Decode (&resource, &imageBuffer)) {
 
 			return imageBuffer.Value (buffer);
 
@@ -1978,9 +1982,9 @@ namespace lime {
 
 	HL_PRIM ImageBuffer* HL_NAME(hl_image_load_file) (hl_vstring* data, ImageBuffer* buffer) {
 
+		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (data);
 
-		#ifdef LIME_SDL_IMAGE
 		if (PNG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -1993,9 +1997,14 @@ namespace lime {
 
 		}
 
+		if (BMP::Decode (&resource, buffer)) {
 
+			return buffer;
 
 		}
+		#endif
+
+		return 0;
 
 	}
 
@@ -2419,77 +2428,6 @@ namespace lime {
 	}
 
 
-	value lime_jpeg_decode_bytes (value data, bool decodeData, value buffer) {
-
-		#ifdef LIME_SDL_IMAGE
-		ImageBuffer imageBuffer (buffer);
-		Bytes bytes (data);
-		Resource resource = Resource (&bytes);
-
-		if (JPEG::Decode (&resource, &imageBuffer)) {
-
-			return imageBuffer.Value (buffer);
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_bytes) (Bytes* data, bool decodeData, ImageBuffer* buffer) {
-
-		#ifdef LIME_SDL_IMAGE
-		Resource resource = Resource (data);
-
-		if (JPEG::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-		#endif
-
-		return 0;
-
-	}
-
-
-	value lime_jpeg_decode_file (HxString path, bool decodeData, value buffer) {
-
-		#ifdef LIME_SDL_IMAGE
-		ImageBuffer imageBuffer (buffer);
-		Resource resource = Resource (hxs_utf8 (path, nullptr));
-
-		if (JPEG::Decode (&resource, &imageBuffer)) {
-
-			return imageBuffer.Value (buffer);
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_file) (hl_vstring* path, bool decodeData, ImageBuffer* buffer) {
-
-		#ifdef LIME_SDL_IMAGE
-		Resource resource = Resource (path);
-
-		if (JPEG::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-		#endif
-
-		return 0;
-
-	}
-
-
 	int lime_key_code_from_scan_code (int scanCode) {
 
 		return KeyCode::FromScanCode (scanCode);
@@ -2724,6 +2662,147 @@ namespace lime {
 		Resource resource = Resource (path);
 
 		if (PNG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_jpeg_decode_bytes (value data, bool decodeData, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Bytes bytes (data);
+		Resource resource = Resource (&bytes);
+
+		if (JPEG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_bytes) (Bytes* data, bool decodeData, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (data);
+
+		if (JPEG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_jpeg_decode_file (HxString path, bool decodeData, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Resource resource = Resource (hxs_utf8 (path, nullptr));
+
+		if (JPEG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_jpeg_decode_file) (hl_vstring* path, bool decodeData, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (path);
+
+		if (JPEG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+	value lime_bmp_decode_bytes (value data, bool decodeData, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Bytes bytes (data);
+		Resource resource = Resource (&bytes);
+
+		if (BMP::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_bmp_decode_bytes) (Bytes* data, bool decodeData, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (data);
+
+		if (BMP::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_bmp_decode_file (HxString path, bool decodeData, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Resource resource = Resource (hxs_utf8 (path, nullptr));
+
+		if (BMP::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_bmp_decode_file) (hl_vstring* path, bool decodeData, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (path);
+
+		if (BMP::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -4156,8 +4235,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_joystick_get_num_hats);
 	DEFINE_PRIME4v (lime_joystick_rumble);
 	DEFINE_PRIME4v (lime_joystick_set_led);
-	DEFINE_PRIME3 (lime_jpeg_decode_bytes);
-	DEFINE_PRIME3 (lime_jpeg_decode_file);
 	DEFINE_PRIME1 (lime_key_code_from_scan_code);
 	DEFINE_PRIME1 (lime_key_code_to_scan_code);
 	DEFINE_PRIME2v (lime_key_event_manager_register);
@@ -4168,6 +4245,10 @@ namespace lime {
 	DEFINE_PRIME2v (lime_orientation_event_manager_register);
 	DEFINE_PRIME3 (lime_png_decode_bytes);
 	DEFINE_PRIME3 (lime_png_decode_file);
+	DEFINE_PRIME3 (lime_jpeg_decode_bytes);
+	DEFINE_PRIME3 (lime_jpeg_decode_file);
+	DEFINE_PRIME3 (lime_bmp_decode_bytes);
+	DEFINE_PRIME3 (lime_bmp_decode_file);
 	DEFINE_PRIME2v (lime_render_event_manager_register);
 	DEFINE_PRIME2v (lime_sensor_event_manager_register);
 	DEFINE_PRIME0 (lime_system_get_allow_screen_timeout);
@@ -4353,8 +4434,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_joystick_get_num_hats, _I32);
 	DEFINE_HL_PRIM (_VOID, hl_joystick_rumble, _I32 _F64 _F64 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_joystick_set_led, _I32 _I32 _I32 _I32);
-	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
-	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_file, _STRING _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_I32, hl_key_code_from_scan_code, _I32);
 	DEFINE_HL_PRIM (_I32, hl_key_code_to_scan_code, _I32);
 	DEFINE_HL_PRIM (_VOID, hl_key_event_manager_register, _FUN (_VOID, _NO_ARG) _TKEY_EVENT);
@@ -4365,6 +4444,10 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_orientation_event_manager_register, _FUN (_VOID, _NO_ARG) _TORIENTATION_EVENT);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_png_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_png_decode_file, _STRING _BOOL _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_file, _STRING _BOOL _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_bmp_decode_bytes, _TBYTES _BOOL _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_bmp_decode_file, _STRING _BOOL _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_VOID, hl_render_event_manager_register, _FUN (_VOID, _NO_ARG) _TRENDER_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_sensor_event_manager_register, _FUN (_VOID, _NO_ARG) _TSENSOR_EVENT);
 	DEFINE_HL_PRIM (_BOOL, hl_system_get_allow_screen_timeout, _NO_ARG);

@@ -192,8 +192,9 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/include" />
 			<compilerflag value="-DLIME_SDL_IMAGE" />
 
-			<file name="src/graphics/format/PNG.cpp" />
+			<file name="src/graphics/format/BMP.cpp" />
 			<file name="src/graphics/format/JPEG.cpp" />
+			<file name="src/graphics/format/PNG.cpp" />
 
 		</section>
 

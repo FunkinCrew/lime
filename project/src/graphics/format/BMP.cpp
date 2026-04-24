@@ -1,7 +1,7 @@
 #include <system/System.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/PixelFormat.h>
-#include <graphics/format/JPEG.h>
+#include <graphics/format/BMP.h>
 #include <utils/File.h>
 
 #include <SDL3/SDL.h>
@@ -10,7 +10,7 @@
 namespace lime {
 
 
-	bool JPEG::Decode (Resource *resource, ImageBuffer* imageBuffer) {
+	bool BMP::Decode (Resource *resource, ImageBuffer *imageBuffer) {
 
 		File file = resource->path ? File (resource->path, "rb") : File (resource->data);
 
@@ -20,7 +20,7 @@ namespace lime {
 
 		}
 
-		if (!IMG_isJPG ((SDL_IOStream *)file.handle)) {
+		if (!IMG_isBMP ((SDL_IOStream *)file.handle)) {
 
 			file.Close ();
 
@@ -28,7 +28,7 @@ namespace lime {
 
 		}
 
-		SDL_Surface *surface = IMG_LoadJPG_IO ((SDL_IOStream *)file.handle);
+		SDL_Surface *surface = IMG_LoadBMP_IO ((SDL_IOStream *)file.handle);
 
 		if (!surface) {
 
@@ -67,7 +67,7 @@ namespace lime {
 	}
 
 
-	bool JPEG::Encode (ImageBuffer *imageBuffer, Bytes *bytes, int quality) {
+	bool BMP::Encode (ImageBuffer *imageBuffer, Bytes* bytes) {
 
 		SDL_Surface *surface = SDL_CreateSurfaceFrom(imageBuffer->width, imageBuffer->height, SDL_PIXELFORMAT_RGBA32, imageBuffer->data->buffer->b, imageBuffer->Stride ());
 
@@ -77,21 +77,11 @@ namespace lime {
 
 		}
 
-		SDL_Surface *rgb = SDL_ConvertSurface (surface, SDL_PIXELFORMAT_RGB24);
-
-		SDL_DestroySurface (surface);
-
-		if (!rgb) {
-
-			return false;
-
-		}
-
 		SDL_IOStream *dst = SDL_IOFromDynamicMem ();
 
 		if (!dst) {
 
-			SDL_DestroySurface (rgb);
+			SDL_DestroySurface (surface);
 
 			return false;
 
@@ -101,7 +91,7 @@ namespace lime {
 
 		if (bytes) {
 
-			success = IMG_SaveJPG_IO (rgb, dst, false, quality);
+			success = IMG_SaveBMP_IO (surface, dst, false);
 
 			if (success) {
 
@@ -128,7 +118,7 @@ namespace lime {
 		}
 
 		SDL_CloseIO(dst);
-		SDL_DestroySurface (rgb);
+		SDL_DestroySurface (surface);
 
 		return success;
 

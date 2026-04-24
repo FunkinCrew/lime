@@ -190,16 +190,7 @@ class IconHelper
 
 			if (image != null)
 			{
-				var data:Bytes = null;
-
-				if (size < 256)
-				{
-					data = lime._internal.format.BMP.encode(image, ICO);
-				}
-				else
-				{
-					data = image.encode(PNG);
-				}
+				var data:Bytes = image.encode(PNG);
 
 				if (data != null)
 				{
