@@ -69,8 +69,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_application_update(handle:Dynamic):Bool;
 
-	@:cffi private static function lime_audio_load(data:Dynamic, buffer:Dynamic):Dynamic;
-
 	@:cffi private static function lime_audio_load_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
 
 	@:cffi private static function lime_audio_load_file(path:Dynamic, buffer:Dynamic):Dynamic;
@@ -141,8 +139,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_font_get_units_per_em(handle:Dynamic):Int;
 
-	@:cffi private static function lime_font_load(data:Dynamic):Dynamic;
-
 	@:cffi private static function lime_font_load_bytes(data:Dynamic):Dynamic;
 
 	@:cffi private static function lime_font_load_file(path:Dynamic):Dynamic;
@@ -174,8 +170,6 @@ class NativeCFFI
 	@:cffi private static function lime_haptic_vibrate(period:Int, duration:Int):Void;
 
 	@:cffi private static function lime_image_encode(data:Dynamic, type:Int, quality:Int, bytes:Dynamic):Dynamic;
-
-	@:cffi private static function lime_image_load(data:Dynamic, buffer:Dynamic):Dynamic;
 
 	@:cffi private static function lime_image_load_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
 
@@ -390,7 +384,6 @@ class NativeCFFI
 	private static var lime_application_set_frame_rate = new cpp.Callable<cpp.Object->Float->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_application_set_frame_rate", "odv", false));
 	private static var lime_application_update = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_application_update", "ob", false));
-	private static var lime_audio_load = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load", "ooo", false));
 	private static var lime_audio_load_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_bytes",
 		"ooo", false));
 	private static var lime_audio_load_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_file", "ooo",
@@ -454,7 +447,6 @@ class NativeCFFI
 	private static var lime_font_get_strikethrough_thickness = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_strikethrough_thickness",
 		"oi", false));
 	private static var lime_font_get_units_per_em = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_units_per_em", "oi", false));
-	private static var lime_font_load = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load", "oo", false));
 	private static var lime_font_load_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_bytes", "oo", false));
 	private static var lime_font_load_file = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_file", "oo", false));
 	private static var lime_font_outline_decompose = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_outline_decompose",
@@ -483,7 +475,6 @@ class NativeCFFI
 	private static var lime_haptic_vibrate = new cpp.Callable<Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_haptic_vibrate", "iiv", false));
 	private static var lime_image_encode = new cpp.Callable<cpp.Object->Int->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_image_encode",
 		"oiioo", false));
-	private static var lime_image_load = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_image_load", "ooo", false));
 	private static var lime_image_load_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_image_load_bytes",
 		"ooo", false));
 	private static var lime_image_load_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_image_load_file", "ooo",
@@ -670,7 +661,6 @@ class NativeCFFI
 	private static var lime_application_quit = CFFI.load("lime", "lime_application_quit", 1);
 	private static var lime_application_set_frame_rate = CFFI.load("lime", "lime_application_set_frame_rate", 2);
 	private static var lime_application_update = CFFI.load("lime", "lime_application_update", 1);
-	private static var lime_audio_load = CFFI.load("lime", "lime_audio_load", 2);
 	private static var lime_audio_load_bytes = CFFI.load("lime", "lime_audio_load_bytes", 2);
 	private static var lime_audio_load_file = CFFI.load("lime", "lime_audio_load_file", 2);
 	private static var lime_bytes_from_data_pointer = CFFI.load("lime", "lime_bytes_from_data_pointer", 3);
@@ -706,7 +696,6 @@ class NativeCFFI
 	private static var lime_font_get_strikethrough_position = CFFI.load("lime", "lime_font_get_strikethrough_position", 1);
 	private static var lime_font_get_strikethrough_thickness = CFFI.load("lime", "lime_font_get_strikethrough_thickness", 1);
 	private static var lime_font_get_units_per_em = CFFI.load("lime", "lime_font_get_units_per_em", 1);
-	private static var lime_font_load = CFFI.load("lime", "lime_font_load", 1);
 	private static var lime_font_load_bytes = CFFI.load("lime", "lime_font_load_bytes", 1);
 	private static var lime_font_load_file = CFFI.load("lime", "lime_font_load_file", 1);
 	private static var lime_font_outline_decompose = CFFI.load("lime", "lime_font_outline_decompose", 2);
@@ -723,7 +712,6 @@ class NativeCFFI
 	private static var lime_gzip_decompress = CFFI.load("lime", "lime_gzip_decompress", 2);
 	private static var lime_haptic_vibrate = CFFI.load("lime", "lime_haptic_vibrate", 2);
 	private static var lime_image_encode = CFFI.load("lime", "lime_image_encode", 4);
-	private static var lime_image_load = CFFI.load("lime", "lime_image_load", 2);
 	private static var lime_image_load_bytes = CFFI.load("lime", "lime_image_load_bytes", 2);
 	private static var lime_image_load_file = CFFI.load("lime", "lime_image_load_file", 2);
 	private static var lime_image_data_util_color_transform = CFFI.load("lime", "lime_image_data_util_color_transform", 3);
@@ -854,7 +842,6 @@ class NativeCFFI
 		return false;
 	}
 
-	// @:cffi private static function lime_audio_load (data:Dynamic, buffer:Dynamic):Dynamic;
 	@:hlNative("lime", "hl_audio_load_bytes") private static function lime_audio_load_bytes(data:Bytes, buffer:AudioBuffer):AudioBuffer
 	{
 		return null;
@@ -1008,7 +995,6 @@ class NativeCFFI
 		return 0;
 	}
 
-	// @:hlNative("lime", "") private static function lime_font_load (data:Dynamic):Dynamic { return null; }
 	@:hlNative("lime", "hl_font_load_bytes") private static function lime_font_load_bytes(data:Bytes):CFFIPointer
 	{
 		return null;
@@ -1073,7 +1059,6 @@ class NativeCFFI
 		return null;
 	}
 
-	// @:cffi private static function lime_image_load (data:Dynamic, buffer:Dynamic):Dynamic;
 	@:hlNative("lime", "hl_image_load_bytes") private static function lime_image_load_bytes(data:Bytes, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;

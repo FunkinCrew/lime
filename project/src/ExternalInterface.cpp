@@ -2004,22 +2004,8 @@ namespace lime {
 			return buffer;
 
 		}
-		#endif
-
-		return 0;
-
-	}
 
 
-	value lime_image_load (value data, value buffer) {
-
-		if (val_is_string (data)) {
-
-			return lime_image_load_file (data, buffer);
-
-		} else {
-
-			return lime_image_load_bytes (data, buffer);
 
 		}
 
@@ -4107,7 +4093,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_application_quit);
 	DEFINE_PRIME2v (lime_application_set_frame_rate);
 	DEFINE_PRIME1 (lime_application_update);
-	DEFINE_PRIME2 (lime_audio_load);
 	DEFINE_PRIME2 (lime_audio_load_bytes);
 	DEFINE_PRIME2 (lime_audio_load_file);
 	DEFINE_PRIME3 (lime_bytes_from_data_pointer);
@@ -4144,7 +4129,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_font_get_strikethrough_position);
 	DEFINE_PRIME1 (lime_font_get_strikethrough_thickness);
 	DEFINE_PRIME1 (lime_font_get_units_per_em);
-	DEFINE_PRIME1 (lime_font_load);
 	DEFINE_PRIME1 (lime_font_load_bytes);
 	DEFINE_PRIME1 (lime_font_load_file);
 	DEFINE_PRIME2 (lime_font_outline_decompose);
@@ -4174,7 +4158,6 @@ namespace lime {
 	DEFINE_PRIME12 (lime_image_data_util_threshold);
 	DEFINE_PRIME1v (lime_image_data_util_unmultiply_alpha);
 	DEFINE_PRIME4 (lime_image_encode);
-	DEFINE_PRIME2 (lime_image_load);
 	DEFINE_PRIME2 (lime_image_load_bytes);
 	DEFINE_PRIME2 (lime_image_load_file);
 	DEFINE_PRIME0 (lime_jni_getenv);
@@ -4343,7 +4326,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_font_get_strikethrough_position, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_I32, hl_font_get_strikethrough_thickness, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_I32, hl_font_get_units_per_em, _TCFFIPOINTER);
-	// DEFINE_PRIME1 (lime_font_load);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_bytes, _TBYTES);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_file, _STRING);
 	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32);
@@ -4373,7 +4355,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_image_data_util_threshold, _TIMAGE _TIMAGE _TRECTANGLE _TVECTOR2 _I32 _I32 _I32 _I32 _I32 _I32 _I32 _BOOL);
 	DEFINE_HL_PRIM (_VOID, hl_image_data_util_unmultiply_alpha, _TIMAGE);
 	DEFINE_HL_PRIM (_TBYTES, hl_image_encode, _TIMAGEBUFFER _I32 _I32 _TBYTES);
-	// DEFINE_PRIME2 (lime_image_load);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_image_load_bytes, _TBYTES _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_image_load_file, _STRING _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_F64, hl_jni_getenv, _NO_ARG);
