@@ -23,6 +23,7 @@
 #include <graphics/format/BMP.h>
 #include <graphics/format/JPEG.h>
 #include <graphics/format/PNG.h>
+#include <graphics/format/SVG.h>
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
@@ -1913,6 +1914,12 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
+
+		if (SVG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
 		#endif
 
 		return alloc_null ();
@@ -1938,6 +1945,12 @@ namespace lime {
 		}
 
 		if (BMP::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+
+		if (SVG::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -1973,6 +1986,12 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
+
+		if (SVG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
 		#endif
 
 		return alloc_null ();
@@ -1998,6 +2017,12 @@ namespace lime {
 		}
 
 		if (BMP::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+
+		if (SVG::Decode (&resource, buffer)) {
 
 			return buffer;
 
@@ -2803,6 +2828,148 @@ namespace lime {
 		Resource resource = Resource (path);
 
 		if (BMP::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_svg_decode_bytes (value data, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Bytes bytes (data);
+		Resource resource = Resource (&bytes);
+
+		if (SVG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_svg_decode_bytes) (Bytes* data, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (data);
+
+		if (SVG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_svg_decode_file (HxString path, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Resource resource = Resource (hxs_utf8 (path, nullptr));
+
+		if (SVG::Decode (&resource, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_svg_decode_file) (hl_vstring* path, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (path);
+
+		if (SVG::Decode (&resource, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_svg_decode_sized_bytes (value data, int width, int height, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Bytes bytes (data);
+		Resource resource = Resource (&bytes);
+
+		if (SVG::DecodeSized (&resource, width, height, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_svg_decode_sized_bytes) (Bytes* data, int width, int height, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (data);
+
+		if (SVG::DecodeSized (&resource, width, height, buffer)) {
+
+			return buffer;
+
+		}
+		#endif
+
+		return 0;
+
+	}
+
+
+	value lime_svg_decode_sized_file (HxString path, int width, int height, value buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		ImageBuffer imageBuffer (buffer);
+		Resource resource = Resource (hxs_utf8 (path, nullptr));
+
+		if (SVG::DecodeSized (&resource, width, height, &imageBuffer)) {
+
+			return imageBuffer.Value (buffer);
+
+		}
+		#endif
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM ImageBuffer* HL_NAME(hl_svg_decode_sized_file) (hl_vstring* path, int width, int height, ImageBuffer* buffer) {
+
+		#ifdef LIME_SDL_IMAGE
+		Resource resource = Resource (path);
+
+		if (SVG::DecodeSized (&resource, width, height, buffer)) {
 
 			return buffer;
 
@@ -4249,6 +4416,10 @@ namespace lime {
 	DEFINE_PRIME2 (lime_jpeg_decode_file);
 	DEFINE_PRIME2 (lime_bmp_decode_bytes);
 	DEFINE_PRIME2 (lime_bmp_decode_file);
+	DEFINE_PRIME2 (lime_svg_decode_bytes);
+	DEFINE_PRIME2 (lime_svg_decode_file);
+	DEFINE_PRIME4 (lime_svg_decode_sized_bytes);
+	DEFINE_PRIME4 (lime_svg_decode_sized_file);
 	DEFINE_PRIME2v (lime_render_event_manager_register);
 	DEFINE_PRIME2v (lime_sensor_event_manager_register);
 	DEFINE_PRIME0 (lime_system_get_allow_screen_timeout);
@@ -4448,6 +4619,10 @@ namespace lime {
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_jpeg_decode_file, _STRING _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_bmp_decode_bytes, _TBYTES _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_bmp_decode_file, _STRING _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_svg_decode_bytes, _TBYTES _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_svg_decode_file, _STRING _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_svg_decode_sized_bytes, _TBYTES _I32 _I32 _TIMAGEBUFFER);
+	DEFINE_HL_PRIM (_TIMAGEBUFFER, hl_svg_decode_sized_file, _STRING _I32 _I32 _TIMAGEBUFFER);
 	DEFINE_HL_PRIM (_VOID, hl_render_event_manager_register, _FUN (_VOID, _NO_ARG) _TRENDER_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_sensor_event_manager_register, _FUN (_VOID, _NO_ARG) _TSENSOR_EVENT);
 	DEFINE_HL_PRIM (_BOOL, hl_system_get_allow_screen_timeout, _NO_ARG);

@@ -195,6 +195,7 @@
 			<file name="src/graphics/format/BMP.cpp" />
 			<file name="src/graphics/format/JPEG.cpp" />
 			<file name="src/graphics/format/PNG.cpp" />
+			<file name="src/graphics/format/SVG.cpp" />
 
 		</section>
 
