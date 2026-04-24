@@ -235,17 +235,17 @@ class NativeCFFI
 
 	@:cffi private static function lime_orientation_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
-	@:cffi private static function lime_png_decode_bytes(data:Dynamic, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_png_decode_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_png_decode_file(path:String, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_png_decode_file(path:String, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_jpeg_decode_bytes(data:Dynamic, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_jpeg_decode_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_jpeg_decode_file(path:String, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_jpeg_decode_file(path:String, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_bmp_decode_bytes(data:Dynamic, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_bmp_decode_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
 
-	@:cffi private static function lime_bmp_decode_file(path:String, decodeData:Bool, buffer:Dynamic):Dynamic;
+	@:cffi private static function lime_bmp_decode_file(path:String, buffer:Dynamic):Dynamic;
 
 	@:cffi private static function lime_render_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
@@ -536,18 +536,18 @@ class NativeCFFI
 		"lime_mouse_event_manager_register", "oov", false));
 	private static var lime_orientation_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_orientation_event_manager_register", "oov", false));
-	private static var lime_png_decode_bytes = new cpp.Callable<cpp.Object->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_png_decode_bytes", "oboo", false));
-	private static var lime_png_decode_file = new cpp.Callable<String->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_png_decode_file",
-		"sboo", false));
-	private static var lime_jpeg_decode_bytes = new cpp.Callable<cpp.Object->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_jpeg_decode_bytes", "oboo", false));
-	private static var lime_jpeg_decode_file = new cpp.Callable<String->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_jpeg_decode_file",
-		"sboo", false));
-	private static var lime_bmp_decode_bytes = new cpp.Callable<cpp.Object->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_bmp_decode_bytes", "oboo", false));
-	private static var lime_bmp_decode_file = new cpp.Callable<String->Bool->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_bmp_decode_file",
-		"sboo", false));
+	private static var lime_png_decode_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_png_decode_bytes", "ooo", false));
+	private static var lime_png_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_png_decode_file",
+		"soo", false));
+	private static var lime_jpeg_decode_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_jpeg_decode_bytes", "ooo", false));
+	private static var lime_jpeg_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_jpeg_decode_file",
+		"soo", false));
+	private static var lime_bmp_decode_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_bmp_decode_bytes", "ooo", false));
+	private static var lime_bmp_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_bmp_decode_file",
+		"soo", false));
 	private static var lime_render_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_render_event_manager_register", "oov", false));
 	private static var lime_sensor_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
@@ -750,12 +750,12 @@ class NativeCFFI
 	private static var lime_lzma_decompress = CFFI.load("lime", "lime_lzma_decompress", 2);
 	private static var lime_mouse_event_manager_register = CFFI.load("lime", "lime_mouse_event_manager_register", 2);
 	private static var lime_orientation_event_manager_register = CFFI.load("lime", "lime_orientation_event_manager_register", 2);
-	private static var lime_png_decode_bytes = CFFI.load("lime", "lime_png_decode_bytes", 3);
-	private static var lime_png_decode_file = CFFI.load("lime", "lime_png_decode_file", 3);
-	private static var lime_jpeg_decode_bytes = CFFI.load("lime", "lime_jpeg_decode_bytes", 3);
-	private static var lime_jpeg_decode_file = CFFI.load("lime", "lime_jpeg_decode_file", 3);
-	private static var lime_bmp_decode_bytes = CFFI.load("lime", "lime_bmp_decode_bytes", 3);
-	private static var lime_bmp_decode_file = CFFI.load("lime", "lime_bmp_decode_file", 3);
+	private static var lime_png_decode_bytes = CFFI.load("lime", "lime_png_decode_bytes", 2);
+	private static var lime_png_decode_file = CFFI.load("lime", "lime_png_decode_file", 2);
+	private static var lime_jpeg_decode_bytes = CFFI.load("lime", "lime_jpeg_decode_bytes", 2);
+	private static var lime_jpeg_decode_file = CFFI.load("lime", "lime_jpeg_decode_file", 2);
+	private static var lime_bmp_decode_bytes = CFFI.load("lime", "lime_bmp_decode_bytes", 2);
+	private static var lime_bmp_decode_file = CFFI.load("lime", "lime_bmp_decode_file", 2);
 	private static var lime_render_event_manager_register = CFFI.load("lime", "lime_render_event_manager_register", 2);
 	private static var lime_sensor_event_manager_register = CFFI.load("lime", "lime_sensor_event_manager_register", 2);
 	private static var lime_system_get_allow_screen_timeout = CFFI.load("lime", "lime_system_get_allow_screen_timeout", 0);
@@ -1185,32 +1185,32 @@ class NativeCFFI
 	@:hlNative("lime", "hl_orientation_event_manager_register") private static function lime_orientation_event_manager_register(callback:Void->Void,
 		eventObject:OrientationEventInfo):Void {}
 
-	@:hlNative("lime", "hl_png_decode_bytes") private static function lime_png_decode_bytes(data:Bytes, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_png_decode_bytes") private static function lime_png_decode_bytes(data:Bytes, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_png_decode_file") private static function lime_png_decode_file(path:String, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_png_decode_file") private static function lime_png_decode_file(path:String, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_jpeg_decode_bytes") private static function lime_jpeg_decode_bytes(data:Bytes, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_jpeg_decode_bytes") private static function lime_jpeg_decode_bytes(data:Bytes, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_jpeg_decode_file") private static function lime_jpeg_decode_file(path:String, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_jpeg_decode_file") private static function lime_jpeg_decode_file(path:String, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_bmp_decode_bytes") private static function lime_bmp_decode_bytes(data:Bytes, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_bmp_decode_bytes") private static function lime_bmp_decode_bytes(data:Bytes, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_bmp_decode_file") private static function lime_bmp_decode_file(path:String, decodeData:Bool, buffer:ImageBuffer):ImageBuffer
+	@:hlNative("lime", "hl_bmp_decode_file") private static function lime_bmp_decode_file(path:String, buffer:ImageBuffer):ImageBuffer
 	{
 		return null;
 	}
