@@ -47,5 +47,4 @@ jobs:
           path: |
             tools/tools.n
             run.n
-            svg.n
           if-no-files-found: error
