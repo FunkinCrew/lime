@@ -24,6 +24,8 @@
 
 			</section>
 
+			<compilerflag value="-DSDL_IMAGE_USE_COMMON_BACKEND" if="apple" />
+
 		</section>
 
 		<section>
