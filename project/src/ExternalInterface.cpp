@@ -2004,10 +2004,9 @@ namespace lime {
 			return buffer;
 
 		}
+		#endif
 
-
-
-		}
+		return 0;
 
 	}
 
