@@ -80,7 +80,6 @@ namespace lime {
 
 				if (result != 1) {
 
-					LOG_SOUND ("Invalid Wave Format!\n");
 					lime::fclose (file);
 					return false;
 
@@ -107,7 +106,6 @@ namespace lime {
 
 				if (result != 1) {
 
-					LOG_SOUND ("Invalid Wav Data Header!\n");
 					lime::fclose (file);
 					return false;
 
@@ -129,7 +127,6 @@ namespace lime {
 
 			if (!lime::fread (audioBuffer->data->buffer->b, wave_data.subChunkSize, 1, file)) {
 
-				LOG_SOUND ("error loading WAVE data into struct!\n");
 				lime::fclose (file);
 				return false;
 
@@ -164,7 +161,6 @@ namespace lime {
 
 			if (wave_format.subChunkID[0] != 'f' || wave_format.subChunkID[1] != 'm' || wave_format.subChunkID[2] != 't' || wave_format.subChunkID[3] != ' ') {
 
-				LOG_SOUND ("Invalid Wave Format!\n");
 				return false;
 
 			}
@@ -181,7 +177,6 @@ namespace lime {
 
 			if (wave_data.subChunkID[0] != 'd' || wave_data.subChunkID[1] != 'a' || wave_data.subChunkID[2] != 't' || wave_data.subChunkID[3] != 'a') {
 
-				LOG_SOUND ("Invalid Wav Data Header!\n");
 				return false;
 
 			}
