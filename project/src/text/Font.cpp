@@ -1,6 +1,7 @@
 #include <text/Font.h>
 #include <graphics/ImageBuffer.h>
 #include <system/System.h>
+#include <utils/File.h>
 
 #include <algorithm>
 #include <list>
@@ -272,99 +273,86 @@ namespace {
 namespace lime {
 
 
+	void* Font::library;
+
+
+	void Font::InitializeLibrary() {
+
+		FT_Init_FreeType((FT_Library*)&library);
+
+	}
+
+
+	void Font::ShutdownLibrary() {
+
+		if (library) {
+
+			FT_Done_FreeType((FT_Library)library);
+
+			library = 0;
+
+		}
+
+	}
+
+
 	Font::Font (Resource *resource, int faceIndex) {
 
-		this->library = 0;
 		this->face = 0;
 		this->faceMemory = 0;
 
 		if (resource) {
 
-			int error;
-			FT_Library library;
+			File file = resource->path ? File (resource->path, "rb") : File (resource->data);
 
-			error = FT_Init_FreeType (&library);
+			if (!file.handle) {
 
-			if (error) {
+				return;
 
-				printf ("Could not initialize FreeType\n");
+			}
+
+			file.Seek(0, SEEK_END);
+			size_t size = (size_t)file.Tell();
+			file.Seek(0, SEEK_SET);
+
+			unsigned char* faceMemory = (unsigned char*)malloc(size);
+			file.Read(faceMemory, size);
+			file.Close();
+
+			FT_Face face;
+
+			int error = FT_New_Memory_Face((FT_Library)library, faceMemory, size, faceIndex, &face);
+
+			if (!error) {
+
+				this->face = face;
+				this->faceMemory = faceMemory;
+
+				/* Set charmap
+					*
+					* See http://www.microsoft.com/typography/otspec/name.htm for a list of
+					* some possible platform-encoding pairs.  We're interested in 0-3 aka 3-1
+					* - UCS-2.  Otherwise, fail. If a font has some unicode map, but lacks
+					* UCS-2 - it is a broken or irrelevant font. What exactly Freetype will
+					* select on face load (it promises most wide unicode, and if that will be
+					* slower that UCS-2 - left as an excercise to check.
+					*/
+				for (int i = 0; i < ((FT_Face)face)->num_charmaps; i++) {
+
+					FT_UShort pid = ((FT_Face)face)->charmaps[i]->platform_id;
+					FT_UShort eid = ((FT_Face)face)->charmaps[i]->encoding_id;
+
+					if (((pid == 0) && (eid == 3)) || ((pid == 3) && (eid == 1))) {
+
+						FT_Set_Charmap ((FT_Face)face, ((FT_Face)face)->charmaps[i]);
+
+					}
+
+				}
 
 			} else {
 
-				FT_Face face;
-				FILE_HANDLE *file = NULL;
-				unsigned char *faceMemory = NULL;
-
-				if (resource->path) {
-
-					file = lime::fopen (resource->path, "rb");
-
-					if (!file) {
-
-						FT_Done_FreeType (library);
-						return;
-
-					}
-
-					Bytes data;
-					data.ReadFile (resource->path);
-					faceMemory = (unsigned char*)malloc (data.length);
-					memcpy (faceMemory, data.b, data.length);
-
-					lime::fclose (file);
-					file = 0;
-
-					error = FT_New_Memory_Face (library, faceMemory, data.length, faceIndex, &face);
-
-				} else {
-
-					faceMemory = (unsigned char*)malloc (resource->data->length);
-					memcpy (faceMemory, resource->data->b, resource->data->length);
-					error = FT_New_Memory_Face (library, faceMemory, resource->data->length, faceIndex, &face);
-
-				}
-
-				if (file) {
-
-					lime::fclose (file);
-					file = 0;
-
-				}
-
-				if (!error) {
-
-					this->library = library;
-					this->face = face;
-					this->faceMemory = faceMemory;
-
-					/* Set charmap
-					 *
-					 * See http://www.microsoft.com/typography/otspec/name.htm for a list of
-					 * some possible platform-encoding pairs.  We're interested in 0-3 aka 3-1
-					 * - UCS-2.  Otherwise, fail. If a font has some unicode map, but lacks
-					 * UCS-2 - it is a broken or irrelevant font. What exactly Freetype will
-					 * select on face load (it promises most wide unicode, and if that will be
-					 * slower that UCS-2 - left as an excercise to check.
-					 */
-					for (int i = 0; i < ((FT_Face)face)->num_charmaps; i++) {
-
-						FT_UShort pid = ((FT_Face)face)->charmaps[i]->platform_id;
-						FT_UShort eid = ((FT_Face)face)->charmaps[i]->encoding_id;
-
-						if (((pid == 0) && (eid == 3)) || ((pid == 3) && (eid == 1))) {
-
-							FT_Set_Charmap ((FT_Face)face, ((FT_Face)face)->charmaps[i]);
-
-						}
-
-					}
-
-				} else {
-
-					FT_Done_FreeType (library);
-					free (faceMemory);
-
-				}
+				free (faceMemory);
 
 			}
 
@@ -375,16 +363,19 @@ namespace lime {
 
 	Font::~Font () {
 
-		if (library) {
+		if (face) {
 
-			FT_Done_FreeType ((FT_Library)library);
-			library = 0;
+			FT_Done_Face ((FT_Face)face);
 			face = 0;
 
 		}
 
-		free (faceMemory);
-		faceMemory = 0;
+		if (faceMemory) {
+
+			free(faceMemory);
+			faceMemory = 0;
+
+		}
 
 	}
 
@@ -1338,7 +1329,6 @@ namespace lime {
 			hdpi,								//Horizontal DPI
 			vdpi								//Vertical DPI
 		);
-		mSize = size;
 
 	}
 
