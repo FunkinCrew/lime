@@ -1591,8 +1591,15 @@ namespace lime {
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		Bytes bytes (data);
+		std::vector<int> _indices;
 
-		if (font->RenderGlyphs (indices, &bytes)) {
+		for (int i = 0; i < val_array_size (indices); i++) {
+
+			_indices.push_back (val_int (val_array_i (indices, i)));
+
+		}
+
+		if (font->RenderGlyphs (_indices.data (), _indices.size (), &bytes)) {
 
 			return bytes.Value (data);
 
@@ -1606,12 +1613,17 @@ namespace lime {
 
 	HL_PRIM Bytes* HL_NAME(hl_font_render_glyphs) (HL_CFFIPointer* fontHandle, hl_varray* indices, Bytes* data) {
 
-		// #ifdef LIME_FREETYPE
-		// Font *font = (Font*)fontHandle->ptr;
-		// return font->RenderGlyphs (indices, &bytes);
-		// #else
+		#ifdef LIME_FREETYPE
+		Font *font = (Font*)fontHandle->ptr;
+
+		if (font->RenderGlyphs (hl_aptr (indices, int), indices->size, data)) {
+
+			return data;
+
+		}
+		#endif
+
 		return NULL;
-		// #endif
 
 	}
 

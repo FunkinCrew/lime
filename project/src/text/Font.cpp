@@ -1294,17 +1294,15 @@ namespace lime {
 	}
 
 
-	int Font::RenderGlyphs (value indices, Bytes *bytes) {
+	int Font::RenderGlyphs (int* indices, int numIndices, Bytes* bytes) {
 
 		int offset = 0;
 		int totalOffset = 4;
 		uint32_t count = 0;
 
-		int numIndices = val_array_size (indices);
-
 		for (int i = 0; i < numIndices; i++) {
 
-			offset = RenderGlyph (val_int (val_array_i (indices, i)), bytes, totalOffset);
+			offset = RenderGlyph (indices[i], bytes, totalOffset);
 
 			if (offset > 0) {
 

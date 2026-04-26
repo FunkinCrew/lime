@@ -59,7 +59,7 @@ namespace lime {
 			int GetStrikethroughThickness ();
 			int GetUnitsPerEM ();
 			int RenderGlyph (int index, Bytes *bytes, int offset = 0);
-			int RenderGlyphs (value indices, Bytes *bytes);
+			int RenderGlyphs (int* indices, int numIndices, Bytes* bytes);
 			void SetSize (size_t size, size_t dpi);
 
 			void* library;
