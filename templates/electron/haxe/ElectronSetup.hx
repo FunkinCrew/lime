@@ -22,7 +22,7 @@ class ElectronSetup
 				fullscreen: ::fullscreen::,
 				hardware: ::hardware::,
 				height: ::height::,
-				hidden: #if munit true #else ::hidden:: #end,
+				hidden: ::hidden::,
 				maximized: ::maximized::,
 				minimized: ::minimized::,
 				parameters: ::parameters::,
