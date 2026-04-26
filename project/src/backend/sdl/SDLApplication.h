@@ -62,8 +62,9 @@ namespace lime {
 			void ProcessWindowEvent (SDL_Event* event);
 
 			static bool HandleAppLifecycleEvent (void* userdata, SDL_Event* event);
-			static void UpdateFrame ();
-			static void UpdateFrame (void*);
+			#ifdef IPHONE
+			static void UpdateFrame (void* userdata);
+			#endif
 
 			static SDLApplication* currentApplication;
 			FrameTime frameTime;

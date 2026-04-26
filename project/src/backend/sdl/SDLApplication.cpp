@@ -7,10 +7,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef EMSCRIPTEN
-#include "emscripten.h"
-#endif
-
 #include <cmath>
 
 
@@ -138,17 +134,7 @@ namespace lime {
 
 		Init ();
 
-		#ifdef EMSCRIPTEN
-		emscripten_cancel_main_loop ();
-		emscripten_set_main_loop (UpdateFrame, 0, 0);
-		emscripten_set_main_loop_timing (EM_TIMING_RAF, 1);
-		#endif
-
-		#if defined(IPHONE) || defined(EMSCRIPTEN)
-
-		return 0;
-
-		#else
+		#ifndef IPHONE
 
 		while (active) {
 
@@ -158,6 +144,10 @@ namespace lime {
 
 		return Quit ();
 
+		#else
+
+		return 0;
+
 		#endif
 
 	}
@@ -165,7 +155,7 @@ namespace lime {
 
 	void SDLApplication::HandleEvent (SDL_Event* event) {
 
-		#if defined(IPHONE) || defined(EMSCRIPTEN)
+		#ifdef IPHONE
 
 		int top = 0;
 		gc_set_top_of_stack(&top, false);
@@ -248,7 +238,6 @@ namespace lime {
 				ProcessMouseEvent (event);
 				break;
 
-			#ifndef EMSCRIPTEN
 			case SDL_EVENT_RENDER_DEVICE_RESET:
 				renderEvent.type = RENDER_CONTEXT_LOST;
 				RenderEvent::Dispatch (&renderEvent);
@@ -256,7 +245,6 @@ namespace lime {
 				renderEvent.type = RENDER_CONTEXT_RESTORED;
 				RenderEvent::Dispatch (&renderEvent);
 				break;
-			#endif
 
 			case SDL_EVENT_SENSOR_UPDATE:
 
@@ -860,7 +848,7 @@ namespace lime {
 
 	bool SDLApplication::HandleAppLifecycleEvent (void* userdata, SDL_Event* event) {
 
-		#if defined(IPHONE) || defined(EMSCRIPTEN)
+		#ifdef IPHONE
 
 		int top = 0;
 		gc_set_top_of_stack(&top, false);
@@ -908,26 +896,13 @@ namespace lime {
 	}
 
 
-	void SDLApplication::UpdateFrame () {
-
-		#ifdef EMSCRIPTEN
-		System::GCTryExitBlocking ();
-		#endif
+	#ifdef IPHONE
+	void SDLApplication::UpdateFrame (void *userdata) {
 
 		currentApplication->Update ();
 
-		#ifdef EMSCRIPTEN
-		System::GCTryEnterBlocking ();
-		#endif
-
 	}
-
-
-	void SDLApplication::UpdateFrame (void*) {
-
-		UpdateFrame ();
-
-	}
+	#endif
 
 
 	Application* CreateApplication () {

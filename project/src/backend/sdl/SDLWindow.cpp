@@ -31,10 +31,7 @@ namespace lime {
 		if (flags & WINDOW_FLAG_HIDDEN) sdlWindowFlags |= SDL_WINDOW_HIDDEN;
 		if (flags & WINDOW_FLAG_MINIMIZED) sdlWindowFlags |= SDL_WINDOW_MINIMIZED;
 		if (flags & WINDOW_FLAG_MAXIMIZED) sdlWindowFlags |= SDL_WINDOW_MAXIMIZED;
-
-		#ifndef EMSCRIPTEN
 		if (flags & WINDOW_FLAG_ALWAYS_ON_TOP) sdlWindowFlags |= SDL_WINDOW_ALWAYS_ON_TOP;
-		#endif
 
 		#ifdef LIME_OPENGL_GLES2
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
@@ -648,8 +645,6 @@ namespace lime {
 
 	bool SDLWindow::SetResizable (bool resizable) {
 
-		#ifndef EMSCRIPTEN
-
 		if (resizable) {
 
 			SDL_SetWindowResizable (sdlWindow, true);
@@ -661,12 +656,6 @@ namespace lime {
 		}
 
 		return (SDL_GetWindowFlags (sdlWindow) & SDL_WINDOW_RESIZABLE);
-
-		#else
-
-		return resizable;
-
-		#endif
 
 	}
 
