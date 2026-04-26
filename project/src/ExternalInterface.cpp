@@ -1648,6 +1648,42 @@ namespace lime {
 	}
 
 
+	void lime_font_initialize_library () {
+
+		#ifdef LIME_FREETYPE
+		Font::InitializeLibrary();
+		#endif
+
+	}
+
+
+	HL_PRIM void HL_NAME(hl_font_initialize_library) () {
+
+		#ifdef LIME_FREETYPE
+		Font::InitializeLibrary();
+		#endif
+
+	}
+
+
+	void lime_font_shutdown_library () {
+
+		#ifdef LIME_FREETYPE
+		Font::ShutdownLibrary();
+		#endif
+
+	}
+
+
+	HL_PRIM void HL_NAME(hl_font_shutdown_library) () {
+
+		#ifdef LIME_FREETYPE
+		Font::ShutdownLibrary();
+		#endif
+
+	}
+
+
 	void lime_gamepad_add_mappings (value mappings) {
 
 		int length = val_array_size (mappings);
@@ -4163,6 +4199,8 @@ namespace lime {
 	DEFINE_PRIME3 (lime_font_render_glyph);
 	DEFINE_PRIME3 (lime_font_render_glyphs);
 	DEFINE_PRIME3v (lime_font_set_size);
+	DEFINE_PRIME0v (lime_font_initialize_library);
+	DEFINE_PRIME0v (lime_font_shutdown_library);
 	DEFINE_PRIME1v (lime_gamepad_add_mappings);
 	DEFINE_PRIME2v (lime_gamepad_event_manager_register);
 	DEFINE_PRIME1 (lime_gamepad_get_device_guid);
@@ -4362,6 +4400,8 @@ namespace lime {
 	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_font_set_size, _TCFFIPOINTER _I32 _I32);
+	DEFINE_HL_PRIM (_VOID, hl_font_initialize_library, _NO_ARG);
+	DEFINE_HL_PRIM (_VOID, hl_font_shutdown_library, _NO_ARG);
 	DEFINE_HL_PRIM (_VOID, hl_gamepad_add_mappings, _ARR);
 	DEFINE_HL_PRIM (_VOID, hl_gamepad_event_manager_register, _FUN(_VOID, _NO_ARG) _TGAMEPAD_EVENT);
 	DEFINE_HL_PRIM (_BYTES, hl_gamepad_get_device_guid, _I32);

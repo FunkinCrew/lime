@@ -19,6 +19,7 @@ import lime.system.Theme;
 import lime.system.Sensor;
 import lime.system.SensorType;
 import lime.system.System;
+import lime.text.Font;
 import lime.ui.Gamepad;
 import lime.ui.Gesture;
 import lime.ui.Joystick;
@@ -89,10 +90,13 @@ class NativeApplication
 		#end
 
 		var gamepadBindings = NativeControllerBindings.listBindings();
+
 		if (gamepadBindings.length > 0)
 		{
 			Gamepad.addMappings(gamepadBindings);
 		}
+
+		Font.init();
 
 		AudioManager.init();
 
@@ -157,6 +161,8 @@ class NativeApplication
 	public function exit():Void
 	{
 		AudioManager.shutdown();
+
+		Font.shutdown();
 
 		#if (!macro && lime_cffi)
 		NativeCFFI.lime_application_quit(handle);

@@ -35,6 +35,26 @@ import haxe.io.Path;
 class Font
 {
 	/**
+     	* Initialize the library instance for all fonts.
+     	*/
+	public static function init():Void
+	{
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_font_initialize_library();
+		#end
+	}
+
+	/**
+     	* Shutdown the library instance for all fonts.
+     	*/
+	public static function shutdown():Void
+	{
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_font_shutdown_library();
+		#end
+	}
+
+	/**
      	* The ascender value of the font.
      	*/
 	public var ascender:Int;
