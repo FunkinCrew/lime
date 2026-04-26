@@ -18,10 +18,6 @@ import ::APP_MAIN::;
 
 	public static function create(config:Dynamic):Void
 	{
-		#if !disable_preloader_assets
-		ManifestResources.init(config);
-		#end
-
 		::if (WIN_ORIENTATION != "auto")::
 		lime.system.System.setHint("ORIENTATIONS", ::if (WIN_ORIENTATION == "portrait")::"Portrait PortraitUpsideDown"::else::"LandscapeLeft LandscapeRight"::end::);
 		::end::
@@ -36,6 +32,10 @@ import ::APP_MAIN::;
 		appMeta.set("version", "::meta.version::");
 
 		var app = new ::APP_MAIN::(appMeta);
+
+		#if !disable_preloader_assets
+		ManifestResources.init(config);
+		#end
 
 		::foreach windows::
 		var attributes:lime.ui.WindowAttributes =
