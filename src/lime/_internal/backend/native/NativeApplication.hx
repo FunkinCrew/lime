@@ -89,13 +89,6 @@ class NativeApplication
 		handle = NativeCFFI.lime_application_create();
 		#end
 
-		var gamepadBindings = NativeControllerBindings.listBindings();
-
-		if (gamepadBindings.length > 0)
-		{
-			Gamepad.addMappings(gamepadBindings);
-		}
-
 		Font.init();
 
 		AudioManager.init();
