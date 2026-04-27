@@ -138,7 +138,6 @@
 
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/unix/SDL_appid.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/unix/SDL_fribidi.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/unix/SDL_gtk.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/unix/SDL_poll.c" />
 
             </section>
