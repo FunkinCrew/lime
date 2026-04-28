@@ -30,22 +30,26 @@ class DefineMacro
 				if (Context.defined("ios") || Context.defined("android"))
 				{
 					Compiler.define("mobile");
-					if (cffi) Compiler.define("lime-opengles");
+					//if (cffi) Compiler.define("lime-opengles");
 				}
 				else
 				{
 					Compiler.define("desktop");
-					if (cffi) Compiler.define("lime-opengl");
+					//if (cffi) Compiler.define("lime-opengl");
 				}
 
 				if (cffi)
 				{
 					Compiler.define("lime-cffi");
-
 					Compiler.define("lime-openal");
 					Compiler.define("lime-cairo");
 					Compiler.define("lime-curl");
 					Compiler.define("lime-harfbuzz");
+
+					if (!Context.defined("lime-opengles") || !Context.defined("lime-opengl"))
+					{
+						Compiler.define("lime-bgfx");
+					}
 				}
 				else
 				{

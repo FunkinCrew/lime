@@ -18,8 +18,9 @@
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />
 	<define name="lime-openal" if="windows || linux || mac || android || ios || tvos" />
-	<define name="lime-opengl" if="desktop" unless="html5" />
-	<define name="lime-opengles" if="mobile" />
+	<!-- <define name="lime-opengl" if="desktop" unless="html5" /> -->
+	<!-- <define name="lime-opengles" if="mobile" /> -->
+	<define name="lime-bgfx" unless="lime-opengl || lime-opengles" />
 	<define name="lime-webgl" if="html5" />
 
 	<haxedef name="no-compilation" />

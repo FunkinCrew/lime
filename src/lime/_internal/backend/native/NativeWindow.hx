@@ -21,6 +21,7 @@ import lime.utils.UInt8Array;
 
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime._internal.backend.native.NativeOpenGLRenderContext)
+@:access(lime._internal.backend.native.NativeBGFXRenderContext)
 @:access(lime.app.Application)
 @:access(lime.graphics.opengl.GL)
 @:access(lime.graphics.OpenGLRenderContext)
@@ -114,6 +115,7 @@ class NativeWindow
 		var context = new RenderContext();
 		context.window = parent;
 
+		#if (lime_opengl || lime_opengles)
 		var gl = new NativeOpenGLRenderContext();
 
 		#if lime_opengl
@@ -135,6 +137,13 @@ class NativeWindow
 		{
 			GL.context = gl;
 		}
+		#elseif lime_bgfx
+		var bgfx = new NativeBGFXRenderContext();
+
+		context.bgfx = bgfx;
+		context.type = bgfx.type;
+		context.version = Std.string(bgfx.version);
+		#end
 
 		contextAttributes.type = context.type;
 		context.attributes = contextAttributes;

@@ -79,6 +79,14 @@ class RenderContext
 	#if (!lime_doc_gen || native || (js && html5))
 	public var webgl2(default, null):WebGL2RenderContext;
 	#end
+
+	/**
+		Access to the current BGFX render API, if available
+	**/
+	#if (!lime_doc_gen || native)
+	public var bgfx(default, null):BGFXRenderContext;
+	#end
+	
 	public var window(default, null):Window;
 
 	@:noCompletion private function new() {}

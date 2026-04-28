@@ -1,7 +1,14 @@
 #include "SDLWindow.h"
 #include "SDLApplication.h"
 #include "system/System.h"
+
+#ifdef LIME_OPENGL
 #include "../../bindings/opengl/OpenGLBindings.h"
+#endif
+
+#ifdef LIME_BGFX
+#include "../../bindings/bgfx/BGFXBindings.h"
+#endif
 
 #include <vector>
 #include <cstring>
@@ -21,7 +28,11 @@ namespace lime {
 
 		this->flags = flags;
 
+		#ifdef LIME_OPENGL
 		int sdlWindowFlags = SDL_WINDOW_OPENGL;
+		#else
+		int sdlWindowFlags = 0;
+		#endif
 
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
 		if (flags & WINDOW_FLAG_RESIZABLE) sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
@@ -33,6 +44,7 @@ namespace lime {
 		if (flags & WINDOW_FLAG_MAXIMIZED) sdlWindowFlags |= SDL_WINDOW_MAXIMIZED;
 		if (flags & WINDOW_FLAG_ALWAYS_ON_TOP) sdlWindowFlags |= SDL_WINDOW_ALWAYS_ON_TOP;
 
+		#ifdef LIME_OPENGL
 		#ifdef LIME_OPENGL_GLES2
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 		SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -81,6 +93,7 @@ namespace lime {
 			SDL_GL_SetAttribute (SDL_GL_BLUE_SIZE, 5);
 
 		}
+		#endif
 
 		sdlWindow = SDL_CreateWindow (title, width, height, sdlWindowFlags);
 
@@ -96,41 +109,12 @@ namespace lime {
 
 		}
 
-		context = SDL_GL_CreateContext (sdlWindow);
-
-		if (context && SDL_GL_MakeCurrent (sdlWindow, context)) {
-
-			SetVSyncMode ((flags & WINDOW_FLAG_VSYNC) ? WINDOW_VSYNC_ON : WINDOW_VSYNC_OFF);
-
-			OpenGLBindings::Init ();
-
-			#if defined(IPHONE) || defined(APPLETV)
-			SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
-			OpenGLBindings::defaultFramebuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER, 0);
-			OpenGLBindings::defaultRenderbuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_RENDERBUFFER_NUMBER, 0);
-			#endif
-
-			((SDLApplication*)currentApplication)->RegisterWindow (this);
-
-		} else {
-
-			#if defined(IPHONE) || defined(APPLETV)
-			printf ("Could not create SDL GL Context: %s\n", SDL_GetError ());
-			#else
-			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not create SDL GL Context", SDL_GetError (), sdlWindow);
-			#endif
+		if (!CreateRenderer ()) {
 
 			if (sdlWindow) {
 
 				SDL_DestroyWindow (sdlWindow);
 				sdlWindow = 0;
-
-			}
-
-			if (context) {
-
-				SDL_GL_DestroyContext (context);
-				context = 0;
 
 			}
 
@@ -148,12 +132,87 @@ namespace lime {
 
 		}
 
+		#ifdef LIME_OPENGL
 		if (context) {
 
 			SDL_GL_DestroyContext (context);
 			context = 0;
 
 		}
+		#endif
+
+		#ifdef LIME_BGFX
+		bgfx::shutdown();
+		#endif
+
+	}
+
+	bool SDLWindow::CreateRenderer () {
+
+		#ifdef LIME_OPENGL
+		context = SDL_GL_CreateContext (sdlWindow);
+
+		if (context && SDL_GL_MakeCurrent (sdlWindow, context)) {
+
+			SetVSyncMode ((flags & WINDOW_FLAG_VSYNC) ? WINDOW_VSYNC_ON : WINDOW_VSYNC_OFF);
+
+			OpenGLBindings::Init ();
+
+			#if defined(IPHONE) || defined(APPLETV)
+			SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
+			OpenGLBindings::defaultFramebuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER, 0);
+			OpenGLBindings::defaultRenderbuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_RENDERBUFFER_NUMBER, 0);
+			#endif
+
+			((SDLApplication*)currentApplication)->RegisterWindow (this);
+
+			return true;
+		} else {
+
+			#if defined(IPHONE) || defined(APPLETV)
+			printf ("Could not create SDL GL Context: %s\n", SDL_GetError ());
+			#else
+			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not create SDL GL Context", SDL_GetError (), sdlWindow);
+			#endif
+
+			if (context) {
+
+				SDL_GL_DestroyContext (context);
+				context = 0;
+
+			}
+
+			return false;
+		}
+		#endif
+
+		#ifdef LIME_BGFX
+    	bgfx::renderFrame();
+
+		SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
+    	void* hwnd = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+    	bgfx::Init init;
+    	init.type = bgfx::RendererType::Direct3D11;
+    	init.platformData.nwh = hwnd;
+    	init.resolution.width = GetWidth ();
+    	init.resolution.height = GetHeight ();
+
+		if (!bgfx::init (init))
+		{
+			#if defined(IPHONE) || defined(APPLETV)
+			printf ("Could not initialize BGFX backend: %s\n", SDL_GetError ());
+			#else
+			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not initialize BGFX backend", SDL_GetError (), sdlWindow);
+			#endif
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		#endif
+
+		return false;
 
 	}
 

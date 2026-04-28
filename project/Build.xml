@@ -27,12 +27,13 @@
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
 	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone || appletv" />
-	<set name="LIME_OPENGL" value="1" />
+	<!-- <set name="LIME_OPENGL" value="1" /> -->
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone || appletv" />
 	<set name="LIME_PIXMAN" value="1" />
 	<set name="LIME_SDL" value="1" />
 	<set name="LIME_SDL_IMAGE" value="1" if="LIME_SDL" />
 	<set name="LIME_ZLIB" value="1" />
+	<set name="LIME_BGFX" value="1" unless="LIME_OPENGL" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
@@ -55,6 +56,15 @@
 		</section>
 
 		<file name="src/ExternalInterface.cpp" />
+
+		<section if="LIME_BGFX">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/include" />
+			<compilerflag value="-DLIME_BGFX" />
+
+			<file name="src/bindings/bgfx/BGFXBindings.cpp" />
+
+		</section>
 
 		<section if="LIME_CAIRO">
 
@@ -301,6 +311,9 @@
 	<!-- TODO: if https://github.com/HaxeFoundation/hxcpp/issues/930 ever gets resolved, use that instead. -->
 	<setup name="androidNdk" if="android" />
 
+	<include name="lib/bgfx-files.xml" />
+	<include name="lib/bimg-files.xml" />
+	<include name="lib/bx-files.xml" />
 	<include name="lib/cairo-files.xml" />
 	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
@@ -331,6 +344,26 @@
 
 		<files id="lime" />
 		<files id="android-cpufeatures" if="android" />
+
+		<section if="LIME_BGFX">
+
+			<section>
+
+				<files id="native-toolkit-bx-3rdparty" />
+				<files id="native-toolkit-bx" />
+
+			</section>
+
+			<section>
+
+				<files id="native-toolkit-bimg-3rdparty" />
+				<files id="native-toolkit-bimg" />
+
+			</section>
+
+			<files id="native-toolkit-bgfx" />
+
+		</section>
 
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
 		<files id="native-toolkit-curl" if="LIME_CURL" />
@@ -375,6 +408,11 @@
 					<lib name="ole32.lib" />
 					<lib name="oleaut32.lib" />
 					<lib name="opengl32.lib" />
+					<lib name="d3d11.lib" if="LIME_BGFX" />
+					<lib name="d3d12.lib" if="LIME_BGFX" />
+					<lib name="dxgi.lib" if="LIME_BGFX" />
+					<lib name="dxguid.lib" if="LIME_BGFX" />
+					<lib name="psapi.lib" if="LIME_BGFX" />
 					<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
 					<lib name="setupapi.lib" />
 					<lib name="shell32.lib" />

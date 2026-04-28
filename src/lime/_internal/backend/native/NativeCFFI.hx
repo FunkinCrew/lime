@@ -5975,6 +5975,42 @@ class NativeCFFI
 	@:hlNative("lime", "hl_gl_wait_sync") private static function lime_gl_wait_sync(sync:CFFIPointer, flags:Int, timeoutA:Int, timeoutB:Int):Void {}
 	#end
 	#end
+	#if (lime_cffi && !macro && lime_bgfx)
+	#if cpp
+	#if disable_cffi
+	@:cffi private static function lime_bgfx_set_debug(falgs:Int):Void;
+	@:cffi private static function lime_bgfx_set_view_clear(id:Int, flags:Int, rgba:Int, depth:Float, stencil:Int):Void;
+	@:cffi private static function lime_bgfx_set_view_rect(id:Int, x:Int, y:Int, width:Int, height:Int):Void;
+	@:cffi private static function lime_bgfx_touch(id:Int):Void;
+	@:cffi private static function lime_bgfx_frame(flags:Int):Int;
+	@:cffi private static function lime_bgfx_get_stats():Dynamic;
+	@:cffi private static function lime_bgfx_dbg_text_clear(attr:Int, small:Bool):Void;
+	@:cffi private static function lime_bgfx_dbg_text_printf(x:Int, y:Int, attr:Int, text:String):Void;
+	@:cffi private static function lime_bgfx_dbg_text_image(x:Int, y:Int, width:Int, height:Int, data:Dynamic, pitch:Int):Void;
+	#else
+	private static var lime_bgfx_set_debug = new cpp.Callable<Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_debug", "iv", false));
+	private static var lime_bgfx_set_view_clear = new cpp.Callable<Int->Int->Int->Float->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_view_clear", "iiidiv", false));
+	private static var lime_bgfx_set_view_rect = new cpp.Callable<Int->Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_view_rect", "iiiiiv", false));
+	private static var lime_bgfx_touch = new cpp.Callable<Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_touch", "iv", false));
+	private static var lime_bgfx_frame = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_bgfx_frame", "ii", false));
+	private static var lime_bgfx_get_stats = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_bgfx_get_stats", "o", false));
+	private static var lime_bgfx_dbg_text_clear = new cpp.Callable<Int->Bool->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_dbg_text_clear", "ibv", false));
+	private static var lime_bgfx_dbg_text_printf = new cpp.Callable<Int->Int->Int->String->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_dbg_text_printf", "iiisv", false));
+	private static var lime_bgfx_dbg_text_image = new cpp.Callable<Int->Int->Int->Int->cpp.Object->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_dbg_text_image", "iiiioiv", false));
+	#end
+	#end
+	#if neko
+	private static var lime_bgfx_set_debug = CFFI.load("lime", "lime_bgfx_frame", 1);
+	private static var lime_bgfx_set_view_clear = CFFI.load("lime", "lime_bgfx_set_view_clear", 5);
+	private static var lime_bgfx_set_view_rect = CFFI.load("lime", "lime_bgfx_set_view_rect", 5);
+	private static var lime_bgfx_touch = CFFI.load("lime", "lime_bgfx_touch", 1);
+	private static var lime_bgfx_frame = CFFI.load("lime", "lime_bgfx_frame", 1);
+	private static var lime_bgfx_get_stats = CFFI.load("lime", "lime_bgfx_get_stats", 0);
+	private static var lime_bgfx_dbg_text_clear = CFFI.load("lime", "lime_bgfx_dbg_text_clear", 2);
+	private static var lime_bgfx_dbg_text_printf = CFFI.load("lime", "lime_bgfx_dbg_text_printf", 4);
+	private static var lime_bgfx_dbg_text_image = CFFI.load("lime", "lime_bgfx_dbg_text_image", 6);
+	#end
+	#end
 	#if (lime_cffi && !macro && lime_harfbuzz)
 	#if cpp
 	#if disable_cffi
