@@ -1132,10 +1132,6 @@ class HXProject extends Script
 			context.ndlls.push(templateNDLL);
 		}
 
-		// Reflect.setField (context, "ndlls", ndlls);
-		// Reflect.setField (context, "sslCaCert", sslCaCert);
-		context.sslCaCert = "";
-
 		var compilerFlags:Array<String> = [];
 
 		for (haxelib in haxelibs)
