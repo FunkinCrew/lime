@@ -1,5 +1,6 @@
 <xml>
 
+	<set name="HXCPP_NO_SEGV_HANDLING" value="1" if="isMsvc" />
 	<set name="HXCPP_CPP20" value="1" />
 	<set name="OBJC_ARC" value="1" if="apple" />
 

@@ -61,6 +61,8 @@
 
                 <compilerflag value="/wd4267" />
 
+                <compilerflag value="/EHs" />
+
             </section>
 
             <section unless="isMsvc">
