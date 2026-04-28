@@ -77,4 +77,15 @@
 [submodule "project/lib/dr_libs"]
 	path = project/lib/dr_libs
 	url = https://github.com/mackron/dr_libs.git
+[submodule "project/lib/bgfx"]
+	path = project/lib/bgfx
+	url = https://github.com/bkaradzic/bgfx.git
+	shallow = true
+[submodule "project/lib/bx"]
+	path = project/lib/bx
+	url = https://github.com/bkaradzic/bx.git
+	shallow = true
+[submodule "project/lib/bimg"]
+	path = project/lib/bimg
+	url = https://github.com/bkaradzic/bimg.git
 	shallow = true

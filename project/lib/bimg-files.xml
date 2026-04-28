@@ -1,0 +1,237 @@
+<xml>
+
+	<files id="native-toolkit-bimg">
+
+		<section>
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/tinyexr/deps" />
+
+			</section>
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/include" />
+
+			</section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
+
+		</section>
+
+		<section>
+
+			<section if="isMsvc">
+
+				<section>
+
+					<compilerflag value="-D_HAS_EXCEPTIONS=0" />
+					<compilerflag value="-D_SCL_SECURE=0" />
+					<compilerflag value="-D_SECURE_SCL=0" />
+					<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_DEPRECATE" />
+
+				</section>
+
+				<section>
+
+					<compilerflag value="/wd4201" />
+					<compilerflag value="/wd4324" />
+
+				</section>
+
+				<compilerflag value="/Ob2" />
+				<compilerflag value="/EHs-c-" />
+
+				<section>
+
+					<compilerflag value="/Zc:__cplusplus" />
+					<compilerflag value="/Zc:preprocessor" />
+
+				</section>
+
+			</section>
+
+			<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
+			<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/src/image.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/src/image_cubemap_filter.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/src/image_decode.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/src/image_encode.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/src/image_gnf.cpp" />
+
+		</section>
+
+	</files>
+
+	<files id="native-toolkit-bimg-3rdparty">
+
+		<section>
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/edtaa3" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/etc1" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/etc2" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/lodepng" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/stb" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/tinyexr" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/tinyexr/deps" />
+
+			</section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
+
+		</section>
+
+		<section>
+
+			<section if="isMsvc">
+
+				<section>
+
+					<compilerflag value="-D_HAS_EXCEPTIONS=0" />
+					<compilerflag value="-D_SCL_SECURE=0" />
+					<compilerflag value="-D_SECURE_SCL=0" />
+					<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_DEPRECATE" />
+
+				</section>
+
+				<section>
+
+					<compilerflag value="/wd4201" />
+					<compilerflag value="/wd4324" />
+
+				</section>
+
+				<compilerflag value="/Ob2" />
+				<compilerflag value="/EHs-c-" />
+
+				<section>
+
+					<compilerflag value="/Zc:__cplusplus" />
+					<compilerflag value="/Zc:preprocessor" />
+
+				</section>
+
+			</section>
+
+			<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
+			<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_averages_and_directions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_block_sizes.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_color_quantize.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_color_unquantize.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_compress_symbolic.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_compute_variance.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_decompress_symbolic.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_diagnostic_trace.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_entry.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_find_best_partitioning.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_ideal_endpoints_and_weights.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_image.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_integer_sequence.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_mathlib.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_mathlib_softfloat.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_partition_tables.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_percentile_tables.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_pick_best_endpoint_format.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_quantization.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_symbolic_physical.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_weight_align.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_weight_quant_xfer_tables.cpp" />
+
+		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/edtaa3/edtaa3func.cpp" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/etc1/etc1.cpp" />
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/etc2/ProcessRGB.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/etc2/Tables.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/convolve.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/decimate.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/math_utils.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/mse.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/ms_ssim.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/psnr.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/ssim.c" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/alpha.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/clusterfit.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/colourblock.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/colourfit.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/colourset.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/maths.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/rangefit.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/singlecolourfit.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/libsquish/squish.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zoh.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zohone.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zohtwo.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zoh_utils.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode0.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode1.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode2.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode3.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode4.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode5.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode6.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode7.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_utils.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/nvmath/fitting.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/nvtt.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc/BitScale.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc/MortonTable.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc/PvrTcDecoder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc/PvrTcEncoder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/pvrtc/PvrTcPacket.cpp" />
+
+		</section>
+	</files>
+
+</xml>

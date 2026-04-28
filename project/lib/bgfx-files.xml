@@ -1,0 +1,99 @@
+<xml>
+
+	<files id="native-toolkit-bgfx">
+
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
+
+			<section>
+
+				<section>
+
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty" />
+
+				</section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/include" />
+
+			</section>
+
+		</section>
+
+		<section>
+
+			<section if="isMsvc">
+
+				<section>
+
+					<compilerflag value="-D_HAS_EXCEPTIONS=0" />
+					<compilerflag value="-D_SCL_SECURE=0" />
+					<compilerflag value="-D_SECURE_SCL=0" />
+					<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_DEPRECATE" />
+
+				</section>
+
+				<section>
+
+					<compilerflag value="/wd4201" />
+					<compilerflag value="/wd4324" />
+
+				</section>
+
+				<compilerflag value="/Ob2" />
+				<compilerflag value="/EHs-c-" />
+
+				<section>
+
+					<compilerflag value="/Zc:__cplusplus" />
+					<compilerflag value="/Zc:preprocessor" />
+
+				</section>
+
+			</section>
+
+			<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
+			<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
+
+		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/bgfx.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/debug_renderdoc.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/dxgi.cpp" />
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/glcontext_egl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/glcontext_html5.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/glcontext_wgl.cpp" />
+
+		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/nvapi.cpp" />
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_agc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_d3d11.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_d3d12.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_gl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_gnm.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_mtl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_noop.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_nvn.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_vk.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/renderer_webgpu.cpp" />
+
+		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/shader.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/topology.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/vertexlayout.cpp" />
+
+	</files>
+
+</xml>

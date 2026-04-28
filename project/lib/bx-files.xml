@@ -1,0 +1,95 @@
+<xml>
+
+	<files id="native-toolkit-bx">
+
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/3rdparty" />
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/msvc" if="isMsvc" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/mingw" if="mingw" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/osx" if="macos" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/linux" if="linux" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/ios" if="iphone" />
+
+			</section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
+
+		</section>
+
+		<section>
+
+			<section if="isMsvc">
+
+				<section>
+
+					<compilerflag value="-D_HAS_EXCEPTIONS=0" />
+					<compilerflag value="-D_SCL_SECURE=0" />
+					<compilerflag value="-D_SECURE_SCL=0" />
+					<compilerflag value="-D_SCL_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_WARNINGS" />
+					<compilerflag value="-D_CRT_SECURE_NO_DEPRECATE" />
+
+				</section>
+
+				<section>
+
+					<compilerflag value="/wd4201" />
+					<compilerflag value="/wd4324" />
+
+				</section>
+
+				<compilerflag value="/Ob2" />
+				<compilerflag value="/EHs-c-" />
+
+				<section>
+
+					<compilerflag value="/Zc:__cplusplus" />
+					<compilerflag value="/Zc:preprocessor" />
+
+				</section>
+
+			</section>
+
+			<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
+			<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
+
+		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/allocator.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/bounds.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/bx.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/commandline.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/crtnone.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/debug.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/dtoa.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/easing.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/file.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/filepath.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/hash.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/math.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/mutex.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/os.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/process.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/semaphore.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/settings.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/sort.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/string.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/thread.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/timer.cpp" />
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/src/url.cpp" />
+
+	</files>
+
+	<files id="native-toolkit-bx-3rdparty">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/3rdparty/catch" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/bx/3rdparty/catch/catch_amalgamated.cpp" />
+
+	</files>
+
+</xml>
