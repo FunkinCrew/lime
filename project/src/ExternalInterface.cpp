@@ -29,7 +29,6 @@
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
 #include <media/AudioBuffer.h>
-#include <media/containers/OGG.h>
 #include <media/containers/WAV.h>
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
@@ -49,6 +48,10 @@
 #include <ui/Window.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
+
+#ifdef LIME_VORBIS
+#include <media/containers/OGG.h>
+#endif
 
 #ifdef HX_WINDOWS
 #include <locale>
@@ -334,7 +337,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, &audioBuffer)) {
 
 			return audioBuffer.Value (buffer);
@@ -357,7 +360,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, buffer)) {
 
 			return buffer;
@@ -384,7 +387,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, &audioBuffer)) {
 
 			return audioBuffer.Value (buffer);
@@ -407,7 +410,7 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OGG
+		#ifdef LIME_VORBIS
 		if (OGG::Decode (&resource, buffer)) {
 
 			return buffer;
