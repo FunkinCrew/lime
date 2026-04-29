@@ -583,18 +583,8 @@ namespace lime {
 				case SDL_EVENT_MOUSE_WHEEL:
 
 					mouseEvent.type = MOUSE_WHEEL;
-
-					if (event->wheel.direction == SDL_MOUSEWHEEL_FLIPPED) {
-
-						mouseEvent.x = -event->wheel.x;
-						mouseEvent.y = -event->wheel.y;
-
-					} else {
-
-						mouseEvent.x = event->wheel.x;
-						mouseEvent.y = event->wheel.y;
-
-					}
+					mouseEvent.x = event->wheel.x;
+					mouseEvent.y = event->wheel.y;
 					break;
 
 			}
