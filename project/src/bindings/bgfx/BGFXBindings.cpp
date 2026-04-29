@@ -9,6 +9,13 @@
 namespace lime {
 
 
+	int lime_bgfx_render_frame () {
+
+		return bgfx::renderFrame ();
+
+	}
+
+
 	void lime_bgfx_set_debug (int flags) {
 
 		bgfx::setDebug ((uint32_t)flags);
@@ -161,6 +168,7 @@ namespace lime {
 	}
 
 
+	DEFINE_PRIME0 (lime_bgfx_render_frame);
 	DEFINE_PRIME1v(lime_bgfx_set_debug);
 	DEFINE_PRIME5v (lime_bgfx_set_view_clear);
 	DEFINE_PRIME5v (lime_bgfx_set_view_rect);
@@ -170,6 +178,139 @@ namespace lime {
 	DEFINE_PRIME2v (lime_bgfx_dbg_text_clear);
 	DEFINE_PRIME4v (lime_bgfx_dbg_text_printf);
 	DEFINE_PRIME6v (lime_bgfx_dbg_text_image);
+
+
+	static bgfx::RendererType::Enum getRendererType () {
+
+		#if defined (ANDROID) || defined (HX_LINUX)
+		return bgfx::RendererType::Vulkan;
+		#elif defined (IPHONE) || defined (HX_MACOS)
+		return bgfx::RendererType::Metal;
+		#elif defined (HX_WINDOWS)
+		return bgfx::RendererType::Direct3D11;
+		#else
+		return bgfx::RendererType::Noop;
+		#endif
+
+	}
+
+
+	static void* getNativeWindowHandle (SDL_Window* sdlWindow) {
+
+		if (!sdlWindow) {
+
+			return NULL;
+
+		}
+
+		SDL_PropertiesID props = SDL_GetWindowProperties (sdlWindow);
+
+		#if defined (ANDROID)
+
+		return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER, NULL);
+
+		#elif defined (IPHONE)
+
+		return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER, NULL);
+
+		#elif defined (HX_LINUX)
+
+		const char* driver = SDL_GetCurrentVideoDriver ();
+
+		if (SDL_strcmp (driver, "wayland") == 0) {
+
+			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
+
+		} else if (SDL_strcmp (driver, "x11") == 0) {
+
+			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
+
+		}
+
+		#elif defined (HX_MACOS)
+
+		return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL);
+
+		#elif defined (HX_WINDOWS)
+
+		return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+
+		#endif
+
+		return NULL;
+
+	}
+
+
+	static void* getNativeDisplayHandle (SDL_Window* sdlWindow) {
+
+		if (!sdlWindow) {
+
+			return NULL;
+
+		}
+
+		SDL_PropertiesID props = SDL_GetWindowProperties (sdlWindow);
+
+		#if defined (HX_LINUX)
+		const char* driver = SDL_GetCurrentVideoDriver ();
+
+		if (SDL_strcmp (driver, "wayland") == 0) {
+
+			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
+
+		} else if (SDL_strcmp (driver, "x11") == 0) {
+
+			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
+
+		}
+		#endif
+
+		return NULL;
+
+	}
+
+
+	static bgfx::NativeWindowHandleType::Enum getNativeWindowHandleType (SDL_Window* sdlWindow) {
+
+		#if defined (HX_LINUX)
+		const char* driver = SDL_GetCurrentVideoDriver ();
+
+		if (SDL_strcmp (driver, "wayland") == 0) {
+
+			return bgfx::NativeWindowHandleType::Wayland;
+
+		}
+		#endif
+
+		return bgfx::NativeWindowHandleType::Default;
+
+	}
+
+
+	bool BGFXBindings::Init (SDL_Window* sdlWindow) {
+
+		// BGFX needs a frame render before init or it hangs
+		bgfx::renderFrame ();
+
+		// Setup bgfx init struct
+		bgfx::Init init;
+
+		// Set renderer type based on platform
+		init.type = getRendererType ();
+
+		// Get native window/display handles from SDL
+		init.platformData.nwh = getNativeWindowHandle (sdlWindow);
+		init.platformData.ndt = getNativeDisplayHandle (sdlWindow);
+		init.platformData.type = getNativeWindowHandleType (sdlWindow);
+
+		// Set resolution
+		SDL_GetWindowSizeInPixels (sdlWindow, (int*)&init.resolution.width, (int*)&init.resolution.height);
+
+		// Init bgfx with the config
+		return bgfx::init (init);
+
+	}
 
 
 }

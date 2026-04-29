@@ -187,28 +187,20 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_BGFX
-    	bgfx::renderFrame();
+		if (!BGFXBindings::Init (sdlWindow)) {
 
-		SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
-    	void* hwnd = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
-    	bgfx::Init init;
-    	init.type = bgfx::RendererType::Direct3D11;
-    	init.platformData.nwh = hwnd;
-    	init.resolution.width = GetWidth ();
-    	init.resolution.height = GetHeight ();
-
-		if (!bgfx::init (init))
-		{
 			#if defined(IPHONE) || defined(APPLETV)
 			printf ("Could not initialize BGFX backend: %s\n", SDL_GetError ());
 			#else
 			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not initialize BGFX backend", SDL_GetError (), sdlWindow);
 			#endif
+
 			return false;
-		}
-		else
-		{
+
+		} else {
+
 			return true;
+
 		}
 		#endif
 

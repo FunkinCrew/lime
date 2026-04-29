@@ -34,6 +34,15 @@ class NativeBGFXRenderContext
 		type = BGFX;
 	}
 
+	public function renderFrame():Int
+	{
+		#if (lime_cffi && lime_bgfx && !macro)
+		return NativeCFFI.lime_bgfx_render_frame();
+		#else
+		return 0;
+		#end
+	}
+
 	public function setDebug(flags:Int):Void
 	{
 		#if (lime_cffi && lime_bgfx && !macro)

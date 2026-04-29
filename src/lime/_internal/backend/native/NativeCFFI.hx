@@ -5978,6 +5978,7 @@ class NativeCFFI
 	#if (lime_cffi && !macro && lime_bgfx)
 	#if cpp
 	#if disable_cffi
+	@:cffi private static function lime_bgfx_render_frame():Int;
 	@:cffi private static function lime_bgfx_set_debug(falgs:Int):Void;
 	@:cffi private static function lime_bgfx_set_view_clear(id:Int, flags:Int, rgba:Int, depth:Float, stencil:Int):Void;
 	@:cffi private static function lime_bgfx_set_view_rect(id:Int, x:Int, y:Int, width:Int, height:Int):Void;
@@ -5988,6 +5989,7 @@ class NativeCFFI
 	@:cffi private static function lime_bgfx_dbg_text_printf(x:Int, y:Int, attr:Int, text:String):Void;
 	@:cffi private static function lime_bgfx_dbg_text_image(x:Int, y:Int, width:Int, height:Int, data:Dynamic, pitch:Int):Void;
 	#else
+	private static var lime_bgfx_render_frame = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_bgfx_render_frame", "i", false));
 	private static var lime_bgfx_set_debug = new cpp.Callable<Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_debug", "iv", false));
 	private static var lime_bgfx_set_view_clear = new cpp.Callable<Int->Int->Int->Float->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_view_clear", "iiidiv", false));
 	private static var lime_bgfx_set_view_rect = new cpp.Callable<Int->Int->Int->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_bgfx_set_view_rect", "iiiiiv", false));
@@ -6000,6 +6002,7 @@ class NativeCFFI
 	#end
 	#end
 	#if neko
+	private static var lime_bgfx_render_frame = CFFI.load("lime", "lime_bgfx_render_frame", 0);
 	private static var lime_bgfx_set_debug = CFFI.load("lime", "lime_bgfx_frame", 1);
 	private static var lime_bgfx_set_view_clear = CFFI.load("lime", "lime_bgfx_set_view_clear", 5);
 	private static var lime_bgfx_set_view_rect = CFFI.load("lime", "lime_bgfx_set_view_rect", 5);
