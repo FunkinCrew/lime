@@ -1,8 +1,14 @@
 <xml>
 
+	<compiler exe="g++" if="apple">
+
+		<cppflag value="-x" />
+		<cppflag value="objective-c++" />
+
+	</compiler>
+
 	<set name="HXCPP_NO_SEGV_HANDLING" value="1" if="isMsvc" />
 	<set name="HXCPP_CPP20" value="1" />
-	<set name="OBJC_ARC" value="1" if="apple" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
@@ -40,6 +46,12 @@
 	<files id="lime">
 
 		<compilerflag value="-Iinclude" />
+
+		<section if="apple">
+
+			<compilerflag value="-fobjc-arc" />
+
+		</section>
 
 		<file name="src/ExternalInterface.cpp" />
 
@@ -491,6 +503,13 @@
 		<target id="lime" />
 
 	</target>
+
+	<compiler exe="g++" if="apple">
+
+		<cppflag value="-x" />
+		<cppflag value="objective-c++" />
+
+	</compiler>
 
 	<section if="LIME_HASHLINK">
 

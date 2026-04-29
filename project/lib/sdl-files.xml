@@ -21,6 +21,12 @@
 
         </section>
 
+        <section if="apple">
+
+          <compilerflag value="-fobjc-arc" />
+
+        </section>
+
         <section>
 
             <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/sdl/include" />
