@@ -3,11 +3,104 @@
 #include <system/CFFIPointer.h>
 #include <system/ValuePointer.h>
 #include <utils/ArrayBufferView.h>
-#include <graphics/Image.h>
-#include <graphics/ImageBuffer.h>
+#include <system/Mutex.h>
+#include <map>
+#include <vector>
+
 
 namespace lime {
 
+	#ifdef HXCPP_DEBUG
+	class BGFXCallback : public bgfx::CallbackI {
+		public:
+			void fatal(const char* _filePath, uint16_t _line, bgfx::Fatal::Enum _code, const char* _str) override {
+				fprintf(stderr, "[BGFX FATAL] (%d) %s at %s:%d\n", _code, _str, _filePath, _line);
+				abort();
+			}
+
+		  void traceVargs(const char* _filePath, uint16_t _line, const char* _format, va_list _argList) override {
+				fprintf(stderr, "[BGFX] ");
+				vfprintf(stderr, _format, _argList);
+			}
+
+			void profilerBegin(const char*, uint32_t, const char*, uint16_t) override {}
+			void profilerBeginLiteral(const char*, uint32_t, const char*, uint16_t) override {}
+			void profilerEnd() override {}
+			uint32_t cacheReadSize(uint64_t) override { return 0; }
+			bool cacheRead(uint64_t, void*, uint32_t) override { return false; }
+			void cacheWrite(uint64_t, const void*, uint32_t) override {}
+			void screenShot(const char*, uint32_t, uint32_t, uint32_t, bgfx::TextureFormat::Enum, const void*, uint32_t, bool) override {}
+			void captureBegin(uint32_t, uint32_t, uint32_t, bgfx::TextureFormat::Enum, bool) override {}
+			void captureEnd() override {}
+			void captureFrame(const void*, uint32_t) override {}
+		};
+
+	static BGFXCallback s_bgfxCallback;
+	#endif
+
+	std::map<void*, void*> bgfxObjectPtrs;
+	std::vector<void*> gc_bgfx_ptr;
+	Mutex gc_bgfx_mutex;
+
+	void gc_bgfx_object (value object) {
+
+		gc_bgfx_mutex.Lock ();
+
+		void* ptr = bgfxObjectPtrs[object];
+		if (ptr) {
+
+				gc_bgfx_ptr.push_back (ptr);
+
+				bgfxObjectPtrs.erase (object);
+
+		}
+
+		gc_bgfx_mutex.Unlock ();
+
+	}
+
+	void gc_bgfx_vertex_buffer (value handle) {
+
+		bgfx::VertexBufferHandle* vbuff = (bgfx::VertexBufferHandle*) val_data (handle);
+		if (bgfx::isValid (*vbuff)) bgfx::destroy (*vbuff);
+
+		delete vbuff;
+
+	}
+
+	void gc_bgfx_index_buffer (value handle) {
+
+		bgfx::IndexBufferHandle* ibuff = (bgfx::IndexBufferHandle*) val_data (handle);
+		if (bgfx::isValid (*ibuff)) bgfx::destroy (*ibuff);
+
+		delete ibuff;
+
+	}
+
+	void gc_bgfx_shader (value handle) {
+
+		bgfx::ShaderHandle* shader = (bgfx::ShaderHandle*) val_data (handle);
+		if (bgfx::isValid (*shader)) bgfx::destroy (*shader);
+
+		delete shader;
+
+	}
+
+	void gc_bgfx_program (value handle) {
+
+		bgfx::ProgramHandle* program = (bgfx::ProgramHandle*) val_data (handle);
+		if (bgfx::isValid (*program)) bgfx::destroy (*program);
+
+		delete program;
+
+	}
+
+	void gc_bgfx_val (value handle) {
+
+		void* val = (void*) val_data (handle);
+		delete val;
+
+	}
 
 	int lime_bgfx_render_frame () {
 
@@ -167,6 +260,203 @@ namespace lime {
 
 	}
 
+	value lime_bgfx_register_object (value object) {
+
+		value handle = CFFIPointer (object, gc_bgfx_object);
+
+		bgfxObjectPtrs[object] = handle;
+
+		return handle;
+
+	}
+
+	value lime_bgfx_create_vertex_layout () {
+
+		return CFFIPointer (new bgfx::VertexLayout (), gc_bgfx_val);
+
+	}
+
+	void lime_bgfx_vertex_layout_begin (value handle, int backend) {
+
+		bgfx::VertexLayout* v_layout = (bgfx::VertexLayout*) val_data (handle);
+		v_layout->begin ((bgfx::RendererType::Enum) backend);
+
+	}
+
+	void lime_bgfx_vertex_layout_add (value handle, int attrib, int num, int type, bool normalized, bool asInt) {
+
+		bgfx::VertexLayout* v_layout = (bgfx::VertexLayout*) val_data (handle);
+		v_layout->add ((bgfx::Attrib::Enum) attrib, num, (bgfx::AttribType::Enum) type, normalized, asInt);
+
+	}
+
+	void lime_bgfx_vertex_layout_end (value handle) {
+
+		bgfx::VertexLayout* v_layout = (bgfx::VertexLayout*) val_data (handle);
+		v_layout->end ();
+
+	}
+
+	value lime_bgfx_make_ref (value data, int size) {
+
+		ArrayBufferView bufferView (data);
+
+		const bgfx::Memory* ref = bgfx::makeRef (bufferView.buffer->b, size);
+		value handle = CFFIPointer (const_cast<bgfx::Memory*> (ref));
+
+		return handle;
+
+	}
+
+	value lime_bgfx_create_vertex_buffer (value _mem, value _layout, int flags) {
+
+		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (_mem);
+		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (_layout);
+		bgfx::VertexBufferHandle* vbh = new bgfx::VertexBufferHandle (bgfx::createVertexBuffer (mem, *layout, (uint16_t) flags));
+
+		return CFFIPointer (vbh, gc_bgfx_vertex_buffer);
+
+	}
+
+	value lime_bgfx_create_index_buffer (value _mem, int flags) {
+
+		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (_mem);
+		bgfx::IndexBufferHandle* ibh = new bgfx::IndexBufferHandle (bgfx::createIndexBuffer (mem, (uint16_t) flags));
+
+		return CFFIPointer (ibh, gc_bgfx_index_buffer);
+
+	}
+
+	value lime_bgfx_create_shader(value _mem) {
+
+		const bgfx::Memory* mem = (const bgfx::Memory*) val_data(_mem);
+		bgfx::ShaderHandle* shader = new bgfx::ShaderHandle (bgfx::createShader (mem));
+
+		return CFFIPointer (shader, gc_bgfx_shader);
+
+	}
+
+	value lime_bgfx_create_program (value _vsh, value _fsh, bool destroyShaders) {
+
+		bgfx::ShaderHandle* vsh = (bgfx::ShaderHandle*) val_data (_vsh);
+		bgfx::ShaderHandle* fsh = (bgfx::ShaderHandle*) val_data (_fsh);
+		bgfx::ProgramHandle* program = new bgfx::ProgramHandle (bgfx::createProgram (*vsh, *fsh, destroyShaders));
+
+		if (destroyShaders) {
+			vsh->idx = bgfx::kInvalidHandle;
+			fsh->idx = bgfx::kInvalidHandle;
+		}
+
+		return CFFIPointer (program, gc_bgfx_program);
+
+	}
+
+	void lime_bgfx_set_vertex_buffer (int stream, value _handle, int startVertex, int numVertices) {
+
+		bgfx::VertexBufferHandle* vbh = (bgfx::VertexBufferHandle*) val_data(_handle);
+		bgfx::setVertexBuffer ((uint8_t) stream, *vbh, (uint32_t) startVertex, (uint32_t) numVertices);
+
+	}
+
+	void lime_bgfx_set_index_buffer (value _handle, int firstIndex, int numIndices) {
+
+		bgfx::IndexBufferHandle* ibh = (bgfx::IndexBufferHandle*) val_data (_handle);
+		bgfx::setIndexBuffer (*ibh, (uint32_t )firstIndex, (uint32_t) numIndices);
+
+	}
+
+	void lime_bgfx_set_state (int stateA, int stateB, int rgba) {
+
+		uint64_t state = (uint64_t)(uint32_t) stateA << 32 | (uint32_t) stateB;
+		bgfx::setState (state, (uint32_t) rgba);
+
+	}
+
+	void lime_bgfx_set_view_transform (int id, value view, value proj) {
+
+		ArrayBufferView viewBuffer (view);
+		ArrayBufferView projBuffer (proj);
+
+		bgfx::setViewTransform ((bgfx::ViewId) id, viewBuffer.buffer->b, projBuffer.buffer->b);
+
+	}
+
+	int lime_bgfx_set_transform (value mtx, int num) {
+
+		ArrayBufferView buffer (mtx);
+
+		return (int)bgfx::setTransform (buffer.buffer->b, (uint16_t) num);
+
+	}
+
+	void lime_bgfx_submit (int id, value _program, int depth, int flags) {
+
+		bgfx::ProgramHandle* program = (bgfx::ProgramHandle*) val_data(_program);
+
+		bgfx::submit ((bgfx::ViewId) id, *program, (uint32_t) depth, (uint8_t) flags);
+
+	}
+
+	value lime_bgfx_get_caps () {
+
+		const bgfx::Caps* caps = bgfx::getCaps ();
+
+		if (caps) {
+
+			value obj = alloc_empty_object  ();
+			alloc_field (obj, val_id ("rendererType"), alloc_int ((int) caps->rendererType));
+			alloc_field (obj, val_id ("supportedHigh"), alloc_int ((int) (caps->supported >> 32)));
+			alloc_field (obj, val_id ("supportedLow"), alloc_int ((int) (caps->supported & 0xFFFFFFFF)));
+			alloc_field (obj, val_id ("vendorId"), alloc_int ((int) caps->vendorId));
+			alloc_field (obj, val_id ("deviceId"), alloc_int ((int) caps->deviceId));
+			alloc_field (obj, val_id ("homogeneousDepth"), alloc_bool (caps->homogeneousDepth));
+			alloc_field (obj, val_id ("originBottomLeft"), alloc_bool (caps->originBottomLeft));
+			alloc_field (obj, val_id ("numGPUs"), alloc_int ((int) caps->numGPUs));
+
+			value gpus = alloc_array (caps->numGPUs);
+			for (int i = 0; i < caps->numGPUs; i++) {
+				value gpu = alloc_empty_object ();
+				alloc_field (gpu, val_id ("vendorId"), alloc_int ((int) caps->gpu[i].vendorId));
+				alloc_field (gpu, val_id ("deviceId"), alloc_int ((int) caps->gpu[i].deviceId));
+				val_array_set_i (gpus, i, gpu);
+			}
+			alloc_field (obj, val_id ("gpus"), gpus);
+
+			value limits = alloc_empty_object ();
+			alloc_field (limits, val_id ("maxDrawCalls"), alloc_int ((int) caps->limits.maxDrawCalls));
+			alloc_field (limits, val_id ("maxBlits"), alloc_int ((int) caps->limits.maxBlits));
+			alloc_field (limits, val_id ("maxTextureSize"), alloc_int ((int) caps->limits.maxTextureSize));
+			alloc_field (limits, val_id ("maxTextureLayers"), alloc_int ((int) caps->limits.maxTextureLayers));
+			alloc_field (limits, val_id ("maxViews"), alloc_int ((int) caps->limits.maxViews));
+			alloc_field (limits, val_id ("maxFrameBuffers"), alloc_int ((int) caps->limits.maxFrameBuffers));
+			alloc_field (limits, val_id ("maxFBAttachments"), alloc_int ((int) caps->limits.maxFBAttachments));
+			alloc_field (limits, val_id ("maxPrograms"), alloc_int ((int) caps->limits.maxPrograms));
+			alloc_field (limits, val_id ("maxShaders"), alloc_int ((int) caps->limits.maxShaders));
+			alloc_field (limits, val_id ("maxTextures"), alloc_int ((int) caps->limits.maxTextures));
+			alloc_field (limits, val_id ("maxTextureSamplers"), alloc_int ((int) caps->limits.maxTextureSamplers));
+			alloc_field (limits, val_id ("maxComputeBindings"), alloc_int ((int) caps->limits.maxComputeBindings));
+			alloc_field (limits, val_id ("maxVertexLayouts"), alloc_int ((int) caps->limits.maxVertexLayouts));
+			alloc_field (limits, val_id ("maxVertexStreams"), alloc_int ((int) caps->limits.maxVertexStreams));
+			alloc_field (limits, val_id ("maxIndexBuffers"), alloc_int ((int) caps->limits.maxIndexBuffers));
+			alloc_field (limits, val_id ("maxVertexBuffers"), alloc_int ((int) caps->limits.maxVertexBuffers));
+			alloc_field (limits, val_id ("maxDynamicIndexBuffers"), alloc_int ((int) caps->limits.maxDynamicIndexBuffers));
+			alloc_field (limits, val_id ("maxDynamicVertexBuffers"), alloc_int ((int) caps->limits.maxDynamicVertexBuffers));
+			alloc_field (limits, val_id ("maxUniforms"), alloc_int ((int) caps->limits.maxUniforms));
+			alloc_field (limits, val_id ("maxOcclusionQueries"), alloc_int ((int) caps->limits.maxOcclusionQueries));
+			alloc_field (limits, val_id ("maxEncoders"), alloc_int ((int) caps->limits.maxEncoders));
+			alloc_field (limits, val_id ("minResourceCbSize"), alloc_int ((int) caps->limits.minResourceCbSize));
+			alloc_field (limits, val_id ("maxTransientVbSize"), alloc_int ((int) caps->limits.maxTransientVbSize));
+			alloc_field (limits, val_id ("maxTransientIbSize"), alloc_int ((int) caps->limits.maxTransientIbSize));
+			alloc_field (limits, val_id ("minUniformBufferSize"), alloc_int ((int) caps->limits.minUniformBufferSize));
+			alloc_field (obj, val_id ("limits"), limits);
+
+			return obj;
+
+		}
+
+		return alloc_null ();
+	}
+
 
 	DEFINE_PRIME0 (lime_bgfx_render_frame);
 	DEFINE_PRIME1v(lime_bgfx_set_debug);
@@ -178,6 +468,48 @@ namespace lime {
 	DEFINE_PRIME2v (lime_bgfx_dbg_text_clear);
 	DEFINE_PRIME4v (lime_bgfx_dbg_text_printf);
 	DEFINE_PRIME6v (lime_bgfx_dbg_text_image);
+	DEFINE_PRIME0 (lime_bgfx_create_vertex_layout);
+	DEFINE_PRIME1 (lime_bgfx_register_object);
+	DEFINE_PRIME2v (lime_bgfx_vertex_layout_begin);
+	DEFINE_PRIME6v (lime_bgfx_vertex_layout_add);
+	DEFINE_PRIME1v (lime_bgfx_vertex_layout_end);
+	DEFINE_PRIME2 (lime_bgfx_make_ref);
+	DEFINE_PRIME3 (lime_bgfx_create_vertex_buffer);
+	DEFINE_PRIME2 (lime_bgfx_create_index_buffer);
+	DEFINE_PRIME1 (lime_bgfx_create_shader);
+	DEFINE_PRIME3 (lime_bgfx_create_program);
+	DEFINE_PRIME4v (lime_bgfx_set_vertex_buffer);
+	DEFINE_PRIME3v (lime_bgfx_set_index_buffer);
+	DEFINE_PRIME3v (lime_bgfx_set_state);
+	DEFINE_PRIME3v (lime_bgfx_set_view_transform);
+	DEFINE_PRIME2 (lime_bgfx_set_transform);
+	DEFINE_PRIME4v (lime_bgfx_submit);
+	DEFINE_PRIME0 (lime_bgfx_get_caps);
+
+	#define DEFINE_BGFX_DESTROY(name, HandleType) \
+	  void lime_bgfx_destroy_##name (value handle) { \
+			bgfx::HandleType* val = (bgfx::HandleType*) val_data (handle); \
+			if (bgfx::isValid (*val)) { \
+				bgfx::destroy (*val); \
+				val->idx = bgfx::kInvalidHandle; \
+		  } \
+		} \
+		DEFINE_PRIME1v (lime_bgfx_destroy_##name);
+
+	DEFINE_BGFX_DESTROY (vertex_buffer, VertexBufferHandle)
+	DEFINE_BGFX_DESTROY (index_buffer, IndexBufferHandle)
+	DEFINE_BGFX_DESTROY (dynamic_vertex_buffer, DynamicVertexBufferHandle)
+	DEFINE_BGFX_DESTROY (dynamic_index_buffer,  DynamicIndexBufferHandle)
+	DEFINE_BGFX_DESTROY (shader, ShaderHandle)
+	DEFINE_BGFX_DESTROY (program, ProgramHandle)
+	DEFINE_BGFX_DESTROY (texture, TextureHandle)
+	DEFINE_BGFX_DESTROY (frame_buffer, FrameBufferHandle)
+	DEFINE_BGFX_DESTROY (uniform, UniformHandle)
+	DEFINE_BGFX_DESTROY (vertex_layout, VertexLayoutHandle)
+	DEFINE_BGFX_DESTROY (occlusion_query, OcclusionQueryHandle)
+	DEFINE_BGFX_DESTROY (indirect_buffer, IndirectBufferHandle)
+
+	#undef DEFINE_BGFX_DESTROY
 
 
 	static bgfx::RendererType::Enum getRendererType () {
@@ -303,6 +635,11 @@ namespace lime {
 		init.platformData.nwh = getNativeWindowHandle (sdlWindow);
 		init.platformData.ndt = getNativeDisplayHandle (sdlWindow);
 		init.platformData.type = getNativeWindowHandleType (sdlWindow);
+
+		// Enable BGFX logging for debug
+		#ifdef HXCPP_DEBUG
+		init.callback = &s_bgfxCallback;
+		#endif
 
 		// Set resolution
 		SDL_GetWindowSizeInPixels (sdlWindow, (int*)&init.resolution.width, (int*)&init.resolution.height);
