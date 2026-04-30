@@ -435,7 +435,12 @@ class HTML5Platform extends PlatformTarget
 		}
 
 		var createdDirectories = new Map<String, Bool>();
+
 		var dir:String = null;
+
+		#if lime
+		Font.init();
+		#end
 
 		for (asset in project.assets)
 		{
@@ -489,6 +494,7 @@ class HTML5Platform extends PlatformTarget
 							#if lime
 							var font = Font.fromFile(asset.sourcePath);
 
+							embeddedAsset.fontName = font.name;
 							embeddedAsset.ascender = font.ascender;
 							embeddedAsset.descender = font.descender;
 							embeddedAsset.height = font.height;
@@ -523,6 +529,11 @@ class HTML5Platform extends PlatformTarget
 				}
 			}
 		}
+
+		// For some reason it seems to crash in here if the shutdown runs, should be figured out later but it shoudnt cause any issues for now ig
+		// #if lime
+		// Font.shutdown();
+		// #end
 
 		ProjectHelper.recursiveSmartCopyTemplate(project, "html5/template", destination, context);
 
