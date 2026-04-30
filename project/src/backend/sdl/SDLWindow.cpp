@@ -95,7 +95,25 @@ namespace lime {
 		}
 		#endif
 
-		sdlWindow = SDL_CreateWindow (title, width, height, sdlWindowFlags);
+		SDL_PropertiesID props = SDL_CreateProperties ();
+
+		if (title && (*title)) {
+
+			SDL_SetStringProperty (props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title);
+
+		}
+
+		SDL_SetNumberProperty (props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
+		SDL_SetNumberProperty (props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+		SDL_SetNumberProperty (props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, sdlWindowFlags);
+
+		#ifdef LIME_BGFX
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_EXTERNAL_GRAPHICS_CONTEXT_BOOLEAN, true);
+		#endif
+
+		sdlWindow = SDL_CreateWindowWithProperties (props);
+
+		SDL_DestroyProperties (props);
 
 		if (!sdlWindow) {
 
