@@ -75,8 +75,8 @@ class BMP
 
 			return bytes;
 		}
-		#else
-		return null;
 		#end
+
+		return null;
 	}
 }
