@@ -278,7 +278,7 @@ namespace lime {
 
 	void Font::InitializeLibrary() {
 
-		FT_Init_FreeType((FT_Library*)&library);
+		FT_Init_FreeType ((FT_Library*)&library);
 
 	}
 
@@ -287,7 +287,7 @@ namespace lime {
 
 		if (library) {
 
-			FT_Done_FreeType((FT_Library)library);
+			FT_Done_FreeType ((FT_Library)library);
 
 			library = 0;
 
@@ -311,17 +311,15 @@ namespace lime {
 
 			}
 
-			file.Seek(0, SEEK_END);
-			size_t size = (size_t)file.Tell();
-			file.Seek(0, SEEK_SET);
+			size_t size = (size_t)file.GetSize ();
 
-			unsigned char* faceMemory = (unsigned char*)malloc(size);
-			file.Read(faceMemory, size);
-			file.Close();
+			unsigned char* faceMemory = (unsigned char*)malloc (size);
+			file.Read (faceMemory, size);
+			file.Close ();
 
 			FT_Face face;
 
-			int error = FT_New_Memory_Face((FT_Library)library, faceMemory, size, faceIndex, &face);
+			int error = FT_New_Memory_Face ((FT_Library)library, faceMemory, size, faceIndex, &face);
 
 			if (!error) {
 

@@ -95,11 +95,7 @@ namespace lime {
 
 		}
 
-		file.Seek (0, SEEK_END);
-
-		int size = (int)file.Tell ();
-
-		file.Seek (0, SEEK_SET);
+		int size = (int)file.GetSize ();
 
 		if (size > 0) {
 
