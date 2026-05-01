@@ -272,14 +272,6 @@ class WindowsPlatform extends PlatformTarget
 					default:
 				}
 			}
-
-			var iconPath = Path.combine(applicationDirectory, "icon.ico");
-
-			if (IconHelper.createWindowsIcon(icons, iconPath) && System.hostPlatform == WINDOWS)
-			{
-				var templates = [Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)) + "/templates"].concat(project.templatePaths);
-				System.runCommand("", System.findTemplate(templates, "bin/ReplaceVistaIcon.exe"), [executablePath, iconPath, "1"], true, true);
-			}
 		}
 		else
 		{
