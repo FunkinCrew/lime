@@ -571,12 +571,7 @@ class HTML5Platform extends PlatformTarget
 		}
 	}
 
-	public override function watch():Void
-	{
-		// TODO: Use a custom live reload HTTP server for test/run instead
-
-		super.watch();
-	}
+	public override function watch():Void {}
 
 	public override function install():Void {}
 
