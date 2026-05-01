@@ -954,11 +954,6 @@ class CommandLineTools
 			Log.println("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
 			Log.println("  \x1b[3m(html5)\x1b[0m \x1b[1m-npm\x1b[0m -- Target HTML5 using an NPM project structure");
 
-			if (command != "run" && command != "trace")
-			{
-				Log.println("  \x1b[3m(html5|webassembly)\x1b[0m \x1b[1m-minify\x1b[0m -- Minify application file");
-			}
-
 			if (command == "run" || command == "test")
 			{
 				Log.println("  \x1b[3m(html5|webassembly)\x1b[0m \x1b[1m-nolaunch\x1b[0m -- Begin test server without launching");

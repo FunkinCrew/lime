@@ -165,11 +165,6 @@ class HTML5Platform extends PlatformTarget
 
 				System.copyFileTemplate(project.templatePaths, "html5/output.js", outputFile, context);
 			}
-
-			if (project.targetFlags.exists("minify") || type == "final")
-			{
-				HTML5Helper.minify(project, targetDirectory + "/bin/" + project.app.file + ".js");
-			}
 		}
 	}
 

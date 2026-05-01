@@ -127,11 +127,6 @@ class ModuleHelper
 				System.runCommand("", "haxe", [hxmlPath]);
 
 				patchFile(outputPath);
-
-				if (project.targetFlags.exists("final"))
-				{
-					HTML5Helper.minify(project, outputPath);
-				}
 			}
 		}
 	}
