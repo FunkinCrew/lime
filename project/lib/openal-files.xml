@@ -146,7 +146,13 @@
 
                 </section>
 
-                <section if="NATIVE_TOOLKIT_HAVE_SDL">
+                <section if="apple">
+
+                    <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/coreaudio.cpp" />
+
+                </section>
+
+                <section if="NATIVE_TOOLKIT_HAVE_SDL" unless="apple">
 
                     <file name="${NATIVE_TOOLKIT_PATH}/openal/alc/backends/sdl3.cpp" />
 

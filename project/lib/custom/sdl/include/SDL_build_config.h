@@ -424,8 +424,11 @@
  * @brief SDL subsystems that are disabled in this build configuration.
  * @{
  */
-#define SDL_GPU_DISABLED 1      /**< GPU/Graphics subsystem is disabled */
+#if defined(SDL_PLATFORM_MACOS) || defined(SDL_PLATFORM_IOS)
+# define SDL_AUDIO_DISABLED 1   /**< Audio subsystem is disabled */
+#endif
 #define SDL_CAMERA_DISABLED 1   /**< Camera subsystem is disabled */
+#define SDL_GPU_DISABLED 1      /**< GPU/Graphics subsystem is disabled */
 #define SDL_RENDER_DISABLED 1   /**< Render subsystem is disabled */
 /** @} */
 

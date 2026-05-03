@@ -22,7 +22,11 @@
 
 #define HAVE_JACK 0
 
-#define HAVE_COREAUDIO 0
+#if defined(__APPLE__) || defined(__MACH__)
+# define HAVE_COREAUDIO 1
+#else
+# define HAVE_COREAUDIO 0
+#endif
 
 #define HAVE_OPENSL 0
 
@@ -30,10 +34,10 @@
 
 #define HAVE_WAVE 0
 
-#ifdef NATIVE_TOOLKIT_HAVE_SDL
-#define HAVE_SDL3 1
+#if defined (NATIVE_TOOLKIT_HAVE_SDL) && !(defined(__APPLE__) || defined(__MACH__))
+# define HAVE_SDL3 1
 #else
-#define HAVE_SDL3 0
+# define HAVE_SDL3 0
 #endif
 
 #define HAVE_SDL2 0

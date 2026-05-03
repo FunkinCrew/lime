@@ -27,14 +27,10 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
+		#if !(defined (HX_MACOS) || defined(IPHONE) || defined(APPLETV))
 		SDL_SetHint (SDL_HINT_AUDIO_FREQUENCY, "48000");
 		SDL_SetHint (SDL_HINT_AUDIO_CHANNELS, "2");
 		SDL_SetHint (SDL_HINT_AUDIO_FORMAT, "F32");
-
-		#ifdef IPHONE
-		SDL_SetHint (SDL_HINT_AUDIO_CATEGORY, "playback");
-		#endif
-
 		SDL_SetHint (SDL_HINT_AUDIO_DEVICE_STREAM_ROLE, "Game");
 
 		#ifdef ANDROID
@@ -43,6 +39,7 @@ namespace lime {
 			SDL_SetHint (SDL_HINT_AUDIO_DRIVER, "openslES");
 
 		}
+		#endif
 		#endif
 
 		SDL_SetHint (SDL_HINT_JOYSTICK_HIDAPI, "1");
@@ -55,7 +52,11 @@ namespace lime {
 		SDL_SetHint (SDL_HINT_MAC_SCROLL_MOMENTUM, "1");
 		#endif
 
-		Uint32 initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
+		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
+
+		#if !(defined (HX_MACOS) || defined(IPHONE) || defined(APPLETV))
+		initFlags |= SDL_INIT_AUDIO;
+		#endif
 
 		if (!SDL_Init (initFlags)) {
 
