@@ -166,30 +166,31 @@ static inline NSPoint ToLimePoint (NSView* view, NSGestureRecognizer* gr) {
 
 - (void)scrollWheel:(NSEvent *)event {
 
-    if (![event hasPreciseScrollingDeltas])
-    {
-        return;
+    if ([event hasPreciseScrollingDeltas]) {
+
+		if ([event phase] != NSEventPhaseNone) {
+
+			lime::GestureEvent gestureEvent;
+			gestureEvent.scrollX = [event scrollingDeltaX];
+			gestureEvent.scrollY = [event scrollingDeltaY];
+			gestureEvent.state = ToGestureStateFromNSEvent ([event phase]);
+			lime::GestureEvent::Dispatch (&gestureEvent);
+
+		}
+
+		if ([event momentumPhase] != NSEventPhaseNone) {
+
+			lime::GestureEvent gestureEvent;
+			gestureEvent.momentumScrollX = [event scrollingDeltaX];
+			gestureEvent.momentumScrollY = [event scrollingDeltaY];
+			gestureEvent.state = ToGestureStateFromNSEvent ([event momentumPhase]);
+			lime::GestureEvent::Dispatch (&gestureEvent);
+
+		}
+
     }
 
-    if ([event phase] != NSEventPhaseNone)
-    {
-        lime::GestureState phaseState = ToGestureStateFromNSEvent ([event phase]);
-        lime::GestureEvent gestureEvent;
-        gestureEvent.scrollX = [event scrollingDeltaX];
-        gestureEvent.scrollY = [event scrollingDeltaY];
-        gestureEvent.state = phaseState;
-        lime::GestureEvent::Dispatch (&gestureEvent);
-    }
-
-    if ([event momentumPhase] != NSEventPhaseNone)
-    {
-        lime::GestureState momentumPhaseState = ToGestureStateFromNSEvent ([event momentumPhase]);
-        lime::GestureEvent gestureEvent;
-        gestureEvent.momentumScrollX = [event scrollingDeltaX];
-        gestureEvent.momentumScrollY = [event scrollingDeltaY];
-        gestureEvent.state = momentumPhaseState;
-        lime::GestureEvent::Dispatch (&gestureEvent);
-    }
+	[super scrollWheel:event];
 
 }
 

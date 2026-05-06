@@ -214,18 +214,6 @@
 # define HAVE_SYSCTLBYNAME 1   /**< Get system information by name */
 /** @} */
 
-# if defined(SDL_PLATFORM_MACOS)
-
-/**
- * @name GCMouse
- * @brief GameController mouse input.
- * @{
- */
-#  define USE_GCMOUSE_SCROLL 1  /**< Enable GCMouse scrolling; without this, scroll input may not function at all */
-/** @} */
-
-# endif /* SDL_PLATFORM_MACOS */
-
 #endif /* SDL_PLATFORM_MACOS || SDL_PLATFORM_IOS */
 
 /* ============================================================================
