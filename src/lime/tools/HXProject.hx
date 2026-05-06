@@ -732,11 +732,6 @@ class HXProject extends Script
 			defines.set("release", "1");
 		}
 
-		if (defines.exists("SWF_PLAYER"))
-		{
-			environment.set("SWF_PLAYER", defines.get("SWF_PLAYER"));
-		}
-
 		defines.set(Std.string(target).toLowerCase(), "1");
 		defines.set("target", Std.string(target).toLowerCase());
 		defines.set("platform", defines.get("target"));
