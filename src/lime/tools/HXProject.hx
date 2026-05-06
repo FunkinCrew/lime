@@ -716,6 +716,11 @@ class HXProject extends Script
 			defines.set("cpp", "1");
 		}
 
+		if (targetFlags.exists("simulator"))
+		{
+			defines.set("simulator", "1");
+		}
+
 		if (debug)
 		{
 			defines.set("buildType", "debug");
