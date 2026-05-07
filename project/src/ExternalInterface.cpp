@@ -1526,13 +1526,13 @@ namespace lime {
 	}
 
 
-	value lime_font_render_glyph (value fontHandle, int index, value data) {
+	value lime_font_render_glyph (value fontHandle, int index, value data, int flags) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		Bytes bytes (data);
 
-		if (font->RenderGlyph (index, &bytes)) {
+		if (font->RenderGlyph (index, &bytes, 0, flags)) {
 
 			return bytes.Value (data);
 
@@ -1544,12 +1544,12 @@ namespace lime {
 	}
 
 
-	HL_PRIM Bytes* HL_NAME(hl_font_render_glyph) (HL_CFFIPointer* fontHandle, int index, Bytes* data) {
+	HL_PRIM Bytes* HL_NAME(hl_font_render_glyph) (HL_CFFIPointer* fontHandle, int index, Bytes* data, int flags) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
 
-		if (font->RenderGlyph (index, data)) {
+		if (font->RenderGlyph (index, data, 0, flags)) {
 
 			return data;
 
@@ -1561,7 +1561,7 @@ namespace lime {
 	}
 
 
-	value lime_font_render_glyphs (value fontHandle, value indices, value data) {
+	value lime_font_render_glyphs (value fontHandle, value indices, value data, int flags) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
@@ -1574,7 +1574,7 @@ namespace lime {
 
 		}
 
-		if (font->RenderGlyphs (_indices.data (), _indices.size (), &bytes)) {
+		if (font->RenderGlyphs (_indices.data (), _indices.size (), &bytes, flags)) {
 
 			return bytes.Value (data);
 
@@ -1586,12 +1586,12 @@ namespace lime {
 	}
 
 
-	HL_PRIM Bytes* HL_NAME(hl_font_render_glyphs) (HL_CFFIPointer* fontHandle, hl_varray* indices, Bytes* data) {
+	HL_PRIM Bytes* HL_NAME(hl_font_render_glyphs) (HL_CFFIPointer* fontHandle, hl_varray* indices, Bytes* data, int flags) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
 
-		if (font->RenderGlyphs (hl_aptr (indices, int), indices->size, data)) {
+		if (font->RenderGlyphs (hl_aptr (indices, int), indices->size, data, flags)) {
 
 			return data;
 
@@ -4433,8 +4433,8 @@ namespace lime {
 	DEFINE_PRIME1 (lime_font_load_bytes);
 	DEFINE_PRIME1 (lime_font_load_file);
 	DEFINE_PRIME3 (lime_font_outline_decompose);
-	DEFINE_PRIME3 (lime_font_render_glyph);
-	DEFINE_PRIME3 (lime_font_render_glyphs);
+	DEFINE_PRIME4 (lime_font_render_glyph);
+	DEFINE_PRIME4 (lime_font_render_glyphs);
 	DEFINE_PRIME3v (lime_font_set_size);
 	DEFINE_PRIME0v (lime_font_initialize_library);
 	DEFINE_PRIME0v (lime_font_shutdown_library);
@@ -4640,8 +4640,8 @@ namespace lime {
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_bytes, _TBYTES);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_file, _STRING);
 	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32 _BOOL);
-	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES);
-	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES);
+	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES _I32);
+	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES _I32);
 	DEFINE_HL_PRIM (_VOID, hl_font_set_size, _TCFFIPOINTER _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_font_initialize_library, _NO_ARG);
 	DEFINE_HL_PRIM (_VOID, hl_font_shutdown_library, _NO_ARG);

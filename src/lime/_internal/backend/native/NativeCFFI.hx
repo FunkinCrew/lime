@@ -145,9 +145,9 @@ class NativeCFFI
 
 	@:cffi private static function lime_font_outline_decompose(handle:Dynamic, size:Int, forceAutoHint:Bool):Dynamic;
 
-	@:cffi private static function lime_font_render_glyph(handle:Dynamic, index:Int, data:Dynamic):Dynamic;
+	@:cffi private static function lime_font_render_glyph(handle:Dynamic, index:Int, data:Dynamic, flags:Int):Dynamic;
 
-	@:cffi private static function lime_font_render_glyphs(handle:Dynamic, indices:Dynamic, data:Dynamic):Dynamic;
+	@:cffi private static function lime_font_render_glyphs(handle:Dynamic, indices:Dynamic, data:Dynamic, flags:Int):Dynamic;
 
 	@:cffi private static function lime_font_set_size(handle:Dynamic, size:Int, dpi:Int):Void;
 
@@ -469,10 +469,10 @@ class NativeCFFI
 	private static var lime_font_load_file = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_file", "oo", false));
 	private static var lime_font_outline_decompose = new cpp.Callable<cpp.Object->Int->Bool->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_outline_decompose",
 		"oibo", false));
-	private static var lime_font_render_glyph = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_font_render_glyph", "oioo", false));
-	private static var lime_font_render_glyphs = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_font_render_glyphs", "oooo", false));
+	private static var lime_font_render_glyph = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_font_render_glyph", "oioio", false));
+	private static var lime_font_render_glyphs = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_font_render_glyphs", "oooio", false));
 	private static var lime_font_set_size = new cpp.Callable<cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_set_size", "oiiv", false));
 	private static var lime_font_initialize_library = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_initialize_library", "v", false));
 	private static var lime_font_shutdown_library = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_shutdown_library", "v", false));
@@ -733,8 +733,8 @@ class NativeCFFI
 	private static var lime_font_load_bytes = CFFI.load("lime", "lime_font_load_bytes", 1);
 	private static var lime_font_load_file = CFFI.load("lime", "lime_font_load_file", 1);
 	private static var lime_font_outline_decompose = CFFI.load("lime", "lime_font_outline_decompose", 3);
-	private static var lime_font_render_glyph = CFFI.load("lime", "lime_font_render_glyph", 3);
-	private static var lime_font_render_glyphs = CFFI.load("lime", "lime_font_render_glyphs", 3);
+	private static var lime_font_render_glyph = CFFI.load("lime", "lime_font_render_glyph", 4);
+	private static var lime_font_render_glyphs = CFFI.load("lime", "lime_font_render_glyphs", 4);
 	private static var lime_font_set_size = CFFI.load("lime", "lime_font_set_size", 3);
 	private static var lime_font_initialize_library = CFFI.load("lime", "lime_font_initialize_library", 0);
 	private static var lime_font_shutdown_library = CFFI.load("lime", "lime_font_shutdown_library", 0);
@@ -1053,13 +1053,13 @@ class NativeCFFI
 		return null;
 	}
 
-	@:hlNative("lime", "hl_font_render_glyph") private static function lime_font_render_glyph(handle:CFFIPointer, index:Int, data:Bytes):Bytes
+	@:hlNative("lime", "hl_font_render_glyph") private static function lime_font_render_glyph(handle:CFFIPointer, index:Int, data:Bytes, flags:Int):Bytes
 	{
 		return null;
 	}
 
 	@:hlNative("lime", "hl_font_render_glyphs") private static function lime_font_render_glyphs(handle:CFFIPointer, indices:hl.NativeArray<Int>,
-			data:Bytes):Bytes
+			data:Bytes, flags:Int):Bytes
 	{
 		return null;
 	}

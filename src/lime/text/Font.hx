@@ -344,9 +344,10 @@ class Font
      	* @param glyph The glyph to render.
      	* @param fontSize The size to render the glyph at.
      	* @param dpi The DPI used to size the glyph before rasterization.
+		* @param flags Additional FreeType load flags to apply when rasterizing.
      	* @return An `Image` instance representing the rendered glyph.
      	*/
-	public function renderGlyph(glyph:Glyph, fontSize:Int, dpi:Int = 96):Image
+	public function renderGlyph(glyph:Glyph, fontSize:Int, dpi:Int = 96, ?flags:Int = 0):Image
 	{
 		#if (lime_cffi && !macro)
 		__setSize(fontSize, dpi);
@@ -355,7 +356,7 @@ class Font
 		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
 
 		// Call native function to render glyph and get byte data
-		bytes = NativeCFFI.lime_font_render_glyph(src, glyph, bytes);
+		bytes = NativeCFFI.lime_font_render_glyph(src, glyph, bytes, flags);
 
 		if (bytes != null && bytes.length > 0)
 		{
@@ -413,9 +414,10 @@ class Font
      	* @param glyphs The glyphs to render.
      	* @param fontSize The size to render the glyphs at.
      	* @param dpi The DPI used to size the glyphs before rasterization.
+		* @param flags Additional FreeType load flags to apply when rasterizing.
      	* @return A `Map` containing glyphs mapped to their corresponding images.
      	*/
-	public function renderGlyphs(glyphs:Array<Glyph>, fontSize:Int, dpi:Int = 96):Map<Glyph, Image>
+	public function renderGlyphs(glyphs:Array<Glyph>, fontSize:Int, dpi:Int = 96, ?flags:Int = 0):Map<Glyph, Image>
 	{
 		#if (lime_cffi && !macro)
 		var uniqueGlyphs = new Map<Int, Bool>();
@@ -449,7 +451,7 @@ class Font
 		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
 
 		// Call native function to render glyphs and get byte data
-		bytes = NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes);
+		bytes = NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes, flags);
 
 		if (bytes != null && bytes.length > 0)
 		{

@@ -914,9 +914,17 @@ namespace lime {
 	}
 
 
-	int Font::RenderGlyph(int index, Bytes *bytes, int offset) {
+	int Font::RenderGlyph(int index, Bytes *bytes, int offset, int flags) {
 
-		if (FT_Load_Glyph((FT_Face)face, index, FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0) {
+		int loadFlags = FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT;
+
+		if (flags) {
+
+			loadFlags |= flags;
+
+		}
+
+		if (FT_Load_Glyph((FT_Face)face, index, loadFlags) == 0) {
 
 			if (FT_Render_Glyph(((FT_Face)face)->glyph, FT_RENDER_MODE_LCD) == 0) {
 
@@ -988,7 +996,7 @@ namespace lime {
 	}
 
 
-	int Font::RenderGlyphs (int* indices, int numIndices, Bytes* bytes) {
+	int Font::RenderGlyphs (int* indices, int numIndices, Bytes* bytes, int flags) {
 
 		int offset = 0;
 		int totalOffset = 4;
@@ -996,7 +1004,7 @@ namespace lime {
 
 		for (int i = 0; i < numIndices; i++) {
 
-			offset = RenderGlyph (indices[i], bytes, totalOffset);
+			offset = RenderGlyph (indices[i], bytes, totalOffset, flags);
 
 			if (offset > 0) {
 
