@@ -343,12 +343,13 @@ class Font
      	*
      	* @param glyph The glyph to render.
      	* @param fontSize The size to render the glyph at.
+     	* @param dpi The DPI used to size the glyph before rasterization.
      	* @return An `Image` instance representing the rendered glyph.
      	*/
-	public function renderGlyph(glyph:Glyph, fontSize:Int):Image
+	public function renderGlyph(glyph:Glyph, fontSize:Int, dpi:Int = 96):Image
 	{
 		#if (lime_cffi && !macro)
-		__setSize(fontSize, 96);
+		__setSize(fontSize, dpi);
 
 		// Allocate an estimated buffer size - adjust if necessary
 		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
@@ -411,9 +412,10 @@ class Font
      	*
      	* @param glyphs The glyphs to render.
      	* @param fontSize The size to render the glyphs at.
+     	* @param dpi The DPI used to size the glyphs before rasterization.
      	* @return A `Map` containing glyphs mapped to their corresponding images.
      	*/
-	public function renderGlyphs(glyphs:Array<Glyph>, fontSize:Int):Map<Glyph, Image>
+	public function renderGlyphs(glyphs:Array<Glyph>, fontSize:Int, dpi:Int = 96):Map<Glyph, Image>
 	{
 		#if (lime_cffi && !macro)
 		var uniqueGlyphs = new Map<Int, Bool>();
@@ -441,7 +443,7 @@ class Font
 		var glyphList = _glyphList;
 		#end
 
-		__setSize(fontSize, 96);
+		__setSize(fontSize, dpi);
 
 		// Allocate an estimated buffer size - adjust if necessary
 		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
