@@ -156,13 +156,6 @@ namespace lime {
 
 	void SDLApplication::HandleEvent (SDL_Event* event) {
 
-		#ifdef IPHONE
-
-		int top = 0;
-		gc_set_top_of_stack(&top, false);
-
-		#endif
-
 		switch (event->type) {
 
 			case SDL_EVENT_SYSTEM_THEME_CHANGED:
@@ -838,13 +831,6 @@ namespace lime {
 
 
 	bool SDLApplication::HandleAppLifecycleEvent (void* userdata, SDL_Event* event) {
-
-		#ifdef IPHONE
-
-		int top = 0;
-		gc_set_top_of_stack(&top, false);
-
-		#endif
 
 		switch (event->type) {
 
