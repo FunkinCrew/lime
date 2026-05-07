@@ -143,7 +143,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_font_load_file(path:Dynamic):Dynamic;
 
-	@:cffi private static function lime_font_outline_decompose(handle:Dynamic, size:Int):Dynamic;
+	@:cffi private static function lime_font_outline_decompose(handle:Dynamic, size:Int, forceAutoHint:Bool):Dynamic;
 
 	@:cffi private static function lime_font_render_glyph(handle:Dynamic, index:Int, data:Dynamic):Dynamic;
 
@@ -467,8 +467,8 @@ class NativeCFFI
 	private static var lime_font_get_units_per_em = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_units_per_em", "oi", false));
 	private static var lime_font_load_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_bytes", "oo", false));
 	private static var lime_font_load_file = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_file", "oo", false));
-	private static var lime_font_outline_decompose = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_outline_decompose",
-		"oio", false));
+	private static var lime_font_outline_decompose = new cpp.Callable<cpp.Object->Int->Bool->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_outline_decompose",
+		"oibo", false));
 	private static var lime_font_render_glyph = new cpp.Callable<cpp.Object->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_font_render_glyph", "oioo", false));
 	private static var lime_font_render_glyphs = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
@@ -732,7 +732,7 @@ class NativeCFFI
 	private static var lime_font_get_units_per_em = CFFI.load("lime", "lime_font_get_units_per_em", 1);
 	private static var lime_font_load_bytes = CFFI.load("lime", "lime_font_load_bytes", 1);
 	private static var lime_font_load_file = CFFI.load("lime", "lime_font_load_file", 1);
-	private static var lime_font_outline_decompose = CFFI.load("lime", "lime_font_outline_decompose", 2);
+	private static var lime_font_outline_decompose = CFFI.load("lime", "lime_font_outline_decompose", 3);
 	private static var lime_font_render_glyph = CFFI.load("lime", "lime_font_render_glyph", 3);
 	private static var lime_font_render_glyphs = CFFI.load("lime", "lime_font_render_glyphs", 3);
 	private static var lime_font_set_size = CFFI.load("lime", "lime_font_set_size", 3);
@@ -1048,7 +1048,7 @@ class NativeCFFI
 		return null;
 	}
 
-	@:hlNative("lime", "hl_font_outline_decompose") private static function lime_font_outline_decompose(handle:CFFIPointer, size:Int):Dynamic
+	@:hlNative("lime", "hl_font_outline_decompose") private static function lime_font_outline_decompose(handle:CFFIPointer, size:Int, forceAutoHint:Bool):Dynamic
 	{
 		return null;
 	}

@@ -47,7 +47,7 @@ namespace lime {
 			Font (Resource *resource, int faceIndex = 0);
 			~Font ();
 
-			void* Decompose (bool useCFFIValue, int em);
+			void* Decompose (bool useCFFIValue, int size, bool forceAutoHint = true);
 			int GetAscender ();
 			int GetDescender ();
 			wchar_t *GetFamilyName ();

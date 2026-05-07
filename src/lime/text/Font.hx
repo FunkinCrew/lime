@@ -171,13 +171,14 @@ class Font
 	/**
      	* Decomposes the font into outline data.
      	*
+     	* @param forceAutoHint When `true`, force auto-hinting for outline decomposition, When `false`, preserve the unhinted glyph outlines.
      	* @return An instance of `NativeFontData` that contains decomposed font outline information.
      	*/
-	public function decompose():NativeFontData
+	public function decompose(forceAutoHint:Bool = true):NativeFontData
 	{
 		#if (lime_cffi && !macro)
 		if (src == null) throw "Uninitialized font handle.";
-		var data:Dynamic = NativeCFFI.lime_font_outline_decompose(src, 1024 * 20);
+		var data:Dynamic = NativeCFFI.lime_font_outline_decompose(src, 1024 * 20, forceAutoHint);
 		#if hl
 		if (data != null)
 		{

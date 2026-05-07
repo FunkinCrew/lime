@@ -1502,11 +1502,11 @@ namespace lime {
 	}
 
 
-	value lime_font_outline_decompose (value fontHandle, int size) {
+	value lime_font_outline_decompose (value fontHandle, int size, bool forceAutoHint) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
-		return (value)font->Decompose (true, size);
+		return (value)font->Decompose (true, size, forceAutoHint);
 		#else
 		return alloc_null ();
 		#endif
@@ -1514,11 +1514,11 @@ namespace lime {
 	}
 
 
-	HL_PRIM vdynamic* HL_NAME(hl_font_outline_decompose) (HL_CFFIPointer* fontHandle, int size) {
+	HL_PRIM vdynamic* HL_NAME(hl_font_outline_decompose) (HL_CFFIPointer* fontHandle, int size, bool forceAutoHint) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
-		return (vdynamic*)font->Decompose (false, size);
+		return (vdynamic*)font->Decompose (false, size, forceAutoHint);
 		#else
 		return 0;
 		#endif
@@ -4432,7 +4432,7 @@ namespace lime {
 	DEFINE_PRIME1 (lime_font_get_units_per_em);
 	DEFINE_PRIME1 (lime_font_load_bytes);
 	DEFINE_PRIME1 (lime_font_load_file);
-	DEFINE_PRIME2 (lime_font_outline_decompose);
+	DEFINE_PRIME3 (lime_font_outline_decompose);
 	DEFINE_PRIME3 (lime_font_render_glyph);
 	DEFINE_PRIME3 (lime_font_render_glyphs);
 	DEFINE_PRIME3v (lime_font_set_size);
@@ -4639,7 +4639,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_font_get_units_per_em, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_bytes, _TBYTES);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_file, _STRING);
-	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32);
+	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32 _BOOL);
 	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_font_set_size, _TCFFIPOINTER _I32 _I32);

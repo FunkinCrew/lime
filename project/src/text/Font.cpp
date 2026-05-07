@@ -378,11 +378,11 @@ namespace lime {
 	}
 
 
-	void* Font::Decompose (bool useCFFIValue, int em) {
+	void* Font::Decompose (bool useCFFIValue, int size, bool forceAutoHint) {
 
 		int result, i, j;
 
-		FT_Set_Char_Size ((FT_Face)face, em, em, 72, 72);
+		FT_Set_Char_Size ((FT_Face)face, size, size, 72, 72);
 		FT_Set_Transform ((FT_Face)face, 0, NULL);
 
 		std::vector<glyph*> glyphs;
@@ -403,9 +403,21 @@ namespace lime {
 
 		char_code = FT_Get_First_Char ((FT_Face)face, &glyph_index);
 
+		int loadFlags = FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT;
+
+		if (forceAutoHint) {
+
+			loadFlags |= FT_LOAD_FORCE_AUTOHINT;
+
+		} else {
+
+			loadFlags |= FT_LOAD_NO_HINTING;
+
+		}
+
 		while (glyph_index != 0) {
 
-			if (FT_Load_Glyph ((FT_Face)face, glyph_index, FT_LOAD_NO_BITMAP | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0) {
+			if (FT_Load_Glyph ((FT_Face)face, glyph_index, loadFlags) == 0) {
 
 				glyph *g = new glyph;
 				result = FT_Outline_Decompose (&((FT_Face)face)->glyph->outline, &ofn, g);
