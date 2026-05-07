@@ -442,7 +442,10 @@ class Font
 
 		__setSize(fontSize, 96);
 
-		var bytes = Bytes.alloc(0);
+		// Allocate an estimated buffer size - adjust if necessary
+		var bytes:Bytes = Bytes.alloc(0); // Allocate some reasonable initial size
+
+		// Call native function to render glyphs and get byte data
 		bytes = NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes);
 
 		if (bytes != null && bytes.length > 0)

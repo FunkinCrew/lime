@@ -870,8 +870,7 @@ namespace lime {
 
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 
-		if (os2 && os2->version != 0xFFFFU)
-		{
+		if (os2 && os2->version != 0xFFFFU) {
 
 			return os2->yStrikeoutPosition;
 
@@ -886,8 +885,7 @@ namespace lime {
 		TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
 
 
-		if (os2 && os2->version != 0xFFFFU)
-		{
+		if (os2 && os2->version != 0xFFFFU) {
 
 			return os2->yStrikeoutSize;
 
@@ -904,27 +902,31 @@ namespace lime {
 	}
 
 
-	int Font::RenderGlyph(int index, Bytes *bytes, int offset)
-	{
-		if (FT_Load_Glyph((FT_Face)face, index, FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0)
-		{
-			if (FT_Render_Glyph(((FT_Face)face)->glyph, FT_RENDER_MODE_LCD) == 0)
-			{
+	int Font::RenderGlyph(int index, Bytes *bytes, int offset) {
+
+		if (FT_Load_Glyph((FT_Face)face, index, FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0) {
+
+			if (FT_Render_Glyph(((FT_Face)face)->glyph, FT_RENDER_MODE_LCD) == 0) {
+
 				FT_Bitmap bitmap = ((FT_Face)face)->glyph->bitmap;
 
 				int height = bitmap.rows;
 				int width = bitmap.width / 3; //Due to each pixel now has 3 components (R, G, B)
 				int pitch = bitmap.pitch;
 
-				if (width == 0 || height == 0)
+				if (width == 0 || height == 0) {
+
 					return 0;
+
+				}
 
 				//We calculate the size needed for the glyph image, including metadata and 24-bit RGB color data
 				uint32_t size = sizeof(GlyphImage) + (width * height * 4);
 
-				if (bytes->length < size + offset)
-				{
+				if (bytes->length < size + offset) {
+
 					bytes->Resize(size + offset);
+
 				}
 
 				GlyphImage *data = (GlyphImage *)(bytes->b + offset);
@@ -941,10 +943,10 @@ namespace lime {
 				unsigned char *position = &data->data;
 
 				//Copy the bitmap data row by row, copying each RGB triplet and adding padding for 32-bit alignment
-				for (int i = 0; i < height; i++)
-				{
-					for (int j = 0; j < width; j++)
-					{
+				for (int i = 0; i < height; i++) {
+
+					for (int j = 0; j < width; j++) {
+
 						unsigned char r = bitmap.buffer[i * pitch + j * 3 + 0];
 						unsigned char g = bitmap.buffer[i * pitch + j * 3 + 1];
 						unsigned char b = bitmap.buffer[i * pitch + j * 3 + 2];
@@ -958,14 +960,19 @@ namespace lime {
 						position[(i * width + j) * 4 + 2] = b;
 						//Alpha
 						position[(i * width + j) * 4 + 3] = a;
+
 					}
+
 				}
 
 				return size;
+
 			}
+
 		}
 
 		return 0;
+
 	}
 
 
