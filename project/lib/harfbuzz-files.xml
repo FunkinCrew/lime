@@ -55,7 +55,10 @@
 			<section unless="isMsvc">
 
 				<compilerflag value="-Wno-nontrivial-memcall" unless="android || mingw || apple" />
+
 				<compilerflag value="-Wno-format" if="apple" />
+
+				<compilerflag value="-Wa,-mbig-obj" if="mingw" />
 
 			</section>
 
