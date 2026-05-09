@@ -698,7 +698,17 @@ class HXProject extends Script
 				defines.set("console", "1");
 		}
 
-		if (targetFlags.exists("hl"))
+		if (platformType == DESKTOP && target != System.hostPlatform)
+		{
+			if (target == Platform.WINDOWS && (targetFlags.exists("cpp") || targetFlags.exists("mingw")))
+			{
+				defines.set("targetType", "cpp");
+				defines.set("native", "1");
+				defines.set("cpp", "1");
+				defines.set("mingw", "1");
+			}
+		}
+		else if (targetFlags.exists("hl"))
 		{
 			defines.set("targetType", "hl");
 			defines.set("native", "1");
@@ -708,8 +718,7 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
-		else if (targetFlags.exists("cpp")
-			|| ((platformType != PlatformType.WEB) && !targetFlags.exists("html5")))
+		else if (targetFlags.exists("cpp"))
 		{
 			defines.set("targetType", "cpp");
 			defines.set("native", "1");
