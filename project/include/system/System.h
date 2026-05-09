@@ -39,13 +39,11 @@ namespace lime {
 			static void GCTryEnterBlocking ();
 			static void GCTryExitBlocking ();
 
-			#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
 			static char* GetDeviceModel ();
 			static char* GetDeviceVendor ();
 			static char* GetPlatformLabel ();
 			static char* GetPlatformName ();
 			static char* GetPlatformVersion ();
-			#endif
 
 			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
 
@@ -68,7 +66,7 @@ namespace lime {
 			static bool GetAllowScreenTimeout ();
 			static bool SetAllowScreenTimeout (bool allow);
 
-			#if defined(HX_WINDOWS)
+			#ifdef HX_WINDOWS
 			static int GetWindowsConsoleMode (int handleType);
 			static bool SetWindowsConsoleMode (int handleType, int mode);
 			#endif

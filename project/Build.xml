@@ -263,8 +263,6 @@
 		<file name="src/system/Locale.mm" if="apple" />
 		<file name="src/system/Mutex.cpp" />
 		<file name="src/system/System.cpp" />
-		<file name="src/system/windows/System.cpp" if="windows" />
-		<file name="src/system/ios/System.mm" if="iphone || appletv" />
 		<file name="src/system/ValuePointer.cpp" />
 		<file name="src/ui/Cursor.cpp" />
 		<file name="src/ui/FileDialog.cpp" />
