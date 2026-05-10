@@ -93,7 +93,7 @@ class NativeApplication
 
 		AudioManager.init();
 
-		#if (ios || android)
+		#if (!macro && lime_cffi && (ios || android))
 		Sensor.registerSensor(SensorType.ACCELEROMETER, NativeCFFI.lime_system_get_first_accelerometer_sensor_id());
 
 		Sensor.registerSensor(SensorType.GYROSCOPE, NativeCFFI.lime_system_get_first_gyroscope_sensor_id());
