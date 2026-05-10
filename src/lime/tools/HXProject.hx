@@ -718,7 +718,7 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
-		else if (targetFlags.exists("cpp"))
+		else if (targetFlags.exists("cpp") || ((platformType != PlatformType.WEB) && !targetFlags.exists("html5")))
 		{
 			defines.set("targetType", "cpp");
 			defines.set("native", "1");
