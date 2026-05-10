@@ -1192,6 +1192,24 @@ class PlatformSetup
 		getDefineValue("MINGW_ROOT", "Absolute path to MinGW");
 
 		Log.println("");
+
+		Log.println("\x1b[1mWINE_PATH\x1b[0m");
+		Log.println("Absolute path to the Wine executable.");
+		Log.println("This is used to run the Windows application for testing.");
+		Log.println("");
+
+		getDefineValue("WINE_PATH", "Absolute path to Wine");
+
+		Log.println("");
+
+		Log.println("\x1b[1mCROSSOVER_BOTTLE\x1b[0m");
+		Log.println("Name or Absolute Path of the CrossOver bottle used to run the Windows application for testing.");
+		Log.println("This can be left empty if you are not using CrossOver.");
+		Log.println("");
+
+		getDefineValue("CROSSOVER_BOTTLE", "CrossOver bottle name");
+
+		Log.println("");
 		Log.println("Setup complete.");
 	}
 

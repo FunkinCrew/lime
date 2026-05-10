@@ -480,6 +480,26 @@ class WindowsPlatform extends PlatformTarget
 			arguments = arguments.concat(["-livereload"]);
 			System.runCommand(applicationDirectory, Path.withoutDirectory(executablePath), arguments);
 		}
+		else if (project.targetFlags.exists("mingw"))
+		{
+			arguments = arguments.concat(["-livereload"]);
+
+			var winePath = project.defines.get("WINE_PATH");
+
+			if (winePath == null || winePath.length == 0)
+			{
+				return;
+			}
+
+			var crossoverBottle = project.defines.get("CROSSOVER_BOTTLE");
+
+			if (crossoverBottle != null && crossoverBottle.length > 0)
+			{
+				Sys.putEnv('CX_BOTTLE', crossoverBottle);
+			}
+
+			System.runCommand(applicationDirectory, winePath, [Path.withoutDirectory(executablePath)].concat(arguments));
+		}
 	}
 
 	public override function update():Void
