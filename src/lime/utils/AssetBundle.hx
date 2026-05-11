@@ -28,18 +28,19 @@ class AssetBundle
 
 	public static function fromBytes(bytes:Bytes):AssetBundle
 	{
-		var input = new BytesInput(bytes);
-		return __extractBundle(input);
+		return __extractBundle(new BytesInput(bytes));
 	}
 
 	public static function fromFile(path:String):AssetBundle
 	{
-		#if sys
-		var input = File.read(path);
-		return __extractBundle(input);
-		#else
-		return null;
-		#end
+		var bytes = LimeBytes.fromFile(path);
+
+		if (bytes == null)
+		{
+			return null;
+		}
+
+		return __extractBundle(new BytesInput(bytes));
 	}
 
 	public static function loadFromBytes(bytes:Bytes):Future<AssetBundle>
