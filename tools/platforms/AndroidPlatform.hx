@@ -467,6 +467,7 @@ class AndroidPlatform extends PlatformTarget
 		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application", {
 			"android:label": project.meta.title,
 			"android:allowBackup": "true",
+			"android:allowAudioPlaybackCapture": "true",
 			"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
 			"android:enableOnBackInvokedCallback": "false",
 			"android:hardwareAccelerated": "true",
