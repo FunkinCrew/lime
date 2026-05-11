@@ -154,9 +154,7 @@
 				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 				<compilerflag value="-DLIME_VORBIS" />
 
-				<file name="src/bindings/vorbis/VorbisBindings.cpp" />
-				<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
-				<file name="src/media/containers/OGG.cpp" />
+				<file name="src/media/decoders/VorbisDecoder.cpp" />
 
 			</section>
 
@@ -253,7 +251,7 @@
 		<file name="src/math/Rectangle.cpp" />
 		<file name="src/math/Vector2.cpp" />
 		<file name="src/media/AudioBuffer.cpp" />
-		<file name="src/media/containers/WAV.cpp" />
+		<file name="src/media/decoders/WaveDecoder.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
 		<file name="src/system/Clipboard.cpp" />
