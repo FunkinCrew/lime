@@ -625,14 +625,14 @@ class NativeApplication
 				case WINDOW_ACTIVATE:
 					advanceTimer();
 					window.onActivate.dispatch();
-					AudioManager.resume();
+					AudioManager.onActivate();
 
 				case WINDOW_CLOSE:
 					window.close();
 
 				case WINDOW_DEACTIVATE:
 					window.onDeactivate.dispatch();
-					AudioManager.suspend();
+					AudioManager.onDeactivate();
 					pauseTimer = System.getTimer();
 
 				case WINDOW_ENTER:
