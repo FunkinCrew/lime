@@ -6,6 +6,11 @@
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bimg/include" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/msvc" if="isMsvc" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/mingw" if="mingw" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/osx" if="macos" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/linux" if="linux" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include/compat/ios" if="iphone" />
 
 			<section>
 
@@ -31,7 +36,10 @@
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows || linux" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/wsl" if="linux" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/wsl/stubs" if="linux" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/d3d4linux" if="linux" />
 
 				</section>
 
@@ -153,7 +161,10 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows || linux" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/wsl" if="linux" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/wsl/stubs" if="linux" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/d3d4linux" if="linux" />
 
 		</section>
 

@@ -71,7 +71,7 @@
 #include <bx/hash.h>
 #include <bx/file.h>
 #include "../../bgfx/src/vertexlayout.h"
-
+#include <cstring>
 #include <string.h>
 #include <algorithm>
 #include <string>

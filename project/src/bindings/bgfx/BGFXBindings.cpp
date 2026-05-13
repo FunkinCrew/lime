@@ -1093,11 +1093,11 @@ namespace lime {
 
 		if (SDL_strcmp (driver, "wayland") == 0) {
 
-			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
+			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, NULL);
 
 		} else if (SDL_strcmp (driver, "x11") == 0) {
 
-			return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
+			return (void*)(uintptr_t) SDL_GetNumberProperty (props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0);
 
 		}
 
