@@ -217,6 +217,7 @@ namespace lime {
 
 		} else {
 
+			((SDLApplication*)currentApplication)->RegisterWindow (this);
 			return true;
 
 		}

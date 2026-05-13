@@ -95,6 +95,7 @@
 			<dependency name="GameController.framework" />
 			<dependency name="MediaPlayer.framework" />
 			<dependency name="Metal.framework" />
+			<dependency name="MetalKit.framework" />
 			<dependency name="OpenGLES.framework" />
 			<dependency name="QuartzCore.framework" />
 			<dependency name="Security.framework" />

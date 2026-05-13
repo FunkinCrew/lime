@@ -13,11 +13,6 @@
 
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/Public" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
@@ -26,6 +21,16 @@
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include/generated" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-headers/include" />
+
+				</section>
+
+				<section unless="apple">
+
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
 
 				</section>
@@ -113,11 +118,12 @@
 
 		<section>
 
-			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_glsl.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_hlsl.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_metal.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_spirv.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_glsl.cpp" unless="apple" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_hlsl.cpp" unless="apple" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_spirv.cpp" unless="apple" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_metal.cpp" if="apple" />
 
 		</section>
 
@@ -129,11 +135,6 @@
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/Public" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
@@ -142,21 +143,39 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include/generated" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-headers/include" />
+
+		</section>
+
+		<section unless="apple">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
 
 		</section>
 
 		<section>
 
-			<compilerflag value="/wd4291" />
-			<compilerflag value="/wd4005" />
+			<section if="isMsvc">
 
-			<compilerflag value="/Ob2" />
-			<compilerflag value="/EHsc" />
+				<compilerflag value="/wd4291" />
+				<compilerflag value="/wd4005" />
 
-			<compilerflag value="-DENABLE_HLSL" />
-			<compilerflag value="-DENABLE_OPT=1" />
-			<compilerflag value="-DSHADERC_CONFIG_HAS_GLSL_OPTIMIZER=1" />
+				<compilerflag value="/Ob2" />
+				<compilerflag value="/EHsc" />
+
+			</section>
+
+			<section>
+
+				<compilerflag value="-DENABLE_HLSL" />
+				<compilerflag value="-DENABLE_OPT=1" />
+				<compilerflag value="-DSHADERC_CONFIG_HAS_GLSL_OPTIMIZER=1" unless="apple" />
+
+			</section>
 
 		</section>
 
@@ -171,7 +190,7 @@
 
 		</section>
 
-		<section>
+		<section unless="apple">
 
 			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/glcpp-lex.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/glcpp-parse.c" />

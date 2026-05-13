@@ -8,6 +8,10 @@
 #include <map>
 #include <vector>
 
+#if defined(IPHONE)
+#include <SDL3/SDL_metal.h>
+#endif
+
 namespace lime {
 
 	#ifdef HXCPP_DEBUG
@@ -1081,7 +1085,7 @@ namespace lime {
 
 		#elif defined (IPHONE)
 
-		return SDL_GetPointerProperty (props, SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER, NULL);
+		return SDL_Metal_GetLayer(SDL_Metal_CreateView(sdlWindow));
 
 		#elif defined (HX_LINUX)
 

@@ -13,7 +13,7 @@
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
 	<set name="HXCPP_IOS_MIN_VERSION" value="11.0" if="iphone" />
-	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.13" if="mac" />
+	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.15" if="mac" />
 
 	<set name="LIME_CAIRO" value="1" />
 	<set name="LIME_CURL" value="1" />
@@ -59,10 +59,14 @@
 
 		<section if="LIME_BGFX">
 
-			<section>
+			<section if="isMsvc">
 
 				<compilerflag value="/Zc:__cplusplus" />
 				<compilerflag value="/Zc:preprocessor" />
+
+			</section>
+
+			<section>
 
 				<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
 				<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
@@ -514,7 +518,10 @@
 				<vflag name="-framework" value="Foundation" />
 				<vflag name="-framework" value="GameController" />
 				<vflag name="-framework" value="IOKit" />
+				<vflag name="-framework" value="Metal" />
+				<vflag name="-framework" value="MetalKit" />
 				<vflag name="-framework" value="OpenGL" />
+				<vflag name="-framework" value="QuartzCore" />
 				<vflag name="-framework" value="Security" />
 				<vflag name="-framework" value="SystemConfiguration" />
 				<vflag name="-framework" value="UniformTypeIdentifiers" />
