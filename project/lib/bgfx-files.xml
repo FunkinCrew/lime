@@ -11,12 +11,27 @@
 
 				<section>
 
-					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
 					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/Public" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include/generated" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-headers/include" />
+					<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
 
 				</section>
 
 				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/bgfx/" />
 
 			</section>
 
@@ -59,6 +74,8 @@
 			<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
 			<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
 
+			<compilerflag value="-DSHADERC_CONFIG_HAS_GLSLANG" />
+
 		</section>
 
 		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/bgfx.cpp" />
@@ -93,6 +110,459 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/shader.cpp" />
 		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/topology.cpp" />
 		<file name="${NATIVE_TOOLKIT_PATH}/bgfx/src/vertexlayout.cpp" />
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_glsl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_hlsl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_metal.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc_spirv.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/custom/bgfx/shaderc/shaderc.cpp" />
+
+		</section>
+
+	</files>
+
+	<files id="native-toolkit-bgfx-3rdparty">
+
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/Public" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/khronos" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/include/generated" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-headers/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/directx-headers/include/directx" if="windows" />
+
+		</section>
+
+		<section>
+
+			<compilerflag value="/wd4291" />
+			<compilerflag value="/wd4005" />
+
+			<compilerflag value="/Ob2" />
+			<compilerflag value="/EHsc" />
+
+			<compilerflag value="-DENABLE_HLSL" />
+			<compilerflag value="-DENABLE_OPT=1" />
+			<compilerflag value="-DSHADERC_CONFIG_HAS_GLSL_OPTIMIZER=1" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp1.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp2.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp3.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp4.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp5.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/fcpp/cpp6.c" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/glcpp-lex.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/glcpp-parse.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/pp.c" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/strtod.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa/main/imports.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa/program/prog_hash_table.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/mesa/program/symbol_table.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util/hash_table.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/util/ralloc.c" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ast_array_index.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ast_expr.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ast_function.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ast_to_hir.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ast_type.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/builtin_functions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/builtin_types.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/builtin_variables.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_lexer.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_optimizer.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_parser.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_parser_extras.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_symbol_table.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/glsl_types.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/hir_field_selection.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_basic_block.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_builder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_clone.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_constant_expression.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_equals.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_expression_flattening.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_function.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_function_can_inline.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_function_detect_recursion.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_hierarchical_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_hv_accept.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_import_prototypes.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_print_glsl_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_print_metal_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_print_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_rvalue_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_stats.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_unused_structs.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_validate.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_variable_refcount.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_atomics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_functions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_interface_blocks.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_uniform_block_active_visitor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_uniform_blocks.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_uniform_initializers.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_uniforms.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/link_varyings.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/linker.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/loop_analysis.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/loop_controls.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/loop_unroll.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_clip_distance.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_discard.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_discard_flow.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_if_to_cond_assign.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_instructions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_jumps.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_mat_op_to_vec.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_named_interface_blocks.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_noise.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_offset_array.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_output_reads.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_packed_varyings.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_packing_builtins.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_ubo_reference.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_variable_index_to_cond_assign.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_vec_index_to_cond_assign.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_vector.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_vector_insert.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_vec_index_to_swizzle.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/lower_vertex_id.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_algebraic.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_array_splitting.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_constant_folding.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_constant_propagation.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_constant_variable.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_copy_propagation.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_copy_propagation_elements.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_cse.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_dead_builtin_variables.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_dead_builtin_varyings.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_dead_code.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_dead_code_local.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_dead_functions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_flatten_nested_if_blocks.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_flip_matrices.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_function_inlining.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_if_simplification.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_minmax.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_noop_swizzle.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_rebalance_tree.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_redundant_jumps.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_structure_splitting.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_swizzle_swizzle.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_tree_grafting.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/opt_vectorize.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/s_expression.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glsl-optimizer/src/glsl/standalone_scaffolding.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/GenericCodeGen/CodeGen.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/GenericCodeGen/Link.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslAttributes.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslGrammar.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslOpMap.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslParseables.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslParseHelper.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslScanContext.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/HLSL/hlslTokenStream.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/attribute.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/Constant.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/glslang_tab.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/InfoSink.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/Initialize.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/Intermediate.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/intermOut.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/IntermTraverse.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/iomapper.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/limits.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/linkValidate.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/parseConst.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/ParseContextBase.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/ParseHelper.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/PoolAlloc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/propagateNoContraction.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/reflection.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/RemoveTree.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/Scan.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/ShaderLang.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/SpirvIntrinsics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/SymbolTable.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/Versions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/Pp.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/PpAtom.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/PpContext.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/PpScanner.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/PpTokens.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/ResourceLimits/ResourceLimits.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/OSDependent/Windows/ossource.cpp" if="windows" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/glslang/OSDependent/Unix/ossource.cpp" unless="windows" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/disassemble.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/doc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/GlslangToSpv.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/InReadableOrder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/Logger.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/SpvBuilder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/SpvPostProcess.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/glslang/SPIRV/SpvTools.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_cfg.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_cross.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_cross_parsed_ir.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_cross_util.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_glsl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_hlsl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_msl.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_parser.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-cross/spirv_reflect.cpp" />
+
+		</section>
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/assembly_grammar.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/binary.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/diagnostic.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/disassemble.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/extensions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/ext_inst.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/libspirv.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/name_mapper.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opcode.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/operand.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/parsed_operand.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/print.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/software_version.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_endian.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_fuzzer_options.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_optimizer_options.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_reducer_options.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_target_env.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/spirv_validator_options.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/table.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/table2.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/text.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/text_handler.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/to_string.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/aggressive_dead_code_elim_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/amd_ext_to_khr.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/analyze_live_input_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/basic_block.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/block_merge_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/block_merge_util.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/build_module.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/canonicalize_ids_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/ccp_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/cfg.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/cfg_cleanup_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/code_sink.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/combine_access_chains.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/compact_ids_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/composite.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/const_folding_rules.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/constants.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/control_dependence.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/convert_to_half_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/convert_to_sampled_image_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/copy_prop_arrays.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dataflow.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dead_branch_elim_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dead_insert_elim_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dead_variable_elimination.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/debug_info_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/decoration_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/def_use_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/desc_sroa.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/desc_sroa_util.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dominator_analysis.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/dominator_tree.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_constant_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_functions_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_functions_util.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_io_components_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_members_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/eliminate_dead_output_stores_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/feature_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/fix_func_call_arguments.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/fix_storage_class.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/flatten_decoration_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/fold.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/fold_spec_constant_op_and_composite_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/folding_rules.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/freeze_spec_constant_value_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/function.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/graph.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/graphics_robust_access_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/if_conversion.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/inline_exhaustive_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/inline_opaque_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/inline_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/instruction.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/instruction_list.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/interface_var_sroa.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/interp_fixup_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/invocation_interlock_placement_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/ir_context.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/ir_loader.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/legalize_multidim_array_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/licm_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/liveness.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/local_access_chain_convert_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/local_redundancy_elimination.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/local_single_block_elim_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/local_single_store_elim_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_dependence.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_dependence_helpers.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_descriptor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_fission.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_fusion.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_fusion_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_peeling.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_unroller.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_unswitch_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/loop_utils.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/mem_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/merge_return_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/modify_maximal_reconvergence.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/module.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/opextinst_forward_ref_fixup_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/optimizer.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/pass_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/pch_source_opt.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/private_to_local_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/propagator.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/reduce_load_size.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/redundancy_elimination.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/register_pressure.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/relax_float_ops_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/remove_dontinline_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/remove_duplicates_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/remove_unused_interface_variables_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/replace_desc_array_access_using_var_index.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/replace_invalid_opc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/resolve_binding_conflicts_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/scalar_analysis.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/scalar_analysis_simplification.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/scalar_replacement_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/set_spec_constant_default_value_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/simplification_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/split_combined_image_sampler_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/spread_volatile_semantics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/ssa_rewrite_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/strength_reduction_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/strip_debug_info_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/strip_nonsemantic_info_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/struct_cfg_analysis.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/struct_packing_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/switch_descriptorset_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/trim_capabilities_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/type_manager.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/types.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/unify_const_pass.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/upgrade_memory_model.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/value_number_table.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/vector_dce.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/workaround1209.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/opt/wrap_opkill.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/basic_block.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/construct.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/function.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/instruction.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_adjacency.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_annotation.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_arithmetics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_atomics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_barriers.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_bitwise.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_builtins.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_capability.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_cfg.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_composites.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_constants.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_conversion.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_debug.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_decorations.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_derivatives.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_dot_product.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_execution_limitations.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_extensions.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_function.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_graph.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_group.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_id.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_image.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_instruction.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_interfaces.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_invalid_type.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_layout.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_literals.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_logical_pointers.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_logicals.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_memory.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_memory_semantics.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_mesh_shading.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_misc.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_mode_setting.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_non_uniform.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_pipe.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_primitives.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_ray_query.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_ray_tracing.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_ray_tracing_reorder.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_scopes.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_small_type_uses.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_tensor.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_tensor_layout.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validate_type.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/val/validation_state.cpp" />
+
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/util/bit_vector.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/util/parse_number.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/util/string_utils.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bgfx/3rdparty/spirv-tools/source/util/timer.cpp" />
+
+		</section>
 
 	</files>
 

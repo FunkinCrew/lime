@@ -5,11 +5,5 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.system.CFFIPointer;
 
 @:access(lime._internal.backend.native.NativeCFFI)
-abstract BGFXShader(CFFIPointer) from CFFIPointer to CFFIPointer
-{
-	public function new(handle)
-	{
-		this = handle;
-	}
-}
+abstract BGFXShader(CFFIPointer) from CFFIPointer to CFFIPointer {}
 #end

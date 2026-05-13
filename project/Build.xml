@@ -59,7 +59,19 @@
 
 		<section if="LIME_BGFX">
 
+			<section>
+
+				<compilerflag value="/Zc:__cplusplus" />
+				<compilerflag value="/Zc:preprocessor" />
+
+				<compilerflag value="-DBX_CONFIG_DEBUG=1" if="debug" />
+				<compilerflag value="-DBX_CONFIG_DEBUG=0" unless="debug" />
+
+			</section>
+
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bgfx/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/bgfx/" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/bx/include" />
 			<compilerflag value="-DLIME_BGFX" />
 
 			<file name="src/bindings/bgfx/BGFXBindings.cpp" />
@@ -362,6 +374,7 @@
 			</section>
 
 			<files id="native-toolkit-bgfx" />
+			<files id="native-toolkit-bgfx-3rdparty" />
 
 		</section>
 

@@ -5,11 +5,5 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.system.CFFIPointer;
 
 @:access(lime._internal.backend.native.NativeCFFI)
-abstract BGFXProgram(CFFIPointer) from CFFIPointer to CFFIPointer
-{
-	public function new(handle)
-	{
-		this = handle;
-	}
-}
+abstract BGFXProgram(CFFIPointer) from CFFIPointer to CFFIPointer {}
 #end

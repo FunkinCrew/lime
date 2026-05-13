@@ -1,6 +1,6 @@
 package lime.graphics;
 
-#if (!lime_doc_gen || lime_opengl)
+#if (!lime_doc_gen || lime_bgfx)
 #if (lime_doc_gen || (sys && lime_cffi && !doc_gen))
 import lime._internal.backend.native.NativeBGFXRenderContext;
 

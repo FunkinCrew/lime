@@ -5,5 +5,5 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.system.CFFIPointer;
 
 @:access(lime._internal.backend.native.NativeCFFI)
-abstract BGFXMemoryRef(CFFIPointer) from CFFIPointer to CFFIPointer {}
+abstract BGFXFrameBuffer(CFFIPointer) from CFFIPointer to CFFIPointer {}
 #end
