@@ -66,6 +66,10 @@ namespace lime {
 
 		SDL_SetEventFilter (HandleAppLifecycleEvent, NULL);
 
+		#if defined(HX_WINDOWS) || defined(HX_MACOS) || defined(HX_LINUX)
+		SDL_AddEventWatch (HandleEventWatcher, NULL);
+		#endif
+
 		currentApplication = this;
 
 		SDL_zero (frameTime);
@@ -785,29 +789,19 @@ namespace lime {
 	}
 
 
-	bool SDLApplication::Update () {
+	void SDLApplication::RenderFrame () {
 
-		SDL_Event event;
+		applicationEvent.type = UPDATE;
+		applicationEvent.deltaTime = std::fmax (0.0, (double)frameTime.frame / 1e6);
+		ApplicationEvent::Dispatch (&applicationEvent);
 
-		while (SDL_PollEvent (&event)) {
+		renderEvent.type = RENDER;
+		RenderEvent::Dispatch (&renderEvent);
 
-			HandleEvent (&event);
+	}
 
-			if (!active)
-				return active;
 
-		}
-
-		if (!inBackground) {
-
-			applicationEvent.type = UPDATE;
-			applicationEvent.deltaTime = std::fmax (0.0, (double)frameTime.frame / 1e6); // Use the duration of the *previous frame* for deltaTime
-			ApplicationEvent::Dispatch (&applicationEvent);
-
-			renderEvent.type = RENDER;
-			RenderEvent::Dispatch (&renderEvent);
-
-		}
+	void SDLApplication::FramePacer () {
 
 		// Measure the total duration of the current frame (update + render)
 		frameTime.current = SDL_GetTicksNS ();
@@ -826,6 +820,30 @@ namespace lime {
 			frameTime.previous = frameTime.current;
 
 		}
+
+	}
+
+
+	bool SDLApplication::Update () {
+
+		SDL_Event event;
+
+		while (SDL_PollEvent (&event)) {
+
+			HandleEvent (&event);
+
+			if (!active)
+				return active;
+
+		}
+
+		if (!inBackground) {
+
+			RenderFrame ();
+
+		}
+
+		FramePacer ();
 
 		return active;
 
@@ -873,6 +891,32 @@ namespace lime {
 		}
 
 	}
+
+
+	#if defined(HX_WINDOWS) || defined(HX_MACOS) || defined(HX_LINUX)
+	bool SDLApplication::HandleEventWatcher (void *userdata, SDL_Event *event) {
+
+		if (!inBackground) {
+
+			switch (event->type) {
+
+				case SDL_EVENT_WINDOW_EXPOSED:
+				case SDL_EVENT_WINDOW_MOVED:
+				case SDL_EVENT_WINDOW_RESIZED:
+
+					currentApplication->ProcessWindowEvent (event);
+					currentApplication->RenderFrame ();
+					currentApplication->FramePacer ();
+					return false;
+
+			}
+
+		}
+
+		return true;
+
+	}
+	#endif
 
 
 	#ifdef IPHONE

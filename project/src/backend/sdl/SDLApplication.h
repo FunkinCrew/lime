@@ -61,7 +61,13 @@ namespace lime {
 			void ProcessTouchEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);
 
+			void RenderFrame ();
+			void FramePacer ();
+
 			static bool HandleAppLifecycleEvent (void* userdata, SDL_Event* event);
+			#if defined(HX_WINDOWS) || defined(HX_MACOS) || defined(HX_LINUX)
+			static bool HandleEventWatcher (void* userdata, SDL_Event* event);
+			#endif
 			#ifdef IPHONE
 			static void UpdateFrame (void* userdata);
 			#endif
