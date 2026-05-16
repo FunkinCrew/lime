@@ -61,7 +61,14 @@ namespace lime {
 			void ProcessTouchEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);
 
+			void RenderFrame ();
+
 			static bool HandleAppLifecycleEvent (void* userdata, SDL_Event* event);
+
+			#ifdef LIME_FIX_FREEZE_WINDOW
+			static bool SDLCALL ExposeEventWatcher (void* userdata, SDL_Event* event);
+			#endif
+
 			#ifdef IPHONE
 			static void UpdateFrame (void* userdata);
 			#endif

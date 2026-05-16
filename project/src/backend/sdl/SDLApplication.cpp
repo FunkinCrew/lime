@@ -299,6 +299,12 @@ namespace lime {
 
 		active = true;
 
+		#ifdef LIME_FIX_FREEZE_WINDOW
+
+		SDL_AddEventWatch(ExposeEventWatcher, NULL);
+
+		#endif
+
 	}
 
 
@@ -778,12 +784,55 @@ namespace lime {
 	}
 
 
+	#ifdef LIME_FIX_FREEZE_WINDOW
+
+	bool SDLCALL SDLApplication::ExposeEventWatcher (void *userdata, SDL_Event *event) {
+
+		if (!inBackground) {
+
+			switch (event->type) {
+
+				case SDL_EVENT_WINDOW_EXPOSED:
+				case SDL_EVENT_WINDOW_MOVED:
+				case SDL_EVENT_WINDOW_RESIZED:
+
+					currentApplication->ProcessWindowEvent (event);
+					currentApplication->RenderFrame ();
+
+					// Update frame timing so deltaTime stays accurate for the next frame, i hope
+					currentApplication->frameTime.current = SDL_GetTicksNS ();
+					currentApplication->frameTime.frame = currentApplication->frameTime.current - currentApplication->frameTime.previous;
+					currentApplication->frameTime.previous = currentApplication->frameTime.current;
+
+					return false;
+
+			}
+
+		}
+
+		return true;
+
+	}
+
+	#endif
+
+
 	void SDLApplication::SetFrameRate (double frameRate) {
 
 		frameTime.target = frameRate < 1 ? 0 : (Uint64) std::llround (1e9 / frameRate);
 
 	}
 
+	void SDLApplication::RenderFrame () {
+
+		applicationEvent.type = UPDATE;
+		applicationEvent.deltaTime = std::fmax (0.0, (double)frameTime.frame / 1e6);
+		ApplicationEvent::Dispatch (&applicationEvent);
+
+		renderEvent.type = RENDER;
+		RenderEvent::Dispatch (&renderEvent);
+
+	}
 
 	bool SDLApplication::Update () {
 
@@ -800,12 +849,7 @@ namespace lime {
 
 		if (!inBackground) {
 
-			applicationEvent.type = UPDATE;
-			applicationEvent.deltaTime = std::fmax (0.0, (double)frameTime.frame / 1e6); // Use the duration of the *previous frame* for deltaTime
-			ApplicationEvent::Dispatch (&applicationEvent);
-
-			renderEvent.type = RENDER;
-			RenderEvent::Dispatch (&renderEvent);
+			RenderFrame ();
 
 		}
 
@@ -889,6 +933,5 @@ namespace lime {
 		return new SDLApplication ();
 
 	}
-
 
 }

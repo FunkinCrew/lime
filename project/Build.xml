@@ -32,6 +32,7 @@
 	<set name="LIME_SDL_IMAGE" value="1" if="LIME_SDL" />
 	<set name="LIME_VORBIS" value="1" />
 	<set name="LIME_ZLIB" value="1" />
+	<set name="LIME_FIX_FREEZE_WINDOW" value="1" if="LIME_SDL windows" unless="emscripten" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
@@ -196,6 +197,7 @@
 			<compilerflag value="-DLIME_SDL" />
 			<compilerflag value="-DSDL_DISABLE_ALLOCA" />
 			<compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
+			<compilerflag value="-DLIME_FIX_FREEZE_WINDOW" if="LIME_FIX_FREEZE_WINDOW" />
 
 			<file name="src/backend/sdl/SDLApplication.cpp" />
 			<file name="src/backend/sdl/SDLWindow.cpp" />
