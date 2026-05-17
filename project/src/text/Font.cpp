@@ -311,7 +311,11 @@ namespace lime {
 
 			}
 
-			size_t size = (size_t)file.GetSize ();
+			file.Seek (0, SEEK_END);
+
+			size_t size = (size_t)file.Tell ();
+
+			file.Seek (0, SEEK_SET);
 
 			unsigned char* faceMemory = (unsigned char*)malloc (size);
 			file.Read (faceMemory, size);
