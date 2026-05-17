@@ -126,4 +126,11 @@ import ::APP_MAIN::;
 		lime.system.System.exit(result);
 		#end
 	}
+
+	#if !macro
+	@:noCompletion @:dox(hide) public static function __init__()
+	{
+		var init = lime.app.Application;
+	}
+	#end
 }
