@@ -29,7 +29,8 @@
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
 #include <media/AudioBuffer.h>
-#include <media/containers/WAV.h>
+#include <media/AudioDecoder.h>
+#include <media/decoders/WaveDecoder.h>
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
@@ -50,7 +51,7 @@
 #include <utils/compress/Zlib.h>
 
 #ifdef LIME_VORBIS
-#include <media/containers/OGG.h>
+#include <media/decoders/VorbisDecoder.h>
 #endif
 
 #ifdef HX_WINDOWS
@@ -136,6 +137,22 @@ namespace lime {
 
 		Window* window = (Window*)handle->ptr;
 		delete window;
+
+	}
+
+
+	void gc_audio_decoder (value handle) {
+
+		AudioDecoder* audioDecoder = (AudioDecoder*)val_data (handle);
+		delete audioDecoder;
+
+	}
+
+
+	void hl_gc_audio_decoder (HL_CFFIPointer* handle) {
+
+		AudioDecoder* audioDecoder = (AudioDecoder*)handle->ptr;
+		delete audioDecoder;
 
 	}
 
@@ -320,105 +337,134 @@ namespace lime {
 	}
 
 
-	value lime_audio_load_bytes (value data, value buffer) {
+	AudioDecoder* lime_audio_decoder_load (Resource* resource, int codec) {
 
-		Resource resource;
+		AudioDecoder* audioDecoder;
+
+		switch (codec) {
+
+			case 0:
+
+				audioDecoder = new WaveDecoder ();
+				break;
+
+			#if LIME_VORBIS
+
+			case 1:
+
+				audioDecoder = new VorbisDecoder ();
+				break;
+
+			#endif
+
+			default:
+
+				return 0;
+
+		}
+
+		if (audioDecoder::Open (resource)) {
+
+			return audioDecoder;
+
+		}
+
+		delete audioDecoder;
+		return 0;
+
+	}
+
+
+	value lime_audio_decoder_load_bytes (value data, int codec) {
+
 		Bytes bytes;
-
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
-
 		bytes.Set (data);
-		resource = Resource (&bytes);
+		Resource resource (&bytes);
 
+		AudioDecoder* audioDecoder = lime_audio_decoder_load (&resource, codec);
 
-		if (WAV::Decode (&resource, &audioBuffer)) {
+		if (audioDecoder) {
 
-			return audioBuffer.Value (buffer);
-
-		}
-
-		#ifdef LIME_VORBIS
-		if (OGG::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
+			return CFFIPointer ((void*)(uintptr_t)audioDecoder, gc_audio_decoder);
 
 		}
-		#endif
 
 		return alloc_null ();
 
 	}
 
 
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_bytes) (Bytes* data, AudioBuffer* buffer) {
+	HL_PRIM HL_CFFIPointer* HL_NAME(hl_audio_decoder_load_bytes) (Bytes* data, int codec) {
 
-		Resource resource = Resource (data);
+		Resource resource (data);
 
-		if (WAV::Decode (&resource, buffer)) {
+		AudioDecoder* audioDecoder = lime_audio_decoder_load (&resource, codec);
 
-			return buffer;
+		if (audioDecoder) {
 
-		}
-
-		#ifdef LIME_VORBIS
-		if (OGG::Decode (&resource, buffer)) {
-
-			return buffer;
+			return HLCFFIPointer ((void*)(uintptr_t)audioDecoder, (hl_finalizer)hl_gc_audio_decoder);
 
 		}
-		#endif
 
-		return 0;
+		return NULL;
 
 	}
 
 
-	value lime_audio_load_file (value data, value buffer) {
+	value lime_audio_decoder_load_file (HxString path, int codec) {
 
-		Resource resource;
+		Resource resource (path.c_str());
 
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
+		AudioDecoder* audioDecoder = lime_audio_decoder_load (&resource, codec);
 
-		resource = Resource (val_string (data));
+		if (audioDecoder) {
 
-		if (WAV::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
+			return CFFIPointer ((void*)(uintptr_t)audioDecoder, gc_audio_decoder);
 
 		}
-
-		#ifdef LIME_VORBIS
-		if (OGG::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
-		#endif
 
 		return alloc_null ();
 
 	}
 
 
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_file) (hl_vstring* data, AudioBuffer* buffer) {
+	HL_PRIM HL_CFFIPointer* HL_NAME(hl_audio_decoder_load_file) (hl_vstring* path, int codec) {
 
-		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
+		Resource resource (path ? hl_to_utf8 ((const uchar*)path->bytes) : NULL);
 
-		if (WAV::Decode (&resource, buffer)) {
+		AudioDecoder* audioDecoder = lime_audio_decoder_load (&resource, codec);
 
-			return buffer;
+		if (audioDecoder) {
+
+			return HLCFFIPointer ((void*)(uintptr_t)audioDecoder, (hl_finalizer)hl_gc_audio_decoder);
+
+		}
+
+		return NULL;
+
+	}
+
+
+	int lime_audio_decoder_decode (value decoder, value buffer, int offset, int frames, int byteDepth) {
+
+		if (val_is_null (decoder)) {
+
+			return 0;
 
 		}
 
-		#ifdef LIME_VORBIS
-		if (OGG::Decode (&resource, buffer)) {
+		if (val_is_null (buffer)) {
 
-			return buffer;
+			return 0;
 
 		}
-		#endif
 
-		return 0;
+		Bytes bytes;
+		bytes.Set (buffer);
+
+		AudioDecoder* audioDecoder = (AudioDecoder*)(uintptr_t)val_data (decoder);
+
+		return (int)audioDecoder->Decode((char*)bytes.b + offset, frames, byteDepth);
 
 	}
 
@@ -1486,11 +1532,11 @@ namespace lime {
 	}
 
 
-	value lime_font_outline_decompose (value fontHandle, int size, bool forceAutoHint) {
+	value lime_font_outline_decompose (value fontHandle, int size) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
-		return (value)font->Decompose (true, size, forceAutoHint);
+		return (value)font->Decompose (true, size);
 		#else
 		return alloc_null ();
 		#endif
@@ -1498,11 +1544,11 @@ namespace lime {
 	}
 
 
-	HL_PRIM vdynamic* HL_NAME(hl_font_outline_decompose) (HL_CFFIPointer* fontHandle, int size, bool forceAutoHint) {
+	HL_PRIM vdynamic* HL_NAME(hl_font_outline_decompose) (HL_CFFIPointer* fontHandle, int size) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
-		return (vdynamic*)font->Decompose (false, size, forceAutoHint);
+		return (vdynamic*)font->Decompose (false, size);
 		#else
 		return 0;
 		#endif
@@ -1510,13 +1556,13 @@ namespace lime {
 	}
 
 
-	value lime_font_render_glyph (value fontHandle, int index, value data, int flags) {
+	value lime_font_render_glyph (value fontHandle, int index, value data) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		Bytes bytes (data);
 
-		if (font->RenderGlyph (index, &bytes, 0, flags)) {
+		if (font->RenderGlyph (index, &bytes)) {
 
 			return bytes.Value (data);
 
@@ -1528,12 +1574,12 @@ namespace lime {
 	}
 
 
-	HL_PRIM Bytes* HL_NAME(hl_font_render_glyph) (HL_CFFIPointer* fontHandle, int index, Bytes* data, int flags) {
+	HL_PRIM Bytes* HL_NAME(hl_font_render_glyph) (HL_CFFIPointer* fontHandle, int index, Bytes* data) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
 
-		if (font->RenderGlyph (index, data, 0, flags)) {
+		if (font->RenderGlyph (index, data)) {
 
 			return data;
 
@@ -1545,7 +1591,7 @@ namespace lime {
 	}
 
 
-	value lime_font_render_glyphs (value fontHandle, value indices, value data, int flags) {
+	value lime_font_render_glyphs (value fontHandle, value indices, value data) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
@@ -1558,7 +1604,7 @@ namespace lime {
 
 		}
 
-		if (font->RenderGlyphs (_indices.data (), _indices.size (), &bytes, flags)) {
+		if (font->RenderGlyphs (_indices.data (), _indices.size (), &bytes)) {
 
 			return bytes.Value (data);
 
@@ -1570,12 +1616,12 @@ namespace lime {
 	}
 
 
-	HL_PRIM Bytes* HL_NAME(hl_font_render_glyphs) (HL_CFFIPointer* fontHandle, hl_varray* indices, Bytes* data, int flags) {
+	HL_PRIM Bytes* HL_NAME(hl_font_render_glyphs) (HL_CFFIPointer* fontHandle, hl_varray* indices, Bytes* data) {
 
 		#ifdef LIME_FREETYPE
 		Font *font = (Font*)fontHandle->ptr;
 
-		if (font->RenderGlyphs (hl_aptr (indices, int), indices->size, data, flags)) {
+		if (font->RenderGlyphs (hl_aptr (indices, int), indices->size, data)) {
 
 			return data;
 
@@ -4378,8 +4424,8 @@ namespace lime {
 	DEFINE_PRIME1 (lime_application_quit);
 	DEFINE_PRIME2v (lime_application_set_frame_rate);
 	DEFINE_PRIME1 (lime_application_update);
-	DEFINE_PRIME2 (lime_audio_load_bytes);
-	DEFINE_PRIME2 (lime_audio_load_file);
+	DEFINE_PRIME2 (lime_audio_decoder_load_bytes);
+	DEFINE_PRIME2 (lime_audio_decoder_load_file);
 	DEFINE_PRIME3 (lime_bytes_from_data_pointer);
 	DEFINE_PRIME1 (lime_bytes_get_data_pointer);
 	DEFINE_PRIME2 (lime_bytes_get_data_pointer_offset);
@@ -4415,9 +4461,9 @@ namespace lime {
 	DEFINE_PRIME1 (lime_font_get_units_per_em);
 	DEFINE_PRIME1 (lime_font_load_bytes);
 	DEFINE_PRIME1 (lime_font_load_file);
-	DEFINE_PRIME3 (lime_font_outline_decompose);
-	DEFINE_PRIME4 (lime_font_render_glyph);
-	DEFINE_PRIME4 (lime_font_render_glyphs);
+	DEFINE_PRIME2 (lime_font_outline_decompose);
+	DEFINE_PRIME3 (lime_font_render_glyph);
+	DEFINE_PRIME3 (lime_font_render_glyphs);
 	DEFINE_PRIME3v (lime_font_set_size);
 	DEFINE_PRIME0v (lime_font_initialize_library);
 	DEFINE_PRIME0v (lime_font_shutdown_library);
@@ -4584,8 +4630,8 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_application_quit, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_application_set_frame_rate, _TCFFIPOINTER _F64);
 	DEFINE_HL_PRIM (_BOOL, hl_application_update, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_bytes, _TBYTES _TAUDIOBUFFER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_file, _STRING _TAUDIOBUFFER);
+	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_load_bytes, _TBYTES _I32);
+	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_load_file, _STRING _I32);
 	DEFINE_HL_PRIM (_TBYTES, hl_bytes_from_data_pointer, _F64 _I32 _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer, _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer_offset, _TBYTES _I32);
@@ -4621,9 +4667,9 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_font_get_units_per_em, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_bytes, _TBYTES);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_font_load_file, _STRING);
-	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32 _BOOL);
-	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES _I32);
-	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES _I32);
+	DEFINE_HL_PRIM (_DYN, hl_font_outline_decompose, _TCFFIPOINTER _I32);
+	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyph, _TCFFIPOINTER _I32 _TBYTES);
+	DEFINE_HL_PRIM (_TBYTES, hl_font_render_glyphs, _TCFFIPOINTER _ARR _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_font_set_size, _TCFFIPOINTER _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_font_initialize_library, _NO_ARG);
 	DEFINE_HL_PRIM (_VOID, hl_font_shutdown_library, _NO_ARG);
