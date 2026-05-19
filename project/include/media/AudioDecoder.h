@@ -50,6 +50,8 @@ namespace lime {
 
 			}
 
+			virtual ~AudioDecoder() = default;
+
 			virtual bool Open (Resource* resource) = 0;
 			virtual size_t Decode (void* ptr, size_t frames, int byteDepth) = 0;
 			virtual bool Rewind () = 0;

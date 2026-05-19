@@ -330,7 +330,7 @@ namespace lime {
 		Resource resource = Resource (&bytes);
 
 		#ifdef LIME_OGG
-		OggDecoder* oggDecoder = new OggDecoder();
+		AudioDecoder* oggDecoder = new OggDecoder();
 
 		if (oggDecoder->Load (&resource, &audioBuffer)) {
 
@@ -346,7 +346,7 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_OPUS
-		OpusDecoder* opusDecoder = new OpusDecoder();
+		AudioDecoder* opusDecoder = new OpusDecoder();
 
 		if (opusDecoder->Load (&resource, &audioBuffer)) {
 
@@ -371,7 +371,7 @@ namespace lime {
 		Resource resource = Resource (data);
 
 		#ifdef LIME_OGG
-		OggDecoder* oggDecoder = new OggDecoder();
+		AudioDecoder* oggDecoder = new OggDecoder();
 
 		if (oggDecoder->Load (&resource, buffer)) {
 
@@ -387,7 +387,7 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_OPUS
-		OpusDecoder* opusDecoder = new OpusDecoder();
+		AudioDecoder* opusDecoder = new OpusDecoder();
 
 		if (opusDecoder->Load (&resource, buffer)) {
 
@@ -414,7 +414,7 @@ namespace lime {
 		Resource resource = Resource (val_string (data));
 
 		#ifdef LIME_OGG
-		OggDecoder* oggDecoder = new OggDecoder();
+		AudioDecoder* oggDecoder = new OggDecoder();
 
 		if (oggDecoder->Load (&resource, &audioBuffer)) {
 
@@ -430,7 +430,7 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_OPUS
-		OpusDecoder* opusDecoder = new OpusDecoder();
+		AudioDecoder* opusDecoder = new OpusDecoder();
 
 		if (opusDecoder->Load (&resource, &audioBuffer)) {
 
@@ -455,7 +455,7 @@ namespace lime {
 		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
 
 		#ifdef LIME_OGG
-		OggDecoder* oggDecoder = new OggDecoder();
+		AudioDecoder* oggDecoder = new OggDecoder();
 
 		if (oggDecoder->Load (&resource, buffer)) {
 
@@ -471,7 +471,7 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_OPUS
-		OpusDecoder* opusDecoder = new OpusDecoder();
+		AudioDecoder* opusDecoder = new OpusDecoder();
 
 		if (opusDecoder->Load (&resource, buffer)) {
 
