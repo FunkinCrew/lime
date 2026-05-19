@@ -20,7 +20,6 @@
 	<define name="lime-openal" if="windows || linux || mac || android || ios || tvos" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
 	<define name="lime-opengles" if="mobile" />
-	<define name="lime-vorbis" if="native" />
 	<define name="lime-webgl" if="html5" />
 
 	<haxedef name="no-compilation" />

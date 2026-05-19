@@ -30,7 +30,6 @@
 	<set name="LIME_PIXMAN" value="1" />
 	<set name="LIME_SDL" value="1" />
 	<set name="LIME_SDL_IMAGE" value="1" if="LIME_SDL" />
-	<set name="LIME_VORBIS" value="1" />
 	<set name="LIME_ZLIB" value="1" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
@@ -147,18 +146,11 @@
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 			<compilerflag value="-DLIME_OGG" />
 
-			<section if="LIME_VORBIS">
-
-				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
-				<compilerflag value="-DLIME_VORBIS" />
-
-				<file name="src/bindings/vorbis/VorbisBindings.cpp" />
-				<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
-				<file name="src/media/containers/OGG.cpp" />
-
-			</section>
+			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
+			<file name="src/media/containers/OGG.cpp" />
 
 		</section>
 
@@ -330,7 +322,7 @@
 		<files id="native-toolkit-sdl" if="LIME_SDL" />
 		<files id="native-toolkit-sdl_image" if="LIME_SDL_IMAGE" />
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
-		<files id="native-toolkit-vorbis" if="LIME_VORBIS" />
+		<files id="native-toolkit-vorbis" if="LIME_OGG" />
 		<files id="native-toolkit-webm" if="LIME_WEBM" />
 		<files id="native-toolkit-zlib" if="LIME_ZLIB" />
 

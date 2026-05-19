@@ -8,7 +8,6 @@ import lime.app.Future;
 import lime.app.Promise;
 import lime.media.openal.AL;
 import lime.media.openal.ALBuffer;
-import lime.media.vorbis.VorbisFile;
 import lime.net.HTTPRequest;
 import lime.utils.Log;
 import lime.utils.UInt8Array;
@@ -74,7 +73,6 @@ class AudioBuffer
 	@:noCompletion private var __srcBuffer:#if lime_cffi ALBuffer #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
-	@:noCompletion private var __srcVorbisFile:#if lime_vorbis VorbisFile #else Dynamic #end;
 
 	#if commonjs
 	private static function __init__()
@@ -232,36 +230,6 @@ class AudioBuffer
 	}
 
 	/**
-		Creates an `AudioBuffer` from a `VorbisFile`.
-
-		@param vorbisFile The `VorbisFile` object containing the audio data.
-		@return An `AudioBuffer` instance with the decoded audio data.
-	**/
-	#if lime_vorbis
-
-	public static function fromVorbisFile(vorbisFile:VorbisFile):AudioBuffer
-	{
-		if (vorbisFile == null) return null;
-
-		var info = vorbisFile.info();
-
-		var audioBuffer = new AudioBuffer();
-		audioBuffer.channels = info.channels;
-		audioBuffer.sampleRate = info.rate;
-		audioBuffer.bitsPerSample = 16;
-		audioBuffer.dataFormat = PCM;
-		audioBuffer.__srcVorbisFile = vorbisFile;
-
-		return audioBuffer;
-	}
-	#else
-	public static function fromVorbisFile(vorbisFile:Dynamic):AudioBuffer
-	{
-		return null;
-	}
-	#end
-
-	/**
 		Asynchronously loads an `AudioBuffer` from a file.
 
 		@param path The file path to the audio data.
@@ -400,8 +368,6 @@ class AudioBuffer
 		#else
 		return __srcAudio;
 		#end
-		#elseif lime_vorbis
-		return __srcVorbisFile;
 		#else
 		return __srcCustom;
 		#end
@@ -415,8 +381,6 @@ class AudioBuffer
 		#else
 		return __srcAudio = value;
 		#end
-		#elseif lime_vorbis
-		return __srcVorbisFile = value;
 		#else
 		return __srcCustom = value;
 		#end
