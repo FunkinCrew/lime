@@ -18,13 +18,10 @@ namespace lime {
 
 			bitsPerSample = 0;
 			channels = 0;
-			// data = new ArrayBufferView ();
 			dataFormat = 0;
 			sampleRate = 0;
 
 		}
-
-		// _value = audioBuffer;
 
 	}
 

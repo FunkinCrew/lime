@@ -28,8 +28,10 @@
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
+#ifdef LIME_OGG
+#include <media/decoders/OggDecoder.h>
+#endif
 #include <media/AudioBuffer.h>
-#include <media/containers/WAV.h>
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
@@ -48,10 +50,6 @@
 #include <ui/Window.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
-
-#ifdef LIME_OGG
-#include <media/containers/OGG.h>
-#endif
 
 #ifdef HX_WINDOWS
 #include <locale>
@@ -322,25 +320,24 @@ namespace lime {
 
 	value lime_audio_load_bytes (value data, value buffer) {
 
-		Resource resource;
-		Bytes bytes;
-
 		AudioBuffer audioBuffer = AudioBuffer (buffer);
 
-		bytes.Set (data);
-		resource = Resource (&bytes);
+		Bytes bytes = Bytes (data);
 
-
-		if (WAV::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
+		Resource resource = Resource (&bytes);
 
 		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, &audioBuffer)) {
+		OggDecoder* oggDecoder = new OggDecoder();
+
+		if (oggDecoder->Load (&resource, &audioBuffer)) {
+
+			delete oggDecoder;
 
 			return audioBuffer.Value (buffer);
+
+		} else {
+
+			delete oggDecoder;
 
 		}
 		#endif
@@ -354,43 +351,45 @@ namespace lime {
 
 		Resource resource = Resource (data);
 
-		if (WAV::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-
 		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, buffer)) {
+		OggDecoder* oggDecoder = new OggDecoder();
+
+		if (oggDecoder->Load (&resource, buffer)) {
+
+			delete oggDecoder;
 
 			return buffer;
+
+		} else {
+
+			delete oggDecoder;
 
 		}
 		#endif
 
-		return 0;
+		return NULL;
 
 	}
 
 
 	value lime_audio_load_file (value data, value buffer) {
 
-		Resource resource;
-
 		AudioBuffer audioBuffer = AudioBuffer (buffer);
 
-		resource = Resource (val_string (data));
-
-		if (WAV::Decode (&resource, &audioBuffer)) {
-
-			return audioBuffer.Value (buffer);
-
-		}
+		Resource resource = Resource (val_string (data));
 
 		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, &audioBuffer)) {
+		OggDecoder* oggDecoder = new OggDecoder();
+
+		if (oggDecoder->Load (&resource, &audioBuffer)) {
+
+			delete oggDecoder;
 
 			return audioBuffer.Value (buffer);
+
+		} else {
+
+			delete oggDecoder;
 
 		}
 		#endif
@@ -404,16 +403,18 @@ namespace lime {
 
 		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
 
-		if (WAV::Decode (&resource, buffer)) {
-
-			return buffer;
-
-		}
-
 		#ifdef LIME_OGG
-		if (OGG::Decode (&resource, buffer)) {
+		OggDecoder* oggDecoder = new OggDecoder();
+
+		if (oggDecoder->Load (&resource, buffer)) {
+
+			delete oggDecoder;
 
 			return buffer;
+
+		} else {
+
+			delete oggDecoder;
 
 		}
 		#endif

@@ -149,8 +149,7 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 			<compilerflag value="-DLIME_OGG" />
 
-			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
-			<file name="src/media/containers/OGG.cpp" />
+			<file name="src/media/decoders/OggDecoder.cpp" />
 
 		</section>
 
@@ -245,7 +244,6 @@
 		<file name="src/math/Rectangle.cpp" />
 		<file name="src/math/Vector2.cpp" />
 		<file name="src/media/AudioBuffer.cpp" />
-		<file name="src/media/containers/WAV.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
 		<file name="src/system/Clipboard.cpp" />
@@ -315,6 +313,7 @@
 		<files id="native-toolkit-harfbuzz" if="LIME_HARFBUZZ" />
 		<files id="native-toolkit-lzma" if="LIME_LZMA" />
 		<files id="native-toolkit-mbedtls" if="LIME_MBEDTLS" unless="static_link" />
+		<files id="native-toolkit-vorbis" if="LIME_OGG" />
 		<files id="native-toolkit-ogg" if="LIME_OGG" />
 		<files id="native-toolkit-openal" if="LIME_OPENAL" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
@@ -322,7 +321,6 @@
 		<files id="native-toolkit-sdl" if="LIME_SDL" />
 		<files id="native-toolkit-sdl_image" if="LIME_SDL_IMAGE" />
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
-		<files id="native-toolkit-vorbis" if="LIME_OGG" />
 		<files id="native-toolkit-webm" if="LIME_WEBM" />
 		<files id="native-toolkit-zlib" if="LIME_ZLIB" />
 
