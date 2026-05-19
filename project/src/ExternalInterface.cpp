@@ -31,6 +31,9 @@
 #ifdef LIME_OGG
 #include <media/decoders/OggDecoder.h>
 #endif
+#ifdef LIME_OPUS
+#include <media/decoders/OpusDecoder.h>
+#endif
 #include <media/AudioBuffer.h>
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
@@ -342,6 +345,22 @@ namespace lime {
 		}
 		#endif
 
+		#ifdef LIME_OPUS
+		OpusDecoder* opusDecoder = new OpusDecoder();
+
+		if (opusDecoder->Load (&resource, &audioBuffer)) {
+
+			delete opusDecoder;
+
+			return audioBuffer.Value (buffer);
+
+		} else {
+
+			delete opusDecoder;
+
+		}
+		#endif
+
 		return alloc_null ();
 
 	}
@@ -363,6 +382,22 @@ namespace lime {
 		} else {
 
 			delete oggDecoder;
+
+		}
+		#endif
+
+		#ifdef LIME_OPUS
+		OpusDecoder* opusDecoder = new OpusDecoder();
+
+		if (opusDecoder->Load (&resource, buffer)) {
+
+			delete opusDecoder;
+
+			return buffer;
+
+		} else {
+
+			delete opusDecoder;
 
 		}
 		#endif
@@ -394,6 +429,22 @@ namespace lime {
 		}
 		#endif
 
+		#ifdef LIME_OPUS
+		OpusDecoder* opusDecoder = new OpusDecoder();
+
+		if (opusDecoder->Load (&resource, &audioBuffer)) {
+
+			delete opusDecoder;
+
+			return audioBuffer.Value (buffer);
+
+		} else {
+
+			delete opusDecoder;
+
+		}
+		#endif
+
 		return alloc_null ();
 
 	}
@@ -415,6 +466,22 @@ namespace lime {
 		} else {
 
 			delete oggDecoder;
+
+		}
+		#endif
+
+		#ifdef LIME_OPUS
+		OpusDecoder* opusDecoder = new OpusDecoder();
+
+		if (opusDecoder->Load (&resource, buffer)) {
+
+			delete opusDecoder;
+
+			return buffer;
+
+		} else {
+
+			delete opusDecoder;
 
 		}
 		#endif

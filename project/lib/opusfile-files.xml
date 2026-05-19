@@ -1,0 +1,36 @@
+<xml>
+
+	<files id="native-toolkit-opusfile">
+
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
+
+			</section>
+
+		</section>
+
+		<section>
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/opusfile/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
+
+		</section>
+
+		<compilerflag value="-DHAVE_CONFIG_H" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/http.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/info.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/internal.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/opusfile.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/stream.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/opusfile/src/wincerts.c" />
+
+	</files>
+
+</xml>
