@@ -66,3 +66,15 @@
 	path = project/lib/sdl_image
 	url = https://github.com/libsdl-org/SDL_image.git
 	shallow = true
+[submodule "project/lib/opus"]
+	path = project/lib/opus
+	url = https://github.com/xiph/opus.git
+	shallow = true
+[submodule "project/lib/opusfile"]
+	path = project/lib/opusfile
+	url = https://github.com/xiph/opusfile.git
+	shallow = true
+[submodule "project/lib/dr_libs"]
+	path = project/lib/dr_libs
+	url = https://github.com/mackron/dr_libs.git
+	shallow = true
