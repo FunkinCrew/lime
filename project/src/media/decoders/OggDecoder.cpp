@@ -90,7 +90,6 @@ namespace lime {
 		}
 
 		vorbis_info* vorbisInfo = ov_info (vorbisFile, -1);
-		byteDepth = 2;
 		channels = vorbisInfo->channels;
 		sampleRate = (int)vorbisInfo->rate;
 		handle = (void*)vorbisFile;
@@ -100,7 +99,7 @@ namespace lime {
 	}
 
 
-	size_t OggDecoder::Decode (void* ptr, size_t frames, int byteDepth) {
+	size_t OggDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
 
 		if (!handle) {
 
@@ -110,14 +109,14 @@ namespace lime {
 
 		size_t size = 0;
 		long result;
-		size_t bytesWanted = frames * channels * byteDepth;
+		size_t bytesWanted = frames * channels * 2;
 
 		while (true) {
 
 			#ifdef HXCPP_BIG_ENDIAN
-			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 1, byteDepth, 1, nullptr);
+			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 1, 2, 1, nullptr);
 			#else
-			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 0, byteDepth, 1, nullptr);
+			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 0, 2, 1, nullptr);
 			#endif
 
 			if (result == OV_HOLE) {
@@ -142,7 +141,7 @@ namespace lime {
 
 		}
 
-		return size / byteDepth / channels;
+		return size / 2 / channels;
 
 	}
 

@@ -18,7 +18,7 @@ namespace lime {
 	}
 
 
-	size_t MP3Decoder::Decode (void* ptr, size_t frames, int byteDepth) {
+	size_t MP3Decoder::Decode (void* ptr, size_t frames, AudioFormat format) {
 
 		return 0;
 
