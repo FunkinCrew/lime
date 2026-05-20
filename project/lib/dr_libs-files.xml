@@ -1,0 +1,11 @@
+<xml>
+
+	<files id="native-toolkit-dr_libs">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/dr_libs" />
+
+		<file name="${NATIVE_TOOLKIT_PATH}/custom/dr_libs/dr_impl.c" />
+
+	</files>
+
+</xml>
