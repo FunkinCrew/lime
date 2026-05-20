@@ -151,8 +151,29 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
 			<compilerflag value="-DLIME_OGG" />
 
-			<file name="src/media/codecs/vorbis/VorbisFile.cpp" />
-			<file name="src/media/containers/OGG.cpp" />
+			<file name="src/media/decoders/OggDecoder.cpp" />
+
+		</section>
+
+		<section if="LIME_OPUS">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/opusfile/include" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
+			<compilerflag value="-DLIME_OPUS" />
+
+			<file name="src/media/decoders/OpusDecoder.cpp" />
+
+		</section>
+
+		<section if="LIME_DR_LIBS">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/dr_libs" />
+			<compilerflag value="-DLIME_DR_LIBS" />
+
+			<file name="src/media/decoders/FlacDecoder.cpp" />
+			<file name="src/media/decoders/MP3Decoder.cpp" />
+			<file name="src/media/decoders/WavDecoder.cpp" />
 
 		</section>
 
@@ -247,7 +268,6 @@
 		<file name="src/math/Rectangle.cpp" />
 		<file name="src/math/Vector2.cpp" />
 		<file name="src/media/AudioBuffer.cpp" />
-		<file name="src/media/containers/WAV.cpp" />
 		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
 		<file name="src/system/Clipboard.cpp" />
