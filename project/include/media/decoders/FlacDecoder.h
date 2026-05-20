@@ -15,7 +15,7 @@ namespace lime {
 			~FlacDecoder ();
 
 			bool Open (Resource* resource);
-			size_t Decode (void* ptr, size_t frames, int byteDepth);
+			size_t Decode (void* ptr, size_t frames, AudioFormat format);
 			bool Rewind ();
 			bool Seek (int64_t frame);
 			bool CanSeek ();

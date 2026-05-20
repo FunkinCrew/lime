@@ -18,7 +18,7 @@ namespace lime {
 	}
 
 
-	size_t WavDecoder::Decode (void* ptr, size_t frames, int byteDepth) {
+	size_t WavDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
 
 		return 0;
 

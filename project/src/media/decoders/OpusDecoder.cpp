@@ -87,7 +87,6 @@ namespace lime {
 
 		}
 
-		byteDepth = 2;
 		channels = op_channel_count (opusFile, -1);
 		sampleRate = 48000;
 		handle = (void*)opusFile;
@@ -97,7 +96,7 @@ namespace lime {
 	}
 
 
-	size_t OpusDecoder::Decode (void* ptr, size_t frames, int byteDepth) {
+	size_t OpusDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
 
 		if (!handle) {
 
