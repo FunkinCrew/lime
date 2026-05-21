@@ -119,13 +119,7 @@ class AudioBuffer
 		}
 
 		var audioBuffer = new AudioBuffer();
-
-		#if force_html5_audio
-		audioBuffer.src = new Howl({src: [base64String], html5: true, preload: true});
-		#else
-		audioBuffer.src = new Howl({src: [base64String], preload: true});
-		#end
-
+		audioBuffer.__srcHowl = new Howl({src: [base64String], preload: true});
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
 		// if base64String contains codec data, strip it then decode it.
@@ -160,13 +154,7 @@ class AudioBuffer
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
-
-		#if force_html5_audio
-		audioBuffer.src = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], html5: true, preload: true});
-		#else
-		audioBuffer.src = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
-		#end
-
+		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
 		var decoder:AudioDecoder = AudioDecoder.fromBytes(bytes);
@@ -198,13 +186,7 @@ class AudioBuffer
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
-
-		#if force_html5_audio
-		audioBuffer.__srcHowl = new Howl({src: [path], html5: true, preload: false});
-		#else
 		audioBuffer.__srcHowl = new Howl({src: [path], preload: false});
-		#end
-
 		return audioBuffer;
 		#elseif (lime_cffi && !macro)
 		var decoder:AudioDecoder = AudioDecoder.fromFile(path);
@@ -234,13 +216,7 @@ class AudioBuffer
 	{
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
-
-		#if force_html5_audio
-		audioBuffer.__srcHowl = new Howl({src: paths, html5: true, preload: false});
-		#else
 		audioBuffer.__srcHowl = new Howl({src: paths, preload: false});
-		#end
-
 		return audioBuffer;
 		#else
 		var buffer = null;
