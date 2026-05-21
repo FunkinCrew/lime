@@ -34,7 +34,6 @@
 #ifdef LIME_OPUS
 #include <media/decoders/OpusDecoder.h>
 #endif
-#include <media/AudioBuffer.h>
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
@@ -4783,7 +4782,6 @@ namespace lime {
 
 	#define _TARRAYBUFFER _TBYTES
 	#define _TARRAYBUFFERVIEW _OBJ (_I32 _TARRAYBUFFER _I32 _I32 _I32 _I32)
-	#define _TAUDIOBUFFER _OBJ (_I32 _I32 _TARRAYBUFFERVIEW _I32 _I32 _DYN _DYN _DYN _DYN)
 	#define _TIMAGEBUFFER _OBJ (_I32 _TARRAYBUFFERVIEW _I32 _I32 _BOOL _BOOL _I32 _DYN _DYN _DYN _DYN _DYN)
 	#define _TIMAGE _OBJ (_TIMAGEBUFFER _BOOL _I32 _I32 _I32 _TRECTANGLE _ENUM _I32 _I32 _F64 _F64)
 
