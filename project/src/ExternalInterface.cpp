@@ -141,6 +141,32 @@ namespace lime {
 	}
 
 
+	value allocInt64 (int64_t val) {
+
+		int32_t low = val;
+		int32_t high = (val >> 32);
+
+		value int64Value = alloc_empty_object ();
+		alloc_field (int64Value, val_id ("low"), alloc_int (low));
+		alloc_field (int64Value, val_id ("high"), alloc_int (high));
+		return int64Value;
+
+	}
+
+
+	vdynamic* hl_allocInt64 (int64_t val) {
+
+		int32_t low = val;
+		int32_t high = (val >> 32);
+
+		vdynamic *hl_int64Value = (vdynamic*)hl_alloc_dynobj();
+		hl_dyn_seti (hl_int64Value, hl_hash_utf8 ("low"), &hlt_i32, low);
+		hl_dyn_seti (hl_int64Value, hl_hash_utf8 ("high"), &hlt_i32, high);
+		return hl_int64Value;
+
+	}
+
+
 	std::string wstring_utf8 (const std::wstring& val) {
 
 		std::string out;
