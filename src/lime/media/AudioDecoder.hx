@@ -1,6 +1,7 @@
 package lime.media;
 
 import haxe.Int64;
+import lime.media.AudioCodec;
 import lime.utils.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 
@@ -18,17 +19,36 @@ class AudioDecoder
 		Creates an `AudioBuffer` from a file.
 
 		@param path The path to the audio file.
-		@param codec The expected audio codec format.
+		@param codec The expected audio codec format, or `null` to auto-detect.
 		@return An `AudioDecoder` instance, or `null` if the file cannot be opened.
 	**/
-	public static function fromFile(path:String, codec:AudioCodec):AudioDecoder
+	public static function fromFile(path:String, ?codec:AudioCodec):AudioDecoder
 	{
 		#if (lime_cffi && !macro)
-		var handle = NativeCFFI.lime_audio_decoder_open_file(path, cast codec);
-
-		if (handle != null)
+		if (codec != null)
 		{
-			return new AudioDecoder(handle);
+			var handle = NativeCFFI.lime_audio_decoder_open_file(path, cast codec);
+
+			if (handle != null)
+			{
+				return new AudioDecoder(handle);
+			}
+		}
+		else
+		{
+			var oggHandle = NativeCFFI.lime_audio_decoder_open_file(path, cast OGG);
+
+			if (oggHandle != null)
+			{
+				return new AudioDecoder(oggHandle);
+			}
+
+			var opusHandle = NativeCFFI.lime_audio_decoder_open_file(path, cast OPUS);
+
+			if (opusHandle != null)
+			{
+				return new AudioDecoder(opusHandle);
+			}
 		}
 		#end
 
@@ -42,14 +62,33 @@ class AudioDecoder
 		@param codec The expected audio codec format.
 		@return An `AudioDecoder` instance, or `null` if decoding cannot be initialized.
 	**/
-	public static function fromBytes(bytes:Bytes, codec:AudioCodec):AudioDecoder
+	public static function fromBytes(bytes:Bytes, ?codec:AudioCodec):AudioDecoder
 	{
 		#if (lime_cffi && !macro)
-		var handle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast codec);
-
-		if (handle != null)
+		if (codec != null)
 		{
-			return new AudioDecoder(handle);
+			var handle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast codec);
+
+			if (handle != null)
+			{
+				return new AudioDecoder(handle);
+			}
+		}
+		else
+		{
+			var oggHandle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast OGG);
+
+			if (oggHandle != null)
+			{
+				return new AudioDecoder(oggHandle);
+			}
+
+			var opusHandle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast OPUS);
+
+			if (opusHandle != null)
+			{
+				return new AudioDecoder(opusHandle);
+			}
 		}
 		#end
 
