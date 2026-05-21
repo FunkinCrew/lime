@@ -69,10 +69,6 @@ class NativeCFFI
 
 	@:cffi private static function lime_application_update(handle:Dynamic):Bool;
 
-	@:cffi private static function lime_audio_load_bytes(data:Dynamic, buffer:Dynamic):Dynamic;
-
-	@:cffi private static function lime_audio_load_file(path:Dynamic, buffer:Dynamic):Dynamic;
-
 	@:cffi private static function lime_bytes_from_data_pointer(data:Float, length:Int, bytes:Dynamic):Dynamic;
 
 	@:cffi private static function lime_bytes_get_data_pointer(data:Dynamic):Float;
@@ -389,6 +385,24 @@ class NativeCFFI
 
 	@:cffi private static function lime_window_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
+	@:cffi private static function lime_audio_decoder_open_file(path:Dynamic, codec:Int):Dynamic;
+
+	@:cffi private static function lime_audio_decoder_open_bytes(data:Dynamic, codec:Int):Dynamic;
+
+	@:cffi private static function lime_audio_decoder_info(handle:Dynamic):Dynamic;
+
+	@:cffi private static function lime_audio_decoder_decode(handle:Dynamic, bytes:Dynamic, frames:Int, format:Int):Dynamic;
+
+	@:cffi private static function lime_audio_decoder_rewind(handle:Dynamic):Bool;
+
+	@:cffi private static function lime_audio_decoder_seek(handle:Dynamic, frameLow:Int, frameHigh:Int):Bool;
+
+	@:cffi private static function lime_audio_decoder_can_seek(handle:Dynamic):Bool;
+
+	@:cffi private static function lime_audio_decoder_tell(handle:Dynamic):Dynamic;
+
+	@:cffi private static function lime_audio_decoder_total(handle:Dynamic):Dynamic;
+
 	@:cffi private static function lime_zlib_compress(data:Dynamic, bytes:Dynamic):Dynamic;
 
 	@:cffi private static function lime_zlib_decompress(data:Dynamic, bytes:Dynamic):Dynamic;
@@ -402,10 +416,6 @@ class NativeCFFI
 	private static var lime_application_set_frame_rate = new cpp.Callable<cpp.Object->Float->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_application_set_frame_rate", "odv", false));
 	private static var lime_application_update = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_application_update", "ob", false));
-	private static var lime_audio_load_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_bytes",
-		"ooo", false));
-	private static var lime_audio_load_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_load_file", "ooo",
-		false));
 	private static var lime_bytes_from_data_pointer = new cpp.Callable<Float->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_bytes_from_data_pointer", "dioo", false));
 	private static var lime_bytes_get_data_pointer = new cpp.Callable<cpp.Object->Float>(cpp.Prime._loadPrime("lime", "lime_bytes_get_data_pointer", "od",
@@ -681,6 +691,24 @@ class NativeCFFI
 		"oiiv", false));
 	private static var lime_window_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_window_event_manager_register", "oov", false));
+	private static var lime_audio_decoder_open_file = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_open_file",
+		"oio", false));
+	private static var lime_audio_decoder_open_bytes = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_open_bytes",
+		"oio", false));
+	private static var lime_audio_decoder_info = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_info", "oo", false));
+	private static var lime_audio_decoder_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_decode",
+		"ooiio", false));
+	private static var lime_audio_decoder_rewind = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_rewind", "ob", false));
+	private static var lime_audio_decoder_seek = new cpp.Callable<cpp.Object->Int->Int->Bool>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_seek", "oiib", false));
+	private static var lime_audio_decoder_can_seek = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_can_seek", "ob", false));
+	private static var lime_audio_decoder_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_tell", "oo", false));
+	private static var lime_audio_decoder_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_total", "oo", false));
 	private static var lime_zlib_compress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_compress", "ooo",
 		false));
 	private static var lime_zlib_decompress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_decompress", "ooo",
@@ -695,8 +723,6 @@ class NativeCFFI
 	private static var lime_application_quit = CFFI.load("lime", "lime_application_quit", 1);
 	private static var lime_application_set_frame_rate = CFFI.load("lime", "lime_application_set_frame_rate", 2);
 	private static var lime_application_update = CFFI.load("lime", "lime_application_update", 1);
-	private static var lime_audio_load_bytes = CFFI.load("lime", "lime_audio_load_bytes", 2);
-	private static var lime_audio_load_file = CFFI.load("lime", "lime_audio_load_file", 2);
 	private static var lime_bytes_from_data_pointer = CFFI.load("lime", "lime_bytes_from_data_pointer", 3);
 	private static var lime_bytes_get_data_pointer = CFFI.load("lime", "lime_bytes_get_data_pointer", 1);
 	private static var lime_bytes_get_data_pointer_offset = CFFI.load("lime", "lime_bytes_get_data_pointer_offset", 2);
@@ -853,6 +879,15 @@ class NativeCFFI
 	private static var lime_window_set_always_on_top = CFFI.load("lime", "lime_window_set_always_on_top", 2);
 	private static var lime_window_warp_mouse = CFFI.load("lime", "lime_window_warp_mouse", 3);
 	private static var lime_window_event_manager_register = CFFI.load("lime", "lime_window_event_manager_register", 2);
+	private static var lime_audio_decoder_open_file = CFFI.load("lime", "lime_audio_decoder_open_file", 2);
+	private static var lime_audio_decoder_open_bytes = CFFI.load("lime", "lime_audio_decoder_open_bytes", 2);
+	private static var lime_audio_decoder_info = CFFI.load("lime", "lime_audio_decoder_info", 1);
+	private static var lime_audio_decoder_decode = CFFI.load("lime", "lime_audio_decoder_decode", 4);
+	private static var lime_audio_decoder_rewind = CFFI.load("lime", "lime_audio_decoder_rewind", 1);
+	private static var lime_audio_decoder_seek = CFFI.load("lime", "lime_audio_decoder_seek", 3);
+	private static var lime_audio_decoder_can_seek = CFFI.load("lime", "lime_audio_decoder_can_seek", 1);
+	private static var lime_audio_decoder_tell = CFFI.load("lime", "lime_audio_decoder_tell", 1);
+	private static var lime_audio_decoder_total = CFFI.load("lime", "lime_audio_decoder_total", 1);
 	private static var lime_zlib_compress = CFFI.load("lime", "lime_zlib_compress", 2);
 	private static var lime_zlib_decompress = CFFI.load("lime", "lime_zlib_decompress", 2);
 	#end
@@ -883,16 +918,6 @@ class NativeCFFI
 	@:hlNative("lime", "hl_application_update") private static function lime_application_update(handle:CFFIPointer):Bool
 	{
 		return false;
-	}
-
-	@:hlNative("lime", "hl_audio_load_bytes") private static function lime_audio_load_bytes(data:Bytes, buffer:AudioBuffer):AudioBuffer
-	{
-		return null;
-	}
-
-	@:hlNative("lime", "hl_audio_load_file") private static function lime_audio_load_file(path:String, buffer:AudioBuffer):AudioBuffer
-	{
-		return null;
 	}
 
 	@:hlNative("lime", "hl_bytes_from_data_pointer") private static function lime_bytes_from_data_pointer(data:Float, length:Int, bytes:Bytes):Bytes
@@ -1526,6 +1551,52 @@ class NativeCFFI
 
 	@:hlNative("lime", "hl_window_event_manager_register") private static function lime_window_event_manager_register(callback:Void->Void,
 		eventObject:WindowEventInfo):Void {}
+
+	@:hlNative("lime", "hl_audio_decoder_open_file") private static function lime_audio_decoder_open_file(data:Bytes, codec:Int):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_open_bytes") private static function lime_audio_decoder_open_bytes(path:String, codec:Int):CFFIPointer
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_info") private static function lime_audio_decoder_info(handle:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_decode") private static function lime_audio_decoder_decode(handle:CFFIPointer, bytes:Bytes, frames:Int, format:Int):Bytes
+	{
+		return null;
+	}
+
+
+	@:hlNative("lime", "hl_audio_decoder_rewind") private static function lime_audio_decoder_rewind(handle:CFFIPointer):Bool
+	{
+		return false;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_seek") private static function lime_audio_decoder_seek(handle:CFFIPointer, frameLow:Int, frameHigh:Int):Bool
+	{
+		return false;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_can_seek") private static function lime_audio_decoder_can_seek(handle:CFFIPointer):Bool
+	{
+		return false;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_tell") private static function lime_audio_decoder_tell(handle:CFFIPointer):Dynamic
+	{
+		return null;
+	}
+
+	@:hlNative("lime", "hl_audio_decoder_total") private static function lime_audio_decoder_total(handle:CFFIPointer):Dynamic
+	{
+		return null;
+	}
 
 	@:hlNative("lime", "hl_zlib_compress") private static function lime_zlib_compress(data:Bytes, bytes:Bytes):Bytes
 	{

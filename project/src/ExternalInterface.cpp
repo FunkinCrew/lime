@@ -141,6 +141,22 @@ namespace lime {
 	}
 
 
+	void gc_audio_decoder (value handle) {
+
+		AudioDecoder* audioDecoder = (AudioDecoder*)val_data (handle);
+		delete audioDecoder;
+
+	}
+
+
+	void hl_gc_audio_decoder (HL_CFFIPointer* handle) {
+
+		AudioDecoder* audioDecoder = (AudioDecoder*)handle->ptr;
+		delete audioDecoder;
+
+	}
+
+
 	value allocInt64 (int64_t val) {
 
 		int32_t low = val;
@@ -343,176 +359,6 @@ namespace lime {
 
 		Application* app = (Application*)application->ptr;
 		return app->Update ();
-
-	}
-
-
-	value lime_audio_load_bytes (value data, value buffer) {
-
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
-
-		Bytes bytes = Bytes (data);
-
-		Resource resource = Resource (&bytes);
-
-		#ifdef LIME_OGG
-		AudioDecoder* oggDecoder = new OggDecoder();
-
-		if (oggDecoder->Load (&resource, &audioBuffer)) {
-
-			delete oggDecoder;
-
-			return audioBuffer.Value (buffer);
-
-		} else {
-
-			delete oggDecoder;
-
-		}
-		#endif
-
-		#ifdef LIME_OPUS
-		AudioDecoder* opusDecoder = new OpusDecoder();
-
-		if (opusDecoder->Load (&resource, &audioBuffer)) {
-
-			delete opusDecoder;
-
-			return audioBuffer.Value (buffer);
-
-		} else {
-
-			delete opusDecoder;
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_bytes) (Bytes* data, AudioBuffer* buffer) {
-
-		Resource resource = Resource (data);
-
-		#ifdef LIME_OGG
-		AudioDecoder* oggDecoder = new OggDecoder();
-
-		if (oggDecoder->Load (&resource, buffer)) {
-
-			delete oggDecoder;
-
-			return buffer;
-
-		} else {
-
-			delete oggDecoder;
-
-		}
-		#endif
-
-		#ifdef LIME_OPUS
-		AudioDecoder* opusDecoder = new OpusDecoder();
-
-		if (opusDecoder->Load (&resource, buffer)) {
-
-			delete opusDecoder;
-
-			return buffer;
-
-		} else {
-
-			delete opusDecoder;
-
-		}
-		#endif
-
-		return 0;
-
-	}
-
-
-	value lime_audio_load_file (value data, value buffer) {
-
-		AudioBuffer audioBuffer = AudioBuffer (buffer);
-
-		Resource resource = Resource (val_string (data));
-
-		#ifdef LIME_OGG
-		AudioDecoder* oggDecoder = new OggDecoder();
-
-		if (oggDecoder->Load (&resource, &audioBuffer)) {
-
-			delete oggDecoder;
-
-			return audioBuffer.Value (buffer);
-
-		} else {
-
-			delete oggDecoder;
-
-		}
-		#endif
-
-		#ifdef LIME_OPUS
-		AudioDecoder* opusDecoder = new OpusDecoder();
-
-		if (opusDecoder->Load (&resource, &audioBuffer)) {
-
-			delete opusDecoder;
-
-			return audioBuffer.Value (buffer);
-
-		} else {
-
-			delete opusDecoder;
-
-		}
-		#endif
-
-		return alloc_null ();
-
-	}
-
-
-	HL_PRIM AudioBuffer* HL_NAME(hl_audio_load_file) (hl_vstring* data, AudioBuffer* buffer) {
-
-		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
-
-		#ifdef LIME_OGG
-		AudioDecoder* oggDecoder = new OggDecoder();
-
-		if (oggDecoder->Load (&resource, buffer)) {
-
-			delete oggDecoder;
-
-			return buffer;
-
-		} else {
-
-			delete oggDecoder;
-
-		}
-		#endif
-
-		#ifdef LIME_OPUS
-		AudioDecoder* opusDecoder = new OpusDecoder();
-
-		if (opusDecoder->Load (&resource, buffer)) {
-
-			delete opusDecoder;
-
-			return buffer;
-
-		} else {
-
-			delete opusDecoder;
-
-		}
-		#endif
-
-		return 0;
 
 	}
 
@@ -4409,6 +4255,274 @@ namespace lime {
 	}
 
 
+	value lime_audio_decoder_open_file (value data, int codec) {
+
+		AudioDecoder* decoder;
+
+		switch (codec) {
+
+			case 0:
+				decoder = new OggDecoder ();
+				break;
+
+			case 1:
+				decoder = new OpusDecoder ();
+				break;
+
+			default:
+				return alloc_null ();
+		}
+
+		Resource resource = Resource (val_string (data));
+
+		if (decoder->Open (&resource)) {
+
+			return CFFIPointer (decoder, gc_audio_decoder);
+
+		}
+
+		delete decoder;
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM HL_CFFIPointer* HL_NAME(hl_audio_decoder_open_file) (hl_vstring* data, int codec) {
+
+		AudioDecoder* decoder;
+
+		switch (codec) {
+
+			case 0:
+				decoder = new OggDecoder ();
+				break;
+
+			case 1:
+				decoder = new OpusDecoder ();
+				break;
+
+			default:
+				return 0;
+		}
+
+		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
+
+		if (decoder->Open (&resource)) {
+
+			return HLCFFIPointer (decoder, (hl_finalizer)hl_gc_audio_decoder);
+
+		}
+
+		delete decoder;
+
+		return 0;
+
+	}
+
+
+	value lime_audio_decoder_open_bytes (value data, int codec) {
+
+		AudioDecoder* decoder;
+
+		switch (codec) {
+
+			case 0:
+				decoder = new OggDecoder ();
+				break;
+
+			case 1:
+				decoder = new OpusDecoder ();
+				break;
+
+			default:
+				return alloc_null ();
+		}
+
+		Bytes bytes (data);
+
+		Resource resource = Resource (&bytes);
+
+		if (decoder->Open (&resource)) {
+
+			return CFFIPointer (decoder, gc_audio_decoder);
+
+		}
+
+		delete decoder;
+
+		return alloc_null ();
+
+	}
+
+
+	HL_PRIM HL_CFFIPointer* HL_NAME(hl_audio_decoder_open_bytes) (Bytes* data, int codec) {
+
+		AudioDecoder* decoder;
+
+		switch (codec) {
+
+			case 0:
+				decoder = new OggDecoder ();
+				break;
+
+			case 1:
+				decoder = new OpusDecoder ();
+				break;
+
+			default:
+				return 0;
+		}
+
+		Resource resource = Resource (data);
+
+		if (decoder->Open (&resource)) {
+
+			return HLCFFIPointer (decoder, (hl_finalizer)hl_gc_audio_decoder);
+
+		}
+
+		delete decoder;
+
+		return 0;
+
+	}
+
+
+	value lime_audio_decoder_info (value audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+
+		value info = alloc_empty_object ();
+		alloc_field (info, val_id ("channels"), alloc_int (targetAudioDecoder->channels));
+		alloc_field (info, val_id ("sampleRate"), alloc_int (targetAudioDecoder->sampleRate));
+		return info;
+
+	}
+
+
+	HL_PRIM vdynamic* HL_NAME(hl_audio_decoder_info) (HL_CFFIPointer* audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+
+		vdynamic *info = (vdynamic*)hl_alloc_dynobj();
+		hl_dyn_seti (info, hl_hash_utf8 ("channels"), &hlt_i32, targetAudioDecoder->channels);
+		hl_dyn_seti (info, hl_hash_utf8 ("sampleRate"), &hlt_i32, targetAudioDecoder->sampleRate);
+		return info;
+
+	}
+
+
+	value lime_audio_decoder_decode (value audio_decoder, value bytes, int frames, int format) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+
+		Bytes data = Bytes (bytes);
+
+		int framesDecoded = targetAudioDecoder->Decode (data.b, frames, (AudioFormat) format);
+
+		data.Resize(framesDecoded * targetAudioDecoder->channels * 2);
+
+		return data.Value (bytes);
+
+	}
+
+
+	HL_PRIM Bytes* HL_NAME(hl_audio_decoder_decode) (HL_CFFIPointer* audio_decoder, Bytes* bytes, int frames, int format) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+
+		int framesDecoded = targetAudioDecoder->Decode (bytes->b, frames, (AudioFormat) format);
+
+		bytes->Resize(framesDecoded * targetAudioDecoder->channels * 2);
+
+		return bytes;
+
+	}
+
+
+	bool lime_audio_decoder_rewind (value audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		return targetAudioDecoder->Rewind ();
+
+	}
+
+
+	HL_PRIM bool HL_NAME(hl_audio_decoder_rewind) (HL_CFFIPointer* audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		return targetAudioDecoder->Rewind ();
+
+	}
+
+
+	bool lime_audio_decoder_seek (value audio_decoder, int frameLow, int frameHigh) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		int64_t frame = ((int64_t)frameHigh << 32) | (int64_t)frameLow;
+		return targetAudioDecoder->Seek (frame);
+
+	}
+
+
+	HL_PRIM bool HL_NAME(hl_audio_decoder_seek) (HL_CFFIPointer* audio_decoder, int frameLow, int frameHigh) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		int64_t frame = ((int64_t)frameHigh << 32) | (int64_t)frameLow;
+		return targetAudioDecoder->Seek (frame);
+
+	}
+
+
+	bool lime_audio_decoder_can_seek (value audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		return targetAudioDecoder->CanSeek ();
+
+	}
+
+
+	HL_PRIM bool HL_NAME(hl_audio_decoder_can_seek) (HL_CFFIPointer* audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		return targetAudioDecoder->CanSeek ();
+
+	}
+
+
+	value lime_audio_decoder_tell (value audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		return allocInt64 (targetAudioDecoder->Tell ());
+
+	}
+
+
+	HL_PRIM vdynamic* HL_NAME(hl_audio_decoder_tell) (HL_CFFIPointer* audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		return hl_allocInt64 (targetAudioDecoder->Tell ());
+
+	}
+
+
+	value lime_audio_decoder_total (value audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		return allocInt64 (targetAudioDecoder->Total ());
+
+	}
+
+
+	HL_PRIM vdynamic* HL_NAME(hl_audio_decoder_total) (HL_CFFIPointer* audio_decoder) {
+
+		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		return hl_allocInt64 (targetAudioDecoder->Total ());
+
+	}
+
+
 	value lime_zlib_compress (value buffer, value bytes) {
 
 		#ifdef LIME_ZLIB
@@ -4472,8 +4586,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_application_quit);
 	DEFINE_PRIME2v (lime_application_set_frame_rate);
 	DEFINE_PRIME1 (lime_application_update);
-	DEFINE_PRIME2 (lime_audio_load_bytes);
-	DEFINE_PRIME2 (lime_audio_load_file);
 	DEFINE_PRIME3 (lime_bytes_from_data_pointer);
 	DEFINE_PRIME1 (lime_bytes_get_data_pointer);
 	DEFINE_PRIME2 (lime_bytes_get_data_pointer_offset);
@@ -4634,6 +4746,15 @@ namespace lime {
 	DEFINE_PRIME3v (lime_window_warp_mouse);
 	DEFINE_PRIME1 (lime_window_get_opacity);
 	DEFINE_PRIME2v (lime_window_set_opacity);
+	DEFINE_PRIME2 (lime_audio_decoder_open_file);
+	DEFINE_PRIME2 (lime_audio_decoder_open_bytes);
+	DEFINE_PRIME1 (lime_audio_decoder_info);
+	DEFINE_PRIME4 (lime_audio_decoder_decode);
+	DEFINE_PRIME1 (lime_audio_decoder_rewind);
+	DEFINE_PRIME3 (lime_audio_decoder_seek);
+	DEFINE_PRIME1 (lime_audio_decoder_can_seek);
+	DEFINE_PRIME1 (lime_audio_decoder_tell);
+	DEFINE_PRIME1 (lime_audio_decoder_total);
 	DEFINE_PRIME2 (lime_zlib_compress);
 	DEFINE_PRIME2 (lime_zlib_decompress);
 
@@ -4677,8 +4798,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_application_quit, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_application_set_frame_rate, _TCFFIPOINTER _F64);
 	DEFINE_HL_PRIM (_BOOL, hl_application_update, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_bytes, _TBYTES _TAUDIOBUFFER);
-	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_file, _STRING _TAUDIOBUFFER);
 	DEFINE_HL_PRIM (_TBYTES, hl_bytes_from_data_pointer, _F64 _I32 _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer, _TBYTES);
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer_offset, _TBYTES _I32);
@@ -4839,6 +4958,15 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_window_warp_mouse, _TCFFIPOINTER _I32 _I32);
 	DEFINE_HL_PRIM (_F64, hl_window_get_opacity, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_set_opacity, _TCFFIPOINTER _F64);
+	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_file, _STRING _I32);
+	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_bytes, _BYTES _I32);
+	DEFINE_HL_PRIM (_DYN, hl_audio_decoder_info, _TCFFIPOINTER);
+	DEFINE_HL_PRIM (_BYTES, hl_audio_decoder_decode, _TCFFIPOINTER _BYTES _I32 _I32);
+	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_rewind, _TCFFIPOINTER);
+	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_seek, _TCFFIPOINTER _I32 _I32);
+	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_can_seek, _TCFFIPOINTER);
+	DEFINE_HL_PRIM (_DYN, hl_audio_decoder_tell, _TCFFIPOINTER);
+	DEFINE_HL_PRIM (_DYN, hl_audio_decoder_total, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_TBYTES, hl_zlib_compress, _TBYTES _TBYTES);
 	DEFINE_HL_PRIM (_TBYTES, hl_zlib_decompress, _TBYTES _TBYTES);
 
