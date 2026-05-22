@@ -43,7 +43,7 @@ class AudioBuffer
 	/**
 		The number of bits per sample in the audio data.
 	**/
-	public var bitsPerSample:Int;
+	public var bitsPerSample(get, never):Int;
 
 	/**
 		The number of audio channels (e.g., 1 for mono, 2 for stereo).
@@ -132,7 +132,6 @@ class AudioBuffer
 			var buffer:AudioBuffer = new AudioBuffer();
 			buffer.sampleRate = decoder.sampleRate;
 			buffer.channels = decoder.channels;
-			buffer.bitsPerSample = 16;
 			buffer.dataFormat = S16;
 			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
 			return buffer;
@@ -164,7 +163,6 @@ class AudioBuffer
 			var buffer:AudioBuffer = new AudioBuffer();
 			buffer.sampleRate = decoder.sampleRate;
 			buffer.channels = decoder.channels;
-			buffer.bitsPerSample = 16;
 			buffer.dataFormat = S16;
 			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
 			return buffer;
@@ -196,7 +194,6 @@ class AudioBuffer
 			var buffer:AudioBuffer = new AudioBuffer();
 			buffer.sampleRate = decoder.sampleRate;
 			buffer.channels = decoder.channels;
-			buffer.bitsPerSample = 16;
 			buffer.dataFormat = S16;
 			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
 			return buffer;
@@ -362,6 +359,16 @@ class AudioBuffer
 	}
 
 	// Get & Set Methods
+	@:noCompletion private function get_bitsPerSample():Int
+	{
+		return switch (dataFormat)
+		{
+			case S16: 16;
+			case F32: 32;
+			default: 0;
+		}
+	}
+
 	@:noCompletion private function get_src():Dynamic
 	{
 		#if (js && html5)
