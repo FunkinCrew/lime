@@ -1552,12 +1552,12 @@ class NativeCFFI
 	@:hlNative("lime", "hl_window_event_manager_register") private static function lime_window_event_manager_register(callback:Void->Void,
 		eventObject:WindowEventInfo):Void {}
 
-	@:hlNative("lime", "hl_audio_decoder_open_file") private static function lime_audio_decoder_open_file(data:Bytes, codec:Int):CFFIPointer
+	@:hlNative("lime", "hl_audio_decoder_open_file") private static function lime_audio_decoder_open_file(path:String, codec:Int):CFFIPointer
 	{
 		return null;
 	}
 
-	@:hlNative("lime", "hl_audio_decoder_open_bytes") private static function lime_audio_decoder_open_bytes(path:String, codec:Int):CFFIPointer
+	@:hlNative("lime", "hl_audio_decoder_open_bytes") private static function lime_audio_decoder_open_bytes(data:Bytes, codec:Int):CFFIPointer
 	{
 		return null;
 	}

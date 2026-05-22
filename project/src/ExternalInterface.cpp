@@ -5066,9 +5066,9 @@ namespace lime {
 	DEFINE_HL_PRIM (_F64, hl_window_get_opacity, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_set_opacity, _TCFFIPOINTER _F64);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_file, _STRING _I32);
-	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_bytes, _BYTES _I32);
+	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_bytes, _TBYTES _I32);
 	DEFINE_HL_PRIM (_DYN, hl_audio_decoder_info, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_BYTES, hl_audio_decoder_decode, _TCFFIPOINTER _BYTES _I32 _I32);
+	DEFINE_HL_PRIM (_TBYTES, hl_audio_decoder_decode, _TCFFIPOINTER _TBYTES _I32 _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_rewind, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_seek, _TCFFIPOINTER _I32 _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_can_seek, _TCFFIPOINTER);
