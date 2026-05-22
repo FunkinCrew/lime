@@ -99,49 +99,82 @@ namespace lime {
 	}
 
 
-	size_t OggDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
+	size_t OggDecoder::Decode(void* ptr, size_t frames, AudioFormat format) {
 
-		if (!handle) {
+		if (format == AudioFormat::S16) {
 
-			return 0;
+			size_t bytesWanted = frames * channels * 2;
+			size_t bytesRead = 0;
+
+			while (bytesRead < bytesWanted) {
+
+				#ifdef HXCPP_BIG_ENDIAN
+				long result = ov_read((OggVorbis_File*)handle, (char*)ptr + bytesRead, bytesWanted - bytesRead, 1, 2, 1, nullptr);
+				#else
+				long result = ov_read((OggVorbis_File*)handle, (char*)ptr + bytesRead, bytesWanted - bytesRead, 0, 2, 1, nullptr);
+				#endif
+
+				if (result == OV_HOLE) {
+
+					continue;
+
+				}
+
+				if (result <= 0) {
+
+					break;
+
+				}
+
+				bytesRead += result;
+
+			}
+
+			return bytesRead / (channels * 2);
+
+		} else if (format == AudioFormat::F32) {
+
+			size_t framesReadTotal = 0;
+			float **pcm_channels = nullptr;
+			float* out = (float*)ptr;
+
+			while (framesReadTotal < frames) {
+
+				long result = ov_read_float((OggVorbis_File*)handle, &pcm_channels, frames - framesReadTotal, nullptr);
+
+				if (result == OV_HOLE) {
+
+					continue;
+
+				}
+
+				if (result <= 0) {
+
+					break;
+
+				}
+
+				for (long i = 0; i < result; i++) {
+
+					size_t base = (framesReadTotal + i) * channels;
+
+					for (int c = 0; c < channels; c++) {
+
+						out[base + c] = pcm_channels[c][i];
+
+					}
+
+				}
+
+				framesReadTotal += result;
+
+			}
+
+			return framesReadTotal;
 
 		}
 
-		size_t size = 0;
-		long result;
-		size_t bytesWanted = frames * channels * 2;
-
-		while (true) {
-
-			#ifdef HXCPP_BIG_ENDIAN
-			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 1, 2, 1, nullptr);
-			#else
-			result = ov_read ((OggVorbis_File*)handle, (char*)ptr + size, bytesWanted - size, 0, 2, 1, nullptr);
-			#endif
-
-			if (result == OV_HOLE) {
-
-				continue;
-
-			}
-
-			if (result <= 0) {
-
-				break;
-
-			}
-
-			size += result;
-
-			if (size >= bytesWanted) {
-
-				break;
-
-			}
-
-		}
-
-		return size / 2 / channels;
+		return 0;
 
 	}
 
