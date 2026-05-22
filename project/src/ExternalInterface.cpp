@@ -4499,9 +4499,23 @@ namespace lime {
 
 		Bytes data = Bytes (bytes);
 
-		int framesDecoded = targetAudioDecoder->Decode (data.b, frames, (AudioFormat) format);
+		AudioFormat targetAudioFormat = (AudioFormat) format;
 
-		data.Resize(framesDecoded * targetAudioDecoder->channels * 2);
+		int framesDecoded = targetAudioDecoder->Decode (data.b, frames, targetAudioFormat);
+
+		switch (targetAudioFormat) {
+
+			case AudioFormat::S16:
+
+				data.Resize(framesDecoded * targetAudioDecoder->channels * 2);
+				break;
+
+			case AudioFormat::F32:
+
+				data.Resize(framesDecoded * targetAudioDecoder->channels * 4);
+				break;
+
+		}
 
 		return data.Value (bytes);
 
@@ -4512,9 +4526,23 @@ namespace lime {
 
 		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
 
-		int framesDecoded = targetAudioDecoder->Decode (bytes->b, frames, (AudioFormat) format);
+		AudioFormat targetAudioFormat = (AudioFormat) format;
 
-		bytes->Resize(framesDecoded * targetAudioDecoder->channels * 2);
+		int framesDecoded = targetAudioDecoder->Decode (bytes->b, frames, targetAudioFormat);
+
+		switch (targetAudioFormat) {
+
+			case AudioFormat::S16:
+
+				bytes->Resize(framesDecoded * targetAudioDecoder->channels * 2);
+				break;
+
+			case AudioFormat::F32:
+
+				bytes->Resize(framesDecoded * targetAudioDecoder->channels * 4);
+				break;
+
+		}
 
 		return bytes;
 
