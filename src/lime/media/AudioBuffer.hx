@@ -74,6 +74,7 @@ class AudioBuffer
 	@:noCompletion private var __srcBuffer:#if lime_cffi ALBuffer #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
+	@:noCompletion private var __srcHowlerDefaultSprite:String;
 
 	#if commonjs
 	private static function __init__()

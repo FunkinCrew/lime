@@ -62,7 +62,14 @@ class HTML5AudioSource
 		var cacheVolume = untyped parent.buffer.__srcHowl._volume;
 		untyped parent.buffer.__srcHowl._volume = parent.gain;
 
-		id = parent.buffer.__srcHowl.play();
+		if (parent.buffer.__srcHowlerDefaultSprite != null)
+		{
+			id = parent.buffer.__srcHowl.play(parent.buffer.__srcHowlerDefaultSprite);
+		}
+		else
+		{
+			id = parent.buffer.__srcHowl.play();
+		}
 
 		untyped parent.buffer.__srcHowl._volume = cacheVolume;
 		// setGain (parent.gain);
@@ -194,7 +201,19 @@ class HTML5AudioSource
 		#if lime_howlerjs
 		if (parent.buffer != null && parent.buffer.__srcHowl != null)
 		{
-			return Std.int(parent.buffer.__srcHowl.duration() * 1000);
+			var howl = parent.buffer.__srcHowl;
+
+			if (parent.buffer.__srcHowlerDefaultSprite != null)
+			{
+				var sprite = untyped howl._sprite[parent.buffer.__srcHowlerDefaultSprite];
+
+				if (sprite != null)
+				{
+					return Std.int(sprite[1]);
+				}
+			}
+
+			return Std.int(howl.duration() * 1000);
 		}
 		#end
 
