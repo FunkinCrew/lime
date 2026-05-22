@@ -20,13 +20,13 @@ namespace lime {
 		switch (origin) {
 
 			case DRFLAC_SEEK_SET:
-				return ((File*) pUserData)->Seek (offset, SEEK_SET) ? DRFLAC_TRUE : DRFLAC_FALSE;
+				return ((File*) pUserData)->Seek (offset, SEEK_SET) < 0 ? DRFLAC_FALSE : DRFLAC_TRUE;
 
 			case DRFLAC_SEEK_CUR:
-				return ((File*) pUserData)->Seek (offset, SEEK_CUR) ? DRFLAC_TRUE : DRFLAC_FALSE;
+				return ((File*) pUserData)->Seek (offset, SEEK_CUR) < 0 ? DRFLAC_FALSE : DRFLAC_TRUE;
 
 			case DRFLAC_SEEK_END:
-				return ((File*) pUserData)->Seek (offset, SEEK_END) ? DRFLAC_TRUE : DRFLAC_FALSE;
+				return ((File*) pUserData)->Seek (offset, SEEK_END) < 0 ? DRFLAC_FALSE : DRFLAC_TRUE;
 
 		}
 
