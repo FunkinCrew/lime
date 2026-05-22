@@ -74,27 +74,26 @@ class NativeAudioSource
 
 		format = 0;
 
-		if (parent.buffer.channels == 1)
+		switch (parent.buffer.dataFormat)
 		{
-			if (parent.buffer.bitsPerSample == 8)
-			{
-				format = AL.FORMAT_MONO8;
-			}
-			else if (parent.buffer.bitsPerSample == 16)
-			{
-				format = AL.FORMAT_MONO16;
-			}
-		}
-		else if (parent.buffer.channels == 2)
-		{
-			if (parent.buffer.bitsPerSample == 8)
-			{
-				format = AL.FORMAT_STEREO8;
-			}
-			else if (parent.buffer.bitsPerSample == 16)
-			{
-				format = AL.FORMAT_STEREO16;
-			}
+			case S16:
+				if (parent.buffer.channels == 1)
+				{
+					format = AL.FORMAT_MONO16;
+				}
+				else if (parent.buffer.channels == 2)
+				{
+					format = AL.FORMAT_STEREO16;
+				}
+			case F32:
+				if (parent.buffer.channels == 1)
+				{
+					format = AL.FORMAT_MONO_FLOAT32;
+				}
+				else if (parent.buffer.channels == 2)
+				{
+					format = AL.FORMAT_STEREO_FLOAT32;
+				}
 		}
 
 		handle = AL.createSource();
