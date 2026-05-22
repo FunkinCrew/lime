@@ -49,6 +49,27 @@ class AudioDecoder
 			{
 				return new AudioDecoder(opusHandle);
 			}
+
+			var flacHandle = NativeCFFI.lime_audio_decoder_open_file(path, cast FLAC);
+
+			if (flacHandle != null)
+			{
+				return new AudioDecoder(flacHandle);
+			}
+
+			var mp3Handle = NativeCFFI.lime_audio_decoder_open_file(path, cast MP3);
+
+			if (mp3Handle != null)
+			{
+				return new AudioDecoder(mp3Handle);
+			}
+
+			var wavHandle = NativeCFFI.lime_audio_decoder_open_file(path, cast WAV);
+
+			if (wavHandle != null)
+			{
+				return new AudioDecoder(wavHandle);
+			}
 		}
 		#end
 
@@ -88,6 +109,27 @@ class AudioDecoder
 			if (opusHandle != null)
 			{
 				return new AudioDecoder(opusHandle);
+			}
+
+			var flacHandle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast FLAC);
+
+			if (flacHandle != null)
+			{
+				return new AudioDecoder(flacHandle);
+			}
+
+			var mp3Handle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast MP3);
+
+			if (mp3Handle != null)
+			{
+				return new AudioDecoder(mp3Handle);
+			}
+
+			var wavHandle = NativeCFFI.lime_audio_decoder_open_bytes(bytes, cast WAV);
+
+			if (wavHandle != null)
+			{
+				return new AudioDecoder(wavHandle);
 			}
 		}
 		#end

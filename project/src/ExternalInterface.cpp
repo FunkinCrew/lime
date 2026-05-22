@@ -28,6 +28,11 @@
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
+#ifdef LIME_DR_LIBS
+#include <media/decoders/FlacDecoder.h>
+#include <media/decoders/MP3Decoder.h>
+#include <media/decoders/WavDecoder.h>
+#endif
 #ifdef LIME_OGG
 #include <media/decoders/OggDecoder.h>
 #endif
@@ -4260,16 +4265,35 @@ namespace lime {
 
 		switch (codec) {
 
+			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
+			#endif
 
+			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
+			#endif
+
+			#ifdef LIME_DR_LIBS
+			case 2:
+				decoder = new FlacDecoder ();
+				break;
+
+			case 3:
+				decoder = new MP3Decoder ();
+				break;
+
+			case 4:
+				decoder = new WavDecoder ();
+				break;
+			#endif
 
 			default:
 				return alloc_null ();
+
 		}
 
 		Resource resource = Resource (val_string (data));
@@ -4293,16 +4317,35 @@ namespace lime {
 
 		switch (codec) {
 
+			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
+			#endif
 
+			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
+			#endif
+
+			#ifdef LIME_DR_LIBS
+			case 2:
+				decoder = new FlacDecoder ();
+				break;
+
+			case 3:
+				decoder = new MP3Decoder ();
+				break;
+
+			case 4:
+				decoder = new WavDecoder ();
+				break;
+			#endif
 
 			default:
 				return 0;
+
 		}
 
 		Resource resource = Resource (data ? hl_to_utf8 ((const uchar*)data->bytes) : NULL);
@@ -4326,16 +4369,35 @@ namespace lime {
 
 		switch (codec) {
 
+			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
+			#endif
 
+			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
+			#endif
+
+			#ifdef LIME_DR_LIBS
+			case 2:
+				decoder = new FlacDecoder ();
+				break;
+
+			case 3:
+				decoder = new MP3Decoder ();
+				break;
+
+			case 4:
+				decoder = new WavDecoder ();
+				break;
+			#endif
 
 			default:
 				return alloc_null ();
+
 		}
 
 		Bytes bytes (data);
@@ -4361,16 +4423,35 @@ namespace lime {
 
 		switch (codec) {
 
+			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
+			#endif
 
+			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
+			#endif
+
+			#ifdef LIME_DR_LIBS
+			case 2:
+				decoder = new FlacDecoder ();
+				break;
+
+			case 3:
+				decoder = new MP3Decoder ();
+				break;
+
+			case 4:
+				decoder = new WavDecoder ();
+				break;
+			#endif
 
 			default:
 				return 0;
+
 		}
 
 		Resource resource = Resource (data);
