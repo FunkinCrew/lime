@@ -100,13 +100,13 @@ namespace lime {
 	}
 
 
-	size_t FlacDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
+	size_t FlacDecoder::Decode (void* ptr, size_t frames, AudioDataFormat format) {
 
-		if (format == AudioFormat::S16) {
+		if (format == AudioDataFormat::S16) {
 
 			return drflac_read_pcm_frames_s16 ((drflac*) handle, frames, (drflac_int16*) ptr);
 
-		} else if (format == AudioFormat::F32) {
+		} else if (format == AudioDataFormat::F32) {
 
 			return drflac_read_pcm_frames_f32 ((drflac*) handle, frames, (float*) ptr);
 

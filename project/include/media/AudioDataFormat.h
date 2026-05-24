@@ -3,7 +3,7 @@
 namespace lime {
 
 
-	enum AudioFormat {
+	enum AudioDataFormat {
 
 		S16,
 		F32

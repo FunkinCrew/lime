@@ -179,7 +179,7 @@ class AudioDecoder
 		@param format The output format (`S16` or `F32`).
 		@return A `Bytes` object containing decoded PCM audio data.
 	**/
-	public function decode(frames:Int, format:AudioFormat = S16):Bytes
+	public function decode(frames:Int, format:AudioDataFormat = S16):Bytes
 	{
 		#if (lime_cffi && !macro)
 		if (handle != null)

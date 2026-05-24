@@ -104,13 +104,13 @@ namespace lime {
 	}
 
 
-	size_t MP3Decoder::Decode (void* ptr, size_t frames, AudioFormat format) {
+	size_t MP3Decoder::Decode (void* ptr, size_t frames, AudioDataFormat format) {
 
-		if (format == AudioFormat::S16) {
+		if (format == AudioDataFormat::S16) {
 
 			return drmp3_read_pcm_frames_s16 ((drmp3*) handle, frames, (drmp3_int16*) ptr);
 
-		} else if (format == AudioFormat::F32) {
+		} else if (format == AudioDataFormat::F32) {
 
 			return drmp3_read_pcm_frames_f32 ((drmp3*) handle, frames, (float*) ptr);
 

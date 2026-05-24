@@ -53,7 +53,7 @@ class AudioBuffer
 	/**
 		The format the raw audio data is stored in.
 	**/
-	public var dataFormat:AudioFormat;
+	public var dataFormat:AudioDataFormat;
 
 	/**
 		The sample rate of the audio data, in Hz.

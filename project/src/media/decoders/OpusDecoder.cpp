@@ -96,7 +96,7 @@ namespace lime {
 	}
 
 
-	size_t OpusDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
+	size_t OpusDecoder::Decode (void* ptr, size_t frames, AudioDataFormat format) {
 
 		int totalSamples = frames * channels;
 
@@ -106,11 +106,11 @@ namespace lime {
 
 			int result = 0;
 
-			if (format == AudioFormat::S16) {
+			if (format == AudioDataFormat::S16) {
 
 				result = op_read ((OggOpusFile*)handle, ((int16_t*) ptr) + samplesRead, totalSamples - samplesRead, NULL);
 
-			} else if (format == AudioFormat::F32) {
+			} else if (format == AudioDataFormat::F32) {
 
 				result = op_read_float ((OggOpusFile*)handle, ((float*) ptr) + samplesRead, totalSamples - samplesRead, NULL);
 

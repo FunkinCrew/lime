@@ -104,13 +104,13 @@ namespace lime {
 	}
 
 
-	size_t WavDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
+	size_t WavDecoder::Decode (void* ptr, size_t frames, AudioDataFormat format) {
 
-		if (format == AudioFormat::S16) {
+		if (format == AudioDataFormat::S16) {
 
 			return drwav_read_pcm_frames_s16 ((drwav*) handle, frames, (drwav_int16*) ptr);
 
-		} else if (format == AudioFormat::F32) {
+		} else if (format == AudioDataFormat::F32) {
 
 			return drwav_read_pcm_frames_f32 ((drwav*) handle, frames, (float*) ptr);
 
