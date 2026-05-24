@@ -117,8 +117,10 @@ class AudioManager
 	@:noCompletion private static var __pendingDefaultCaptureDevice:Bool;
 
 	@:noCompletion private static var __captureExtSupported:Bool;
+	@:noCompletion private static var __directChannelsExtSupported:Bool;
 	@:noCompletion private static var __disconnectExtSupported:Bool;
 	@:noCompletion private static var __enumerateAllSupported:Bool;
+	@:noCompletion private static var __latencyExtSupported:Bool;
 	@:noCompletion private static var __resumeOnFocus:Bool;
 	@:noCompletion private static var __reopenDeviceSupported:Bool;
 	@:noCompletion private static var __systemEventsSupported:Bool;
@@ -502,6 +504,9 @@ class AudioManager
 		__enumerateAllSupported = ALC.isExtensionPresent(null, 'ALC_ENUMERATE_ALL_EXT');
 		__reopenDeviceSupported = ALC.isExtensionPresent(null, 'ALC_SOFT_reopen_device');
 		__systemEventsSupported = ALC.isExtensionPresent(null, 'ALC_SOFT_system_events');
+
+		__latencyExtSupported = AL.isExtensionPresent('AL_SOFT_source_latency');
+		__directChannelsExtSupported = AL.isExtensionPresent('AL_SOFT_direct_channels') && AL.isExtensionPresent('AL_SOFT_direct_channels_remix');
 
 		gain = __gain;
 		AL.distanceModel(AL.NONE);

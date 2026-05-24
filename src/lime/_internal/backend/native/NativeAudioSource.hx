@@ -13,9 +13,6 @@ import lime.utils.UInt8Array;
 @:access(lime.media.AudioBuffer)
 class NativeAudioSource
 {
-	private static var hasDirectChannelsExt:Null<Bool>;
-	private static var hasALSoftLatencyExt:Null<Bool>;
-
 	private var completed:Bool;
 	private var dataLength:Int;
 	private var format:Int;
@@ -57,16 +54,6 @@ class NativeAudioSource
 
 	public function init():Void
 	{
-		if (hasALSoftLatencyExt == null)
-		{
-			hasALSoftLatencyExt = AL.isExtensionPresent("AL_SOFT_source_latency");
-		}
-
-		if (hasDirectChannelsExt == null)
-		{
-			hasDirectChannelsExt = AL.isExtensionPresent("AL_SOFT_direct_channels") && AL.isExtensionPresent("AL_SOFT_direct_channels_remix");
-		}
-
 		format = 0;
 
 		switch (parent.buffer.dataFormat)
@@ -105,7 +92,7 @@ class NativeAudioSource
 
 		AL.sourcei(handle, AL.BUFFER, parent.buffer.__srcBuffer);
 
-		if (hasDirectChannelsExt)
+		if (AudioManager.__directChannelsExtSupported)
 		{
 			AL.sourcei(handle, AL.DIRECT_CHANNELS_SOFT, AL.REMIX_UNMATCHED_SOFT);
 		}
@@ -331,7 +318,7 @@ class NativeAudioSource
 
 	public function getLatency():Float
 	{
-		if (hasALSoftLatencyExt)
+		if (AudioManager.__latencyExtSupported)
 		{
 			var offsets = AL.getSourcedvSOFT(handle, AL.SEC_OFFSET_LATENCY_SOFT, 2);
 
