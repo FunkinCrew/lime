@@ -56,6 +56,12 @@ jobs:
           name: Linux64-Hashlink
           path: templates/bin/hl/Linux64
 
+      - name: Download LinuxArm64-NDLL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: LinuxArm64-NDLL
+          path: ndll/LinuxArm64
+
       - name: Download Mac64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
