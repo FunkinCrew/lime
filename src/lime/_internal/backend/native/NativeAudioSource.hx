@@ -215,16 +215,12 @@ class NativeAudioSource
 
 		if (playing)
 		{
-			var timeRemaining = Std.int((getLength() - value) / getPitch());
+			completed = false;
 
-			if (timeRemaining > 0)
+			if (value >= getLength())
 			{
-				completed = false;
-			}
-			else
-			{
-				playing = false;
 				completed = true;
+				playing = false;
 			}
 		}
 
