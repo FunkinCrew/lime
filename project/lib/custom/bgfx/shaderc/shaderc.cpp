@@ -398,6 +398,8 @@ namespace bgfx
 		, keepIntermediate(false)
 		, optimize(false)
 		, optimizationLevel(3)
+		, fileOpen(NULL)
+		, fileOpenUserData(NULL)
 	{
 	}
 
@@ -980,6 +982,16 @@ namespace bgfx
 			m_depends += _fileName;
 		}
 
+		void setFileOpen(ShaderFileOpenFn _fn, void* _userData)
+		{
+			m_fileOpen = _fn;
+			m_fileOpenUserData = _userData;
+
+			m_tagptr->tag = FPPTAG_FILEOPENFUNC;
+			m_tagptr->data = (void*)fppFileOpen;
+			m_tagptr++;
+		}
+
 		void setKeepComments(bool keep)
 		{
 			m_keepCommentsTag->data = (void*)keep;
@@ -1036,6 +1048,12 @@ namespace bgfx
 			thisClass->addDependency(_fileName);
 		}
 
+		static FILE* fppFileOpen(char* _filename, char* _mode, void* _userData)
+		{
+			Preprocessor* thisClass = (Preprocessor*)_userData;
+			return thisClass->m_fileOpen(_filename, _mode, thisClass->m_fileOpenUserData);
+		}
+
 		static char* fppInput(char* _buffer, int _size, void* _userData)
 		{
 			Preprocessor* thisClass = (Preprocessor*)_userData;
@@ -1066,6 +1084,9 @@ namespace bgfx
 
 		fppTag m_tags[MAX_TAGS];
 		fppTag* m_tagptr;
+
+		ShaderFileOpenFn m_fileOpen = NULL;
+		void* m_fileOpenUserData = NULL;
 
 		std::string m_depends;
 		std::string m_default;
@@ -1283,6 +1304,11 @@ namespace bgfx
 		for (size_t ii = 0; ii < _options.includeDirs.size(); ++ii)
 		{
 			preprocessor.addInclude(_options.includeDirs[ii].c_str() );
+		}
+
+		if (NULL != _options.fileOpen)
+		{
+			preprocessor.setFileOpen(_options.fileOpen, _options.fileOpenUserData);
 		}
 
 		for (size_t ii = 0; ii < _options.defines.size(); ++ii)

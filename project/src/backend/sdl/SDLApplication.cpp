@@ -3,6 +3,10 @@
 #include <ui/Gamepad.h>
 #include <ui/Joystick.h>
 
+#ifdef LIME_BGFX
+#include "../../bindings/bgfx/BGFXBindings.h"
+#endif
+
 #ifdef HX_MACOS
 #include <unistd.h>
 #endif
@@ -729,8 +733,13 @@ namespace lime {
 				case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
 				case SDL_EVENT_WINDOW_RESIZED: {
 
+
 					int width = event->window.data1;
 					int height = event->window.data2;
+
+					#ifdef LIME_BGFX
+					BGFXBindings::ResetWindow (width, height);
+					#endif
 
 					if (width == 0 && height == 0) {
 
@@ -777,6 +786,10 @@ namespace lime {
 
 		#ifdef IPHONE
 		SDL_SetiOSAnimationCallback (window->sdlWindow, 1, UpdateFrame, NULL);
+		#endif
+
+		#ifdef LIME_BGFX
+		BGFXBindings::defaultWindow = window->sdlWindow;
 		#endif
 
 	}
@@ -878,6 +891,10 @@ namespace lime {
 				return false;
 
 			case SDL_EVENT_DID_ENTER_FOREGROUND:
+
+				#ifdef LIME_BGFX
+				BGFXBindings::ResetWindow (0, 0);
+				#endif
 
 				currentApplication->windowEvent.type = WINDOW_ACTIVATE;
 				WindowEvent::Dispatch (&currentApplication->windowEvent);

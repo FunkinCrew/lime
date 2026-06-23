@@ -1,16 +1,56 @@
 package lime.graphics.bgfx;
 
-typedef BGFXCaps =
+import haxe.Int64;
+
+@:structInit
+class BGFXCaps
 {
-	var rendererType:BGFXBackend;
-	var supported:Float;
+	public var rendererType(default, null):BGFXRendererType;
+	public var supported(get, never):Int64;
+	public var vendorId(default, null):Int;
+	public var deviceId(default, null):Int;
+	public var homogeneousDepth(default, null):Bool;
+	public var originBottomLeft(default, null):Bool;
+	public var numGPUs(default, null):Int;
+	public var gpus(default, null):Array<BGFXCapsGPU>;
+	public var limits(default, null):BGFXCapsLimits;
+
+	@:noCompletion
+	private var __supportedHigh(default, null):Int;
+
+	@:noCompletion
+	private var __supportedLow(default, null):Int;
+
+	@:noCompletion
+	private function get_supported():Int64
+	{
+		return Int64.make(__supportedHigh, __supportedLow);
+	}
+
+	@:noCompletion
+	private static function fromCFFI(struct:Dynamic):BGFXCaps
+	{
+		if (struct == null) return null;
+
+		return {
+			rendererType: struct.rendererType,
+			vendorId: struct.vendorId,
+			deviceId: struct.deviceId,
+			homogeneousDepth: struct.homogeneousDepth,
+			originBottomLeft: struct.originBottomLeft,
+			numGPUs: struct.numGPUs,
+			gpus: struct.gpus,
+			limits: struct.limits,
+			__supportedHigh: struct.__supportedHigh,
+			__supportedLow: struct.__supportedLow
+		};
+	}
+}
+
+typedef BGFXCapsGPU =
+{
 	var vendorId:Int;
 	var deviceId:Int;
-	var homogeneousDepth:Bool;
-	var originBottomLeft:Bool;
-	var numGPUs:Int;
-	var limits:BGFXCapsLimits;
-	var formats:Array<Int>;
 }
 
 typedef BGFXCapsLimits =

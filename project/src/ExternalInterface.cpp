@@ -57,6 +57,7 @@
 #include <ui/Window.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
+#include <utils/HaxeResource.h>
 
 #ifdef HX_WINDOWS
 #include <locale>
@@ -429,6 +430,20 @@ namespace lime {
 
 		if (!bytes) return 0;
 		return (uintptr_t)bytes->b + offset;
+
+	}
+
+
+	void lime_haxe_resource_init (value listNames, value getBytes) {
+
+		HaxeResource::Init (val_is_null (listNames) ? NULL : new ValuePointer (listNames), val_is_null (getBytes) ? NULL : new ValuePointer (getBytes));
+
+	}
+
+
+	HL_PRIM void HL_NAME(hl_haxe_resource_init) (vclosure* listNames, vclosure* getBytes) {
+
+		HaxeResource::Init (listNames ? new ValuePointer (listNames) : NULL, getBytes ? new ValuePointer (getBytes) : NULL);
 
 	}
 
@@ -4699,6 +4714,7 @@ namespace lime {
 	DEFINE_PRIME2 (lime_bytes_get_data_pointer_offset);
 	DEFINE_PRIME2 (lime_bytes_read_file);
 	DEFINE_PRIME2v (lime_bytes_write_file);
+	DEFINE_PRIME2v (lime_haxe_resource_init);
 	DEFINE_PRIME1 (lime_cffi_get_native_pointer);
 	DEFINE_PRIME2v (lime_clipboard_event_manager_register);
 	DEFINE_PRIME0 (lime_clipboard_get_text);
@@ -4910,6 +4926,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_F64, hl_bytes_get_data_pointer_offset, _TBYTES _I32);
 	DEFINE_HL_PRIM (_TBYTES, hl_bytes_read_file, _STRING _TBYTES);
 	DEFINE_HL_PRIM (_VOID, hl_bytes_write_file, _STRING _TBYTES);
+	DEFINE_HL_PRIM (_VOID, hl_haxe_resource_init, _FUN (_ARR, _NO_ARG) _FUN (_TBYTES, _BYTES));
 	DEFINE_HL_PRIM (_F64, hl_cffi_get_native_pointer, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_clipboard_event_manager_register, _FUN(_VOID, _NO_ARG) _TCLIPBOARD_EVENT);
 	DEFINE_HL_PRIM (_BYTES, hl_clipboard_get_text, _NO_ARG);

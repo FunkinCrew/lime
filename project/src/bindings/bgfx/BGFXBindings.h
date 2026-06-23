@@ -23,7 +23,13 @@ namespace lime {
 
 		public:
 
+			static SDL_Window* defaultWindow;
+
 			static bool Init (SDL_Window* sdlWindow);
+
+			static void ResetWindow (int width, int height);
+
+			static void Shutdown ();
 
 	};
 

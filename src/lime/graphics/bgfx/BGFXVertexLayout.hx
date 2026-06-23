@@ -12,7 +12,7 @@ abstract BGFXVertexLayout(CFFIPointer) from CFFIPointer to CFFIPointer
 		this = handle;
 	}
 
-	public function begin(backend:BGFXBackend):BGFXVertexLayout
+	public function begin(backend:BGFXRendererType):BGFXVertexLayout
 	{
 		#if (lime_cffi && lime_bgfx && !macro)
 		NativeCFFI.lime_bgfx_vertex_layout_begin(this, backend);

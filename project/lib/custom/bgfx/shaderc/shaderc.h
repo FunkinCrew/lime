@@ -72,6 +72,7 @@
 #include <bx/file.h>
 #include "../../bgfx/src/vertexlayout.h"
 #include <cstring>
+#include <stdio.h>
 #include <string.h>
 #include <algorithm>
 #include <string>
@@ -147,6 +148,8 @@ namespace bgfx
 		uint16_t texFormat;
 	};
 
+	typedef FILE* (*ShaderFileOpenFn)(const char* _filename, const char* _mode, void* _userData);
+
 	struct Options
 	{
 		Options();
@@ -182,6 +185,9 @@ namespace bgfx
 
 		bool optimize;
 		uint32_t optimizationLevel;
+
+		ShaderFileOpenFn fileOpen;
+		void* fileOpenUserData;
 	};
 
 	typedef std::vector<Uniform> UniformArray;
