@@ -29,10 +29,6 @@ import haxe.Json;
  * automatically. For web content, the assets are preloaded before
  * the start of the rest of the application.</p>
  */
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime.utils.AssetLibrary)
 class Assets
 {
@@ -606,10 +602,6 @@ class Assets
 	}
 }
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 private class LibrarySymbol
 {
 	public var library(default, null):AssetLibrary;

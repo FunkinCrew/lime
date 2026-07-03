@@ -4,10 +4,6 @@ package lime.math;
 	`Vector4` is a vector suitable for three-dimensional
 	math, containing (x, y, z, w) components
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Vector4
 {
 	/**

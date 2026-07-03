@@ -10,10 +10,6 @@ import lime._internal.graphics.ImageCanvasUtil;
 import js.Browser;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.graphics.ImageBuffer)
 class JPEG

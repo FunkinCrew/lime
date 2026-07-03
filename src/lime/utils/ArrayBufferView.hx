@@ -6,10 +6,6 @@ typedef ArrayBufferView = #if haxe4 js.lib.ArrayBufferView #else js.html.ArrayBu
 import lime.system.System;
 import lime.system.Endian;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class ArrayBufferView
 {
 	public var type = TypedArrayType.None;

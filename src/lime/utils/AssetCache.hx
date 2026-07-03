@@ -8,10 +8,6 @@ import lime.graphics.Image;
 import lime._internal.macros.AssetsMacro;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class AssetCache
 {
 	public var audio:IMap<String, AudioBuffer>;

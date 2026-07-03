@@ -4,10 +4,6 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.app.Event;
 import lime.system.CFFI;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class Joystick
 {

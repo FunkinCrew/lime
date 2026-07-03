@@ -545,16 +545,6 @@
 #define SDL_STORAGE_STEAM 1                                      /**< Steam cloud storage support */
 
 /**
- * @name KMS/DRM Video Driver
- * @brief Kernel Mode Setting / Direct Rendering Manager video driver.
- * @{
- */
-# define SDL_VIDEO_DRIVER_KMSDRM 1                        /**< KMS/DRM video driver */
-# define SDL_VIDEO_DRIVER_KMSDRM_DYNAMIC "libdrm.so.2"   /**< Dynamic libdrm loading */
-# define SDL_VIDEO_DRIVER_KMSDRM_DYNAMIC_GBM "libgbm.so.1" /**< Dynamic libgbm loading */
-/** @} */
-
-/**
  * @name Wayland Video Driver
  * @brief Wayland Window System video driver with extensions.
  * @{

@@ -10,10 +10,6 @@ import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetType;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime.text.Font)
 @:access(lime.utils.Assets)
 class AssetLibrary

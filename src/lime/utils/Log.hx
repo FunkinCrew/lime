@@ -2,10 +2,6 @@ package lime.utils;
 
 import haxe.PosInfos;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Log
 {
 	public static var level:LogLevel;
@@ -31,9 +27,6 @@ class Log
 
 			if (throwErrors)
 			{
-				#if webassembly
-				println(message);
-				#end
 				throw message;
 			}
 			else

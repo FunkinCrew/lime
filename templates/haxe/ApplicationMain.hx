@@ -122,7 +122,7 @@ import ::APP_MAIN::;
 	{
 		var result = app.exec();
 
-		#if (sys && !ios && !nodejs && !webassembly)
+		#if (sys && !ios && !nodejs)
 		lime.system.System.exit(result);
 		#end
 	}

@@ -531,7 +531,8 @@ class AssetHelper
 			{
 				if (library.name == DEFAULT_LIBRARY_NAME)
 				{
-					library.preload = true;
+					var shouldPreload = (project.haxedefs.get("disable_preload_default_library") != "1") ?? true;
+					library.preload = shouldPreload;
 				}
 
 				if (!hasManifest.exists(library.name))

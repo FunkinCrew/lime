@@ -41,10 +41,6 @@ typedef CFFIPointer = Dynamic;
 // #if hl
 // typedef TNative_Application = hl.Abstract<"Application">;
 // #end
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 #if (!macro && !lime_doc_gen)
 #if disable_cffi
 @:build(lime.system.CFFI.build())

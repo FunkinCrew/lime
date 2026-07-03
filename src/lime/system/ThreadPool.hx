@@ -60,10 +60,6 @@ import haxe.Exception;
 	  to take a small fraction of the frame's time, and `ThreadPool` will keep
 	  running the function until enough time passes.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class ThreadPool extends WorkOutput
 {
 	#if (haxe4 && lime_threads && !html5)

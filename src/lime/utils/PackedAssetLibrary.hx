@@ -12,10 +12,6 @@ import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:keep class PackedAssetLibrary extends AssetLibrary
 {
 	@:noCompletion private var id:String;

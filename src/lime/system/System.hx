@@ -21,10 +21,6 @@ import sys.io.Process;
 /**
 	Access operating system level settings and operations.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.system.Display)
 @:access(lime.system.DisplayMode)

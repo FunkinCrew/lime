@@ -7,10 +7,6 @@ package lime.math;
 #if hl
 @:keep
 #end
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Vector2
 {
 	/**

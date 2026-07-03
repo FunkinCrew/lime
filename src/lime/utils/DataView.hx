@@ -98,10 +98,6 @@ abstract DataView(JSDataView) from JSDataView to JSDataView to ArrayBufferView
 #else
 import lime.utils.ArrayBuffer;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class DataView
 {
 	public var buffer:ArrayBuffer;

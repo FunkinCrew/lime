@@ -11,10 +11,6 @@ import lime._internal.backend.html5.HTML5Window;
 /**
 	Reads and writes text on the system clipboard.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.ui.Window)
 class Clipboard

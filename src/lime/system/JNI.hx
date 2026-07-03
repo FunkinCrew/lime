@@ -36,10 +36,6 @@ using StringTools;
 	use `Extension.callbackHandler.post()` to switch to the UI thread, while
 	Haxe code can avoid the problem using `lime.system.JNI.JNISafety`.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class JNI
 {
@@ -234,10 +230,6 @@ class JNI
 	}
 }
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class JNIMemberField
 {
@@ -266,10 +258,6 @@ class JNIMemberField
 	}
 }
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class JNIStaticField
 {
@@ -298,10 +286,6 @@ class JNIStaticField
 	}
 }
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class JNIMethod
 {

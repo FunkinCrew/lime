@@ -56,10 +56,6 @@ import sys.io.File;
 	loading from files, loading from bytes, and performing many pixel operations over an
 	`ImageBuffer` instance.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:autoBuild(lime._internal.macros.AssetsMacro.embedImage())
 @:access(lime._internal.backend.native.NativeCFFI)
 @:allow(lime._internal.graphics.ImageCanvasUtil)

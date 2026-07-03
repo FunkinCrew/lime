@@ -6,10 +6,6 @@ import haxe.ds.ObjectMap;
 /**
  	A generic object pool for reusing objects.
  **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 #if !js @:generic #end class ObjectPool<T>
 {
 	/**
@@ -35,7 +31,7 @@ import haxe.ds.ObjectMap;
 
 	/**
    		Creates a new ObjectPool instance.
-   
+
    		@param create A function that creates a new instance of type T.
    		@param clean A function that cleans up an instance of type T before it is reused.
    		@param size The maximum size of the object pool.
@@ -66,7 +62,7 @@ import haxe.ds.ObjectMap;
 	}
 	/**
    		Adds an object to the object pool.
-   
+
    		@param object The object to add to the pool.
    	**/
 	public function add(object:T):Void
@@ -83,7 +79,7 @@ import haxe.ds.ObjectMap;
 		Dynamic function.
 
    		Cleans up an object before returning it to the pool.
-   
+
    		@param object The object to clean up.
   	**/
 	public dynamic function clean(object:T):Void {}
@@ -115,7 +111,7 @@ import haxe.ds.ObjectMap;
 
 	/**
    		Creates a new object and adds it to the pool, or returns an existing inactive object from the pool.
-   
+
    		@return The object retrieved from the pool, or null if the pool is full and no new objects can be created.
   	**/
 	public function get():T
@@ -142,7 +138,7 @@ import haxe.ds.ObjectMap;
 
 	/**
    		Releases an active object back into the pool.
-   
+
    		@param object The object to release.
    	**/
 	public function release(object:T):Void
@@ -173,7 +169,7 @@ import haxe.ds.ObjectMap;
 
 	/**
    		Removes an object from the pool.
-    
+
    		@param object The object to remove from the pool.
    	**/
 	public function remove(object:T):Void

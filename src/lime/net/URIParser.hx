@@ -4,10 +4,6 @@ package lime.net;
 	Class used for parsing URIs and URLs.
 	Based on http://blog.stevenlevithan.com/archives/parseuri
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class URIParser
 {
 	public static var URI_REGEX = ~/^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;

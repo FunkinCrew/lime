@@ -6,10 +6,6 @@ import lime.system.CFFI;
 import lime.system.CFFIPointer;
 import haxe.io.Bytes;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class ALC
 {

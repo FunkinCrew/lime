@@ -24,10 +24,6 @@ import lime.utils.Preloader;
 	to override "on" functions in the class in order to handle standard events
 	that are relevant.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime.ui.Window)
 class Application extends Module
 {

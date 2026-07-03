@@ -21,10 +21,6 @@ import lime._internal.backend.native.NativeCFFI;
 		], Sys.getCwd());
 	```
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.ui.Window)
 class FileDialog

@@ -5,10 +5,6 @@ import lime.media.openal.AL;
 import lime.media.openal.ALSource;
 import lime.math.Vector4;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 /**
 	The `AudioSource` class provides a way to control audio playback in a Lime application.
 	It allows for playing, pausing, and stopping audio, as well as controlling various

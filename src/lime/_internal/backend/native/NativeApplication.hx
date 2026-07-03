@@ -29,10 +29,6 @@ import lime.ui.KeyModifier;
 import lime.ui.Touch;
 import lime.ui.Window;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(haxe.Timer)
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime._internal.backend.native.NativeOpenGLRenderContext)
@@ -178,6 +174,10 @@ class NativeApplication
 				updateTimer();
 
 				parent.onUpdate.dispatch(applicationEventInfo.deltaTime);
+
+				#if HXCPP_TRACY
+				cpp.vm.tracy.TracyProfiler.frameMark();
+				#end
 
 			default:
 		}

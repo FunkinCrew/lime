@@ -18,10 +18,6 @@ import js.lib.Uint8ClampedArray;
 
 	For higher-level operations, use the `Image` class.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 #if hl
 @:keep
 #end

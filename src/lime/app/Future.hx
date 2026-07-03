@@ -36,10 +36,6 @@ import lime.utils.Log;
 	using a `Promise`, and use the `Promise` interface to influence the error, complete or progress state
 	of a `Future`.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:allow(lime.app.Promise) class Future<T>
 {
 	/**
@@ -440,10 +436,6 @@ import lime.utils.Log;
 /**
 	The class that handles asynchronous `work` functions passed to `new Future()`.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:dox(hide) class FutureWork
 {
 	private static var threadPool:ThreadPool;

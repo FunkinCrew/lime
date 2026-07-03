@@ -23,10 +23,6 @@ import js.Browser;
 import haxe.io.Path;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 #if (!display && !macro)
 @:autoBuild(lime._internal.macros.AssetsMacro.embedFont())
 #end

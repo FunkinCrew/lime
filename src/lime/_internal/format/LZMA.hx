@@ -4,10 +4,6 @@ import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.utils.UInt8Array;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class LZMA
 {

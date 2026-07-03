@@ -44,10 +44,6 @@ import lime.system.WorkOutput;
 	future.onProgress(function(loaded, total) { trace("Progress: " + loaded + ", " + total); });
 	```
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:allow(lime.app.Future)
 class Promise<T>
 {

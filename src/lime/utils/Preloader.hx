@@ -20,10 +20,6 @@ import lime.net.HTTPRequest;
 #end
 
 @:access(lime.utils.AssetLibrary)
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Preloader
 {
 	public var complete(default, null):Bool;

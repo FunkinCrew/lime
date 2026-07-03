@@ -10,10 +10,6 @@ import lime.media.openal.ALSource;
 import lime.utils.ArrayBufferView;
 import haxe.io.Bytes;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class OpenALAudioContext
 {
 	public var NONE:Int = 0;

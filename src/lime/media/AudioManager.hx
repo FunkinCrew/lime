@@ -19,10 +19,6 @@ import lime.app.Application;
 import js.Browser;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:allow(lime._internal.backend.native.NativeApplication)
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.media.openal.ALDevice)

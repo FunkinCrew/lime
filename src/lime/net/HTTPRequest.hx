@@ -6,10 +6,6 @@ import lime.app.Event;
 import lime.app.Future;
 import lime.app.Promise;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 #if doc_gen
 class HTTPRequest<T>
 {
@@ -19,10 +15,6 @@ class HTTPRequest<T>
 #end
 class HTTPRequest<T> extends AbstractHTTPRequest<T> {}
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 private class AbstractHTTPRequest<T> implements _IHTTPRequest
 {
 #end
@@ -79,10 +71,6 @@ public function load(uri:String = null):Future<T>
 }
 }
 #if !doc_gen
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:noCompletion class _HTTPRequest_Bytes<T> extends AbstractHTTPRequest<T>
 {
 	public function new(uri:String = null)
@@ -122,10 +110,6 @@ public function load(uri:String = null):Future<T>
 	}
 }
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:noCompletion class _HTTPRequest_String<T> extends AbstractHTTPRequest<T>
 {
 	public function new(uri:String = null)

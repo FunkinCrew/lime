@@ -152,13 +152,6 @@ class HTTPRequestMacro
 					}
 				];
 
-				var meta:Array<MetadataEntry> = [];
-
-				#if !lime_debug
-				meta.push({name: ":fileXml", params: [macro 'tags="haxe,release"'], pos: pos});
-				meta.push({name: ":noDebug", pos: pos});
-				#end
-
 				Context.defineType(
 					{
 						name: name,
@@ -171,8 +164,7 @@ class HTTPRequestMacro
 								params: [TPType(paramType.toComplexType())]
 							}, null, false),
 						fields: fields,
-						pos: pos,
-						meta: meta
+						pos: pos
 					});
 			}
 

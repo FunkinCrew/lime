@@ -177,7 +177,7 @@ class HXProject extends Script
 		else
 		{
 			environment = Sys.environment();
-			for (conflict in ["android", "cpp", "hl", "html5", "ios", "linux", "mac", "webassembly", "windows"])
+			for (conflict in ["android", "cpp", "hl", "html5", "ios", "linux", "mac", "windows"])
 			{
 				environment.remove(conflict);
 			}

@@ -20,10 +20,6 @@ import lime.system.Endian;
 import lime.utils.BytePointer;
 import lime.utils.UInt8Array;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.graphics.ImageBuffer)
 @:access(lime.math.RGBA)

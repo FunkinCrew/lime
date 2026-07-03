@@ -1,9 +1,5 @@
 package lime.net;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class HTTPRequestHeader
 {
 	public var name:String;

@@ -158,11 +158,6 @@ class EventMacro
 				{name: ":noCompletion", pos: pos}
 			];
 
-			#if !lime_debug
-			meta.push({name: ":fileXml", params: [macro 'tags="haxe,release"'], pos: pos});
-			meta.push({name: ":noDebug", pos: pos});
-			#end
-
 			Context.defineType(
 				{
 					pos: pos,

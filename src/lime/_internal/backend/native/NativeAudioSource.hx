@@ -10,10 +10,6 @@ import lime.media.AudioManager;
 import lime.media.AudioSource;
 import lime.utils.UInt8Array;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime.media.AudioBuffer)
 class NativeAudioSource
 {

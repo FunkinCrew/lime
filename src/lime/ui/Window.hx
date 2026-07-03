@@ -20,10 +20,6 @@ typedef Stage = Dynamic;
 #if hl
 @:keep
 #end
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Window
 {
 	public var application(default, null):Application;

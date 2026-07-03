@@ -4,10 +4,6 @@ package lime.net.curl;
 import lime._internal.backend.native.NativeCFFI;
 import lime.system.CFFIPointer;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.net.curl.CURL)
 @:access(lime.net.curl.CURLMultiMessage)

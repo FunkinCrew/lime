@@ -20,10 +20,6 @@ import sys.thread.Thread;
 	@see `ThreadPool` for more advanced threading capabilities, including thread
 	safety, HTML5 threads, and more robust handling of tasks.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class BackgroundWorker
 {
 	private static var MESSAGE_COMPLETE = "__COMPLETE__";

@@ -8,10 +8,6 @@ import lime.utils.Preloader;
 	simplifying support for adding new components, such as a renderer,
 	input handler or higher-level framework.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class Module implements IModule
 {
 	/**

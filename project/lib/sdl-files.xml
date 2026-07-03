@@ -17,8 +17,6 @@
 
             </section>
 
-            <compilerflag value="-I/usr/include/libdrm" />
-
         </section>
 
         <section if="apple">
@@ -601,13 +599,6 @@
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/dummy/SDL_nullevents.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/dummy/SDL_nullframebuffer.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/dummy/SDL_nullvideo.c" />
-
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmdyn.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmevents.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmmouse.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmopengles.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmvideo.c" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/kmsdrm/SDL_kmsdrmvulkan.c" />
 
             <section if="iphone">
 

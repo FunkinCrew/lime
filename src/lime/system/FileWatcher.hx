@@ -5,10 +5,6 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
 import lime.app.Event;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class FileWatcher
 {

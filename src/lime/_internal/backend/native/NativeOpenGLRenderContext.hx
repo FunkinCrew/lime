@@ -26,10 +26,6 @@ import lime.utils.Float32Array;
 import lime.utils.Int32Array;
 import lime.utils.UInt32Array;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:dox(hide)
 @:allow(lime.ui.Window)
 @:access(lime._internal.backend.native.NativeCFFI)

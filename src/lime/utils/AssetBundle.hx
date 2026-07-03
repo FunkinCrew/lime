@@ -10,10 +10,6 @@ import lime.utils.Bytes as LimeBytes;
 import sys.io.File;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class AssetBundle
 {
 	public var data:Map<String, Bytes>;

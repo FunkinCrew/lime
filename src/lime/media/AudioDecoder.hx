@@ -8,10 +8,6 @@ import lime._internal.backend.native.NativeCFFI;
 /**
 	The `AudioDecoder` class provides low-level access to decode audio streams.
 **/
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class AudioDecoder
 {

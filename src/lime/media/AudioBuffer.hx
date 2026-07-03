@@ -24,10 +24,6 @@ import js.html.Audio;
 #if hl
 @:keep
 #end
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 
 /**
 	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`.

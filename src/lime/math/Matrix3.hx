@@ -21,10 +21,6 @@ import lime.utils.Float32Array;
 #if hl
 @:keep
 #end
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 abstract Matrix3(Float32Array) to Float32Array
 {
 	/**

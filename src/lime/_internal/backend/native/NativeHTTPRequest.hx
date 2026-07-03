@@ -20,10 +20,6 @@ import sys.thread.Deque;
 import sys.FileSystem;
 #end
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 class NativeHTTPRequest
 {
 	private static var activeInstances:Array<NativeHTTPRequest>;

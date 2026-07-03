@@ -3,10 +3,6 @@ package lime._internal.format;
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 
-#if !lime_debug
-@:fileXml('tags="haxe,release"')
-@:noDebug
-#end
 @:access(lime._internal.backend.native.NativeCFFI)
 class GZip
 {
