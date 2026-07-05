@@ -14,6 +14,7 @@ class BGFXCaps
 	public var numGPUs(default, null):Int;
 	public var gpus(default, null):Array<BGFXCapsGPU>;
 	public var limits(default, null):BGFXCapsLimits;
+	public var formats(default, null):Array<BGFXTextureFormat>;
 
 	@:noCompletion
 	private var __supportedHigh(default, null):Int;
@@ -41,6 +42,7 @@ class BGFXCaps
 			numGPUs: struct.numGPUs,
 			gpus: struct.gpus,
 			limits: struct.limits,
+			formats: struct.formats,
 			__supportedHigh: struct.__supportedHigh,
 			__supportedLow: struct.__supportedLow
 		};

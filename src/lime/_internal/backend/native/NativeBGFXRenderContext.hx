@@ -246,6 +246,25 @@ class NativeBGFXRenderContext
 	public var CAPS_VERTEX_ID:Int64 = Int64.make(0x00000001, 0x00000000);
 	public var CAPS_VIEWPORT_LAYER_ARRAY:Int64 = Int64.make(0x00000002, 0x00000000);
 
+	public var CAPS_FORMAT_TEXTURE_NONE = 0x00000000;
+	public var CAPS_FORMAT_TEXTURE_2D = 0x00000001;
+	public var CAPS_FORMAT_TEXTURE_2D_SRGB = 0x00000002;
+	public var CAPS_FORMAT_TEXTURE_2D_EMULATED = 0x00000004;
+	public var CAPS_FORMAT_TEXTURE_3D = 0x00000008;
+	public var CAPS_FORMAT_TEXTURE_3D_SRGB = 0x00000010;
+	public var CAPS_FORMAT_TEXTURE_3D_EMULATED = 0x00000020;
+	public var CAPS_FORMAT_TEXTURE_CUBE = 0x00000040;
+	public var CAPS_FORMAT_TEXTURE_CUBE_SRGB = 0x00000080;
+	public var CAPS_FORMAT_TEXTURE_CUBE_EMULATED = 0x00000100;
+	public var CAPS_FORMAT_TEXTURE_VERTEX = 0x00000200;
+	public var CAPS_FORMAT_TEXTURE_IMAGE_READ = 0x00000400;
+	public var CAPS_FORMAT_TEXTURE_IMAGE_WRITE = 0x00000800;
+	public var CAPS_FORMAT_TEXTURE_FRAMEBUFFER = 0x00001000;
+	public var CAPS_FORMAT_TEXTURE_FRAMEBUFFER_MSAA = 0x00002000;
+	public var CAPS_FORMAT_TEXTURE_MSAA = 0x00004000;
+	public var CAPS_FORMAT_TEXTURE_MIP_AUTOGEN = 0x00008000;
+	public var CAPS_FORMAT_TEXTURE_BACKBUFFER = 0x00010000;
+
 	public var type(default, null):RenderContextType;
 	public var version:Float = 1;
 
@@ -1448,5 +1467,15 @@ class NativeBGFXRenderContext
 	public inline function blendFuncSeparate(srcRGB:Int64, dstRGB:Int64, srcA:Int64, dstA:Int64):Int64
 	{
 		return (srcRGB | (dstRGB << 4)) | ((srcA | (dstA << 4)) << 8);
+	}
+
+	public inline function stencilFuncRef(v:Int):Int
+	{
+		return (v & 0xFF);
+	}
+
+	public inline function stencilFuncRmask(v:Int):Int
+	{
+		return (v & 0xFF) << 8;
 	}
 }

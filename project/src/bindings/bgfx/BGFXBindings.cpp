@@ -897,6 +897,12 @@ namespace lime {
 			alloc_field (limits, val_id ("minUniformBufferSize"), alloc_int ((int) caps->limits.minUniformBufferSize));
 			alloc_field (obj, val_id ("limits"), limits);
 
+			value formats = alloc_array ((int) bgfx::TextureFormat::Count);
+			for (int i = 0; i < (int) bgfx::TextureFormat::Count; i++) {
+				val_array_set_i (formats, i, alloc_int ((int) caps->formats[i]));
+			}
+			alloc_field (obj, val_id ("formats"), formats);
+
 			return obj;
 
 		}

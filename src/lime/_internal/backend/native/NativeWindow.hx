@@ -3,6 +3,7 @@ package lime._internal.backend.native;
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
+import lime.graphics.bgfx.BGFX;
 import lime.graphics.opengl.GL;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
@@ -143,6 +144,11 @@ class NativeWindow
 		context.bgfx = bgfx;
 		context.type = bgfx.type;
 		context.version = Std.string(bgfx.version);
+
+		if (BGFX.context == null)
+		{
+			BGFX.context = bgfx;
+		}
 		#end
 
 		contextAttributes.type = context.type;

@@ -1,0 +1,1021 @@
+package lime.graphics.bgfx;
+
+#if (!lime_doc_gen || lime_bgfx)
+import haxe.ds.Map;
+import haxe.Int64;
+import lime.graphics.BGFXRenderContext;
+import lime.math.Matrix4;
+import lime.utils.ArrayBufferView;
+
+@:allow(lime._internal.backend.native.NativeWindow)
+class BGFX
+{
+	public static inline var CLEAR_NONE = 0x0000;
+	public static inline var CLEAR_COLOR = 0x0001;
+	public static inline var CLEAR_DEPTH = 0x0002;
+	public static inline var CLEAR_STENCIL = 0x0004;
+	public static inline var CLEAR_DISCARD_COLOR_0 = 0x0008;
+	public static inline var CLEAR_DISCARD_COLOR_1 = 0x0010;
+	public static inline var CLEAR_DISCARD_COLOR_2 = 0x0020;
+	public static inline var CLEAR_DISCARD_COLOR_3 = 0x0040;
+	public static inline var CLEAR_DISCARD_COLOR_4 = 0x0080;
+	public static inline var CLEAR_DISCARD_COLOR_5 = 0x0100;
+	public static inline var CLEAR_DISCARD_COLOR_6 = 0x0200;
+	public static inline var CLEAR_DISCARD_COLOR_7 = 0x0400;
+	public static inline var CLEAR_DISCARD_DEPTH = 0x0800;
+	public static inline var CLEAR_DISCARD_STENCIL = 0x1000;
+
+	public static inline var DEBUG_NONE = 0x00000000;
+	public static inline var DEBUG_WIREFRAME = 0x00000001;
+	public static inline var DEBUG_IFH = 0x00000002;
+	public static inline var DEBUG_STATS = 0x00000004;
+	public static inline var DEBUG_TEXT = 0x00000008;
+	public static inline var DEBUG_PROFILER = 0x00000010;
+
+	public static var STATE_NONE:Int64 = Int64.make(0x00000000, 0x00000000);
+	public static var STATE_WRITE_R:Int64 = Int64.make(0x00000000, 0x00000001);
+	public static var STATE_WRITE_G:Int64 = Int64.make(0x00000000, 0x00000002);
+	public static var STATE_WRITE_B:Int64 = Int64.make(0x00000000, 0x00000004);
+	public static var STATE_WRITE_A:Int64 = Int64.make(0x00000000, 0x00000008);
+	public static var STATE_WRITE_Z:Int64 = Int64.make(0x00000040, 0x00000000);
+	public static var STATE_WRITE_RGB:Int64 = Int64.make(0x00000000, 0x00000007);
+	public static var STATE_WRITE_MASK:Int64 = Int64.make(0x00000040, 0x0000000F);
+	public static var STATE_DEPTH_TEST_LESS:Int64 = Int64.make(0x00000000, 0x00000010);
+	public static var STATE_DEPTH_TEST_LEQUAL:Int64 = Int64.make(0x00000000, 0x00000020);
+	public static var STATE_DEPTH_TEST_EQUAL:Int64 = Int64.make(0x00000000, 0x00000030);
+	public static var STATE_DEPTH_TEST_GEQUAL:Int64 = Int64.make(0x00000000, 0x00000040);
+	public static var STATE_DEPTH_TEST_GREATER:Int64 = Int64.make(0x00000000, 0x00000050);
+	public static var STATE_DEPTH_TEST_NOTEQUAL:Int64 = Int64.make(0x00000000, 0x00000060);
+	public static var STATE_DEPTH_TEST_NEVER:Int64 = Int64.make(0x00000000, 0x00000070);
+	public static var STATE_DEPTH_TEST_ALWAYS:Int64 = Int64.make(0x00000000, 0x00000080);
+	public static var STATE_BLEND_ZERO:Int64 = Int64.make(0x00000000, 0x00001000);
+	public static var STATE_BLEND_ONE:Int64 = Int64.make(0x00000000, 0x00002000);
+	public static var STATE_BLEND_SRC_COLOR:Int64 = Int64.make(0x00000000, 0x00003000);
+	public static var STATE_BLEND_INV_SRC_COLOR:Int64 = Int64.make(0x00000000, 0x00004000);
+	public static var STATE_BLEND_SRC_ALPHA:Int64 = Int64.make(0x00000000, 0x00005000);
+	public static var STATE_BLEND_INV_SRC_ALPHA:Int64 = Int64.make(0x00000000, 0x00006000);
+	public static var STATE_BLEND_DST_ALPHA:Int64 = Int64.make(0x00000000, 0x00007000);
+	public static var STATE_BLEND_INV_DST_ALPHA:Int64 = Int64.make(0x00000000, 0x00008000);
+	public static var STATE_BLEND_DST_COLOR:Int64 = Int64.make(0x00000000, 0x00009000);
+	public static var STATE_BLEND_INV_DST_COLOR:Int64 = Int64.make(0x00000000, 0x0000A000);
+	public static var STATE_BLEND_SRC_ALPHA_SAT:Int64 = Int64.make(0x00000000, 0x0000B000);
+	public static var STATE_BLEND_FACTOR:Int64 = Int64.make(0x00000000, 0x0000C000);
+	public static var STATE_BLEND_INV_FACTOR:Int64 = Int64.make(0x00000000, 0x0000D000);
+	public static var STATE_BLEND_EQUATION_ADD:Int64 = Int64.make(0x00000000, 0x00000000);
+	public static var STATE_BLEND_EQUATION_SUB:Int64 = Int64.make(0x00000000, 0x10000000);
+	public static var STATE_BLEND_EQUATION_REVSUB:Int64 = Int64.make(0x00000000, 0x20000000);
+	public static var STATE_BLEND_EQUATION_MIN:Int64 = Int64.make(0x00000000, 0x30000000);
+	public static var STATE_BLEND_EQUATION_MAX:Int64 = Int64.make(0x00000000, 0x40000000);
+	public static var STATE_BLEND_ADD:Int64 = Int64.make(0x00000000, 0x02222000); // FUNC(ONE, ONE)
+	public static var STATE_BLEND_ALPHA:Int64 = Int64.make(0x00000000, 0x06565000); // FUNC(SRC_ALPHA, INV_SRC_ALPHA)
+	public static var STATE_BLEND_DARKEN:Int64 = Int64.make(0x00000000, 0x32222000); // FUNC(ONE, ONE) + EQUATION_MIN
+	public static var STATE_BLEND_LIGHTEN:Int64 = Int64.make(0x00000000, 0x42222000); // FUNC(ONE, ONE) + EQUATION_MAX
+	public static var STATE_BLEND_MULTIPLY:Int64 = Int64.make(0x00000000, 0x01919000); // FUNC(DST_COLOR, ZERO)
+	public static var STATE_BLEND_NORMAL:Int64 = Int64.make(0x00000000, 0x06262000); // FUNC(ONE, INV_SRC_ALPHA)
+	public static var STATE_BLEND_SCREEN:Int64 = Int64.make(0x00000000, 0x04242000); // FUNC(ONE, INV_SRC_COLOR)
+	public static var STATE_BLEND_LINEAR_BURN:Int64 = Int64.make(0x00000000, 0x1A9A9000); // FUNC(DST_COLOR, INV_DST_COLOR) + EQUATION_SUB
+	public static var STATE_BLEND_INDEPENDENT:Int64 = Int64.make(0x00000004, 0x00000000);
+	public static var STATE_BLEND_ALPHA_TO_COVERAGE:Int64 = Int64.make(0x00000008, 0x00000000);
+	public static var STATE_CULL_CW:Int64 = Int64.make(0x00000010, 0x00000000);
+	public static var STATE_CULL_CCW:Int64 = Int64.make(0x00000020, 0x00000000);
+	public static var STATE_FRONT_CCW:Int64 = Int64.make(0x00000080, 0x00000000);
+	public static var STATE_PT_TRISTRIP:Int64 = Int64.make(0x00010000, 0x00000000);
+	public static var STATE_PT_LINES:Int64 = Int64.make(0x00020000, 0x00000000);
+	public static var STATE_PT_LINESTRIP:Int64 = Int64.make(0x00030000, 0x00000000);
+	public static var STATE_PT_POINTS:Int64 = Int64.make(0x00040000, 0x00000000);
+	public static var STATE_MSAA:Int64 = Int64.make(0x01000000, 0x00000000);
+	public static var STATE_LINEAA:Int64 = Int64.make(0x02000000, 0x00000000);
+	public static var STATE_CONSERVATIVE_RASTER:Int64 = Int64.make(0x04000000, 0x00000000);
+	public static var STATE_DEFAULT:Int64 = Int64.make(0x01000050, 0x0000001F);
+
+	public static inline var STENCIL_NONE = 0x00000000;
+	public static inline var STENCIL_TEST_LESS = 0x00010000;
+	public static inline var STENCIL_TEST_LEQUAL = 0x00020000;
+	public static inline var STENCIL_TEST_EQUAL = 0x00030000;
+	public static inline var STENCIL_TEST_GEQUAL = 0x00040000;
+	public static inline var STENCIL_TEST_GREATER = 0x00050000;
+	public static inline var STENCIL_TEST_NOTEQUAL = 0x00060000;
+	public static inline var STENCIL_TEST_NEVER = 0x00070000;
+	public static inline var STENCIL_TEST_ALWAYS = 0x00080000;
+	public static inline var STENCIL_OP_FAIL_S_ZERO = 0x00000000;
+	public static inline var STENCIL_OP_FAIL_S_KEEP = 0x00100000;
+	public static inline var STENCIL_OP_FAIL_S_REPLACE = 0x00200000;
+	public static inline var STENCIL_OP_FAIL_S_INCR = 0x00300000;
+	public static inline var STENCIL_OP_FAIL_S_INCRSAT = 0x00400000;
+	public static inline var STENCIL_OP_FAIL_S_DECR = 0x00500000;
+	public static inline var STENCIL_OP_FAIL_S_DECRSAT = 0x00600000;
+	public static inline var STENCIL_OP_FAIL_S_INVERT = 0x00700000;
+	public static inline var STENCIL_OP_FAIL_Z_ZERO = 0x00000000;
+	public static inline var STENCIL_OP_FAIL_Z_KEEP = 0x01000000;
+	public static inline var STENCIL_OP_FAIL_Z_REPLACE = 0x02000000;
+	public static inline var STENCIL_OP_FAIL_Z_INCR = 0x03000000;
+	public static inline var STENCIL_OP_FAIL_Z_INCRSAT = 0x04000000;
+	public static inline var STENCIL_OP_FAIL_Z_DECR = 0x05000000;
+	public static inline var STENCIL_OP_FAIL_Z_DECRSAT = 0x06000000;
+	public static inline var STENCIL_OP_FAIL_Z_INVERT = 0x07000000;
+	public static inline var STENCIL_OP_PASS_Z_ZERO = 0x00000000;
+	public static inline var STENCIL_OP_PASS_Z_KEEP = 0x10000000;
+	public static inline var STENCIL_OP_PASS_Z_REPLACE = 0x20000000;
+	public static inline var STENCIL_OP_PASS_Z_INCR = 0x30000000;
+	public static inline var STENCIL_OP_PASS_Z_INCRSAT = 0x40000000;
+	public static inline var STENCIL_OP_PASS_Z_DECR = 0x50000000;
+	public static inline var STENCIL_OP_PASS_Z_DECRSAT = 0x60000000;
+	public static inline var STENCIL_OP_PASS_Z_INVERT = 0x70000000;
+
+	public static inline var DISCARD_NONE = 0x00;
+	public static inline var DISCARD_BINDINGS = 0x01;
+	public static inline var DISCARD_INDEX_BUFFER = 0x02;
+	public static inline var DISCARD_INSTANCE_DATA = 0x04;
+	public static inline var DISCARD_STATE = 0x08;
+	public static inline var DISCARD_TRANSFORM = 0x10;
+	public static inline var DISCARD_VERTEX_STREAMS = 0x20;
+	public static inline var DISCARD_ALL = 0xFF;
+
+	public static inline var BUFFER_NONE = 0x0000;
+	public static inline var BUFFER_COMPUTE_READ = 0x0100;
+	public static inline var BUFFER_COMPUTE_WRITE = 0x0200;
+	public static inline var BUFFER_COMPUTE_READ_WRITE = 0x0300;
+	public static inline var BUFFER_DRAW_INDIRECT = 0x0400;
+	public static inline var BUFFER_ALLOW_RESIZE = 0x0800;
+	public static inline var BUFFER_INDEX32 = 0x1000;
+
+	public static var TEXTURE_NONE:Int64 = Int64.make(0x00000000, 0x00000000);
+	public static var TEXTURE_MSAA_SAMPLE:Int64 = Int64.make(0x00000008, 0x00000000);
+	public static var TEXTURE_RT:Int64 = Int64.make(0x00000010, 0x00000000);
+	public static var TEXTURE_RT_MSAA_X2:Int64 = Int64.make(0x00000020, 0x00000000);
+	public static var TEXTURE_RT_MSAA_X4:Int64 = Int64.make(0x00000030, 0x00000000);
+	public static var TEXTURE_RT_MSAA_X8:Int64 = Int64.make(0x00000040, 0x00000000);
+	public static var TEXTURE_RT_MSAA_X16:Int64 = Int64.make(0x00000050, 0x00000000);
+	public static var TEXTURE_RT_WRITE_ONLY:Int64 = Int64.make(0x00000080, 0x00000000);
+	public static var TEXTURE_COMPUTE_WRITE:Int64 = Int64.make(0x00001000, 0x00000000);
+	public static var TEXTURE_SRGB:Int64 = Int64.make(0x00002000, 0x00000000);
+	public static var TEXTURE_BLIT_DST:Int64 = Int64.make(0x00004000, 0x00000000);
+	public static var TEXTURE_READ_BACK:Int64 = Int64.make(0x00008000, 0x00000000);
+	public static var TEXTURE_EXTERNAL_SHARED:Int64 = Int64.make(0x00010000, 0x00000000);
+
+	public static inline var SAMPLER_NONE = 0x00000000;
+	public static inline var SAMPLER_U_MIRROR = 0x00000001;
+	public static inline var SAMPLER_U_CLAMP = 0x00000002;
+	public static inline var SAMPLER_U_BORDER = 0x00000003;
+	public static inline var SAMPLER_V_MIRROR = 0x00000004;
+	public static inline var SAMPLER_V_CLAMP = 0x00000008;
+	public static inline var SAMPLER_V_BORDER = 0x0000000C;
+	public static inline var SAMPLER_W_MIRROR = 0x00000010;
+	public static inline var SAMPLER_W_CLAMP = 0x00000020;
+	public static inline var SAMPLER_W_BORDER = 0x00000030;
+	public static inline var SAMPLER_MIN_POINT = 0x00000040;
+	public static inline var SAMPLER_MIN_ANISOTROPIC = 0x00000080;
+	public static inline var SAMPLER_MAG_POINT = 0x00000100;
+	public static inline var SAMPLER_MAG_ANISOTROPIC = 0x00000200;
+	public static inline var SAMPLER_MIP_POINT = 0x00000400;
+	public static inline var SAMPLER_COMPARE_LESS = 0x00010000;
+	public static inline var SAMPLER_COMPARE_LEQUAL = 0x00020000;
+	public static inline var SAMPLER_COMPARE_EQUAL = 0x00030000;
+	public static inline var SAMPLER_COMPARE_GEQUAL = 0x00040000;
+	public static inline var SAMPLER_COMPARE_GREATER = 0x00050000;
+	public static inline var SAMPLER_COMPARE_NOTEQUAL = 0x00060000;
+	public static inline var SAMPLER_COMPARE_NEVER = 0x00070000;
+	public static inline var SAMPLER_COMPARE_ALWAYS = 0x00080000;
+	public static inline var SAMPLER_SAMPLE_STENCIL = 0x00100000;
+	public static inline var SAMPLER_POINT = 0x00000540;
+	public static inline var SAMPLER_UVW_MIRROR = 0x00000015;
+	public static inline var SAMPLER_UVW_CLAMP = 0x0000002A;
+	public static inline var SAMPLER_UVW_BORDER = 0x0000003F;
+
+	public static inline var RESET_NONE = 0x00000000;
+	public static inline var RESET_FULLSCREEN = 0x00000001;
+	public static inline var RESET_MSAA_X2 = 0x00000010;
+	public static inline var RESET_MSAA_X4 = 0x00000020;
+	public static inline var RESET_MSAA_X8 = 0x00000030;
+	public static inline var RESET_MSAA_X16 = 0x00000040;
+	public static inline var RESET_VSYNC = 0x00000080;
+	public static inline var RESET_MAXANISOTROPY = 0x00000100;
+	public static inline var RESET_CAPTURE = 0x00000200;
+	public static inline var RESET_FLUSH_AFTER_RENDER = 0x00002000;
+	public static inline var RESET_FLIP_AFTER_RENDER = 0x00004000;
+	public static inline var RESET_SRGB_BACKBUFFER = 0x00008000;
+	public static inline var RESET_HDR10 = 0x00010000;
+	public static inline var RESET_HIDPI = 0x00020000;
+	public static inline var RESET_DEPTH_CLAMP = 0x00040000;
+	public static inline var RESET_SUSPEND = 0x00080000;
+	public static inline var RESET_TRANSPARENT_BACKBUFFER = 0x00100000;
+
+	public static var CAPS_ALPHA_TO_COVERAGE:Int64 = Int64.make(0x00000000, 0x00000001);
+	public static var CAPS_BLEND_INDEPENDENT:Int64 = Int64.make(0x00000000, 0x00000002);
+	public static var CAPS_COMPUTE:Int64 = Int64.make(0x00000000, 0x00000004);
+	public static var CAPS_CONSERVATIVE_RASTER:Int64 = Int64.make(0x00000000, 0x00000008);
+	public static var CAPS_DRAW_INDIRECT:Int64 = Int64.make(0x00000000, 0x00000010);
+	public static var CAPS_DRAW_INDIRECT_COUNT:Int64 = Int64.make(0x00000000, 0x00000020);
+	public static var CAPS_FRAGMENT_DEPTH:Int64 = Int64.make(0x00000000, 0x00000040);
+	public static var CAPS_FRAGMENT_ORDERING:Int64 = Int64.make(0x00000000, 0x00000080);
+	public static var CAPS_GRAPHICS_DEBUGGER:Int64 = Int64.make(0x00000000, 0x00000100);
+	public static var CAPS_HDR10:Int64 = Int64.make(0x00000000, 0x00000200);
+	public static var CAPS_HIDPI:Int64 = Int64.make(0x00000000, 0x00000400);
+	public static var CAPS_IMAGE_RW:Int64 = Int64.make(0x00000000, 0x00000800);
+	public static var CAPS_INDEX32:Int64 = Int64.make(0x00000000, 0x00001000);
+	public static var CAPS_INSTANCING:Int64 = Int64.make(0x00000000, 0x00002000);
+	public static var CAPS_OCCLUSION_QUERY:Int64 = Int64.make(0x00000000, 0x00004000);
+	public static var CAPS_PRIMITIVE_ID:Int64 = Int64.make(0x00000000, 0x00008000);
+	public static var CAPS_RENDERER_MULTITHREADED:Int64 = Int64.make(0x00000000, 0x00010000);
+	public static var CAPS_SWAP_CHAIN:Int64 = Int64.make(0x00000000, 0x00020000);
+	public static var CAPS_TEXTURE_BLIT:Int64 = Int64.make(0x00000000, 0x00040000);
+	public static var CAPS_TEXTURE_COMPARE_LEQUAL:Int64 = Int64.make(0x00000000, 0x00080000);
+	public static var CAPS_TEXTURE_CUBE_ARRAY:Int64 = Int64.make(0x00000000, 0x00200000);
+	public static var CAPS_TEXTURE_DIRECT_ACCESS:Int64 = Int64.make(0x00000000, 0x00400000);
+	public static var CAPS_TEXTURE_EXTERNAL:Int64 = Int64.make(0x00000000, 0x00800000);
+	public static var CAPS_TEXTURE_EXTERNAL_SHARED:Int64 = Int64.make(0x00000000, 0x01000000);
+	public static var CAPS_TEXTURE_READ_BACK:Int64 = Int64.make(0x00000000, 0x02000000);
+	public static var CAPS_TEXTURE_2D_ARRAY:Int64 = Int64.make(0x00000000, 0x04000000);
+	public static var CAPS_TEXTURE_3D:Int64 = Int64.make(0x00000000, 0x08000000);
+	public static var CAPS_TRANSPARENT_BACKBUFFER:Int64 = Int64.make(0x00000000, 0x10000000);
+	public static var CAPS_VARIABLE_RATE_SHADING:Int64 = Int64.make(0x00000000, 0x20000000);
+	public static var CAPS_VERTEX_ATTRIB_HALF:Int64 = Int64.make(0x00000000, 0x40000000);
+	public static var CAPS_VERTEX_ATTRIB_UINT10:Int64 = Int64.make(0x00000000, 0x80000000);
+	public static var CAPS_VERTEX_ID:Int64 = Int64.make(0x00000001, 0x00000000);
+	public static var CAPS_VIEWPORT_LAYER_ARRAY:Int64 = Int64.make(0x00000002, 0x00000000);
+
+	public static inline var CAPS_FORMAT_TEXTURE_NONE = 0x00000000;
+	public static inline var CAPS_FORMAT_TEXTURE_2D = 0x00000001;
+	public static inline var CAPS_FORMAT_TEXTURE_2D_SRGB = 0x00000002;
+	public static inline var CAPS_FORMAT_TEXTURE_2D_EMULATED = 0x00000004;
+	public static inline var CAPS_FORMAT_TEXTURE_3D = 0x00000008;
+	public static inline var CAPS_FORMAT_TEXTURE_3D_SRGB = 0x00000010;
+	public static inline var CAPS_FORMAT_TEXTURE_3D_EMULATED = 0x00000020;
+	public static inline var CAPS_FORMAT_TEXTURE_CUBE = 0x00000040;
+	public static inline var CAPS_FORMAT_TEXTURE_CUBE_SRGB = 0x00000080;
+	public static inline var CAPS_FORMAT_TEXTURE_CUBE_EMULATED = 0x00000100;
+	public static inline var CAPS_FORMAT_TEXTURE_VERTEX = 0x00000200;
+	public static inline var CAPS_FORMAT_TEXTURE_IMAGE_READ = 0x00000400;
+	public static inline var CAPS_FORMAT_TEXTURE_IMAGE_WRITE = 0x00000800;
+	public static inline var CAPS_FORMAT_TEXTURE_FRAMEBUFFER = 0x00001000;
+	public static inline var CAPS_FORMAT_TEXTURE_FRAMEBUFFER_MSAA = 0x00002000;
+	public static inline var CAPS_FORMAT_TEXTURE_MSAA = 0x00004000;
+	public static inline var CAPS_FORMAT_TEXTURE_MIP_AUTOGEN = 0x00008000;
+	public static inline var CAPS_FORMAT_TEXTURE_BACKBUFFER = 0x00010000;
+
+	public static var context(default, null):BGFXRenderContext;
+
+	public static inline function renderFrame():BGFXRenderFrame
+	{
+		return context.renderFrame();
+	}
+
+	public static inline function setDebug(flags:Int):Void
+	{
+		context.setDebug(flags);
+	}
+
+	public static inline function setViewClear(id:Int, flags:Int, rgba:Int, depth:Float, stencil:Int):Void
+	{
+		context.setViewClear(id, flags, rgba, depth, stencil);
+	}
+
+	public static inline function setViewClearDepth(id:Int, flags:Int, depth:Float, stencil:Int):Void
+	{
+		context.setViewClearDepth(id, flags, depth, stencil);
+	}
+
+	public static inline function setViewRect(id:Int, x:Int, y:Int, width:Int, height:Int):Void
+	{
+		context.setViewRect(id, x, y, width, height);
+	}
+
+	public static inline function setViewRectRatio(id:Int, x:Int, y:Int, ratio:BGFXBackbufferRatio):Void
+	{
+		context.setViewRectRatio(id, x, y, ratio);
+	}
+
+	public static inline function touch(id:Int):Void
+	{
+		context.touch(id);
+	}
+
+	public static inline function frame(flags:Int = 0):Int
+	{
+		return context.frame(flags);
+	}
+
+	public static inline function getStats():BGFXStats
+	{
+		return context.getStats();
+	}
+
+	public static inline function dbgTextClear(attr:Int, small:Bool):Void
+	{
+		context.dbgTextClear(attr, small);
+	}
+
+	public static inline function dbgTextPrintf(x:Int, y:Int, attr:Int, text:String):Void
+	{
+		context.dbgTextPrintf(x, y, attr, text);
+	}
+
+	public static inline function dbgTextImage(x:Int, y:Int, width:Int, height:Int, data:ArrayBufferView, pitch:Int):Void
+	{
+		context.dbgTextImage(x, y, width, height, data, pitch);
+	}
+
+	public static inline function createVertexLayout():BGFXVertexLayout
+	{
+		return context.createVertexLayout();
+	}
+
+	public static inline function registerVertexLayout(layout:BGFXVertexLayout):BGFXVertexLayoutHandle
+	{
+		return context.registerVertexLayout(layout);
+	}
+
+	public static inline function makeRef(data:ArrayBufferView, ?size:Int):BGFXMemoryRef
+	{
+		return context.makeRef(data, size);
+	}
+
+	public static inline function alloc(size:Int):BGFXMemoryRef
+	{
+		return context.alloc(size);
+	}
+
+	public static inline function copy(data:ArrayBufferView, ?size:Int):BGFXMemoryRef
+	{
+		return context.copy(data, size);
+	}
+
+	public static inline function createVertexBuffer(mem:BGFXMemoryRef, layout:BGFXVertexLayout, flags:Int = 0):BGFXVertexBuffer
+	{
+		return context.createVertexBuffer(mem, layout, flags);
+	}
+
+	public static inline function createIndexBuffer(mem:BGFXMemoryRef, flags:Int = 0):BGFXIndexBuffer
+	{
+		return context.createIndexBuffer(mem, flags);
+	}
+
+	public static inline function createDynamicVertexBuffer(num:Int, layout:BGFXVertexLayout, flags:Int = 0):BGFXDynamicVertexBuffer
+	{
+		return context.createDynamicVertexBuffer(num, layout, flags);
+	}
+
+	public static inline function createDynamicVertexBufferMem(mem:BGFXMemoryRef, layout:BGFXVertexLayout, flags:Int = 0):BGFXDynamicVertexBuffer
+	{
+		return context.createDynamicVertexBufferMem(mem, layout, flags);
+	}
+
+	public static inline function updateDynamicVertexBuffer(handle:BGFXDynamicVertexBuffer, startVertex:Int, mem:BGFXMemoryRef):Void
+	{
+		context.updateDynamicVertexBuffer(handle, startVertex, mem);
+	}
+
+	public static inline function createDynamicIndexBuffer(num:Int, flags:Int = 0):BGFXDynamicIndexBuffer
+	{
+		return context.createDynamicIndexBuffer(num, flags);
+	}
+
+	public static inline function createDynamicIndexBufferMem(mem:BGFXMemoryRef, flags:Int = 0):BGFXDynamicIndexBuffer
+	{
+		return context.createDynamicIndexBufferMem(mem, flags);
+	}
+
+	public static inline function updateDynamicIndexBuffer(handle:BGFXDynamicIndexBuffer, firstIndex:Int, mem:BGFXMemoryRef):Void
+	{
+		context.updateDynamicIndexBuffer(handle, firstIndex, mem);
+	}
+
+	public static inline function allocTransientVertexBuffer(num:Int, layout:BGFXVertexLayout):BGFXTransientVertexBuffer
+	{
+		return context.allocTransientVertexBuffer(num, layout);
+	}
+
+	public static inline function allocTransientIndexBuffer(num:Int, index32:Bool):BGFXTransientIndexBuffer
+	{
+		return context.allocTransientIndexBuffer(num, index32);
+	}
+
+	public static inline function getAvailTransientVertexBuffer(num:Int, layout:BGFXVertexLayout):Int
+	{
+		return context.getAvailTransientVertexBuffer(num, layout);
+	}
+
+	public static inline function getAvailTransientIndexBuffer(num:Int, index32:Bool):Int
+	{
+		return context.getAvailTransientIndexBuffer(num, index32);
+	}
+
+	public static inline function createShader(mem:BGFXMemoryRef):BGFXShader
+	{
+		return context.createShader(mem);
+	}
+
+	public static inline function createProgram(vertex:BGFXShader, fragment:BGFXShader, destroyShaders:Bool = true):BGFXProgram
+	{
+		return context.createProgram(vertex, fragment, destroyShaders);
+	}
+
+	public static inline function createComputeProgram(compute:BGFXShader, destroyShaders:Bool = true):BGFXProgram
+	{
+		return context.createComputeProgram(compute, destroyShaders);
+	}
+
+	public static inline function createUniform(name:String, type:BGFXUniformType, num:Int = 1):BGFXUniform
+	{
+		return context.createUniform(name, type, num);
+	}
+
+	public static inline function createUniformFreq(name:String, freq:BGFXUniformFreq, type:BGFXUniformType, num:Int = 1):BGFXUniform
+	{
+		return context.createUniformFreq(name, freq, type, num);
+	}
+
+	public static inline function setUniform(handle:BGFXUniform, value:ArrayBufferView, num:Int = 0xFFFF):Void
+	{
+		context.setUniform(handle, value, num);
+	}
+
+	public static inline function setViewUniform(id:Int, handle:BGFXUniform, value:ArrayBufferView, num:Int = 1):Void
+	{
+		context.setViewUniform(id, handle, value, num);
+	}
+
+	public static inline function setFrameUniform(handle:BGFXUniform, value:ArrayBufferView, num:Int = 1):Void
+	{
+		context.setFrameUniform(handle, value, num);
+	}
+
+	public static inline function getUniformInfo(handle:BGFXUniform):BGFXUniformInfo
+	{
+		return context.getUniformInfo(handle);
+	}
+
+	public static inline function getShaderUniforms(shader:BGFXShader):Array<BGFXUniform>
+	{
+		return context.getShaderUniforms(shader);
+	}
+
+	public static inline function createTexture(mem:BGFXMemoryRef, flags:Int64, skip:Int = 0):BGFXTexture
+	{
+		return context.createTexture(mem, flags, skip);
+	}
+
+	public static inline function createTexture2D(width:Int, height:Int, hasMips:Bool, numLayers:Int, format:BGFXTextureFormat, flags:Int64,
+			?mem:BGFXMemoryRef):BGFXTexture
+	{
+		return context.createTexture2D(width, height, hasMips, numLayers, format, flags, mem);
+	}
+
+	public static inline function createTexture2DScaled(ratio:BGFXBackbufferRatio, hasMips:Bool, numLayers:Int, format:BGFXTextureFormat,
+			flags:Int64):BGFXTexture
+	{
+		return context.createTexture2DScaled(ratio, hasMips, numLayers, format, flags);
+	}
+
+	public static inline function createTexture3D(width:Int, height:Int, depth:Int, hasMips:Bool, format:BGFXTextureFormat, flags:Int64,
+			?mem:BGFXMemoryRef):BGFXTexture
+	{
+		return context.createTexture3D(width, height, depth, hasMips, format, flags, mem);
+	}
+
+	public static inline function createTextureCube(size:Int, hasMips:Bool, numLayers:Int, format:BGFXTextureFormat, flags:Int64,
+			?mem:BGFXMemoryRef):BGFXTexture
+	{
+		return context.createTextureCube(size, hasMips, numLayers, format, flags, mem);
+	}
+
+	public static inline function updateTexture2D(handle:BGFXTexture, layer:Int, mip:Int, x:Int, y:Int, width:Int, height:Int, mem:BGFXMemoryRef,
+			pitch:Int = 0xFFFF):Void
+	{
+		context.updateTexture2D(handle, layer, mip, x, y, width, height, mem, pitch);
+	}
+
+	public static inline function updateTexture3D(handle:BGFXTexture, mip:Int, x:Int, y:Int, z:Int, width:Int, height:Int, depth:Int, mem:BGFXMemoryRef):Void
+	{
+		context.updateTexture3D(handle, mip, x, y, z, width, height, depth, mem);
+	}
+
+	public static inline function updateTextureCube(handle:BGFXTexture, layer:Int, side:Int, mip:Int, x:Int, y:Int, width:Int, height:Int, mem:BGFXMemoryRef,
+			pitch:Int = 0xFFFF):Void
+	{
+		context.updateTextureCube(handle, layer, side, mip, x, y, width, height, mem, pitch);
+	}
+
+	public static inline function readTexture(handle:BGFXTexture, data:ArrayBufferView, mip:Int = 0):Int
+	{
+		return context.readTexture(handle, data, mip);
+	}
+
+	public static inline function isTextureValid(depth:Int, cubeMap:Bool, numLayers:Int, format:BGFXTextureFormat, flags:Int64):Bool
+	{
+		return context.isTextureValid(depth, cubeMap, numLayers, format, flags);
+	}
+
+	public static inline function calcTextureSize(width:Int, height:Int, depth:Int, cubeMap:Bool, hasMips:Bool, numLayers:Int,
+			format:BGFXTextureFormat):BGFXTextureInfo
+	{
+		return context.calcTextureSize(width, height, depth, cubeMap, hasMips, numLayers, format);
+	}
+
+	public static inline function setTexture(stage:Int, sampler:BGFXUniform, texture:BGFXTexture, flags:Int = -1):Void
+	{
+		context.setTexture(stage, sampler, texture, flags);
+	}
+
+	public static inline function setImage(stage:Int, texture:BGFXTexture, mip:Int, access:BGFXAccess, format:Int = -1):Void
+	{
+		context.setImage(stage, texture, mip, access, format);
+	}
+
+	public static inline function createFrameBuffer(width:Int, height:Int, format:BGFXTextureFormat, textureFlags:Int64):BGFXFrameBuffer
+	{
+		return context.createFrameBuffer(width, height, format, textureFlags);
+	}
+
+	public static inline function createFrameBufferScaled(ratio:BGFXBackbufferRatio, format:BGFXTextureFormat, textureFlags:Int64):BGFXFrameBuffer
+	{
+		return context.createFrameBufferScaled(ratio, format, textureFlags);
+	}
+
+	public static inline function createFrameBufferFromTextures(textures:Array<BGFXTexture>, destroyTextures:Bool = false):BGFXFrameBuffer
+	{
+		return context.createFrameBufferFromTextures(textures, destroyTextures);
+	}
+
+	public static inline function createFrameBufferFromAttachments(attachments:Array<BGFXAttachment>, destroyTextures:Bool = false):BGFXFrameBuffer
+	{
+		return context.createFrameBufferFromAttachments(attachments, destroyTextures);
+	}
+
+	public static inline function isFrameBufferValid(attachments:Array<BGFXAttachment>):Bool
+	{
+		return context.isFrameBufferValid(attachments);
+	}
+
+	public static inline function getTexture(handle:BGFXFrameBuffer, attachment:Int = 0):BGFXTexture
+	{
+		return context.getTexture(handle, attachment);
+	}
+
+	public static inline function setViewFrameBuffer(id:Int, handle:BGFXFrameBuffer):Void
+	{
+		context.setViewFrameBuffer(id, handle);
+	}
+
+	public static inline function setVertexBuffer(stream:Int, vertex:BGFXVertexBuffer):Void
+	{
+		context.setVertexBuffer(stream, vertex);
+	}
+
+	public static inline function setVertexBufferVertices(stream:Int, vertex:BGFXVertexBuffer, startVertex:Int, numVertices:Int):Void
+	{
+		context.setVertexBufferVertices(stream, vertex, startVertex, numVertices);
+	}
+
+	public static inline function setVertexBufferLayout(stream:Int, vertex:BGFXVertexBuffer, startVertex:Int, numVertices:Int,
+			layout:BGFXVertexLayoutHandle):Void
+	{
+		context.setVertexBufferLayout(stream, vertex, startVertex, numVertices, layout);
+	}
+
+	public static inline function setDynamicVertexBuffer(stream:Int, handle:BGFXDynamicVertexBuffer):Void
+	{
+		context.setDynamicVertexBuffer(stream, handle);
+	}
+
+	public static inline function setDynamicVertexBufferVertices(stream:Int, handle:BGFXDynamicVertexBuffer, startVertex:Int, numVertices:Int):Void
+	{
+		context.setDynamicVertexBufferVertices(stream, handle, startVertex, numVertices);
+	}
+
+	public static inline function setDynamicVertexBufferLayout(stream:Int, handle:BGFXDynamicVertexBuffer, startVertex:Int, numVertices:Int,
+			layout:BGFXVertexLayoutHandle):Void
+	{
+		context.setDynamicVertexBufferLayout(stream, handle, startVertex, numVertices, layout);
+	}
+
+	public static inline function setTransientVertexBuffer(stream:Int, tvb:BGFXTransientVertexBuffer):Void
+	{
+		context.setTransientVertexBuffer(stream, tvb);
+	}
+
+	public static inline function setTransientVertexBufferVertices(stream:Int, tvb:BGFXTransientVertexBuffer, startVertex:Int, numVertices:Int):Void
+	{
+		context.setTransientVertexBufferVertices(stream, tvb, startVertex, numVertices);
+	}
+
+	public static inline function setTransientVertexBufferLayout(stream:Int, tvb:BGFXTransientVertexBuffer, startVertex:Int, numVertices:Int,
+			layout:BGFXVertexLayoutHandle):Void
+	{
+		context.setTransientVertexBufferLayout(stream, tvb, startVertex, numVertices, layout);
+	}
+
+	public static inline function setIndexBuffer(index:BGFXIndexBuffer):Void
+	{
+		context.setIndexBuffer(index);
+	}
+
+	public static inline function setIndexBufferIndices(index:BGFXIndexBuffer, firstIndex:Int, numIndices:Int):Void
+	{
+		context.setIndexBufferIndices(index, firstIndex, numIndices);
+	}
+
+	public static inline function setDynamicIndexBuffer(handle:BGFXDynamicIndexBuffer):Void
+	{
+		context.setDynamicIndexBuffer(handle);
+	}
+
+	public static inline function setDynamicIndexBufferIndices(handle:BGFXDynamicIndexBuffer, firstIndex:Int, numIndices:Int):Void
+	{
+		context.setDynamicIndexBufferIndices(handle, firstIndex, numIndices);
+	}
+
+	public static inline function setTransientIndexBuffer(tib:BGFXTransientIndexBuffer):Void
+	{
+		context.setTransientIndexBuffer(tib);
+	}
+
+	public static inline function setTransientIndexBufferIndices(tib:BGFXTransientIndexBuffer, firstIndex:Int, numIndices:Int):Void
+	{
+		context.setTransientIndexBufferIndices(tib, firstIndex, numIndices);
+	}
+
+	public static inline function setState(state:Int64, rgba:Int = 0):Void
+	{
+		context.setState(state, rgba);
+	}
+
+	public static inline function setStencil(fstencil:Int, bstencil:Int = 0):Void
+	{
+		context.setStencil(fstencil, bstencil);
+	}
+
+	public static inline function setScissor(x:Int, y:Int, width:Int, height:Int):Int
+	{
+		return context.setScissor(x, y, width, height);
+	}
+
+	public static inline function setScissorCached(cache:Int = 0xFFFF):Void
+	{
+		context.setScissorCached(cache);
+	}
+
+	public static inline function setVertexCount(numVertices:Int):Void
+	{
+		context.setVertexCount(numVertices);
+	}
+
+	public static inline function setViewTransform(id:Int, view:Matrix4, proj:Matrix4):Void
+	{
+		context.setViewTransform(id, view, proj);
+	}
+
+	public static inline function setTransform(mtx:Matrix4, num:Int = 1):Int
+	{
+		return context.setTransform(mtx, num);
+	}
+
+	public static inline function allocTransform(data:ArrayBufferView, num:Int):Int
+	{
+		return context.allocTransform(data, num);
+	}
+
+	public static inline function setTransformCached(cache:Int, num:Int = 1):Void
+	{
+		context.setTransformCached(cache, num);
+	}
+
+	public static inline function submit(id:Int, program:BGFXProgram, depth:Int = 0, flags:Int = DISCARD_ALL):Void
+	{
+		context.submit(id, program, depth, flags);
+	}
+
+	public static inline function submitOcclusionQuery(id:Int, program:BGFXProgram, oqh:BGFXOcclusionQuery, depth:Int = 0, flags:Int = DISCARD_ALL):Void
+	{
+		context.submitOcclusionQuery(id, program, oqh, depth, flags);
+	}
+
+	public static inline function submitIndirectBuffer(id:Int, program:BGFXProgram, ixbh:BGFXIndirectBuffer, start:Int, num:Int, depth:Int = 0,
+			flags:Int = DISCARD_ALL):Void
+	{
+		context.submitIndirectBuffer(id, program, ixbh, start, num, depth, flags);
+	}
+
+	public static inline function submitIndirectIndexBuffer(id:Int, program:BGFXProgram, ixbh:BGFXIndirectBuffer, start:Int, ibh:BGFXIndexBuffer,
+			numMax:Int, depth:Int = 0, flags:Int = DISCARD_ALL):Void
+	{
+		context.submitIndirectIndexBuffer(id, program, ixbh, start, ibh, numMax, depth, flags);
+	}
+
+	public static inline function discard(flags:Int = DISCARD_ALL):Void
+	{
+		context.discard(flags);
+	}
+
+	public static inline function dispatch(id:Int, program:BGFXProgram, numX:Int = 1, numY:Int = 1, numZ:Int = 1, flags:Int = 0xFF):Void
+	{
+		context.dispatch(id, program, numX, numY, numZ, flags);
+	}
+
+	public static inline function dispatchIndirect(id:Int, program:BGFXProgram, ixbh:BGFXIndirectBuffer, start:Int = 0, num:Int = 1,
+			flags:Int = 0xFF):Void
+	{
+		context.dispatchIndirect(id, program, ixbh, start, num, flags);
+	}
+
+	public static inline function blit(id:Int, dst:BGFXTexture, dstMip:Int, dstX:Int, dstY:Int, dstZ:Int, src:BGFXTexture, srcMip:Int = 0, srcX:Int = 0,
+			srcY:Int = 0, srcZ:Int = 0, width:Int = 0xFFFF, height:Int = 0xFFFF, depth:Int = 0xFFFF):Void
+	{
+		context.blit(id, dst, dstMip, dstX, dstY, dstZ, src, srcMip, srcX, srcY, srcZ, width, height, depth);
+	}
+
+	public static inline function createOcclusionQuery():BGFXOcclusionQuery
+	{
+		return context.createOcclusionQuery();
+	}
+
+	public static inline function getOcclusionQueryResult(handle:BGFXOcclusionQuery):BGFXOcclusionQueryInfo
+	{
+		return context.getOcclusionQueryResult(handle);
+	}
+
+	public static inline function setCondition(handle:BGFXOcclusionQuery, visible:Bool):Void
+	{
+		context.setCondition(handle, visible);
+	}
+
+	public static inline function createIndirectBuffer(num:Int):BGFXIndirectBuffer
+	{
+		return context.createIndirectBuffer(num);
+	}
+
+	public static inline function allocInstanceDataBuffer(num:Int, stride:Int):BGFXInstanceDataBuffer
+	{
+		return context.allocInstanceDataBuffer(num, stride);
+	}
+
+	public static inline function getAvailInstanceDataBuffer(num:Int, stride:Int):Int
+	{
+		return context.getAvailInstanceDataBuffer(num, stride);
+	}
+
+	public static inline function getInstanceDataBufferData(idb:BGFXInstanceDataBuffer):ArrayBufferView
+	{
+		return context.getInstanceDataBufferData(idb);
+	}
+
+	public static inline function setInstanceDataBufferData(idb:BGFXInstanceDataBuffer, data:ArrayBufferView):Void
+	{
+		context.setInstanceDataBufferData(idb, data);
+	}
+
+	public static inline function setInstanceDataBuffer(idb:BGFXInstanceDataBuffer, start:Int = 0, num:Int = -1):Void
+	{
+		context.setInstanceDataBuffer(idb, start, num);
+	}
+
+	public static inline function setInstanceDataFromVertexBuffer(handle:BGFXVertexBuffer, startVertex:Int, num:Int):Void
+	{
+		context.setInstanceDataFromVertexBuffer(handle, startVertex, num);
+	}
+
+	public static inline function setInstanceDataFromDynamicVertexBuffer(handle:BGFXDynamicVertexBuffer, startVertex:Int, num:Int):Void
+	{
+		context.setInstanceDataFromDynamicVertexBuffer(handle, startVertex, num);
+	}
+
+	public static inline function setInstanceCount(numInstances:Int):Void
+	{
+		context.setInstanceCount(numInstances);
+	}
+
+	public static inline function getCaps():BGFXCaps
+	{
+		return context.getCaps();
+	}
+
+	public static inline function getRendererType():BGFXRendererType
+	{
+		return context.getRendererType();
+	}
+
+	public static inline function getRendererName(type:BGFXRendererType):String
+	{
+		return context.getRendererName(type);
+	}
+
+	public static inline function getSupportedRenderers():Array<BGFXRendererType>
+	{
+		return context.getSupportedRenderers();
+	}
+
+	public static inline function reset(width:Int, height:Int, flags:Int = 0, format:Int = -1):Void
+	{
+		context.reset(width, height, flags, format);
+	}
+
+	public static inline function resetView(id:Int):Void
+	{
+		context.resetView(id);
+	}
+
+	public static inline function setViewClearMRT(id:Int, flags:Int, depth:Float, stencil:Int, c0:Int = 0xFF, c1:Int = 0xFF, c2:Int = 0xFF,
+			c3:Int = 0xFF, c4:Int = 0xFF, c5:Int = 0xFF, c6:Int = 0xFF, c7:Int = 0xFF):Void
+	{
+		context.setViewClearMRT(id, flags, depth, stencil, c0, c1, c2, c3, c4, c5, c6, c7);
+	}
+
+	public static inline function setViewMode(id:Int, mode:BGFXViewMode):Void
+	{
+		context.setViewMode(id, mode);
+	}
+
+	public static inline function setViewName(id:Int, name:String):Void
+	{
+		context.setViewName(id, name);
+	}
+
+	public static inline function setViewOrder(id:Int = 0, num:Int = -1, ?order:Array<Int>):Void
+	{
+		context.setViewOrder(id, num, order);
+	}
+
+	public static inline function setViewScissor(id:Int, x:Int = 0, y:Int = 0, width:Int = 0, height:Int = 0):Void
+	{
+		context.setViewScissor(id, x, y, width, height);
+	}
+
+	public static inline function setMarker(name:String):Void
+	{
+		context.setMarker(name);
+	}
+
+	public static inline function setPaletteColor(index:Int, r:Float, g:Float, b:Float, a:Float):Void
+	{
+		context.setPaletteColor(index, r, g, b, a);
+	}
+
+	public static inline function setPaletteColorRGBA8(index:Int, rgba:Int):Void
+	{
+		context.setPaletteColorRGBA8(index, rgba);
+	}
+
+	public static inline function setViewShadingRate(id:Int, shadingRate:Int):Void
+	{
+		context.setViewShadingRate(id, shadingRate);
+	}
+
+	public static inline function setShaderName(handle:BGFXShader, name:String):Void
+	{
+		context.setShaderName(handle, name);
+	}
+
+	public static inline function setTextureName(handle:BGFXTexture, name:String):Void
+	{
+		context.setTextureName(handle, name);
+	}
+
+	public static inline function setFrameBufferName(handle:BGFXFrameBuffer, name:String):Void
+	{
+		context.setFrameBufferName(handle, name);
+	}
+
+	public static inline function setIndexBufferName(handle:BGFXIndexBuffer, name:String):Void
+	{
+		context.setIndexBufferName(handle, name);
+	}
+
+	public static inline function setVertexBufferName(handle:BGFXVertexBuffer, name:String):Void
+	{
+		context.setVertexBufferName(handle, name);
+	}
+
+	public static inline function requestScreenShot(handle:BGFXFrameBuffer, filePath:String):Void
+	{
+		context.requestScreenShot(handle, filePath);
+	}
+
+	public static inline function vertexPack(input:ArrayBufferView, inputNormalized:Bool, attrib:BGFXAttrib, layout:BGFXVertexLayout,
+			data:ArrayBufferView, index:Int = 0):Void
+	{
+		context.vertexPack(input, inputNormalized, attrib, layout, data, index);
+	}
+
+	public static inline function vertexUnpack(output:ArrayBufferView, attrib:BGFXAttrib, layout:BGFXVertexLayout, data:ArrayBufferView,
+			index:Int = 0):Void
+	{
+		context.vertexUnpack(output, attrib, layout, data, index);
+	}
+
+	public static inline function vertexConvert(dstLayout:BGFXVertexLayout, dstData:ArrayBufferView, srcLayout:BGFXVertexLayout,
+			srcData:ArrayBufferView, num:Int = 1):Void
+	{
+		context.vertexConvert(dstLayout, dstData, srcLayout, srcData, num);
+	}
+
+	public static inline function topologyConvert(conversion:BGFXTopologyConvert, dst:ArrayBufferView, dstSize:Int, indices:ArrayBufferView,
+			numIndices:Int, index32:Bool):Int
+	{
+		return context.topologyConvert(conversion, dst, dstSize, indices, numIndices, index32);
+	}
+
+	public static inline function topologySortTriList(sort:BGFXTopologySort, dst:ArrayBufferView, dstSize:Int, dir:ArrayBufferView, pos:ArrayBufferView,
+			vertices:ArrayBufferView, stride:Int, indices:ArrayBufferView, numIndices:Int, index32:Bool):Void
+	{
+		context.topologySortTriList(sort, dst, dstSize, dir, pos, vertices, stride, indices, numIndices, index32);
+	}
+
+	public static inline function overrideInternalTexture(handle:BGFXTexture, width:Int, height:Int, numMips:Int, format:BGFXTextureFormat,
+			flags:Int64):Float
+	{
+		return context.overrideInternalTexture(handle, width, height, numMips, format, flags);
+	}
+
+	public static inline function compileShaderString(type:BGFXShaderType, shaderSource:String, varyingDef:String, ?includes:Map<String, String>,
+			?defines:String = '', ?profile:String = '', ?includeDirs:String = ''):BGFXMemoryRef
+	{
+		return context.compileShaderString(type, shaderSource, varyingDef, includes, defines, profile, includeDirs);
+	}
+
+	public static inline function compileShaderFile(type:BGFXShaderType, filePath:String, varyingPath:String, ?includeDirs:String = '',
+			?defines:String = '', ?profile:String = ''):BGFXMemoryRef
+	{
+		return context.compileShaderFile(type, filePath, varyingPath, includeDirs, defines, profile);
+	}
+
+	public static inline function blendFunc(src:Int64, dst:Int64):Int64
+	{
+		return context.blendFunc(src, dst);
+	}
+
+	public static inline function blendFuncSeparate(srcRGB:Int64, dstRGB:Int64, srcA:Int64, dstA:Int64):Int64
+	{
+		return context.blendFuncSeparate(srcRGB, dstRGB, srcA, dstA);
+	}
+
+	public static inline function stencilFuncRef(v:Int):Int
+	{
+		return context.stencilFuncRef(v);
+	}
+
+	public static inline function stencilFuncRmask(v:Int):Int
+	{
+		return context.stencilFuncRmask(v);
+	}
+
+	public static inline function destroyVertexBuffer(handle:BGFXVertexBuffer):Void
+	{
+		context.destroyVertexBuffer(handle);
+	}
+
+	public static inline function destroyIndexBuffer(handle:BGFXIndexBuffer):Void
+	{
+		context.destroyIndexBuffer(handle);
+	}
+
+	public static inline function destroyDynamicVertexBuffer(handle:BGFXDynamicVertexBuffer):Void
+	{
+		context.destroyDynamicVertexBuffer(handle);
+	}
+
+	public static inline function destroyDynamicIndexBuffer(handle:BGFXDynamicIndexBuffer):Void
+	{
+		context.destroyDynamicIndexBuffer(handle);
+	}
+
+	public static inline function destroyShader(handle:BGFXShader):Void
+	{
+		context.destroyShader(handle);
+	}
+
+	public static inline function destroyProgram(handle:BGFXProgram):Void
+	{
+		context.destroyProgram(handle);
+	}
+
+	public static inline function destroyTexture(handle:BGFXTexture):Void
+	{
+		context.destroyTexture(handle);
+	}
+
+	public static inline function destroyFrameBuffer(handle:BGFXFrameBuffer):Void
+	{
+		context.destroyFrameBuffer(handle);
+	}
+
+	public static inline function destroyUniform(handle:BGFXUniform):Void
+	{
+		context.destroyUniform(handle);
+	}
+
+	public static inline function destroyVertexLayout(handle:BGFXVertexLayoutHandle):Void
+	{
+		context.destroyVertexLayout(handle);
+	}
+
+	public static inline function destroyOcclusionQuery(handle:BGFXOcclusionQuery):Void
+	{
+		context.destroyOcclusionQuery(handle);
+	}
+
+	public static inline function destroyIndirectBuffer(handle:BGFXIndirectBuffer):Void
+	{
+		context.destroyIndirectBuffer(handle);
+	}
+}
+#end
