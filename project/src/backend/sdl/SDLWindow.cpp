@@ -207,7 +207,7 @@ namespace lime {
 		#ifdef LIME_BGFX
 		if (!BGFXBindings::Init (sdlWindow)) {
 
-			#if defined(IPHONE) || defined(APPLETV)
+			#if defined (IPHONE) || defined (APPLETV)
 			printf ("Could not initialize BGFX backend: %s\n", SDL_GetError ());
 			#else
 			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not initialize BGFX backend", SDL_GetError (), sdlWindow);
@@ -218,6 +218,7 @@ namespace lime {
 		} else {
 
 			((SDLApplication*)currentApplication)->RegisterWindow (this);
+
 			return true;
 
 		}
