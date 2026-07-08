@@ -16,6 +16,9 @@
 #include <SDL3/SDL.h>
 
 
+#undef main
+
+
 namespace lime {
 
 
