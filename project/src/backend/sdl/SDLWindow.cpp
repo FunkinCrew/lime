@@ -160,7 +160,6 @@ namespace lime {
 		#endif
 
 		#ifdef LIME_BGFX
-		bgfx::shutdown();
 		BGFXBindings::Shutdown ();
 		#endif
 

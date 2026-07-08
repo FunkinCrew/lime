@@ -2361,6 +2361,9 @@ namespace lime {
 
 	// Clean up any required resources
 	void BGFXBindings::Shutdown () {
+
+		bgfx::shutdown();
+
 		// Destroy the iOS metal view
 		#if defined (IPHONE)
 		if (mtlView) {
@@ -2370,6 +2373,7 @@ namespace lime {
 
 		}
 		#endif
+
 	}
 
 
