@@ -55,6 +55,12 @@
 
 		</section>
 
+		<section unless="isMsvc">
+
+			<compilerflag value="-Wno-delete-incomplete" />
+
+		</section>
+
 		<file name="src/ExternalInterface.cpp" />
 
 		<section if="LIME_BGFX">
