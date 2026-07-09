@@ -910,113 +910,45 @@ namespace lime {
 		return alloc_null ();
 	}
 
-	#if defined (ANDROID) || defined (IPHONE) || defined (HX_MACOS)
-	struct ShaderIncludeStream {
-
-		char* data;
-		size_t size;
-		size_t pos;
-
-	};
-
-	static int shaderIncludeRead (void* src, char* buff, int size) {
-
-		ShaderIncludeStream* stream = (ShaderIncludeStream*) src;
-		size_t dataLeft = stream->size - stream->pos;
-		size_t len = (size_t) size < dataLeft ? (size_t) size : dataLeft;
-
-		memcpy (buff, stream->data + stream->pos, len);
-		stream->pos += len;
-
-		return (int) len;
-
-	}
-
-	static int shaderIncludeClose (void* src) {
-
-		ShaderIncludeStream* stream = (ShaderIncludeStream*) src;
-		SDL_free (stream->data);
-		delete stream;
-
-		return 0;
-
-	}
-	#endif
 
 	static FILE* shaderBytesToFile (void* data, size_t size) {
 
-		#if defined (HX_WINDOWS)
-
-		char* name = _tempnam (NULL, "limebgfxshader");
-		if (!name) return nullptr;
-
-		FILE* file = fopen (name, "w+bTD");
-		free (name);
-
-		if (file) {
-
-			if (size > 0) fwrite (data, 1, size, file);
-			rewind (file);
-
-		}
-
-		SDL_free (data);
-		return file;
-
-		#elif defined (ANDROID) || defined (IPHONE) || defined (HX_MACOS)
-
-		ShaderIncludeStream* stream = new ShaderIncludeStream ();
-		stream->data = (char*) data;
-		stream->size = size;
-		stream->pos = 0;
-
-		FILE* file = funopen (stream, shaderIncludeRead, NULL, NULL, shaderIncludeClose);
+		FILE* file = tmpfile();
 
 		if (!file) {
 
 			SDL_free (data);
-			delete stream;
+
+			return nullptr;
 
 		}
 
-		return file;
+		if (size > 0) {
 
-		#else
-
-		FILE* file = fmemopen (NULL, size + 1, "w+");
-
-		if (file) {
-
-			if (size > 0) fwrite (data, 1, size, file);
-			rewind (file);
+			fwrite (data, 1, size, file);
 
 		}
+
+		rewind (file);
 
 		SDL_free (data);
-		return file;
 
-		#endif
+		return file;
 
 	}
 
 
 	static FILE* shaderFileOpen (const char* name, const char* m, void*) {
 
-		#if defined (HX_WINDOWS)
-
-		FILE* file = fopen (name, m);
-		if (file) return file;
-
-		#else
-
 		size_t size = 0;
+
 		void* data = SDL_LoadFile (name, &size);
-		if (data) return shaderBytesToFile (data, size);
 
-		FILE* file = fopen (name, m);
-		if (file) return file;
+		if (data) {
 
-		#endif
+			return shaderBytesToFile (data, size);
+
+		}
 
 		std::vector<unsigned char> resource;
 
