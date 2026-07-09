@@ -153,8 +153,8 @@
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_ideal_endpoints_and_weights.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_image.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_integer_sequence.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_mathlib.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_mathlib_softfloat.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_mathlib.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_partition_tables.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_percentile_tables.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/astc-encoder/source/astcenc_pick_best_endpoint_format.cpp" />
@@ -181,8 +181,8 @@
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/convolve.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/decimate.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/math_utils.c" />
-			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/mse.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/ms_ssim.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/mse.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/psnr.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/iqa/source/ssim.c" />
 
@@ -204,11 +204,10 @@
 
 		<section>
 
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zoh_utils.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zoh.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zohone.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zohtwo.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc6h/zoh_utils.cpp" />
-			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode0.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode1.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode2.cpp" />
@@ -218,6 +217,7 @@
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode6.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_mode7.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl_utils.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/bc7/avpcl.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/nvmath/fitting.cpp" />
 			<file name="${NATIVE_TOOLKIT_PATH}/bimg/3rdparty/nvtt/nvtt.cpp" />
 
