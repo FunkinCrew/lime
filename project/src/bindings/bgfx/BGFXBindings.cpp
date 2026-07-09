@@ -15,17 +15,24 @@
 
 namespace lime {
 
+
 	#ifdef HXCPP_DEBUG
 	class BGFXCallback : public bgfx::CallbackI {
+
 		public:
+
 			void fatal (const char* _filePath, uint16_t _line, bgfx::Fatal::Enum _code, const char* _str) override {
+
 				fprintf (stderr, "[BGFX FATAL] (%d) %s at %s:%d\n", _code, _str, _filePath, _line);
 				abort ();
+
 			}
 
 			void traceVargs (const char* _filePath, uint16_t _line, const char* _format, va_list _argList) override {
+
 				fprintf (stderr, "[BGFX] ");
 				vfprintf (stderr, _format, _argList);
+
 			}
 
 			void profilerBegin (const char*, uint32_t, const char*, uint16_t) override {}
@@ -38,25 +45,29 @@ namespace lime {
 			void captureBegin (uint32_t, uint32_t, uint32_t, bgfx::TextureFormat::Enum, bool) override {}
 			void captureEnd () override {}
 			void captureFrame (const void*, uint32_t) override {}
-		};
+
+	};
 
 	static BGFXCallback s_bgfxCallback;
 	#endif
 
+
 	std::map<void*, void*> bgfxObjectPtrs;
 	std::vector<void*> gc_bgfx_ptr;
 	Mutex gc_bgfx_mutex;
+
 
 	void gc_bgfx_object (value object) {
 
 		gc_bgfx_mutex.Lock ();
 
 		void* ptr = bgfxObjectPtrs[object];
+
 		if (ptr) {
 
-				gc_bgfx_ptr.push_back (ptr);
+			gc_bgfx_ptr.push_back (ptr);
 
-				bgfxObjectPtrs.erase (object);
+			bgfxObjectPtrs.erase (object);
 
 		}
 
@@ -64,120 +75,195 @@ namespace lime {
 
 	}
 
+
 	void gc_bgfx_vertex_buffer (value handle) {
 
 		bgfx::VertexBufferHandle* vbuff = (bgfx::VertexBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*vbuff)) bgfx::destroy (*vbuff);
+
+		if (bgfx::isValid (*vbuff)) {
+
+			bgfx::destroy (*vbuff);
+
+		}
 
 		delete vbuff;
 
 	}
 
+
 	void gc_bgfx_index_buffer (value handle) {
 
 		bgfx::IndexBufferHandle* ibuff = (bgfx::IndexBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*ibuff)) bgfx::destroy (*ibuff);
+
+		if (bgfx::isValid (*ibuff)) {
+
+			bgfx::destroy (*ibuff);
+
+		}
 
 		delete ibuff;
 
 	}
 
+
 	void gc_bgfx_shader (value handle) {
 
 		bgfx::ShaderHandle* shader = (bgfx::ShaderHandle*) val_data (handle);
-		if (bgfx::isValid (*shader)) bgfx::destroy (*shader);
+
+		if (bgfx::isValid (*shader)) {
+
+			bgfx::destroy (*shader);
+
+		}
 
 		delete shader;
 
 	}
 
+
 	void gc_bgfx_program (value handle) {
 
 		bgfx::ProgramHandle* program = (bgfx::ProgramHandle*) val_data (handle);
-		if (bgfx::isValid (*program)) bgfx::destroy (*program);
+
+		if (bgfx::isValid (*program)) {
+
+			bgfx::destroy (*program);
+
+		}
 
 		delete program;
 
 	}
 
+
 	void gc_bgfx_dynamic_vertex_buffer (value handle) {
 
 		bgfx::DynamicVertexBufferHandle* dvbh = (bgfx::DynamicVertexBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*dvbh)) bgfx::destroy (*dvbh);
+
+		if (bgfx::isValid (*dvbh)) {
+
+			bgfx::destroy (*dvbh);
+
+		}
 
 		delete dvbh;
 
 	}
 
+
 	void gc_bgfx_dynamic_index_buffer (value handle) {
 
 		bgfx::DynamicIndexBufferHandle* dibh = (bgfx::DynamicIndexBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*dibh)) bgfx::destroy (*dibh);
+
+		if (bgfx::isValid (*dibh)) {
+
+			bgfx::destroy (*dibh);
+
+		}
 
 		delete dibh;
 
 	}
 
+
 	void gc_bgfx_occlusion_query (value handle) {
 
 		bgfx::OcclusionQueryHandle* oqh = (bgfx::OcclusionQueryHandle*) val_data (handle);
-		if (bgfx::isValid (*oqh)) bgfx::destroy (*oqh);
+
+		if (bgfx::isValid (*oqh)) {
+
+			bgfx::destroy (*oqh);
+
+		}
 
 		delete oqh;
 
 	}
 
+
 	void gc_bgfx_indirect_buffer (value handle) {
 
 		bgfx::IndirectBufferHandle* ixbh = (bgfx::IndirectBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*ixbh)) bgfx::destroy (*ixbh);
+
+		if (bgfx::isValid (*ixbh)) {
+
+			bgfx::destroy (*ixbh);
+
+		}
 
 		delete ixbh;
 
 	}
 
+
 	void gc_bgfx_vertex_layout_handle (value handle) {
 
 		bgfx::VertexLayoutHandle* vlh = (bgfx::VertexLayoutHandle*) val_data (handle);
-		if (bgfx::isValid (*vlh)) bgfx::destroy (*vlh);
+
+		if (bgfx::isValid (*vlh)) {
+
+			bgfx::destroy (*vlh);
+
+		}
 
 		delete vlh;
 
 	}
 
+
 	void gc_bgfx_texture (value handle) {
 
 		bgfx::TextureHandle* th = (bgfx::TextureHandle*) val_data (handle);
-		if (bgfx::isValid (*th)) bgfx::destroy (*th);
+
+		if (bgfx::isValid (*th)) {
+
+			bgfx::destroy (*th);
+
+		}
 
 		delete th;
 
 	}
 
+
 	void gc_bgfx_uniform (value handle) {
 
 		bgfx::UniformHandle* uh = (bgfx::UniformHandle*) val_data (handle);
-		if (bgfx::isValid (*uh)) bgfx::destroy (*uh);
+
+		if (bgfx::isValid (*uh)) {
+
+			bgfx::destroy (*uh);
+
+		}
 
 		delete uh;
 
 	}
 
+
 	void gc_bgfx_frame_buffer (value handle) {
 
 		bgfx::FrameBufferHandle* fbh = (bgfx::FrameBufferHandle*) val_data (handle);
-		if (bgfx::isValid (*fbh)) bgfx::destroy (*fbh);
+
+		if (bgfx::isValid (*fbh)) {
+
+			bgfx::destroy (*fbh);
+
+		}
 
 		delete fbh;
 
 	}
 
+
 	void gc_bgfx_val (value handle) {
 
 		void* val = (void*) val_data (handle);
+
 		delete val;
 
 	}
+
 
 	int lime_bgfx_render_frame () {
 
@@ -346,20 +432,19 @@ namespace lime {
 	void lime_bgfx_dbg_text_image (int x, int y, int width, int height, value data, int pitch) {
 
 		ArrayBufferView bufferView (data);
-
 		bgfx::dbgTextImage ((uint16_t) x, (uint16_t) y, (uint16_t )width, (uint16_t) height, bufferView.buffer->b, (uint16_t) pitch);
 
 	}
 
+
 	value lime_bgfx_register_object (value object) {
 
 		value handle = CFFIPointer (object, gc_bgfx_object);
-
 		bgfxObjectPtrs[object] = handle;
-
 		return handle;
 
 	}
+
 
 	value lime_bgfx_create_vertex_layout () {
 
@@ -381,6 +466,7 @@ namespace lime {
 
 	}
 
+
 	value lime_bgfx_vertex_layout_decode (value handle, int attrib)
 	{
 		uint8_t num;
@@ -389,6 +475,7 @@ namespace lime {
 		bool asInt;
 
 		bgfx::VertexLayout* v_layout = (bgfx::VertexLayout*) val_data (handle);
+
 		v_layout->decode ((bgfx::Attrib::Enum) attrib, num, type, normalized, asInt);
 
 		value obj = alloc_empty_object ();
@@ -396,7 +483,6 @@ namespace lime {
 		alloc_field (obj, val_id ("type"), alloc_int ((int) type));
 		alloc_field (obj, val_id ("normalized"), alloc_bool (normalized));
 		alloc_field (obj, val_id ("asInt"), alloc_bool (asInt));
-
 		return obj;
 	}
 
@@ -442,67 +528,75 @@ namespace lime {
 
 	}
 
+
 	value lime_bgfx_make_ref (value data, int size) {
 
 		ArrayBufferView bufferView (data);
-
 		const bgfx::Memory* ref = bgfx::makeRef (bufferView.buffer->b, size);
-		value handle = CFFIPointer (const_cast<bgfx::Memory*> (ref));
-
-		return handle;
+		return CFFIPointer (const_cast<bgfx::Memory*> (ref));
 
 	}
+
 
 	value lime_bgfx_create_vertex_buffer (value _mem, value _layout, int flags) {
 
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (_mem);
 		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (_layout);
 		bgfx::VertexBufferHandle* vbh = new bgfx::VertexBufferHandle (bgfx::createVertexBuffer (mem, *layout, (uint16_t) flags));
-
 		return CFFIPointer (vbh, gc_bgfx_vertex_buffer);
 
 	}
+
 
 	value lime_bgfx_create_index_buffer (value _mem, int flags) {
 
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (_mem);
 		bgfx::IndexBufferHandle* ibh = new bgfx::IndexBufferHandle (bgfx::createIndexBuffer (mem, (uint16_t) flags));
-
 		return CFFIPointer (ibh, gc_bgfx_index_buffer);
 
 	}
+
 
 	value lime_bgfx_create_shader(value _mem) {
 
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data(_mem);
 		bgfx::ShaderHandle* shader = new bgfx::ShaderHandle (bgfx::createShader (mem));
-
 		return CFFIPointer (shader, gc_bgfx_shader);
 
 	}
 
+
 	value lime_bgfx_create_program (value _vsh, value _fsh, bool destroyShaders) {
 
 		bgfx::ShaderHandle* vsh = (bgfx::ShaderHandle*) val_data (_vsh);
+
 		bgfx::ShaderHandle* fsh = (bgfx::ShaderHandle*) val_data (_fsh);
+
 		bgfx::ProgramHandle* program = new bgfx::ProgramHandle (bgfx::createProgram (*vsh, *fsh, destroyShaders));
 
 		if (destroyShaders) {
+
 			vsh->idx = bgfx::kInvalidHandle;
+
 			fsh->idx = bgfx::kInvalidHandle;
+
 		}
 
 		return CFFIPointer (program, gc_bgfx_program);
 
 	}
 
+
 	value lime_bgfx_create_compute_program (value _vsh, bool destroyShaders) {
 
 		bgfx::ShaderHandle* vsh = (bgfx::ShaderHandle*) val_data (_vsh);
+
 		bgfx::ProgramHandle* program = new bgfx::ProgramHandle (bgfx::createProgram (*vsh, destroyShaders));
 
 		if (destroyShaders) {
+
 			vsh->idx = bgfx::kInvalidHandle;
+
 		}
 
 		return CFFIPointer (program, gc_bgfx_program);
@@ -634,7 +728,6 @@ namespace lime {
 
 		ArrayBufferView viewBuffer (view);
 		ArrayBufferView projBuffer (proj);
-
 		bgfx::setViewTransform ((bgfx::ViewId) id, viewBuffer.buffer->b, projBuffer.buffer->b);
 
 	}
@@ -642,7 +735,6 @@ namespace lime {
 	int lime_bgfx_set_transform (value mtx, int num) {
 
 		ArrayBufferView buffer (mtx);
-
 		return (int)bgfx::setTransform (buffer.buffer->b, (uint16_t) num);
 
 	}
@@ -650,7 +742,6 @@ namespace lime {
 	void lime_bgfx_submit (int id, value handle, int depth, int flags) {
 
 		bgfx::ProgramHandle* program = (bgfx::ProgramHandle*) val_data(handle);
-
 		bgfx::submit ((bgfx::ViewId) id, *program, (uint32_t) depth, (uint8_t) flags);
 
 	}
@@ -680,6 +771,7 @@ namespace lime {
 
 	}
 
+
 	value lime_bgfx_create_occlusion_query () {
 
 		bgfx::OcclusionQueryHandle* oqh = new bgfx::OcclusionQueryHandle (bgfx::createOcclusionQuery ());
@@ -697,7 +789,6 @@ namespace lime {
 		value obj = alloc_empty_object ();
 		alloc_field (obj, val_id ("result"), alloc_int ((int) result));
 		alloc_field (obj, val_id ("num"), alloc_int ((int) num));
-
 		return obj;
 
 	}
@@ -715,7 +806,6 @@ namespace lime {
 
 		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (handle);
 		bgfx::DynamicVertexBufferHandle* dvbh = new bgfx::DynamicVertexBufferHandle (bgfx::createDynamicVertexBuffer ((uint32_t) num, *layout, (uint16_t) flags));
-
 		return CFFIPointer (dvbh, gc_bgfx_dynamic_vertex_buffer);
 
 	}
@@ -726,7 +816,6 @@ namespace lime {
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (mem_handle);
 		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (layout_handle);
 		bgfx::DynamicVertexBufferHandle* dvbh = new bgfx::DynamicVertexBufferHandle (bgfx::createDynamicVertexBuffer (mem, *layout, (uint16_t) flags));
-
 		return CFFIPointer (dvbh, gc_bgfx_dynamic_vertex_buffer);
 
 	}
@@ -744,7 +833,6 @@ namespace lime {
 	value lime_bgfx_create_dynamic_index_buffer (int num, int flags) {
 
 		bgfx::DynamicIndexBufferHandle* dibh = new bgfx::DynamicIndexBufferHandle (bgfx::createDynamicIndexBuffer ((uint32_t) num, (uint16_t) flags));
-
 		return CFFIPointer (dibh, gc_bgfx_dynamic_index_buffer);
 
 	}
@@ -754,7 +842,6 @@ namespace lime {
 
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (handle);
 		bgfx::DynamicIndexBufferHandle* dibh = new bgfx::DynamicIndexBufferHandle (bgfx::createDynamicIndexBuffer (mem, (uint16_t) flags));
-
 		return CFFIPointer (dibh, gc_bgfx_dynamic_index_buffer);
 
 	}
@@ -774,7 +861,6 @@ namespace lime {
 		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (handle);
 		bgfx::TransientVertexBuffer* tvb = new bgfx::TransientVertexBuffer ();
 		bgfx::allocTransientVertexBuffer (tvb, (uint32_t) num, *layout);
-
 		return CFFIPointer (tvb, gc_bgfx_val);
 
 	}
@@ -784,7 +870,6 @@ namespace lime {
 
 		bgfx::TransientIndexBuffer* tib = new bgfx::TransientIndexBuffer ();
 		bgfx::allocTransientIndexBuffer (tib, (uint32_t) num, index32);
-
 		return CFFIPointer (tib, gc_bgfx_val);
 
 	}
@@ -793,7 +878,12 @@ namespace lime {
 	value lime_bgfx_get_transient_vertex_buffer_data (value handle) {
 
 		bgfx::TransientVertexBuffer* tvb = (bgfx::TransientVertexBuffer*) val_data (handle);
-		if (!tvb || !tvb->data || tvb->size == 0) return alloc_null ();
+
+		if (!tvb || !tvb->data || tvb->size == 0) {
+
+			return alloc_null ();
+
+		}
 
 		ArrayBufferView abv (alloc_null ());
 		abv.buffer->Resize (tvb->size);
@@ -808,12 +898,23 @@ namespace lime {
 	void lime_bgfx_set_transient_vertex_buffer_data (value handle, value data) {
 
 		bgfx::TransientVertexBuffer* tvb = (bgfx::TransientVertexBuffer*) val_data (handle);
-		if (!tvb || !tvb->data) return;
+
+		if (!tvb || !tvb->data) {
+
+			return;
+
+		}
 
 		ArrayBufferView abv (data);
-		if (!abv.buffer || !abv.buffer->b || abv.byteLength == 0) return;
+
+		if (!abv.buffer || !abv.buffer->b || abv.byteLength == 0) {
+
+			return;
+
+		}
 
 		uint32_t copySize = (uint32_t) abv.byteLength < tvb->size ? (uint32_t) abv.byteLength : tvb->size;
+
 		memcpy (tvb->data, abv.buffer->b, copySize);
 
 	}
@@ -838,7 +939,6 @@ namespace lime {
 
 		bgfx::VertexLayout* layout = (bgfx::VertexLayout*) val_data (handle);
 		bgfx::VertexLayoutHandle* vlh = new bgfx::VertexLayoutHandle (bgfx::createVertexLayout (*layout));
-
 		return CFFIPointer (vlh, gc_bgfx_vertex_layout_handle);
 
 	}
@@ -851,6 +951,7 @@ namespace lime {
 		if (caps) {
 
 			value obj = alloc_empty_object ();
+
 			alloc_field (obj, val_id ("rendererType"), alloc_int ((int) caps->rendererType));
 			alloc_field (obj, val_id ("__supportedHigh"), alloc_int ((int) (caps->supported >> 32)));
 			alloc_field (obj, val_id ("__supportedLow"), alloc_int ((int) (caps->supported & 0xFFFFFFFF)));
@@ -861,15 +962,20 @@ namespace lime {
 			alloc_field (obj, val_id ("numGPUs"), alloc_int ((int) caps->numGPUs));
 
 			value gpus = alloc_array (caps->numGPUs);
+
 			for (int i = 0; i < caps->numGPUs; i++) {
+
 				value gpu = alloc_empty_object ();
 				alloc_field (gpu, val_id ("vendorId"), alloc_int ((int) caps->gpu[i].vendorId));
 				alloc_field (gpu, val_id ("deviceId"), alloc_int ((int) caps->gpu[i].deviceId));
 				val_array_set_i (gpus, i, gpu);
+
 			}
+
 			alloc_field (obj, val_id ("gpus"), gpus);
 
 			value limits = alloc_empty_object ();
+
 			alloc_field (limits, val_id ("maxDrawCalls"), alloc_int ((int) caps->limits.maxDrawCalls));
 			alloc_field (limits, val_id ("maxBlits"), alloc_int ((int) caps->limits.maxBlits));
 			alloc_field (limits, val_id ("maxTextureSize"), alloc_int ((int) caps->limits.maxTextureSize));
@@ -898,9 +1004,13 @@ namespace lime {
 			alloc_field (obj, val_id ("limits"), limits);
 
 			value formats = alloc_array ((int) bgfx::TextureFormat::Count);
+
 			for (int i = 0; i < (int) bgfx::TextureFormat::Count; i++) {
+
 				val_array_set_i (formats, i, alloc_int ((int) caps->formats[i]));
+
 			}
+
 			alloc_field (obj, val_id ("formats"), formats);
 
 			return obj;
@@ -955,8 +1065,14 @@ namespace lime {
 		if (HaxeResource::GetBytes (name, resource)) {
 
 			size_t size = resource.size ();
+
 			char* copy = (char*) SDL_malloc (size > 0 ? size : 1);
-			if (size > 0) memcpy (copy, resource.data (), size);
+
+			if (size > 0) {
+
+				memcpy (copy, resource.data (), size);
+
+			}
 
 			return shaderBytesToFile (copy, size);
 
@@ -970,16 +1086,24 @@ namespace lime {
 	static value compileShader (int type, const char* src, const char* varying, const char* defs, const char* prof, const char* includeDirs, const char* inputFilePath) {
 
 		char shaderType;
+
 		switch (type) {
+
 			case 0: shaderType = 'v'; break;
 			case 1: shaderType = 'f'; break;
 			case 2: shaderType = 'c'; break;
 			default: return alloc_null ();
+
 		}
 
-		if (!src || !*src) return alloc_null ();
+		if (!src || !*src) {
+
+			return alloc_null ();
+
+		}
 
 		bgfx::Options options;
+
 		options.shaderType = shaderType;
 		options.inputFilePath = inputFilePath;
 		options.fileOpen = shaderFileOpen;
@@ -1003,9 +1127,13 @@ namespace lime {
 		#endif
 
 		if (prof && *prof) {
+
 			options.profile = prof;
+
 		} else {
+
 			switch (bgfx::getRendererType ()) {
+
 				case bgfx::RendererType::Direct3D11:
 					options.profile = (shaderType == 'c') ? "cs_5_0" : "s_4_0";
 					break;
@@ -1025,20 +1153,30 @@ namespace lime {
 				default:
 					options.profile = "";
 					break;
+
 			}
 		}
 
-		if (options.profile.empty ()) return alloc_null ();
+		if (options.profile.empty ()) {
+
+			return alloc_null ();
+
+		}
 
 		if (defs) {
+
 			const char* d = defs;
+
 			while (*d) {
+
 				while (*d == ' ' || *d == '\t') d++;
 				const char* e = d;
 				while (*e && *e != ';') e++;
 				if (e > d) options.defines.emplace_back (d, e);
 				d = (*e == ';') ? e + 1 : e;
+
 			}
+
 		}
 
 		const size_t padding = 16384;
@@ -1048,11 +1186,19 @@ namespace lime {
 		buf[srcLen] = '\n';
 
 		bgfx::ShaderCWriter sOut, mOut;
+
 		bool compiled = bgfx::compileShader (varying ? varying : "", "", buf, srcLen, options, &sOut, &mOut);
 
 		if (compiled) {
+
 			const bgfx::Memory* mem = sOut.finalize ();
-			if (mem) return CFFIPointer (const_cast<bgfx::Memory*> (mem));
+
+			if (mem) {
+
+				return CFFIPointer (const_cast<bgfx::Memory*> (mem));
+
+			}
+
 		}
 
 		return alloc_null ();
@@ -1096,10 +1242,19 @@ namespace lime {
 		const char* path = hxs_utf8 (filePath, nullptr);
 		const char* varyingFile = hxs_utf8 (varyingPath, nullptr);
 
-		if (!path || !*path) return alloc_null ();
+		if (!path || !*path) {
+
+			return alloc_null ();
+
+		}
 
 		char* src = loadShaderSource (path);
-		if (!src) return alloc_null ();
+
+		if (!src) {
+
+			return alloc_null ();
+
+		}
 
 		char* varying = NULL;
 
@@ -1112,7 +1267,12 @@ namespace lime {
 		value result = compileShader (type, src, varying ? varying : "", hxs_utf8 (defines, nullptr), hxs_utf8 (profile, nullptr), hxs_utf8 (includeDirs, nullptr), path);
 
 		SDL_free (src);
-		if (varying) SDL_free (varying);
+
+		if (varying) {
+
+			SDL_free (varying);
+
+		}
 
 		return result;
 
@@ -1132,23 +1292,16 @@ namespace lime {
 		bgfx::TextureHandle* texture = (bgfx::TextureHandle*) val_data (val_field (object, val_id ("texture")));
 
 		bgfx::Attachment attachment;
-		attachment.init (
-			*texture,
-			(bgfx::Access::Enum) valFieldToInt (object, "access", bgfx::Access::Write),
-			(uint16_t) valFieldToInt (object, "layer", 0),
-			(uint16_t) valFieldToInt (object, "numLayers", 1),
-			(uint16_t) valFieldToInt (object, "mip", 0),
-			(uint8_t) valFieldToInt (object, "resolve", BGFX_RESOLVE_AUTO_GEN_MIPS)
-		);
-
+		attachment.init (*texture, (bgfx::Access::Enum) valFieldToInt (object, "access", bgfx::Access::Write), (uint16_t) valFieldToInt (object, "layer", 0), (uint16_t) valFieldToInt (object, "numLayers", 1), (uint16_t) valFieldToInt (object, "mip", 0), (uint8_t) valFieldToInt (object, "resolve", BGFX_RESOLVE_AUTO_GEN_MIPS));
 		return attachment;
 
 	}
 
 
-	// used only to persist the flags when calling ResetWindow
 	static uint32_t s_resetFlags = BGFX_RESET_NONE;
+
 	static int s_resetFormat = -1;
+
 
 	void lime_bgfx_reset (int width, int height, int flags, int format) {
 
@@ -1212,7 +1365,6 @@ namespace lime {
 		alloc_field (obj, val_id ("name"), alloc_string (info.name));
 		alloc_field (obj, val_id ("type"), alloc_int ((int) info.type));
 		alloc_field (obj, val_id ("num"), alloc_int ((int) info.num));
-
 		return obj;
 
 	}
@@ -1221,10 +1373,16 @@ namespace lime {
 	value lime_bgfx_get_shader_uniforms (value handle) {
 
 		bgfx::ShaderHandle* shader = (bgfx::ShaderHandle*) val_data (handle);
+
 		uint16_t num = bgfx::getShaderUniforms (*shader);
 
 		std::vector<bgfx::UniformHandle> uniforms (num);
-		if (num > 0) bgfx::getShaderUniforms (*shader, uniforms.data (), num);
+
+		if (num > 0) {
+
+			bgfx::getShaderUniforms (*shader, uniforms.data (), num);
+
+		}
 
 		value result = alloc_array (num);
 
@@ -1243,7 +1401,6 @@ namespace lime {
 
 		const bgfx::Memory* mem = (const bgfx::Memory*) val_data (_mem);
 		bgfx::TextureHandle* th = new bgfx::TextureHandle (bgfx::createTexture (mem, mergeUInt64 (flagsHi, flagsLo), (uint8_t) skip));
-
 		return CFFIPointer (th, gc_bgfx_texture);
 
 	}
@@ -1253,7 +1410,6 @@ namespace lime {
 
 		const bgfx::Memory* mem = val_is_null (_mem) ? NULL : (const bgfx::Memory*) val_data (_mem);
 		bgfx::TextureHandle* th = new bgfx::TextureHandle (bgfx::createTexture2D ((uint16_t) width, (uint16_t) height, hasMips, (uint16_t) numLayers, (bgfx::TextureFormat::Enum) format, mergeUInt64 (flagsHi, flagsLo), mem));
-
 		return CFFIPointer (th, gc_bgfx_texture);
 
 	}
@@ -1262,7 +1418,6 @@ namespace lime {
 	value lime_bgfx_create_texture_2d_scaled (int ratio, bool hasMips, int numLayers, int format, int flagsHi, int flagsLo) {
 
 		bgfx::TextureHandle* th = new bgfx::TextureHandle (bgfx::createTexture2D ((bgfx::BackbufferRatio::Enum) ratio, hasMips, (uint16_t) numLayers, (bgfx::TextureFormat::Enum) format, mergeUInt64 (flagsHi, flagsLo)));
-
 		return CFFIPointer (th, gc_bgfx_texture);
 
 	}
@@ -1272,7 +1427,6 @@ namespace lime {
 
 		const bgfx::Memory* mem = val_is_null (_mem) ? NULL : (const bgfx::Memory*) val_data (_mem);
 		bgfx::TextureHandle* th = new bgfx::TextureHandle (bgfx::createTexture3D ((uint16_t) width, (uint16_t) height, (uint16_t) depth, hasMips, (bgfx::TextureFormat::Enum) format, mergeUInt64 (flagsHi, flagsLo), mem));
-
 		return CFFIPointer (th, gc_bgfx_texture);
 
 	}
@@ -1282,7 +1436,6 @@ namespace lime {
 
 		const bgfx::Memory* mem = val_is_null (_mem) ? NULL : (const bgfx::Memory*) val_data (_mem);
 		bgfx::TextureHandle* th = new bgfx::TextureHandle (bgfx::createTextureCube ((uint16_t) size, hasMips, (uint16_t) numLayers, (bgfx::TextureFormat::Enum) format, mergeUInt64 (flagsHi, flagsLo), mem));
-
 		return CFFIPointer (th, gc_bgfx_texture);
 
 	}
@@ -1318,6 +1471,7 @@ namespace lime {
 	int lime_bgfx_read_texture (value handle, value data, int mip) {
 
 		bgfx::TextureHandle* th = (bgfx::TextureHandle*) val_data (handle);
+
 		ArrayBufferView bufferView (data);
 
 		return (int) bgfx::readTexture (*th, bufferView.buffer->b, (uint8_t) mip);
@@ -1335,9 +1489,11 @@ namespace lime {
 	value lime_bgfx_calc_texture_size (int width, int height, int depth, bool cubeMap, bool hasMips, int numLayers, int format) {
 
 		bgfx::TextureInfo info;
+
 		bgfx::calcTextureSize (info, (uint16_t) width, (uint16_t) height, (uint16_t) depth, cubeMap, hasMips, (uint16_t) numLayers, (bgfx::TextureFormat::Enum) format);
 
 		value obj = alloc_empty_object ();
+
 		alloc_field (obj, val_id ("format"), alloc_int ((int) info.format));
 		alloc_field (obj, val_id ("storageSize"), alloc_int ((int) info.storageSize));
 		alloc_field (obj, val_id ("width"), alloc_int ((int) info.width));
@@ -1374,6 +1530,7 @@ namespace lime {
 	value lime_bgfx_create_frame_buffer_from_textures (value handles, bool destroyTextures) {
 
 		int num = val_array_size (handles);
+
 		std::vector<bgfx::TextureHandle> textures (num);
 
 		for (int i = 0; i < num; i++) {
@@ -1402,6 +1559,7 @@ namespace lime {
 	value lime_bgfx_create_frame_buffer_from_attachments (value attachments, bool destroyTextures) {
 
 		int num = val_array_size (attachments);
+
 		std::vector<bgfx::Attachment> attachmentList (num);
 
 		for (int i = 0; i < num; i++) {
@@ -1430,6 +1588,7 @@ namespace lime {
 	bool lime_bgfx_is_frame_buffer_valid (value attachments) {
 
 		int num = val_array_size (attachments);
+
 		std::vector<bgfx::Attachment> attachmentList (num);
 
 		for (int i = 0; i < num; i++) {
@@ -1455,7 +1614,12 @@ namespace lime {
 	void lime_bgfx_set_view_frame_buffer (int id, value handle) {
 
 		bgfx::FrameBufferHandle fbh = BGFX_INVALID_HANDLE;
-		if (!val_is_null (handle)) fbh = *(bgfx::FrameBufferHandle*) val_data (handle);
+
+		if (!val_is_null (handle)) {
+
+			fbh = *(bgfx::FrameBufferHandle*) val_data (handle);
+
+		}
 
 		bgfx::setViewFrameBuffer ((bgfx::ViewId) id, fbh);
 
@@ -1600,7 +1764,12 @@ namespace lime {
 	value lime_bgfx_get_instance_data_buffer_data (value handle) {
 
 		bgfx::InstanceDataBuffer* idb = (bgfx::InstanceDataBuffer*) val_data (handle);
-		if (!idb || !idb->data || idb->size == 0) return alloc_null ();
+
+		if (!idb || !idb->data || idb->size == 0) {
+
+			return alloc_null ();
+
+		}
 
 		ArrayBufferView abv (alloc_null ());
 		abv.buffer->Resize (idb->size);
@@ -1615,12 +1784,23 @@ namespace lime {
 	void lime_bgfx_set_instance_data_buffer_data (value handle, value data) {
 
 		bgfx::InstanceDataBuffer* idb = (bgfx::InstanceDataBuffer*) val_data (handle);
-		if (!idb || !idb->data) return;
+
+		if (!idb || !idb->data) {
+
+			return;
+
+		}
 
 		ArrayBufferView abv (data);
-		if (!abv.buffer || !abv.buffer->b || abv.byteLength == 0) return;
+
+		if (!abv.buffer || !abv.buffer->b || abv.byteLength == 0) {
+
+			return;
+
+		}
 
 		uint32_t copySize = (uint32_t) abv.byteLength < idb->size ? (uint32_t) abv.byteLength : idb->size;
+
 		memcpy (idb->data, abv.buffer->b, copySize);
 
 	}
@@ -1695,6 +1875,7 @@ namespace lime {
 		}
 
 		int count = val_array_size (order);
+
 		std::vector<bgfx::ViewId> remap (count);
 
 		for (int i = 0; i < count; i++) {
@@ -1718,11 +1899,15 @@ namespace lime {
 	int lime_bgfx_alloc_transform (value data, int num) {
 
 		bgfx::Transform transform;
+
 		uint32_t index = bgfx::allocTransform (&transform, (uint16_t) num);
 
 		ArrayBufferView bufferView (data);
+
 		uint32_t size = (uint32_t) num * 16 * sizeof (float);
+
 		uint32_t copySize = (uint32_t) bufferView.byteLength < size ? (uint32_t) bufferView.byteLength : size;
+
 		memcpy (transform.data, bufferView.buffer->b, copySize);
 
 		return (int) index;
@@ -1740,6 +1925,7 @@ namespace lime {
 	void lime_bgfx_set_condition (value handle, bool visible) {
 
 		bgfx::OcclusionQueryHandle* oqh = (bgfx::OcclusionQueryHandle*) val_data (handle);
+
 		bgfx::setCondition (*oqh, visible);
 
 	}
@@ -1937,7 +2123,12 @@ namespace lime {
 	void lime_bgfx_request_screen_shot (value handle, HxString filePath) {
 
 		bgfx::FrameBufferHandle fbh = BGFX_INVALID_HANDLE;
-		if (!val_is_null (handle)) fbh = *(bgfx::FrameBufferHandle*) val_data (handle);
+
+		if (!val_is_null (handle)) {
+
+			fbh = *(bgfx::FrameBufferHandle*) val_data (handle);
+
+		}
 
 		bgfx::requestScreenShot (fbh, hxs_utf8 (filePath, nullptr));
 
@@ -1945,7 +2136,7 @@ namespace lime {
 
 
 	DEFINE_PRIME0 (lime_bgfx_render_frame);
-	DEFINE_PRIME1v(lime_bgfx_set_debug);
+	DEFINE_PRIME1v (lime_bgfx_set_debug);
 	DEFINE_PRIME5v (lime_bgfx_set_view_clear);
 	DEFINE_PRIME4v (lime_bgfx_set_view_clear_depth);
 	DEFINE_PRIME5v (lime_bgfx_set_view_rect);
@@ -2154,7 +2345,12 @@ namespace lime {
 
 		#elif defined (IPHONE)
 
-		if (!mtlView) mtlView = SDL_Metal_CreateView(sdlWindow);
+		if (!mtlView) {
+
+			mtlView = SDL_Metal_CreateView(sdlWindow);
+
+		}
+
 		return SDL_Metal_GetLayer(mtlView);
 
 		#elif defined (HX_LINUX)
