@@ -135,6 +135,7 @@
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_system_theme.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_threadprio.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_udev.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ubuntu_touch.c" />
 
             </section>
 
@@ -655,6 +656,7 @@
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylanddatamanager.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylanddyn.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandevents.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandeventthread.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandkeyboard.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmessagebox.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmouse.c" />

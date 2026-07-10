@@ -431,6 +431,7 @@
 
 				<lib name="-lpthread" />
 				<lib name="-lrt" />
+				<lib name='-ludev' />
 
 				<section if="LIME_HASHLINK">
 

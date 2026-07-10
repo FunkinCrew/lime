@@ -27,10 +27,10 @@
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-dialog-v1-client-protocol.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-foreign-unstable-v2-client-protocol.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-output-unstable-v1-client-protocol.c" />
-			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-session-management-v1.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-session-management-v1-client-protocol.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-shell-client-protocol.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-toplevel-icon-v1-client-protocol.c" />
-			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-toplevel-tag-v1.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/xdg-toplevel-tag-v1-client-protocol.c" />
 		</section>
 	</files>
 
