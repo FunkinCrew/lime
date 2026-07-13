@@ -3,6 +3,7 @@ package lime.tools;
 enum abstract Platform(String) from hxp.HostPlatform
 {
 	var ANDROID = "android";
+	var EMSCRIPTEN = "emscripten";
 	var HTML5 = "html5";
 	var IOS = "ios";
 	var LINUX = "linux";

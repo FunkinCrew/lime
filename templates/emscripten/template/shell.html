@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>::APP_TITLE::</title>
+
+    ::if favicons::::foreach (favicons)::
+    <link rel="::__current__.rel::" type="::__current__.type::" href="::__current__.href::">::end::::end::
+
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,user-scalable=no">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            outline: none;
+            background: #000;
+        }
+
+        #status,
+        #progress,
+        #spinner,
+        #output {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="spinner"></div>
+<div id="status"></div>
+<progress id="progress" value="0" max="100" hidden></progress>
+<textarea id="output" hidden></textarea>
+
+<canvas id="canvas"
+        oncontextmenu="event.preventDefault()"
+        tabindex="-1"></canvas>
+
+<script>
+var statusElement = document.getElementById('status');
+var progressElement = document.getElementById('progress');
+var spinnerElement = document.getElementById('spinner');
+var canvasElement = document.getElementById('canvas');
+var outputElement = document.getElementById('output');
+
+if (outputElement) outputElement.value = '';
+
+canvasElement.addEventListener("webglcontextlost", function(e) {
+    e.preventDefault();
+    console.error("WebGL context lost.");
+}, false);
+
+function setStatus(text) {
+    if (!setStatus.last) setStatus.last = { time: Date.now(), text: "" };
+    if (text === setStatus.last.text) return;
+
+    var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+    var now = Date.now();
+
+    if (m && now - setStatus.last.time < 30) return;
+
+    setStatus.last.time = now;
+    setStatus.last.text = text;
+
+    if (m) {
+        progressElement.value = parseInt(m[2]) * 100;
+        progressElement.max = parseInt(m[4]) * 100;
+    }
+}
+
+#if MODULARIZE && !EXPORT_ES6
+var moduleArgs = {
+#else
+var Module = {
+#endif
+    print: function() {
+        console.log.apply(console, arguments);
+    },
+
+    printErr: function() {
+        console.error.apply(console, arguments);
+    },
+
+    canvas: canvasElement,
+
+    setStatus: setStatus,
+
+    totalDependencies: 0,
+
+    monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        setStatus(left ? "Preparing... (" +
+            (this.totalDependencies - left) + "/" +
+            this.totalDependencies + ")" : "");
+    }
+};
+
+setStatus("Downloading...");
+
+window.onerror = window.onunhandledrejection = function(e) {
+    console.error(e);
+};
+</script>
+
+{{{ SCRIPT }}}
+
+#if MODULARIZE && !EXPORT_ES6
+<script>
+{{{ EXPORT_NAME }}}(moduleArgs);
+</script>
+#endif
+
+</body>
+</html>

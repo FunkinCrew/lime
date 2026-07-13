@@ -71,6 +71,9 @@ namespace lime {
 			#ifdef IPHONE
 			static void UpdateFrame (void* userdata);
 			#endif
+			#ifdef __EMSCRIPTEN__
+			static void UpdateFrame ();
+			#endif
 
 			static SDLApplication* currentApplication;
 			FrameTime frameTime;

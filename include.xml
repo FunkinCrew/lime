@@ -17,9 +17,9 @@
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />
-	<define name="lime-openal" if="windows || linux || mac || android || ios || tvos" />
+	<define name="lime-openal" if="windows || linux || mac || emscripten || android || ios || tvos" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
-	<define name="lime-opengles" if="mobile" />
+	<define name="lime-opengles" if="mobile || emscripten" />
 	<define name="lime-webgl" if="html5" />
 
 	<haxedef name="no-compilation" />
@@ -31,6 +31,7 @@
 	<section if="hxp" unless="lime-tools">
 
 		<target name="android" path="tools/platforms/AndroidPlatform.hx" />
+		<target name="emscripten" path="tools/platforms/EmscriptenTarget.hx" />
 		<target name="html5" path="tools/platforms/HTML5Platform.hx" />
 		<target name="ios" path="tools/platforms/IOSPlatform.hx" />
 		<target name="linux" path="tools/platforms/LinuxPlatform.hx" />
@@ -42,7 +43,7 @@
 
 	<section unless="display">
 
-		<section unless="force-synchronous || force_synchronous">
+		<section unless="emscripten || force-synchronous || force_synchronous">
 
 			<haxedef name="lime-threads" if="native || html5" />
 			<haxedef name="lime-threads-deque" if="native" />

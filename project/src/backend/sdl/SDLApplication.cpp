@@ -7,6 +7,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+#endif
+
 #include <cmath>
 
 
@@ -139,7 +143,17 @@ namespace lime {
 
 		Init ();
 
-		#ifndef IPHONE
+		#ifdef __EMSCRIPTEN__
+		emscripten_cancel_main_loop ();
+		emscripten_set_main_loop (UpdateFrame, 0, 0);
+		emscripten_set_main_loop_timing (EM_TIMING_RAF, 1);
+		#endif
+
+		#if defined(IPHONE) || defined(__EMSCRIPTEN__)
+
+		return 0;
+
+		#else
 
 		while (active) {
 
@@ -148,10 +162,6 @@ namespace lime {
 		}
 
 		return Quit ();
-
-		#else
-
-		return 0;
 
 		#endif
 
@@ -808,6 +818,7 @@ namespace lime {
 		frameTime.frame = frameTime.current - frameTime.previous;
 		frameTime.previous = frameTime.current;
 
+		#ifndef __EMSCRIPTEN__
 		// If the frame was faster than the target frame time, delay to cap FPS
 		if (frameTime.frame < frameTime.target) {
 
@@ -820,6 +831,7 @@ namespace lime {
 			frameTime.previous = frameTime.current;
 
 		}
+		#endif
 
 	}
 
@@ -921,6 +933,15 @@ namespace lime {
 
 	#ifdef IPHONE
 	void SDLApplication::UpdateFrame (void *userdata) {
+
+		currentApplication->Update ();
+
+	}
+	#endif
+
+
+	#ifdef __EMSCRIPTEN__
+	void SDLApplication::UpdateFrame () {
 
 		currentApplication->Update ();
 

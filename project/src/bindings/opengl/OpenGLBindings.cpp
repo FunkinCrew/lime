@@ -2193,7 +2193,9 @@ namespace lime {
 	double lime_gl_get_buffer_pointerv (int target, int pname) {
 
 		uintptr_t result = 0;
+		#ifndef __EMSCRIPTEN__
 		glGetBufferPointerv (target, pname, (void**)result);
+		#endif
 		return (double)result;
 
 	}
@@ -2202,7 +2204,9 @@ namespace lime {
 	HL_PRIM double HL_NAME(hl_gl_get_buffer_pointerv) (int target, int pname) {
 
 		uintptr_t result = 0;
+		#ifndef __EMSCRIPTEN__
 		glGetBufferPointerv (target, pname, (void**)result);
+		#endif
 		return (double)result;
 
 	}
@@ -3785,16 +3789,24 @@ namespace lime {
 
 	double lime_gl_map_buffer_range (int target, double offset, int length, int access) {
 
+		#ifdef __EMSCRIPTEN__
+		return 0.0;
+		#else
 		uintptr_t result = (uintptr_t)glMapBufferRange (target, (GLintptr)(uintptr_t)offset, length, access);
 		return (double)result;
+		#endif
 
 	}
 
 
 	HL_PRIM double HL_NAME(hl_gl_map_buffer_range) (int target, double offset, int length, int access) {
 
+		#ifdef __EMSCRIPTEN__
+		return 0.0;
+		#else
 		uintptr_t result = (uintptr_t)glMapBufferRange (target, (GLintptr)(uintptr_t)offset, length, access);
 		return (double)result;
+		#endif
 
 	}
 
@@ -4915,14 +4927,22 @@ namespace lime {
 
 	bool lime_gl_unmap_buffer (int target) {
 
+		#ifdef __EMSCRIPTEN__
+		return true;
+		#else
 		return glUnmapBuffer (target);
+		#endif
 
 	}
 
 
 	HL_PRIM bool HL_NAME(hl_gl_unmap_buffer) (int target) {
 
+		#ifdef __EMSCRIPTEN__
+		return true;
+		#else
 		return glUnmapBuffer (target);
+		#endif
 
 	}
 

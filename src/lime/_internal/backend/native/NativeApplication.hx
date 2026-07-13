@@ -136,7 +136,7 @@ class NativeApplication
 		#if lime_cffi
 		var result = NativeCFFI.lime_application_exec(handle);
 
-		#if !ios
+		#if !(ios || emscripten)
 		parent.onExit.dispatch(result);
 		#end
 

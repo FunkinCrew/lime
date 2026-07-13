@@ -8,8 +8,12 @@
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
 
 		<compilerflag value="-DOPUS_BUILD" />
+
 		<compilerflag value="-DUSE_ALLOCA" />
-		<compilerflag value="-DHAVE_LRINTF" if="HXCPP_ARMV7" />
+
+		<compilerflag value="-DHAVE_LRINT" if="HXCPP_ARMV7 || emscripten" />
+
+		<compilerflag value="-DHAVE_LRINTF" if="HXCPP_ARMV7 || emscripten" />
 
 		<section>
 

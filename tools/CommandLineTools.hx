@@ -565,6 +565,9 @@ class CommandLineTools
 				case LINUX:
 					platform = new LinuxPlatform(command, project, targetFlags);
 
+				case EMSCRIPTEN:
+					platform = new EmscriptenTarget(command, project, targetFlags);
+
 				case HTML5:
 					platform = new HTML5Platform(command, project, targetFlags);
 

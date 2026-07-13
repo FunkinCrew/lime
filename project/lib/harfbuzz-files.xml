@@ -54,6 +54,8 @@
 
 			<section unless="isMsvc">
 
+				<compilerflag value="-Wno-array-bounds" if="emscripten" />
+
 				<compilerflag value="-Wno-nontrivial-memcall" unless="android || mingw || apple" />
 
 				<compilerflag value="-Wno-format" if="apple" />

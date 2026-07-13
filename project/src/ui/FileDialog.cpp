@@ -1,5 +1,5 @@
 #include <ui/FileDialog.h>
-#ifdef LIME_SDL
+#if defined (LIME_SDL) && !defined (__EMSCRIPTEN__)
 #include "../backend/sdl/SDLWindow.h"
 #endif
 #include <stdio.h>
@@ -9,7 +9,7 @@
 
 namespace lime {
 
-	#ifdef LIME_SDL
+	#if defined (LIME_SDL) && !defined (__EMSCRIPTEN__)
 	struct FileDialogData {
 		std::function<void(const char* const*, int, int)> callback;
 		std::vector<SDL_DialogFileFilter> filters;
@@ -142,7 +142,7 @@ namespace lime {
 
     void FileDialog::OpenDirectory (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char* defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_SDL
+		#if defined (LIME_SDL) && !defined (__EMSCRIPTEN__)
 		SDL_PropertiesID props = SDL_CreateProperties ();
 
 		SDL_SetPointerProperty (props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<SDLWindow*> (window)->sdlWindow : nullptr);
@@ -167,7 +167,7 @@ namespace lime {
 
 	void FileDialog::OpenFile (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_SDL
+		#if defined (LIME_SDL) && !defined (__EMSCRIPTEN__)
 		auto* dialogData = new FileDialogData;
 		dialogData->callback = std::move(callback);
 		dialogData->filters = buildFilters(names, patterns, filterCount);
@@ -197,7 +197,7 @@ namespace lime {
 
 	void FileDialog::SaveFile (Window* window, const char* title, std::function<void(const char* const*, int, int)> callback, const char** names, const char** patterns, int filterCount, const char* defaultPath) {
 
-		#ifdef LIME_SDL
+		#if defined (LIME_SDL) && !defined (__EMSCRIPTEN__)
 		auto* dialogData = new FileDialogData;
 		dialogData->callback = std::move(callback);
 		dialogData->filters = buildFilters(names, patterns, filterCount);

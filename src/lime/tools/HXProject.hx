@@ -718,6 +718,13 @@ class HXProject extends Script
 				defines.set("hlc", "1");
 			}
 		}
+		else if (target == Platform.EMSCRIPTEN)
+		{
+			defines.set("emscripten", "1");
+			defines.set("targetType", "cpp");
+			defines.set("native", "1");
+			defines.set("cpp", "1");
+		}
 		else if (targetFlags.exists("cpp") || ((platformType != PlatformType.WEB) && !targetFlags.exists("html5")))
 		{
 			defines.set("targetType", "cpp");

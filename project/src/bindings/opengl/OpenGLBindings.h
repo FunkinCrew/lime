@@ -11,7 +11,10 @@
 
 #else
 
-#if defined (IPHONE) || defined(APPLETV)
+#if defined(__EMSCRIPTEN__)
+#include <GLES3/gl3.h>
+#include <GLES2/gl2ext.h>
+#elif defined(IPHONE) || defined(APPLETV)
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
 #endif

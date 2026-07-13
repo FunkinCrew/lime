@@ -32,6 +32,10 @@ class DefineMacro
 					Compiler.define("mobile");
 					if (cffi) Compiler.define("lime-opengles");
 				}
+				else if (Context.defined("emscripten"))
+				{
+					if (cffi) Compiler.define("lime-opengles");
+				}
 				else
 				{
 					Compiler.define("desktop");

@@ -122,22 +122,27 @@ namespace lime {
 
 	void lime_al_auxf (value aux, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (aux);
 		alAuxiliaryEffectSlotf (id, param, value);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_auxf) (HL_CFFIPointer* aux, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)aux->ptr;
 		alAuxiliaryEffectSlotf (id, param, value);
+		#endif
 
 	}
 
 
 	void lime_al_auxfv (value aux, int param, value values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (aux);
 
 		if (!val_is_null (values)) {
@@ -155,12 +160,14 @@ namespace lime {
 			delete[] data;
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_auxfv) (HL_CFFIPointer* aux, int param, varray* values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)aux->ptr;
 
 		if (values) {
@@ -169,12 +176,14 @@ namespace lime {
 			alAuxiliaryEffectSlotfv (id, param, hl_aptr (values, float));
 
 		}
+		#endif
 
 	}
 
 
 	void lime_al_auxi (value aux, int param, value val) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (aux);
 		ALuint data;
 
@@ -189,12 +198,14 @@ namespace lime {
 		}
 
 		alAuxiliaryEffectSloti (id, param, data);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_auxi) (HL_CFFIPointer* aux, int param, vdynamic* val) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)aux->ptr;
 		ALuint data;
 
@@ -209,12 +220,14 @@ namespace lime {
 		}
 
 		alAuxiliaryEffectSloti (id, param, data);
+		#endif
 
 	}
 
 
 	void lime_al_auxiv (value aux, int param, value values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (aux);
 
 		if (!val_is_null (values)) {
@@ -232,12 +245,14 @@ namespace lime {
 			delete[] data;
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_auxiv) (HL_CFFIPointer* aux, int param, varray* values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)aux->ptr;
 
 		if (values) {
@@ -245,6 +260,7 @@ namespace lime {
 			alAuxiliaryEffectSlotiv (id, param, hl_aptr (values, int));
 
 		}
+		#endif
 
 	}
 
@@ -405,6 +421,7 @@ namespace lime {
 
 	void lime_al_delete_auxiliary_effect_slot (value aux) {
 
+		#ifndef __EMSCRIPTEN__
 		if (!val_is_null (aux)) {
 
 			al_gc_mutex.Lock ();
@@ -415,12 +432,14 @@ namespace lime {
 			al_gc_mutex.Unlock ();
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_delete_auxiliary_effect_slot) (HL_CFFIPointer* aux) {
 
+		#ifndef __EMSCRIPTEN__
 		if (aux) {
 
 			al_gc_mutex.Lock ();
@@ -431,6 +450,7 @@ namespace lime {
 			al_gc_mutex.Unlock ();
 
 		}
+		#endif
 
 	}
 
@@ -530,6 +550,7 @@ namespace lime {
 
 	void lime_al_delete_effect (value effect) {
 
+		#ifndef __EMSCRIPTEN__
 		if (!val_is_null (effect)) {
 
 			ALuint data = (ALuint)(uintptr_t)val_data (effect);
@@ -537,12 +558,14 @@ namespace lime {
 			val_gc (effect, 0);
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_delete_effect) (HL_CFFIPointer* effect) {
 
+		#ifndef __EMSCRIPTEN__
 		if (effect) {
 
 			ALuint data = (ALuint)(uintptr_t)effect->ptr;
@@ -550,12 +573,14 @@ namespace lime {
 			effect->finalizer = 0;
 
 		}
+		#endif
 
 	}
 
 
 	void lime_al_delete_filter (value filter) {
 
+		#ifndef __EMSCRIPTEN__
 		if (!val_is_null (filter)) {
 
 			ALuint data = (ALuint)(uintptr_t)val_data (filter);
@@ -563,12 +588,14 @@ namespace lime {
 			val_gc (filter, 0);
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_delete_filter) (HL_CFFIPointer* filter) {
 
+		#ifndef __EMSCRIPTEN__
 		if (filter) {
 
 			ALuint data = (ALuint)(uintptr_t)filter->ptr;
@@ -576,6 +603,7 @@ namespace lime {
 			filter->finalizer = 0;
 
 		}
+		#endif
 
 	}
 
@@ -715,22 +743,27 @@ namespace lime {
 
 	void lime_al_effectf (value effect, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (effect);
 		alEffectf (id, param, value);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_effectf) (HL_CFFIPointer* effect, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)effect->ptr;
 		alEffectf (id, param, value);
+		#endif
 
 	}
 
 
 	void lime_al_effectfv (value effect, int param, value values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (effect);
 
 		if (!val_is_null (values)) {
@@ -748,12 +781,14 @@ namespace lime {
 			delete[] data;
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_effectfv) (HL_CFFIPointer* effect, int param, varray* values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)effect->ptr;
 
 		if (values) {
@@ -762,28 +797,34 @@ namespace lime {
 			alEffectfv (id, param, hl_aptr (values, float));
 
 		}
+		#endif
 
 	}
 
 
 	void lime_al_effecti (value effect, int param, int value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (effect);
 		alEffecti (id, param, value);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_effecti) (HL_CFFIPointer* effect, int param, int value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)effect->ptr;
 		alEffecti (id, param, value);
+		#endif
 
 	}
 
 
 	void lime_al_effectiv (value effect, int param, value values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (effect);
 
 		if (!val_is_null (values)) {
@@ -801,12 +842,14 @@ namespace lime {
 			delete[] data;
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_effectiv) (HL_CFFIPointer* effect, int param, varray* values) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)effect->ptr;
 
 		if (values) {
@@ -814,6 +857,7 @@ namespace lime {
 			alEffectiv (id, param, hl_aptr (values, int));
 
 		}
+		#endif
 
 	}
 
@@ -834,50 +878,66 @@ namespace lime {
 
 	void lime_al_filteri (value filter, int param, value val) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (filter);
 		alFilteri (id, param, val_int (val));
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_filteri) (HL_CFFIPointer* filter, int param, int val) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)filter->ptr;
 		alFilteri (id, param, val);
+		#endif
 
 	}
 
 
 	void lime_al_filterf (value filter, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (filter);
 		alFilterf (id, param, value);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_filterf) (HL_CFFIPointer* filter, int param, float value) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)filter->ptr;
 		alFilterf (id, param, value);
+		#endif
 
 	}
 
 
 	value lime_al_gen_aux () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint aux;
 		alGenAuxiliaryEffectSlots ((ALuint)1, &aux);
 		return CFFIPointer ((void*)(uintptr_t)aux, gc_al_auxiliary_effect_slot);
+		#else
+		return alloc_null ();
+		#endif
 
 	}
 
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_al_gen_aux) () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint aux;
 		alGenAuxiliaryEffectSlots ((ALuint)1, &aux);
 		return HLCFFIPointer ((void*)(uintptr_t)aux, (hl_finalizer)hl_gc_al_auxiliary_effect_slot);
+		#else
+		return NULL;
+		#endif
 
 	}
 
@@ -1010,6 +1070,7 @@ namespace lime {
 
 	value lime_al_gen_effect () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint effect;
 		alGenEffects ((ALuint)1, &effect);
 
@@ -1018,6 +1079,7 @@ namespace lime {
 			return CFFIPointer ((void*)(uintptr_t)effect, gc_al_effect);
 
 		}
+		#endif
 
 		return alloc_null ();
 
@@ -1026,6 +1088,7 @@ namespace lime {
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_al_gen_effect) () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint effect;
 		alGenEffects ((ALuint)1, &effect);
 
@@ -1034,6 +1097,7 @@ namespace lime {
 			return HLCFFIPointer ((void*)(uintptr_t)effect, (hl_finalizer)hl_gc_al_effect);
 
 		}
+		#endif
 
 		return NULL;
 
@@ -1042,6 +1106,7 @@ namespace lime {
 
 	value lime_al_gen_filter () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint filter;
 		alGenFilters ((ALuint)1, &filter);
 
@@ -1050,6 +1115,7 @@ namespace lime {
 			return CFFIPointer ((void*)(uintptr_t)filter, gc_al_filter);
 
 		}
+		#endif
 
 		return alloc_null ();
 
@@ -1058,6 +1124,7 @@ namespace lime {
 
 	HL_PRIM HL_CFFIPointer* HL_NAME(hl_al_gen_filter) () {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint filter;
 		alGenFilters ((ALuint)1, &filter);
 
@@ -1066,6 +1133,7 @@ namespace lime {
 			return HLCFFIPointer ((void*)(uintptr_t)filter, (hl_finalizer)hl_gc_al_filter);
 
 		}
+		#endif
 
 		return NULL;
 
@@ -1440,20 +1508,28 @@ namespace lime {
 
 	int lime_al_get_filteri (value filter, int param) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (filter);
 		ALint data;
 		alGetFilteri (id, param, &data);
 		return data;
+		#else
+		return 0;
+		#endif
 
 	}
 
 
 	HL_PRIM int HL_NAME(hl_al_get_filteri) (HL_CFFIPointer* filter, int param) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)filter->ptr;
 		ALint data;
 		alGetFilteri (id, param, &data);
 		return data;
+		#else
+		return 0;
+		#endif
 
 	}
 
@@ -1800,6 +1876,7 @@ namespace lime {
 
 	value lime_al_get_sourcedv_soft (value source, int param, int count) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (source);
 		ALdouble* values = new ALdouble[count];
 		alGetSourcedvSOFT (id, param, values);
@@ -1814,16 +1891,23 @@ namespace lime {
 
 		delete[] values;
 		return result;
+		#else
+		return alloc_null ();
+		#endif
 
 	}
 
 
 	HL_PRIM varray* HL_NAME(hl_al_get_sourcedv_soft) (HL_CFFIPointer* source, int param, int count) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)source->ptr;
 		varray* result = hl_alloc_array (&hlt_f64, count);
 		alGetSourcedvSOFT (id, param, hl_aptr (result, double));
 		return result;
+		#else
+		return NULL;
+		#endif
 
 	}
 
@@ -1943,16 +2027,24 @@ namespace lime {
 
 	bool lime_al_is_aux (value aux) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (aux);
 		return alIsAuxiliaryEffectSlot (id);
+		#else
+		return false;
+		#endif
 
 	}
 
 
 	HL_PRIM bool HL_NAME(hl_al_is_aux) (HL_CFFIPointer* aux) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)aux->ptr;
 		return alIsAuxiliaryEffectSlot (id);
+		#else
+		return false;
+		#endif
 
 	}
 
@@ -1975,16 +2067,24 @@ namespace lime {
 
 	bool lime_al_is_effect (value effect) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (effect);
 		return alIsEffect (id);
+		#else
+		return false;
+		#endif
 
 	}
 
 
 	HL_PRIM bool HL_NAME(hl_al_is_effect) (HL_CFFIPointer* effect) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)effect->ptr;
 		return alIsEffect (id);
+		#else
+		return false;
+		#endif
 
 	}
 
@@ -2189,32 +2289,40 @@ namespace lime {
 
 	void lime_al_remove_direct_filter (value source) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (source);
 		alSourcei (id, AL_DIRECT_FILTER, AL_FILTER_NULL);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_remove_direct_filter) (HL_CFFIPointer* source) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)source->ptr;
 		alSourcei (id, AL_DIRECT_FILTER, AL_FILTER_NULL);
+		#endif
 
 	}
 
 
 	void lime_al_remove_send (value source, int index) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)val_data (source);
 		alSource3i (id, AL_AUXILIARY_SEND_FILTER, AL_EFFECTSLOT_NULL, index, 0);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_al_remove_send) (HL_CFFIPointer* source, int index) {
 
+		#ifndef __EMSCRIPTEN__
 		ALuint id = (ALuint)(uintptr_t)source->ptr;
 		alSource3i (id, AL_AUXILIARY_SEND_FILTER, AL_EFFECTSLOT_NULL, index, 0);
+		#endif
 
 	}
 
@@ -2599,6 +2707,7 @@ namespace lime {
 		ALuint data1;
 		ALuint data3;
 
+		#ifndef __EMSCRIPTEN__
 		if (param == AL_AUXILIARY_SEND_FILTER) {
 
 			if (val_is_null (value1)) {
@@ -2627,6 +2736,10 @@ namespace lime {
 			data3 = val_int (value3);
 
 		}
+		#else
+		data1 = val_int (value1);
+		data3 = val_int (value3);
+		#endif
 
 		alSource3i (id, param, data1, value2, data3);
 
@@ -2639,6 +2752,7 @@ namespace lime {
 		ALuint data1;
 		ALuint data3;
 
+		#ifndef __EMSCRIPTEN__
 		if (param == AL_AUXILIARY_SEND_FILTER) {
 
 			if (value1) {
@@ -2667,6 +2781,10 @@ namespace lime {
 			data3 = value3->v.i;
 
 		}
+		#else
+		data1 = value1->v.i;
+		data3 = value3->v.i;
+		#endif
 
 		alSource3i (id, param, data1, value2, data3);
 
@@ -2733,7 +2851,11 @@ namespace lime {
 
 		if (!val_is_null (val)) {
 
+			#ifndef __EMSCRIPTEN__
 			if (param == AL_BUFFER || param == AL_DIRECT_FILTER) {
+			#else
+			if (param == AL_BUFFER) {
+			#endif
 
 				data = (ALuint)(uintptr_t)val_data (val);
 
@@ -2757,7 +2879,11 @@ namespace lime {
 
 		if (val) {
 
+			#ifndef __EMSCRIPTEN__
 			if (param == AL_BUFFER || param == AL_DIRECT_FILTER) {
+			#else
+			if (param == AL_BUFFER) {
+			#endif
 
 				data = (ALuint)(uintptr_t)((HL_CFFIPointer*)val)->ptr;
 
@@ -3304,16 +3430,20 @@ namespace lime {
 
 	void lime_alc_pause_device (value device) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 		alcDevicePauseSOFT (alcDevice);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_alc_pause_device) (HL_CFFIPointer* device) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		alcDevicePauseSOFT (alcDevice);
+		#endif
 
 	}
 
@@ -3336,16 +3466,20 @@ namespace lime {
 
 	void lime_alc_resume_device (value device) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = val_is_null (device) ? NULL : (ALCdevice*)(uintptr_t)val_data (device);
 		alcDeviceResumeSOFT (alcDevice);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_alc_resume_device) (HL_CFFIPointer* device) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = device ? (ALCdevice*)(uintptr_t)device->ptr : NULL;
 		alcDeviceResumeSOFT (alcDevice);
+		#endif
 
 	}
 
@@ -3368,6 +3502,7 @@ namespace lime {
 
 	void lime_alc_event_control_soft(int count, value events, bool enable) {
 
+		#ifndef __EMSCRIPTEN__
 		if (!val_is_null (events)) {
 
 			int size = val_array_size (events);
@@ -3383,21 +3518,25 @@ namespace lime {
 			delete[] eventsArray;
 
 		}
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_alc_event_control_soft) (int count, varray* events, bool enable) {
 
+		#ifndef __EMSCRIPTEN__
 		if (events) {
 
 			alcEventControlSOFT (count, hl_aptr (events, int), enable ? ALC_TRUE : ALC_FALSE);
 
 		}
+		#endif
 
 	}
 
 
+	#ifndef __EMSCRIPTEN__
 	void ALC_APIENTRY alsoft_callback_function(ALCenum eventType, ALCenum deviceType, ALCdevice* device, ALCsizei length, const ALCchar* message, void* userParam) ALC_API_NOEXCEPT17 {
 
 		gc_set_top_of_stack((int*)99, true);
@@ -3479,10 +3618,12 @@ namespace lime {
 			hl_unregister_thread ();
 
 	}
+	#endif
 
 
 	void lime_alc_event_callback_soft(value callback) {
 
+		#ifndef __EMSCRIPTEN__
 		if (alSoftEventCallback) {
 
 			delete alSoftEventCallback;
@@ -3492,12 +3633,14 @@ namespace lime {
 		alSoftEventCallback = new ValuePointer (callback);
 
 		alcEventCallbackSOFT (alsoft_callback_function, NULL);
+		#endif
 
 	}
 
 
 	HL_PRIM void HL_NAME(hl_alc_event_callback_soft) (vclosure* callback) {
 
+		#ifndef __EMSCRIPTEN__
 		if (alSoftEventCallback) {
 
 			delete alSoftEventCallback;
@@ -3507,12 +3650,14 @@ namespace lime {
 		alSoftEventCallback = new ValuePointer (callback);
 
 		alcEventCallbackSOFT (hl_alsoft_callback_function, NULL);
+		#endif
 
 	}
 
 
 	bool lime_alc_reopen_device_soft(value device, HxString devicename, value attributes) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)val_data (device);
 
 		if (!val_is_null (attributes)) {
@@ -3537,6 +3682,7 @@ namespace lime {
 			return result == ALC_TRUE;
 
 		}
+		#endif
 
 		return false;
 
@@ -3545,9 +3691,13 @@ namespace lime {
 
 	HL_PRIM bool HL_NAME(hl_alc_reopen_device_soft) (HL_CFFIPointer* device, hl_vstring* devicename, varray* attributes) {
 
+		#ifndef __EMSCRIPTEN__
 		ALCdevice* alcDevice = (ALCdevice*)(uintptr_t)device->ptr;
 		ALCboolean result = alcReopenDeviceSOFT (alcDevice, devicename ? hl_to_utf8 (devicename->bytes) : NULL, attributes ? hl_aptr (attributes, ALCint) : NULL);
 		return result == ALC_TRUE;
+		#else
+		return false;
+		#endif
 
 	}
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <pragma once="true" />
+
+    <target id="haxe">
+        ::foreach LIB_PATHS::<lib name="::__current__::" />::end::
+    </target>
+
+    <linker id="exe" exe="em++" if="emscripten">
+
+        <flag value="-s" />
+        <flag value="USE_SDL=3" />
+
+        <flag value="-s" />
+        <flag value="EXPORTED_RUNTIME_METHODS=ccall" />
+
+        <flag value="-s" />
+        <flag value="MIN_WEBGL_VERSION=2" />
+
+        <flag value="-s" />
+        <flag value="MAX_WEBGL_VERSION=2" />
+
+        <flag value="-s" />
+        <flag value="FULL_ES3" />
+
+        <flag value="-s" />
+        <flag value="STACK_SIZE=1MB" />
+
+        <flag value="-s" />
+        <flag value="INITIAL_MEMORY=512MB" />
+
+        <section if="final">
+
+            <flag value="-s" />
+            <flag value="MINIFY_HTML" />
+
+        </section>
+
+        ::if ASSETS_DIR::
+        <flag value="--preload-file" />
+        <flag value="::ASSETS_DIR::" />
+        ::end::
+
+    </linker>
+</xml>

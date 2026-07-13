@@ -5,16 +5,23 @@ import ::APP_MAIN::;
 @:dox(hide)
 @:access(lime.app.Application)
 @:access(lime.system.System)
-#if (static_link || ios || tvos)
+#if (static_link || ios || tvos || emscripten)
+@:buildXml("<include name=\"Configuration.xml\" />")
+#if !emscripten
 @:cppFileCode("\nextern \"C\" int zlib_register_prims ();\nextern \"C\" int lime_register_prims ();\n::foreach ndlls::::if (registerStatics)::extern \"C\" int ::nameSafe::_register_prims ();::end::::end::")
+#else
+@:cppFileCode("\nextern \"C\" int zlib_register_prims ();\n::foreach ndlls::::if (registerStatics)::extern \"C\" int ::nameSafe::_register_prims ();::end::::end::")
+#end
 #end
 class ApplicationMain
 {
 	public static function main():Void
 	{
-		#if (static_link || ios || tvos)
+		#if (static_link || ios || tvos || emscripten)
 		untyped __cpp__("zlib_register_prims ()");
+		#if !emscripten
 		untyped __cpp__("lime_register_prims ()");
+		#end
 		::foreach ndlls::::if (registerStatics)::untyped __cpp__("::nameSafe::_register_prims ()");::end::::end::
 		#end
 
@@ -131,7 +138,7 @@ class ApplicationMain
 	{
 		var result = app.exec();
 
-		#if (sys && !ios && !nodejs)
+		#if (sys && !ios && !emscripten && !nodejs)
 		lime.system.System.exit(result);
 		#end
 	}
