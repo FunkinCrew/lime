@@ -1,6 +1,6 @@
 package lime.graphics;
 
-#if (!lime_doc_gen || lime_opengl || lime_opengles || lime_webgl)
+#if (lime_webgl && !doc_gen)
 import lime.graphics.opengl.*;
 import lime.utils.ArrayBufferView;
 import lime.utils.Float32Array;
@@ -76,41 +76,34 @@ import lime.utils.Float32Array;
 @:transitive
 abstract WebGLRenderContext(WebGL2RenderContext)
 {
-	public function bufferData(target:Int, srcData:#if (!js || !html5 || display) ArrayBufferView #else Dynamic #end, usage:Int):Void
+	public function bufferData(target:Int, srcData:Dynamic, usage:Int):Void
 	{
 		this.bufferData(target, srcData, usage);
 	}
 
-	public inline function bufferSubData(target:Int, offset:Int, srcData:#if (!js || !html5 || display) ArrayBufferView #else Dynamic #end):Void
+	public inline function bufferSubData(target:Int, offset:Int, srcData:Dynamic):Void
 	{
 		this.bufferSubData(target, offset, srcData);
 	}
 
 	public function compressedTexImage2D(target:Int, level:Int, internalformat:Int, width:Int, height:Int, border:Int,
-			srcData:#if (!js || !html5 || display) ArrayBufferView #else Dynamic #end):Void
+			srcData:Dynamic):Void
 	{
 		this.compressedTexImage2D(target, level, internalformat, width, height, border, srcData);
 	}
 
 	public inline function compressedTexSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, width:Int, height:Int, format:Int,
-			srcData:#if (!js || !html5 || display) ArrayBufferView #else Dynamic #end):Void
+			srcData:Dynamic):Void
 	{
 		this.compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, srcData);
 	}
 
 	public inline function readPixels(x:Int, y:Int, width:Int, height:Int, format:Int, type:Int,
-			pixels:#if (!js || !html5 || display) ArrayBufferView #else Dynamic #end):Void
+			pixels:Dynamic):Void
 	{
 		this.readPixels(x, y, width, height, format, type, pixels);
 	}
 
-	#if (!js || !html5 || lime_doc_gen)
-	public inline function texImage2D(target:Int, level:Int, internalformat:Int, width:Int, height:Int, border:Int, format:Int, type:Int,
-			srcData:ArrayBufferView):Void
-	{
-		this.texImage2D(target, level, internalformat, width, height, border, format, type, srcData);
-	}
-	#else
 	// public function texImage2D (target:Int, level:Int, internalformat:Int, format:Int, type:Int, pixels:Dynamic /*ImageBitmap*/):Void {
 	// public function texImage2D (target:Int, level:Int, internalformat:Int, format:Int, type:Int, pixels:#if (js && html5) CanvasElement #else Dynamic #end):Void {
 	// public function texImage2D (target:Int, level:Int, internalformat:Int, format:Int, type:Int, pixels:#if (js && html5) ImageData #else Dynamic #end):Void {
@@ -121,15 +114,7 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 	{
 		this.texImage2D(target, level, internalformat, width, height, border, format, type, srcData);
 	}
-	#end
 
-	#if (!js || !html5 || lime_doc_gen)
-	public inline function texSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, width:Int, height:Int, format:Int, type:Int,
-			srcData:ArrayBufferView, srcOffset:Int = 0):Void
-	{
-		this.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, srcData, srcOffset);
-	}
-	#else
 	// public function texSubImage2D (target:Int, level:Int, xoffset:Int, yoffset:Int, format:Int, type:Int, pixels:#if (js && html5) CanvasElement #else Dynamic #end):Void {
 	// public function texSubImage2D (target:Int, level:Int, xoffset:Int, yoffset:Int, format:Int, type:Int, pixels:Dynamic /*ImageBitmap*/):Void {
 	// public function texSubImage2D (target:Int, level:Int, xoffset:Int, yoffset:Int, format:Int, type:Int, pixels:#if (js && html5) ImageData #else Dynamic #end):Void {
@@ -140,7 +125,6 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 	{
 		this.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, srcData);
 	}
-	#end
 
 	public function uniformMatrix2fv(location:GLUniformLocation, transpose:Bool, v:Float32Array):Void
 	{
@@ -157,15 +141,6 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 		this.uniformMatrix4fv(location, transpose, v);
 	}
 
-
-	public inline function blendBarrier():Void
-	{
-		// Not supported on Web
-		#if !lime_webgl
-		this.blendBarrier();
-		#end
-	}
-
 	@:from private static function fromWebGL2RenderContext(gl:WebGL2RenderContext):WebGLRenderContext
 	{
 		return cast gl;
@@ -180,38 +155,15 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 	{
 		return cast GL.context;
 	}
-
-	#if (!doc_gen && lime_opengl)
-	@:from private static function fromOpenGLContext(gl:OpenGLRenderContext):WebGLRenderContext
+}
+#else
+@:forward()
+@:transitive
+abstract WebGLRenderContext(Dynamic) from Dynamic to Dynamic
+{
+	@:from private static function fromRenderContext(context:RenderContext):WebGLRenderContext
 	{
-		#if (sys && lime_cffi && lime_opengl)
-		return cast gl;
-		#else
 		return null;
-		#end
 	}
-	#end
-
-	#if (!doc_gen && (lime_opengl || lime_opengles))
-	@:from private static function fromOpenGLES2Context(gl:OpenGLES2RenderContext):WebGLRenderContext
-	{
-		#if (sys && lime_cffi && lime_opengl)
-		return cast gl;
-		#else
-		return null;
-		#end
-	}
-	#end
-
-	#if (!doc_gen && (lime_opengl || lime_opengles))
-	@:from private static function fromOpenGLES3Context(gl:OpenGLES3RenderContext):WebGLRenderContext
-	{
-		#if (sys && lime_cffi && lime_opengl)
-		return cast gl;
-		#else
-		return null;
-		#end
-	}
-	#end
 }
 #end

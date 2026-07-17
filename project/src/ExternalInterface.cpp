@@ -5122,12 +5122,6 @@ extern "C" int lime_openal_register_prims ();
 extern "C" int lime_openal_register_prims () { return 0; }
 #endif
 
-#ifdef LIME_OPENGL
-extern "C" int lime_opengl_register_prims ();
-#else
-extern "C" int lime_opengl_register_prims () { return 0; }
-#endif
-
 #ifdef LIME_BGFX
 extern "C" int lime_bgfx_register_prims ();
 #else
@@ -5140,7 +5134,6 @@ extern "C" int lime_register_prims () {
 	lime_curl_register_prims ();
 	lime_harfbuzz_register_prims ();
 	lime_openal_register_prims ();
-	lime_opengl_register_prims ();
 	lime_bgfx_register_prims ();
 
 	return 0;

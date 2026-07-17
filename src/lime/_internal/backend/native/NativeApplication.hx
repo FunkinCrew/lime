@@ -4,8 +4,6 @@ import haxe.Int64;
 import haxe.Timer;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
-import lime.graphics.opengl.GL;
-import lime.graphics.OpenGLRenderContext;
 import lime.graphics.RenderContext;
 import lime.math.Rectangle;
 import lime.media.AudioManager;
@@ -31,11 +29,8 @@ import lime.ui.Window;
 
 @:access(haxe.Timer)
 @:access(lime._internal.backend.native.NativeCFFI)
-@:access(lime._internal.backend.native.NativeOpenGLRenderContext)
 @:access(lime._internal.backend.native.NativeWindow)
 @:access(lime.app.Application)
-@:access(lime.graphics.opengl.GL)
-@:access(lime.graphics.OpenGLRenderContext)
 @:access(lime.graphics.Renderer)
 @:access(lime.system.Clipboard)
 @:access(lime.system.Sensor)
@@ -426,18 +421,6 @@ class NativeApplication
 				case RENDER_CONTEXT_LOST:
 					if (window.context != null)
 					{
-						switch (window.context.type)
-						{
-							case OPENGL, OPENGLES, WEBGL:
-								#if (lime_cffi && (lime_opengl || lime_opengles) && !display)
-								var gl = window.context.gl;
-								(gl : NativeOpenGLRenderContext).__contextLost();
-								if (GL.context == gl) GL.context = null;
-								#end
-
-							default:
-						}
-
 						window.context = null;
 						window.onRenderContextLost.dispatch();
 					}

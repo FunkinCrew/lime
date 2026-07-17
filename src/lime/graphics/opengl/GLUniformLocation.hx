@@ -1,9 +1,9 @@
 package lime.graphics.opengl;
 
-#if (!lime_doc_gen || lime_opengl || lime_opengles || lime_webgl)
-#if (!lime_webgl || doc_gen)
-typedef GLUniformLocation = Int;
-#else
+#if (!lime_doc_gen || lime_webgl)
+#if (lime_webgl && !doc_gen)
 typedef GLUniformLocation = js.html.webgl.UniformLocation;
+#else
+typedef GLUniformLocation = Dynamic;
 #end
 #end

@@ -21,7 +21,6 @@ import lime._internal.graphics.ImageCanvasUtil;
 import lime.app.Application;
 import lime.graphics.opengl.GL;
 import lime.graphics.Image;
-import lime.graphics.OpenGLRenderContext;
 import lime.graphics.RenderContext;
 import lime.graphics.RenderContextType;
 import lime.math.Rectangle;
@@ -40,7 +39,6 @@ import lime.ui.Window;
 @:access(lime._internal.backend.html5.HTML5WebGL2RenderContext)
 @:access(lime.app.Application)
 @:access(lime.graphics.opengl.GL)
-@:access(lime.graphics.OpenGLRenderContext)
 @:access(lime.graphics.RenderContext)
 @:access(lime.ui.Gamepad)
 @:access(lime.ui.Joystick)

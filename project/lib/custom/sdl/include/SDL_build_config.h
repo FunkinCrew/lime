@@ -459,10 +459,6 @@
 # define SDL_POWER_WINDOWS 1                  /**< Windows power management */
 # define SDL_SENSOR_WINDOWS 1                 /**< Windows sensor support */
 # define SDL_VIDEO_DRIVER_WINDOWS 1           /**< Windows video driver */
-# define SDL_VIDEO_OPENGL 1                   /**< OpenGL support */
-# define SDL_VIDEO_OPENGL_EGL 1               /**< EGL (Embedded OpenGL) support */
-# define SDL_VIDEO_OPENGL_ES2 1               /**< OpenGL ES 2.0 support */
-# define SDL_VIDEO_OPENGL_WGL 1               /**< Windows GL (WGL) support */
 /** @} */
 
 #elif defined(SDL_PLATFORM_MACOS)
@@ -482,8 +478,6 @@
 # define SDL_SENSOR_DUMMY 1              /**< Dummy sensor driver (no native support) */
 # define SDL_VIDEO_DRIVER_COCOA 1        /**< Cocoa video driver */
 # define SDL_VIDEO_METAL 1               /**< Metal support */
-# define SDL_VIDEO_OPENGL 1              /**< OpenGL support */
-# define SDL_VIDEO_OPENGL_CGL 1          /**< Core Graphics Layer (CGL) OpenGL support */
 /** @} */
 
 #elif defined(SDL_PLATFORM_IOS)
@@ -514,7 +508,6 @@
 
 # define SDL_VIDEO_DRIVER_UIKIT 1    /**< UIKit video driver */
 # define SDL_VIDEO_METAL 1           /**< Metal support */
-# define SDL_VIDEO_OPENGL_ES2 1      /**< OpenGL ES 2.0 support */
 /** @} */
 
 #elif defined(SDL_PLATFORM_ANDROID)
@@ -534,8 +527,6 @@
 # define SDL_SENSOR_ANDROID 1          /**< Android sensor support */
 # define SDL_TRAY_DUMMY 1              /**< Dummy system tray driver (not applicable on Android) */
 # define SDL_VIDEO_DRIVER_ANDROID 1    /**< Android video driver */
-# define SDL_VIDEO_OPENGL_EGL 1     /**< EGL support */
-# define SDL_VIDEO_OPENGL_ES2 1        /**< OpenGL ES 2.0 support */
 /** @} */
 
 #elif defined(SDL_PLATFORM_LINUX)
@@ -597,17 +588,6 @@
 # define SDL_VIDEO_DRIVER_X11_XSCRNSAVER 1                         /**< Screen saver extension support */
 # define SDL_VIDEO_DRIVER_X11_XSHAPE 1                             /**< Shape extension support */
 # define SDL_VIDEO_DRIVER_X11_XSYNC 1                              /**< Sync extension support */
-/** @} */
-
-/**
- * @name OpenGL Support
- * @brief OpenGL rendering contexts on Linux.
- * @{
- */
-# define SDL_VIDEO_OPENGL 1         /**< OpenGL support */
-# define SDL_VIDEO_OPENGL_EGL 1     /**< EGL support */
-# define SDL_VIDEO_OPENGL_ES2 1     /**< OpenGL ES 2.0 support */
-# define SDL_VIDEO_OPENGL_GLX 1     /**< GLX (OpenGL Extension to X) support */
 /** @} */
 
 #endif

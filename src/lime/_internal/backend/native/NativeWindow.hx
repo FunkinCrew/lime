@@ -4,10 +4,8 @@ import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
 import lime.graphics.bgfx.BGFX;
-import lime.graphics.opengl.GL;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
-import lime.graphics.OpenGLRenderContext;
 import lime.graphics.RenderContext;
 import lime.math.Rectangle;
 import lime.math.Vector2;
@@ -21,11 +19,8 @@ import lime.ui.Window;
 import lime.utils.UInt8Array;
 
 @:access(lime._internal.backend.native.NativeCFFI)
-@:access(lime._internal.backend.native.NativeOpenGLRenderContext)
 @:access(lime._internal.backend.native.NativeBGFXRenderContext)
 @:access(lime.app.Application)
-@:access(lime.graphics.opengl.GL)
-@:access(lime.graphics.OpenGLRenderContext)
 @:access(lime.graphics.RenderContext)
 @:access(lime.system.DisplayMode)
 @:access(lime.ui.Window)
@@ -116,29 +111,7 @@ class NativeWindow
 		var context = new RenderContext();
 		context.window = parent;
 
-		#if (lime_opengl || lime_opengles)
-		var gl = new NativeOpenGLRenderContext();
-
-		#if lime_opengl
-		context.gl = gl;
-		#end
-
-		context.gles2 = gl;
-		context.webgl = gl;
-		context.type = gl.type;
-		context.version = Std.string(gl.version);
-
-		if (gl.type == OPENGLES && gl.version >= 3)
-		{
-			context.gles3 = gl;
-			context.webgl2 = gl;
-		}
-
-		if (GL.context == null)
-		{
-			GL.context = gl;
-		}
-		#elseif lime_bgfx
+		#if lime_bgfx
 		var bgfx = new NativeBGFXRenderContext();
 
 		context.bgfx = bgfx;
@@ -352,58 +325,6 @@ class NativeWindow
 
 		switch (parent.context.type)
 		{
-			case OPENGL, OPENGLES, WEBGL:
-				var gl = parent.context.webgl;
-				var windowWidth = Std.int(parent.__width * parent.__scale);
-				var windowHeight = Std.int(parent.__height * parent.__scale);
-
-				var x:Int;
-				var y:Int;
-				var width:Int;
-				var height:Int;
-
-				if (rect != null)
-				{
-					x = Std.int(rect.x);
-					y = Std.int((windowHeight - rect.y) - rect.height);
-					width = Std.int(rect.width);
-					height = Std.int(rect.height);
-				}
-				else
-				{
-					x = 0;
-					y = 0;
-					width = windowWidth;
-					height = windowHeight;
-				}
-
-				var data = new UInt8Array(width * height * 4);
-
-				gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, data);
-
-				#if !js // TODO
-
-				var rowLength = width * 4;
-				var srcPosition = (height - 1) * rowLength;
-				var destPosition = 0;
-
-				var temp = Bytes.alloc(rowLength);
-				var buffer = data.buffer;
-				var rows = Std.int(height / 2);
-
-				while (rows-- > 0)
-				{
-					temp.blit(0, buffer, destPosition, rowLength);
-					buffer.blit(destPosition, buffer, srcPosition, rowLength);
-					buffer.blit(srcPosition, temp, 0, rowLength);
-
-					destPosition += rowLength;
-					srcPosition -= rowLength;
-				}
-				#end
-
-				imageBuffer = new ImageBuffer(data, width, height, 32, RGBA32);
-
 			default:
 				#if (!macro && lime_cffi)
 				imageBuffer = NativeCFFI.lime_window_read_pixels(handle, rect, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));

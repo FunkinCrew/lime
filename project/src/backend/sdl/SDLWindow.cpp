@@ -2,10 +2,6 @@
 #include "SDLApplication.h"
 #include "system/System.h"
 
-#ifdef LIME_OPENGL
-#include "../../bindings/opengl/OpenGLBindings.h"
-#endif
-
 #ifdef LIME_BGFX
 #include "../../bindings/bgfx/BGFXBindings.h"
 #endif
@@ -28,11 +24,7 @@ namespace lime {
 
 		this->flags = flags;
 
-		#ifdef LIME_OPENGL
-		int sdlWindowFlags = SDL_WINDOW_OPENGL;
-		#else
 		int sdlWindowFlags = 0;
-		#endif
 
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
 		if (flags & WINDOW_FLAG_RESIZABLE) sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
@@ -43,57 +35,6 @@ namespace lime {
 		if (flags & WINDOW_FLAG_MINIMIZED) sdlWindowFlags |= SDL_WINDOW_MINIMIZED;
 		if (flags & WINDOW_FLAG_MAXIMIZED) sdlWindowFlags |= SDL_WINDOW_MAXIMIZED;
 		if (flags & WINDOW_FLAG_ALWAYS_ON_TOP) sdlWindowFlags |= SDL_WINDOW_ALWAYS_ON_TOP;
-
-		#ifdef LIME_OPENGL
-		#ifdef LIME_OPENGL_GLES2
-		SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-		SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-		SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
-		#endif
-
-		#ifdef LIME_OPENGL_GL
-		// TODO: Use OpenGL 3.3 Core on Desktop
-		#endif
-
-		if (flags & WINDOW_FLAG_DEPTH_BUFFER) {
-
-			SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 32 - ((flags & WINDOW_FLAG_STENCIL_BUFFER) ? 8 : 0));
-
-		}
-
-		if (flags & WINDOW_FLAG_STENCIL_BUFFER) {
-
-			SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8);
-
-		}
-
-		if (flags & WINDOW_FLAG_HW_AA_HIRES) {
-
-			SDL_GL_SetAttribute (SDL_GL_MULTISAMPLEBUFFERS, true);
-			SDL_GL_SetAttribute (SDL_GL_MULTISAMPLESAMPLES, 4);
-
-		} else if (flags & WINDOW_FLAG_HW_AA) {
-
-			SDL_GL_SetAttribute (SDL_GL_MULTISAMPLEBUFFERS, true);
-			SDL_GL_SetAttribute (SDL_GL_MULTISAMPLESAMPLES, 2);
-
-		}
-
-		if (flags & WINDOW_FLAG_COLOR_DEPTH_32_BIT) {
-
-			SDL_GL_SetAttribute (SDL_GL_RED_SIZE, 8);
-			SDL_GL_SetAttribute (SDL_GL_GREEN_SIZE, 8);
-			SDL_GL_SetAttribute (SDL_GL_BLUE_SIZE, 8);
-			SDL_GL_SetAttribute (SDL_GL_ALPHA_SIZE, 8);
-
-		} else {
-
-			SDL_GL_SetAttribute (SDL_GL_RED_SIZE, 5);
-			SDL_GL_SetAttribute (SDL_GL_GREEN_SIZE, 6);
-			SDL_GL_SetAttribute (SDL_GL_BLUE_SIZE, 5);
-
-		}
-		#endif
 
 		SDL_PropertiesID props = SDL_CreateProperties ();
 
@@ -150,15 +91,6 @@ namespace lime {
 
 		}
 
-		#ifdef LIME_OPENGL
-		if (context) {
-
-			SDL_GL_DestroyContext (context);
-			context = 0;
-
-		}
-		#endif
-
 		#ifdef LIME_BGFX
 		BGFXBindings::Shutdown ();
 		#endif
@@ -166,43 +98,6 @@ namespace lime {
 	}
 
 	bool SDLWindow::CreateRenderer () {
-
-		#ifdef LIME_OPENGL
-		context = SDL_GL_CreateContext (sdlWindow);
-
-		if (context && SDL_GL_MakeCurrent (sdlWindow, context)) {
-
-			SetVSyncMode ((flags & WINDOW_FLAG_VSYNC) ? WINDOW_VSYNC_ON : WINDOW_VSYNC_OFF);
-
-			OpenGLBindings::Init ();
-
-			#if defined(IPHONE) || defined(APPLETV)
-			SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
-			OpenGLBindings::defaultFramebuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER, 0);
-			OpenGLBindings::defaultRenderbuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_RENDERBUFFER_NUMBER, 0);
-			#endif
-
-			((SDLApplication*)currentApplication)->RegisterWindow (this);
-
-			return true;
-		} else {
-
-			#if defined(IPHONE) || defined(APPLETV)
-			printf ("Could not create SDL GL Context: %s\n", SDL_GetError ());
-			#else
-			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Could not create SDL GL Context", SDL_GetError (), sdlWindow);
-			#endif
-
-			if (context) {
-
-				SDL_GL_DestroyContext (context);
-				context = 0;
-
-			}
-
-			return false;
-		}
-		#endif
 
 		#ifdef LIME_BGFX
 		if (!BGFXBindings::Init (sdlWindow)) {
