@@ -1846,6 +1846,11 @@ class ProjectXMLParser extends HXProject
 						config.set("ios.compiler", substitute(element.att.compiler));
 					}
 
+					if (element.has.resolve("class"))
+					{
+						config.set("ios.class", substitute(element.att.resolve("class")));
+					}
+
 					if (element.has.resolve("prerendered-icon"))
 					{
 						config.set("ios.prerenderedIcon", substitute(element.att.resolve("prerendered-icon")));

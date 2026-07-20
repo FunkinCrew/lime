@@ -315,10 +315,12 @@ class IOSPlatform extends PlatformTarget
 		context.ADDL_PBX_BUILD_FILE = "";
 		context.ADDL_PBX_FILE_REFERENCE = "";
 
+		context.ADDL_PBX_SOURCES_BUILD_PHASE = "";
 		context.ADDL_PBX_RESOURCES_BUILD_PHASE = "";
 		context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE = "";
 		context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE = "";
 
+		context.ADDL_PBX_SOURCE_GROUP = "";
 		context.ADDL_PBX_RESOURCE_GROUP = "";
 		context.ADDL_PBX_FRAMEWORK_GROUP = "";
 
@@ -395,6 +397,35 @@ class IOSPlatform extends PlatformTarget
 
 				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
 			}
+		}
+
+		context.IOS_CLASS_FILES = [];
+
+		for (file in project.config.getArrayString("ios.class"))
+		{
+			var fileType:String = null;
+			var path:String = null;
+
+			if (Path.extension(file) == 'mm')
+			{
+				fileType = 'sourcecode.cpp.cpp';
+				path = project.app.file + "/Classes/" + file;
+			}
+			else if (Path.extension(file) == 'swift')
+			{
+				fileType = 'sourcecode.swift';
+				path = project.app.file + "/Classes/" + file;
+			}
+
+			context.IOS_CLASS_FILES.push(file);
+
+			var buildFileID = "11C0000000000018" + StringTools.getUniqueID();
+			var fileID = "11C0000000000018" + StringTools.getUniqueID();
+
+			context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + file + " in Sources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + file + " */; };\n";
+			context.ADDL_PBX_SOURCES_BUILD_PHASE += "                " + buildFileID + " /* " + file + " in Sources */,\n";
+			context.ADDL_PBX_SOURCE_GROUP += "                " + fileID + " /* " + file + " */,\n";
+			context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + file + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + file + "\"; path = \"" + path + "\"; sourceTree = SOURCE_ROOT; };\n";
 		}
 
 		context.HXML_PATH = System.findTemplate(project.templatePaths, "iphone/PROJ/haxe/Build.hxml", false);

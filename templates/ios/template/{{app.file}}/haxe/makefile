@@ -56,7 +56,9 @@ $(HAXE_BUILDS): build-haxe-%:
 	cd build/$(CONFIG)$(SUFFIX_$*); ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; \
 		haxelib run ::CPP_BUILD_LIBRARY:: Build.xml haxe -Ddestination="$(CURDIR)/../lib/$(BUILD_NAME_$*)$(LIB_DEST)" \
 		-options Options.txt $(DEBUG)
-	touch ../Classes/Main.mm
+	::if (IOS_CLASS_FILES)::::foreach (IOS_CLASS_FILES)::
+	touch ../Classes/::__current__::
+	::end::::end::
 	cd build/$(CONFIG)$(SUFFIX_$*); ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; \
 		::CPP_CACHE_WORKAROUND:: haxelib run ::CPP_BUILD_LIBRARY:: "$(CURDIR)/BuildHxcppMbedtls.xml" \
 		-Ddestination="$(CURDIR)/../lib/$(BUILD_NAME_$*)$(LIB_MBEDTLS_DEST)" \
