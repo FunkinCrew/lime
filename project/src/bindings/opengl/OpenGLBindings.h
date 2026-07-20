@@ -11,7 +11,7 @@
 
 #else
 
-#if defined (IPHONE) || defined(APPLETV)
+#if defined (IPHONE)
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
 #endif

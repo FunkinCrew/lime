@@ -8,7 +8,6 @@ enum abstract Platform(String) from hxp.HostPlatform
 	var LINUX = "linux";
 	var MAC = "mac";
 	var WINDOWS = "windows";
-	var TVOS = "tvos";
 	var CUSTOM = null;
 
 	@:op(A == B) @:commutative

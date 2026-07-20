@@ -27,7 +27,7 @@ namespace lime {
 
 	SDLApplication::SDLApplication () {
 
-		#if !(defined (HX_MACOS) || defined(IPHONE) || defined(APPLETV))
+		#if !(defined (HX_MACOS) || defined(IPHONE))
 		SDL_SetHint (SDL_HINT_AUDIO_FREQUENCY, "48000");
 		SDL_SetHint (SDL_HINT_AUDIO_CHANNELS, "2");
 		SDL_SetHint (SDL_HINT_AUDIO_FORMAT, "F32");
@@ -54,7 +54,7 @@ namespace lime {
 
 		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
 
-		#if !(defined (HX_MACOS) || defined(IPHONE) || defined(APPLETV))
+		#if !(defined (HX_MACOS) || defined(IPHONE))
 		initFlags |= SDL_INIT_AUDIO;
 		#endif
 

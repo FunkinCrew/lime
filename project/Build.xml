@@ -26,9 +26,9 @@
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
-	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone || appletv" />
+	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone" />
 	<set name="LIME_OPENGL" value="1" />
-	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone || appletv" />
+	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone" />
 	<set name="LIME_PIXMAN" value="1" />
 	<set name="LIME_SDL" value="1" />
 	<set name="LIME_SDL_IMAGE" value="1" if="LIME_SDL" />
@@ -198,7 +198,7 @@
 			</section>
 
 			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || iphone || appletv" />
+			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || iphone" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/bindings/opengl/OpenGLBindings.cpp" />
@@ -232,7 +232,7 @@
 		<section if="LIME_ZLIB">
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
-			<compilerflag value="-DSTATIC_LINK" if="iphone || appletv" />
+			<compilerflag value="-DSTATIC_LINK" if="iphone" />
 			<compilerflag value="-DLIME_ZLIB" />
 
 			<file name="src/utils/compress/Zlib.cpp" />

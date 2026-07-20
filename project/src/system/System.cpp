@@ -4,7 +4,7 @@
 #include <system/JNI.h>
 #include <system/System.h>
 
-#if defined(IPHONE) || defined(APPLETV)
+#if defined(IPHONE)
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 #elif defined (HX_WINDOWS)
@@ -141,7 +141,7 @@ namespace lime {
 
 	char* System::GetDeviceModel () {
 
-		#if defined(IPHONE) || defined(APPLETV)
+		#if defined(IPHONE)
 		struct utsname systemInfo;
 		uname (&systemInfo);
 		return SDL_strdup (systemInfo.machine);
@@ -185,7 +185,7 @@ namespace lime {
 
 	char* System::GetPlatformVersion () {
 
-		#if defined(IPHONE) || defined(APPLETV)
+		#if defined(IPHONE)
 		return SDL_strdup(UIDevice.currentDevice.systemVersion.UTF8String);
 		#elif defined (HX_WINDOWS)
 		return GetWMIValue (_bstr_t(L"SELECT * FROM Win32_OperatingSystem"), _bstr_t(L"Version"));

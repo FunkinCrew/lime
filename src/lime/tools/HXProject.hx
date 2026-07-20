@@ -138,7 +138,7 @@ class HXProject extends Script
 			case HTML5:
 				PlatformType.WEB;
 
-			case ANDROID, IOS, TVOS:
+			case ANDROID, IOS:
 				PlatformType.MOBILE;
 
 			case WINDOWS, MAC, LINUX:

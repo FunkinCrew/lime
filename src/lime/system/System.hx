@@ -670,7 +670,7 @@ class System
 	{
 		if (__deviceModel == null)
 		{
-			#if (lime_cffi && !macro && (windows || ios || tvos))
+			#if (lime_cffi && !macro && (windows || ios))
 			__deviceModel = CFFI.stringValue(NativeCFFI.lime_system_get_device_model());
 			#elseif android
 			var manufacturer:String = JNI.createStaticField("android/os/Build", "MANUFACTURER", "Ljava/lang/String;").get();
@@ -709,7 +709,7 @@ class System
 			{
 				__deviceVendor = vendor.charAt(0).toUpperCase() + vendor.substr(1);
 			}
-			#elseif (ios || mac || tvos)
+			#elseif (ios || mac)
 			__deviceVendor = "Apple";
 			#elseif linux
 			__deviceVendor = __runProcess("cat", ["/sys/devices/virtual/dmi/id/product_name"]);
@@ -768,7 +768,7 @@ class System
 			__fontsDirectory = Path.join([Sys.getEnv("WINDIR"), "Fonts"]);
 			#elseif mac
 			__fontsDirectory = "/Library/Fonts";
-			#elseif (ios || tvos)
+			#elseif ios
 			__fontsDirectory = "/System/Library/Fonts";
 			#elseif android
 			__fontsDirectory = "/system/fonts";
@@ -823,8 +823,6 @@ class System
 			__platformName = "iOS";
 			#elseif android
 			__platformName = "Android";
-			#elseif tvos
-			__platformName = "tvOS";
 			#elseif js
 			__platformName = "HTML5";
 			#end
@@ -843,7 +841,7 @@ class System
 			var release = JNI.createStaticField("android/os/Build$VERSION", "RELEASE", "Ljava/lang/String;").get();
 			var api = JNI.createStaticField("android/os/Build$VERSION", "SDK_INT", "I").get();
 			if (release != null && api != null) __platformVersion = release + " (API " + api + ")";
-			#elseif (lime_cffi && !macro && (ios || tvos))
+			#elseif (lime_cffi && !macro && ios)
 			__platformVersion = NativeCFFI.lime_system_get_platform_version();
 			#elseif mac
 			__platformVersion = __runProcess("sw_vers", ["-productVersion"]);

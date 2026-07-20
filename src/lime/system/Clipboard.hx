@@ -52,7 +52,7 @@ class Clipboard
 		// On some native platforms, __update() is called automatically when the
 		// native clipboard changes. On others, __update() needs to be called
 		// manually.
-		#if (js || html5 || ios || tvos || android)
+		#if (js || html5 || ios || android)
 		__update();
 		#elseif linux
 		// Xorg won't call __update until we call set_text at least once.

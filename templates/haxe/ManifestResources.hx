@@ -55,7 +55,7 @@ import sys.FileSystem;
 
 		if (rootPath == null) {
 
-			#if (ios || tvos)
+			#if ios
 			rootPath = "assets/";
 			#elseif android
 			rootPath = "";

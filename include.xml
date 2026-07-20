@@ -17,7 +17,7 @@
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />
-	<define name="lime-openal" if="windows || linux || mac || android || ios || tvos" />
+	<define name="lime-openal" if="windows || linux || mac || android || ios" />
 	<define name="lime-opengl" if="desktop" unless="html5" />
 	<define name="lime-opengles" if="mobile" />
 	<define name="lime-webgl" if="html5" />
@@ -35,7 +35,6 @@
 		<target name="ios" path="tools/platforms/IOSPlatform.hx" />
 		<target name="linux" path="tools/platforms/LinuxPlatform.hx" />
 		<target name="mac" path="tools/platforms/MacPlatform.hx" />
-		<target name="tvos" path="tools/platforms/TVOSPlatform.hx" />
 		<target name="windows" path="tools/platforms/WindowsPlatform.hx" />
 
 	</section>
@@ -104,23 +103,6 @@
 				<config:ios class="Main.mm" />
 
 			</section>
-
-		</section>
-
-		<section if="tvos">
-
-			<dependency name="AudioToolbox.framework" />
-			<dependency name="AVFoundation.framework" />
-			<dependency name="CoreAudio.framework" />
-			<dependency name="CoreBluetooth.framework" />
-			<dependency name="CoreGraphics.framework" />
-			<dependency name="Foundation.framework" />
-			<dependency name="GameController.framework" />
-			<dependency name="MediaPlayer.framework" />
-			<dependency name="OpenGLES.framework" />
-			<dependency name="QuartzCore.framework" />
-			<dependency name="Security.framework" />
-			<dependency name="UIKit.framework" />
 
 		</section>
 

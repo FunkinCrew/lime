@@ -3008,7 +3008,7 @@ namespace lime {
 
 	value lime_system_get_device_model () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* model = System::GetDeviceModel ();
 
 		if (model) {
@@ -3027,7 +3027,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_model) () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* model = System::GetDeviceModel ();
 
 		if (model) {
@@ -3047,7 +3047,7 @@ namespace lime {
 
 	value lime_system_get_device_vendor () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
@@ -3066,7 +3066,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_device_vendor) () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* vendor = System::GetDeviceVendor ();
 
 		if (vendor) {
@@ -3177,7 +3177,7 @@ namespace lime {
 
 	value lime_system_get_platform_label () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* label = System::GetPlatformLabel ();
 
 		if (label) {
@@ -3196,7 +3196,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_label) () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* label = System::GetPlatformLabel ();
 
 		if (label) {
@@ -3216,7 +3216,7 @@ namespace lime {
 
 	value lime_system_get_platform_name () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* name = System::GetPlatformName ();
 
 		if (name) {
@@ -3235,7 +3235,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_name) () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* name = System::GetPlatformName ();
 
 		if (name) {
@@ -3255,7 +3255,7 @@ namespace lime {
 
 	value lime_system_get_platform_version () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* version = System::GetPlatformVersion ();
 
 		if (version) {
@@ -3274,7 +3274,7 @@ namespace lime {
 
 	HL_PRIM vbyte* HL_NAME(hl_system_get_platform_version) () {
 
-		#if defined(HX_WINDOWS) || defined(IPHONE) || defined(APPLETV)
+		#if defined(HX_WINDOWS) || defined(IPHONE)
 		char* version = System::GetPlatformVersion ();
 
 		if (version) {

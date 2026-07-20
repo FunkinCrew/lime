@@ -1652,13 +1652,11 @@ class ProjectXMLParser extends HXProject
 					if (element.has.identity)
 					{
 						config.set("ios.identity", element.att.identity);
-						config.set("tvos.identity", element.att.identity);
 					}
 
 					if (element.has.resolve("team-id"))
 					{
 						config.set("ios.team-id", element.att.resolve("team-id"));
-						config.set("tvos.team-id", element.att.resolve("team-id"));
 					}
 
 				case "dependency":
@@ -1859,50 +1857,6 @@ class ProjectXMLParser extends HXProject
 					if (element.has.resolve("linker-flags"))
 					{
 						config.push("ios.linker-flags", substitute(element.att.resolve("linker-flags")));
-					}
-
-				case "tvos":
-					// deprecated
-
-					if (target != Platform.TVOS) continue;
-
-					if (element.has.deployment)
-					{
-						var deployment = Std.parseFloat(substitute(element.att.deployment));
-
-						// If it is specified, assume the dev knows what he is doing!
-						config.set("tvos.deployment", deployment);
-					}
-
-					if (element.has.binaries)
-					{
-						var binaries = substitute(element.att.binaries);
-
-						switch (binaries)
-						{
-							case "arm64":
-								ArrayTools.addUnique(architectures, Architecture.ARM64);
-						}
-					}
-
-					if (element.has.devices)
-					{
-						config.set("tvos.device", substitute(element.att.devices).toLowerCase());
-					}
-
-					if (element.has.compiler)
-					{
-						config.set("tvos.compiler", substitute(element.att.compiler));
-					}
-
-					if (element.has.resolve("prerendered-icon"))
-					{
-						config.set("tvos.prerenderedIcon", substitute(element.att.resolve("prerendered-icon")));
-					}
-
-					if (element.has.resolve("linker-flags"))
-					{
-						config.push("tvos.linker-flags", substitute(element.att.resolve("linker-flags")));
 					}
 
 				case "config":
