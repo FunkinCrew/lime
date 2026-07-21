@@ -17,7 +17,6 @@ import lime.system.ThreadPool;
 import lime.system.WorkOutput;
 #if sys
 import sys.thread.Deque;
-import sys.FileSystem;
 #end
 
 class NativeHTTPRequest
@@ -409,29 +408,22 @@ class NativeHTTPRequest
 		}
 		#end
 
-		if (path == null #if (sys && !android) || !FileSystem.exists(path) #end)
+		instance.bytes = lime.utils.Bytes.fromFile(path);
+
+		if (instance.bytes != null)
 		{
-			output.sendError({instance: instance, promise: instance.promise, error: "Cannot load file: " + path});
+			output.sendProgress(
+				{
+					instance: instance,
+					promise: instance.promise,
+					bytesLoaded: instance.bytes.length,
+					bytesTotal: instance.bytes.length
+				});
+			output.sendComplete({instance: instance, promise: instance.promise, result: instance.bytes});
 		}
 		else
 		{
-			instance.bytes = lime.utils.Bytes.fromFile(path);
-
-			if (instance.bytes != null)
-			{
-				output.sendProgress(
-					{
-						instance: instance,
-						promise: instance.promise,
-						bytesLoaded: instance.bytes.length,
-						bytesTotal: instance.bytes.length
-					});
-				output.sendComplete({instance: instance, promise: instance.promise, result: instance.bytes});
-			}
-			else
-			{
-				output.sendError({instance: instance, promise: instance.promise, error: "Cannot load file: " + path});
-			}
+			output.sendError({instance: instance, promise: instance.promise, error: "Cannot load file: " + path});
 		}
 	}
 
