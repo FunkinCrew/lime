@@ -167,7 +167,7 @@ class AudioManager
 	@:noCompletion
 	private static function onDeactivate():Void
 	{
-		resumeOnFocus = AudioManager.active;
+		resumeOnFocus = resumeOnFocus || AudioManager.active;
 
 		AudioManager.suspend();
 	}
