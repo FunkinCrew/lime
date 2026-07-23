@@ -98,11 +98,9 @@
 			<dependency name="Security.framework" />
 			<dependency name="UIKit.framework" />
 
-			<section>
+			<config:ios class="Main.mm" />
 
-				<config:ios class="Main.mm" />
-
-			</section>
+			<define name="HXCPP_IOS_MIN_VERSION" value="16.0" />
 
 		</section>
 
