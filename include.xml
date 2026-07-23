@@ -108,7 +108,7 @@
 
 		<section if="mac">
 
-			<define name="MACOSX_DEPLOYMENT_TARGET" value="10.9" unless="MACOSX_DEPLOYMENT_TARGET" />
+			<define name="MACOSX_DEPLOYMENT_TARGET" value="13" />
 			<setenv name="MACOSX_DEPLOYMENT_TARGET" value="${MACOSX_DEPLOYMENT_TARGET}" />
 
 		</section>
