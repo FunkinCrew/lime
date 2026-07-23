@@ -428,8 +428,8 @@ class IOSPlatform extends PlatformTarget
 			context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + file + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + file + "\"; path = \"" + path + "\"; sourceTree = SOURCE_ROOT; };\n";
 		}
 
-		context.HXML_PATH = System.findTemplate(project.templatePaths, "iphone/PROJ/haxe/Build.hxml", false);
-		if (context.HXML_PATH == null) context.HXML_PATH = System.findTemplate(project.templatePaths, "ios/template/{{app.file}}/haxe/Build.hxml");
+		context.HXML_PATH = System.findTemplate(project.templatePaths, "ios/template/{{app.file}}/haxe/Build.hxml");
+
 		context.PRERENDERED_ICON = project.config.getBool("ios.prerenderedIcon", false);
 
 		var allowInsecureHTTP = project.config.getString("ios.allow-insecure-http", "*");
