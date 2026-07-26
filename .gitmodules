@@ -10,10 +10,6 @@
 	path = project/lib/openal
 	url = https://github.com/kcat/openal-soft
 	shallow = true
-[submodule "project/lib/curl"]
-	path = project/lib/curl
-	url = https://github.com/curl/curl
-	shallow = true
 [submodule "project/lib/ogg"]
 	path = project/lib/ogg
 	url = https://github.com/xiph/ogg
@@ -53,10 +49,6 @@
 [submodule "project/lib/webm"]
 	path = project/lib/webm
 	url = https://github.com/webmproject/libwebm
-	shallow = true
-[submodule "project/lib/mbedtls"]
-	path = project/lib/mbedtls
-	url = https://github.com/Mbed-TLS/mbedtls
 	shallow = true
 [submodule "project/lib/hashlink"]
 	path = project/lib/hashlink

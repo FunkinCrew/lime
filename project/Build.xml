@@ -16,13 +16,11 @@
 	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="13" if="mac" />
 
 	<set name="LIME_CAIRO" value="1" />
-	<set name="LIME_CURL" value="1" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
 	<set name="LIME_FREETYPE" value="1" />
 	<set name="LIME_HARFBUZZ" value="1" />
 	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
-	<set name="LIME_MBEDTLS" value="1" />
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
@@ -40,7 +38,6 @@
 	<set name="NATIVE_TOOLKIT_HAVE_CAIRO" value="1" if="LIME_CAIRO" />
 	<set name="NATIVE_TOOLKIT_HAVE_FREETYPE" value="1" if="LIME_FREETYPE" />
 	<set name="NATIVE_TOOLKIT_HAVE_HARFBUZZ" value="1" if="LIME_HARFBUZZ" />
-	<set name="NATIVE_TOOLKIT_HAVE_MBEDTLS" value="1" if="LIME_MBEDTLS" />
 	<set name="NATIVE_TOOLKIT_HAVE_PNG" value="1" if="LIME_PNG" />
 	<set name="NATIVE_TOOLKIT_HAVE_SDL" value="1" if="LIME_SDL" />
 
@@ -74,23 +71,6 @@
 			<compilerflag value="-DCAIRO_HAS_FT_FONT" />
 
 			<file name="src/bindings/cairo/CairoBindings.cpp" />
-
-		</section>
-
-		<section if="LIME_CURL">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/curl/include" />
-			<compilerflag value="-DLIME_CURL" />
-			<compilerflag value="-DCURL_STATICLIB" />
-
-			<file name="src/bindings/curl/CURLBindings.cpp" />
-
-			<section unless="isMsvc">
-
-				<compilerflag value="-Wno-switch" />
-				<compilerflag value="-Wno-deprecated-declarations" />
-
-			</section>
 
 		</section>
 
@@ -303,13 +283,11 @@
 	<setup name="androidNdk" if="android" />
 
 	<include name="lib/cairo-files.xml" />
-	<include name="lib/curl-files.xml" />
 	<include name="lib/efsw-files.xml" />
 	<include name="lib/freetype-files.xml" />
 	<include name="lib/harfbuzz-files.xml" />
 	<include name="lib/glad-files.xml" />
 	<include name="lib/lzma-files.xml" />
-	<include name="lib/mbedtls-files.xml" />
 	<include name="lib/vorbis-files.xml" />
 	<include name="lib/ogg-files.xml" />
 	<include name="lib/opusfile-files.xml" />
@@ -334,12 +312,10 @@
 		<files id="android-cpufeatures" if="android" />
 
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
-		<files id="native-toolkit-curl" if="LIME_CURL" />
 		<files id="native-toolkit-efsw" if="LIME_EFSW" />
 		<files id="native-toolkit-freetype" if="LIME_FREETYPE" />
 		<files id="native-toolkit-harfbuzz" if="LIME_HARFBUZZ" />
 		<files id="native-toolkit-lzma" if="LIME_LZMA" />
-		<files id="native-toolkit-mbedtls" if="LIME_MBEDTLS" unless="static_link" />
 		<files id="native-toolkit-vorbis" if="LIME_OGG" />
 		<files id="native-toolkit-ogg" if="LIME_OGG" />
 		<files id="native-toolkit-opusfile" if="LIME_OPUS" />
@@ -366,7 +342,6 @@
 
 					<lib name="advapi32.lib" />
 					<lib name="avrt.lib" if="LIME_OPENAL" />
-					<lib name="bcrypt.lib" if="LIME_CURL" />
 					<lib name="comdlg32.lib" />
 					<lib name="comsuppw.lib" />
 					<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
@@ -393,7 +368,6 @@
 
 					<lib name="-ladvapi32" />
 					<lib name="-lavrt" if="LIME_OPENAL" />
-					<lib name="-lbcrypt" if="LIME_CURL" />
 					<lib name="-lcomdlg32" />
 					<lib name="-ldwrite" if="LIME_HARFBUZZ" />
 					<lib name="-lgdi32" />

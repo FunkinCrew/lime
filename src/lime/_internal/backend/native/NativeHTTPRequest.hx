@@ -1,69 +1,37 @@
 package lime._internal.backend.native;
 
-import haxe.io.Bytes;
-import haxe.io.BytesBuffer;
+import haxe.Http;
 import haxe.Timer;
+import haxe.io.Bytes;
+import haxe.io.BytesOutput;
 import lime.app.Future;
 import lime.app.Promise;
-import lime.net.curl.CURL;
-import lime.net.curl.CURLCode;
-import lime.net.curl.CURLMulti;
-import lime.net.curl.CURLMultiCode;
-import lime.net.curl.CURLMultiMessage;
 import lime.net.HTTPRequest;
-import lime.net.HTTPRequestHeader;
-import lime.net.HTTPRequestMethod;
 import lime.system.ThreadPool;
 import lime.system.WorkOutput;
-#if sys
-import sys.thread.Deque;
-#end
 
 class NativeHTTPRequest
 {
-	private static var activeInstances:Array<NativeHTTPRequest>;
 	private static var localThreadPool:ThreadPool;
-	private static var multi:CURLMulti;
-	private static var multiInstances:Map<CURL, NativeHTTPRequest>;
-	private static var multiProgressTimer:Timer;
-	private static var multiThreadPool:ThreadPool;
-	private static var multiThreadPoolRunning:Bool;
-	#if (cpp || hl)
-	private static var multiAddHandle:Deque<CURL>;
-	#end
+	private static var httpThreadPool:ThreadPool;
 	private static var cookieList:Array<String>;
 
-	private var buffer:BytesBuffer = new BytesBuffer();
 	private var bytes:Bytes;
 	private var bytesLoaded:Int;
 	private var bytesTotal:Int;
 	private var canceled:Bool;
-	private var curl:CURL;
 	private var parent:_IHTTPRequest;
 	private var promise:Promise<Bytes>;
-	private var writeBytesLoaded:Int;
-	private var writeBytesTotal:Int;
 	private var timeout:Timer;
 
 	public function new()
 	{
-		curl = null;
 		timeout = null;
 	}
 
 	public function cancel():Void
 	{
 		canceled = true;
-
-		if (curl != null)
-		{
-			// This is probably run from a different thread if cURL is running
-			// TODO
-
-			// CURLEasy.cleanup (curl);
-			// CURLEasy.reset (curl);
-			// CURLEasy.perform (curl);
-		}
 
 		if (timeout != null)
 		{
@@ -77,184 +45,6 @@ class NativeHTTPRequest
 		this.parent = parent;
 	}
 
-	private function initRequest(uri:String, binary:Bool):Void
-	{
-		bytes = Bytes.alloc(0);
-
-		bytesLoaded = 0;
-		bytesTotal = 0;
-		writeBytesLoaded = 0;
-		writeBytesTotal = 0;
-
-		if (curl == null)
-		{
-			curl = new CURL();
-		}
-		else
-		{
-			curl.reset();
-		}
-
-		var data = parent.data;
-		var query = "";
-
-		if (data == null)
-		{
-			for (key in parent.formData.keys())
-			{
-				if (query.length > 0) query += "&";
-				query += StringTools.urlEncode(key) + "=" + StringTools.urlEncode(Std.string(parent.formData.get(key)));
-			}
-
-			if (query != "")
-			{
-				if (parent.method == GET)
-				{
-					if (uri.indexOf("?") > -1)
-					{
-						uri += "&" + query;
-					}
-					else
-					{
-						uri += "?" + query;
-					}
-
-					query = "";
-				}
-				else
-				{
-					data = Bytes.ofString(query);
-				}
-			}
-
-			if (data != null && data.length == 0) data = null;
-		}
-
-		curl.setOption(URL, uri);
-
-		switch (parent.method)
-		{
-			case HEAD:
-				curl.setOption(NOBODY, true);
-
-			case GET:
-				curl.setOption(HTTPGET, true);
-
-			case POST:
-				curl.setOption(POST, true);
-
-				if (data != null)
-				{
-					curl.setOption(INFILE, data);
-					curl.setOption(INFILESIZE, data.length);
-					curl.setOption(POSTFIELDSIZE, data.length);
-				}
-				else
-				{
-					curl.setOption(POSTFIELDSIZE, 0);
-				}
-
-			case PUT:
-				curl.setOption(UPLOAD, true);
-
-				if (data != null)
-				{
-					curl.setOption(INFILE, data);
-					curl.setOption(INFILESIZE, data.length);
-				}
-
-			case _:
-				curl.setOption(CUSTOMREQUEST, Std.string(parent.method));
-
-				if (data != null)
-				{
-					curl.setOption(INFILE, data);
-					curl.setOption(INFILESIZE, data.length);
-				}
-		}
-
-		curl.setOption(FOLLOWLOCATION, parent.followRedirects);
-		curl.setOption(AUTOREFERER, true);
-
-		var headers = [];
-		headers.push("Expect: ");
-
-		var contentType = null;
-
-		for (header in cast(parent.headers, Array<Dynamic>))
-		{
-			if (header.name == "Content-Type")
-			{
-				contentType = header.value;
-			}
-			else
-			{
-				headers.push('${header.name}: ${header.value}');
-			}
-		}
-
-		if (parent.contentType != null)
-		{
-			contentType = parent.contentType;
-		}
-
-		if (contentType == null)
-		{
-			if (parent.data != null)
-			{
-				contentType = "application/octet-stream";
-			}
-			else if (query != "")
-			{
-				contentType = "application/x-www-form-urlencoded";
-			}
-		}
-
-		if (contentType != null)
-		{
-			headers.push("Content-Type: " + contentType);
-		}
-
-		curl.setOption(HTTPHEADER, headers);
-
-		curl.setOption(PROGRESSFUNCTION, curl_onProgress);
-		curl.setOption(WRITEFUNCTION, curl_onWrite);
-
-		if (parent.enableResponseHeaders)
-		{
-			parent.responseHeaders = [];
-			curl.setOption(HEADERFUNCTION, curl_onHeader);
-		}
-
-		if (parent.manageCookies)
-		{
-			// an empty string means store cookies in memory
-			// cookies are stored only for the current session
-			curl.setOption(COOKIEFILE, "");
-			if (cookieList != null)
-			{
-				for (cookie in cookieList)
-				{
-					// pass in each stored cookie individually
-					curl.setOption(COOKIELIST, cookie);
-				}
-			}
-		}
-
-		curl.setOption(SSL_VERIFYPEER, false);
-		curl.setOption(SSL_VERIFYHOST, 0);
-		curl.setOption(USERAGENT, parent.userAgent == null ? "libcurl-agent/1.0" : parent.userAgent);
-
-		// curl.setOption (CONNECTTIMEOUT, 30);
-		curl.setOption(NOSIGNAL, true);
-
-		curl.setOption(TRANSFERTEXT, !binary);
-
-		#if curl_verbose
-		curl.setOption(VERBOSE, true);
-		#end
-	}
-
 	public function loadData(uri:String, binary:Bool = true):Future<Bytes>
 	{
 		if (uri == null)
@@ -262,7 +52,8 @@ class NativeHTTPRequest
 			return cast Future.withError("The URI must not be null");
 		}
 
-		var promise = new Promise<Bytes>();
+		var promise:Promise<Bytes> = new Promise<Bytes>();
+
 		this.promise = promise;
 
 		canceled = false;
@@ -281,47 +72,15 @@ class NativeHTTPRequest
 		}
 		else
 		{
-			if (multi == null)
+			if (httpThreadPool == null)
 			{
-				CURL.globalInit(CURL.GLOBAL_ALL);
-
-				multi = new CURLMulti();
-				activeInstances = new Array();
-				multiInstances = new Map();
+				httpThreadPool = new ThreadPool(0, 4);
+				httpThreadPool.onProgress.add(httpThreadPool_onProgress);
+				httpThreadPool.onComplete.add(httpThreadPool_onComplete);
+				httpThreadPool.onError.add(httpThreadPool_onError);
 			}
 
-			initRequest(uri, binary);
-
-			if (curl != null)
-			{
-				activeInstances.push(this);
-				multiInstances.set(curl, this);
-
-				#if (cpp || hl)
-				if (multiAddHandle == null) multiAddHandle = new Deque<CURL>();
-				multiAddHandle.add(curl);
-				#end
-
-				if (multiThreadPool == null)
-				{
-					multiThreadPool = new ThreadPool(0, 1);
-					multiThreadPool.onProgress.add(multiThreadPool_onProgress);
-					multiThreadPool.onComplete.add(multiThreadPool_onComplete);
-				}
-
-				if (!multiThreadPoolRunning)
-				{
-					multiThreadPoolRunning = true;
-					multiThreadPool.run(multiThreadPool_doWork, multi);
-				}
-
-				if (multiProgressTimer == null)
-				{
-					multiProgressTimer = new Timer(8);
-					multiProgressTimer.run = multiProgressTimer_onRun;
-					multiProgressTimer_onRun();
-				}
-			}
+			httpThreadPool.run(httpThreadPool_doWork, {instance: this, uri: uri, binary: binary});
 		}
 
 		return promise.future;
@@ -329,13 +88,12 @@ class NativeHTTPRequest
 
 	public function loadText(uri:String):Future<String>
 	{
-		var promise = new Promise<String>();
-		var future = loadData(uri, false);
+		var promise:Promise<String> = new Promise<String>();
+		var future:Future<Bytes> = loadData(uri, false);
 
 		future.onProgress(promise.progress);
 		future.onError(promise.error);
-
-		future.onComplete(function(bytes)
+		future.onComplete(function(bytes:Bytes):Void
 		{
 			if (bytes == null)
 			{
@@ -350,63 +108,11 @@ class NativeHTTPRequest
 		return promise.future;
 	}
 
-	private function buildBuffer()	{
-		bytes = buffer.getBytes();
-		return bytes;
-	}
-
-	// Event Handlers
-	private function curl_onHeader(curl:CURL, header:String):Void
-	{
-		var parts = header.split(': ');
-
-		if (parts.length == 2)
-		{
-			parent.responseHeaders.push(new HTTPRequestHeader(StringTools.trim(parts[0]), StringTools.trim(parts[1])));
-		}
-	}
-
-	private function curl_onProgress(curl:CURL, dltotal:Float, dlnow:Float, uptotal:Float, upnow:Float):Int
-	{
-		if (upnow > writeBytesLoaded || dlnow > writeBytesLoaded || uptotal > writeBytesTotal || dltotal > writeBytesTotal)
-		{
-			if (upnow > writeBytesLoaded) writeBytesLoaded = Std.int(upnow);
-			if (dlnow > writeBytesLoaded) writeBytesLoaded = Std.int(dlnow);
-			if (uptotal > writeBytesTotal) writeBytesTotal = Std.int(uptotal);
-			if (dltotal > writeBytesTotal) writeBytesTotal = Std.int(dltotal);
-
-			// Wrong thread
-			// promise.progress (bytesLoaded, bytesTotal);
-		}
-
-		return 0;
-	}
-
-	private function curl_onWrite(curl:CURL, output:Bytes):Int
-	{
-		buffer.addBytes(output, 0, output.length);
-
-		return output.length;
-	}
-
 	private static function localThreadPool_doWork(state:Dynamic, output:WorkOutput):Void
 	{
-		var instance:NativeHTTPRequest = state.instance;
-		var path:String = state.uri;
-
-		var index = path.indexOf("?");
-
-		if (index > -1)
-		{
-			path = path.substring(0, index);
-		}
-
-		#if (sys && !windows)
-		if (StringTools.startsWith(path, "~/"))
-		{
-			path = Sys.getEnv("HOME") + "/" + path.substr(2);
-		}
-		#end
+		var typedState:LocalWorkState = state;
+		var instance:NativeHTTPRequest = typedState.instance;
+		var path:String = typedState.uri;
 
 		instance.bytes = lime.utils.Bytes.fromFile(path);
 
@@ -427,13 +133,18 @@ class NativeHTTPRequest
 		}
 	}
 
-	private static function localThreadPool_onComplete(state:{instance:NativeHTTPRequest, promise:Promise<Bytes>, result:Bytes}):Void
+	private static function localThreadPool_onComplete(state:LocalCompleteState):Void
 	{
 		var promise:Promise<Bytes> = state.promise;
-		if (promise.isError) return;
+
+		if (promise.isError)
+		{
+			return;
+		}
+
 		promise.complete(state.result);
 
-		var instance = state.instance;
+		var instance:NativeHTTPRequest = state.instance;
 
 		if (instance.timeout != null)
 		{
@@ -445,12 +156,13 @@ class NativeHTTPRequest
 		instance.promise = null;
 	}
 
-	private static function localThreadPool_onError(state:{instance:NativeHTTPRequest, promise:Promise<Bytes>, error:String}):Void
+	private static function localThreadPool_onError(state:LocalErrorState):Void
 	{
 		var promise:Promise<Bytes> = state.promise;
+
 		promise.error(new _HTTPRequestErrorResponse(state.error, null));
 
-		var instance = state.instance;
+		var instance:NativeHTTPRequest = state.instance;
 
 		if (instance.timeout != null)
 		{
@@ -462,143 +174,263 @@ class NativeHTTPRequest
 		instance.promise = null;
 	}
 
-	private static function localThreadPool_onProgress(state:
-		{
-			instance:NativeHTTPRequest,
-			promise:Promise<Bytes>,
-			bytesLoaded:Int,
-			bytesTotal:Int
-		}):Void
+	private static function localThreadPool_onProgress(state:LocalProgressState):Void
 	{
 		var promise:Promise<Bytes> = state.promise;
-		if (promise.isComplete || promise.isError) return;
+
+		if (promise.isComplete || promise.isError)
+		{
+			return;
+		}
+
 		promise.progress(state.bytesLoaded, state.bytesTotal);
 	}
 
-	private static function multiThreadPool_doWork(multi:CURLMulti, output:WorkOutput):Void
+	private static function httpThreadPool_doWork(state:Dynamic, output:WorkOutput):Void
 	{
-		while (true)
+		var typedState:HttpWorkState = state;
+		var instance:NativeHTTPRequest = typedState.instance;
+		var uri:String = typedState.uri;
+		var parent:_IHTTPRequest = instance.parent;
+		var http:Http = new Http(uri);
+		var data:Bytes = parent.data;
+
+		if (data == null && parent.formData != null)
 		{
-			#if (cpp || hl)
-			var curl = multiAddHandle.pop(false);
-			if (curl != null) multi.addHandle(curl);
-			#end
-
-			var code = multi.wait(1000);
-
-			if (code == CURLMultiCode.OK)
+			for (key in parent.formData.keys())
 			{
-				multi.perform();
-				var message = multi.infoRead();
-
-				if (message == null && multi.runningHandles == 0)
-				{
-					output.sendComplete();
-					break;
-				}
-
-				while (message != null)
-				{
-					var curl = message.curl;
-					var status = curl.getInfo(RESPONSE_CODE);
-
-					// returns an array of cookie values
-					cookieList = curl.getInfo(COOKIELIST);
-
-					multi.removeHandle(curl);
-					curl.cleanup();
-
-					output.sendProgress({curl: curl, result: message.result, status: status});
-					message = multi.infoRead();
-				}
+				http.setParameter(key, Std.string(parent.formData.get(key)));
 			}
 		}
-	}
 
-	private static function multiThreadPool_onComplete(_):Void
-	{
-		#if (cpp || hl)
-		var curl = multiAddHandle.pop(false);
-
-		if (curl != null)
+		if (data != null)
 		{
-			multiAddHandle.push(curl);
-			multiThreadPool.run(multiThreadPool_doWork, multi);
+			http.setPostData(data.toString());
 		}
-		else
+
+		var contentType:String = parent.contentType;
+
+		if (parent.headers != null)
 		{
-			if (multiProgressTimer != null)
+			for (header in parent.headers)
 			{
-				multiProgressTimer.stop();
-				multiProgressTimer = null;
-			}
-
-			multiThreadPoolRunning = false;
-		}
-		#end
-	}
-
-	private static function multiThreadPool_onProgress(state:{curl:CURL, result:Int, status:Int}):Void
-	{
-		if (multiInstances.exists(state.curl))
-		{
-			var instance = multiInstances.get(state.curl);
-			activeInstances.remove(instance);
-			multiInstances.remove(state.curl);
-
-			instance.parent.responseStatus = state.status;
-
-			if (state.result == CURLCode.OK)
-			{
-				if ((state.status >= 200 && state.status < 400) || state.status == 0)
+				if (header.name == "Content-Type")
 				{
-					if (!instance.promise.isError)
-					{
-						instance.promise.complete(instance.buildBuffer());
-					}
-				}
-				else if (instance.bytes != null)
-				{
-					var error = instance.bytes.getString(0, instance.bytes.length);
-					var responseData = instance.buildBuffer();
-					instance.promise.error(new _HTTPRequestErrorResponse(error, responseData));
+					contentType = header.value;
 				}
 				else
 				{
-					var error = 'Status ${state.status}';
-					var responseData = instance.buildBuffer();
-					instance.promise.error(new _HTTPRequestErrorResponse(error, responseData));
+					http.setHeader(header.name, header.value);
 				}
 			}
-			else
-			{
-				var error = CURL.strerror(state.result);
-				instance.promise.error(new _HTTPRequestErrorResponse(error, null));
-			}
-
-			if (instance.timeout != null)
-			{
-				instance.timeout.stop();
-				instance.timeout = null;
-			}
-
-			instance.bytes = null;
-			instance.promise = null;
 		}
 
-		state.curl = null;
-	}
-
-	private static function multiProgressTimer_onRun():Void
-	{
-		for (instance in activeInstances)
+		if (contentType != null)
 		{
-			if (instance.bytesLoaded != instance.writeBytesLoaded || instance.bytesTotal != instance.writeBytesTotal)
+			http.setHeader("Content-Type", contentType);
+		}
+
+		if (parent.userAgent != null)
+		{
+			http.setHeader("User-Agent", parent.userAgent);
+		}
+
+		if (parent.manageCookies && cookieList != null && cookieList.length > 0)
+		{
+			http.setHeader("Cookie", cookieList.join("; "));
+		}
+
+		var responseStatus:Int = 0;
+		var responseOutput:BytesOutput = new BytesOutput();
+
+		http.onStatus = function(status:Int):Void
+		{
+			responseStatus = status;
+		};
+
+		http.onBytes = function(bytes:Bytes):Void
+		{
+			if (bytes != null && bytes.length > 0)
 			{
-				instance.bytesLoaded = instance.writeBytesLoaded;
-				instance.bytesTotal = instance.writeBytesTotal;
-				instance.promise.progress(instance.bytesLoaded, instance.bytesTotal);
+				responseOutput.writeBytes(bytes, 0, bytes.length);
 			}
+		};
+
+		try
+		{
+			var methodStr:String = Std.string(parent.method).toUpperCase();
+			var hasPostData:Bool = (data != null || parent.formData != null);
+			var isPost:Bool = (methodStr == "POST" || methodStr == "PUT" || hasPostData);
+
+			http.customRequest(isPost, responseOutput, null, methodStr);
+
+			var resultBytes:Bytes = responseOutput.getBytes();
+
+			output.sendProgress(
+				{
+					instance: instance,
+					promise: instance.promise,
+					bytesLoaded: resultBytes.length,
+					bytesTotal: resultBytes.length
+				});
+
+			output.sendComplete(
+				{
+					instance: instance,
+					promise: instance.promise,
+					status: responseStatus,
+					result: resultBytes
+				});
+		}
+		catch (e:Dynamic)
+		{
+			output.sendError(
+				{
+					instance: instance,
+					promise: instance.promise,
+					status: responseStatus,
+					error: Std.string(e),
+					responseData: responseOutput.getBytes()
+				});
 		}
 	}
+
+	private static function httpThreadPool_onComplete(state:HttpCompleteState):Void
+	{
+		var instance:NativeHTTPRequest = state.instance;
+
+		if (instance.canceled)
+		{
+			return;
+		}
+
+		var promise:Promise<Bytes> = state.promise;
+
+		if (promise.isError)
+		{
+			return;
+		}
+
+		instance.parent.responseStatus = state.status;
+
+		if ((state.status >= 200 && state.status < 400) || state.status == 0)
+		{
+			promise.complete(state.result);
+		}
+		else
+		{
+			promise.error(new _HTTPRequestErrorResponse("Status " + state.status, state.result));
+		}
+
+		cleanup(instance);
+	}
+
+	private static function httpThreadPool_onError(state:HttpErrorState):Void
+	{
+		var instance:NativeHTTPRequest = state.instance;
+
+		if (instance.canceled)
+		{
+			return;
+		}
+
+		var promise:Promise<Bytes> = state.promise;
+
+		promise.error(new _HTTPRequestErrorResponse(state.error, null));
+
+		instance.parent.responseStatus = state.status;
+
+		cleanup(instance);
+	}
+
+	private static function httpThreadPool_onProgress(state:HttpProgressState):Void
+	{
+		var instance:NativeHTTPRequest = state.instance;
+
+		if (instance.canceled)
+		{
+			return;
+		}
+
+		var promise:Promise<Bytes> = state.promise;
+
+		if (promise.isComplete || promise.isError)
+		{
+			return;
+		}
+
+		promise.progress(state.bytesLoaded, state.bytesTotal);
+	}
+
+	private static function cleanup(instance:NativeHTTPRequest):Void
+	{
+		if (instance.timeout != null)
+		{
+			instance.timeout.stop();
+			instance.timeout = null;
+		}
+
+		instance.bytes = null;
+		instance.promise = null;
+	}
+}
+
+private typedef LocalWorkState =
+{
+	var instance:NativeHTTPRequest;
+	var uri:String;
+}
+
+private typedef LocalCompleteState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var result:Bytes;
+}
+
+private typedef LocalErrorState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var error:String;
+}
+
+private typedef LocalProgressState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var bytesLoaded:Int;
+	var bytesTotal:Int;
+}
+
+private typedef HttpWorkState =
+{
+	var instance:NativeHTTPRequest;
+	var uri:String;
+	@:optional var binary:Bool;
+}
+
+private typedef HttpCompleteState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var status:Int;
+	var result:Bytes;
+}
+
+private typedef HttpErrorState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var status:Int;
+	var error:String;
+	var responseData:Bytes;
+}
+
+private typedef HttpProgressState =
+{
+	var instance:NativeHTTPRequest;
+	var promise:Promise<Bytes>;
+	var bytesLoaded:Int;
+	var bytesTotal:Int;
 }

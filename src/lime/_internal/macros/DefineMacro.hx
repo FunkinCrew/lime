@@ -44,7 +44,6 @@ class DefineMacro
 
 					Compiler.define("lime-openal");
 					Compiler.define("lime-cairo");
-					Compiler.define("lime-curl");
 					Compiler.define("lime-harfbuzz");
 				}
 				else
