@@ -92,6 +92,7 @@ namespace lime {
 		vorbis_info* vorbisInfo = ov_info (vorbisFile, -1);
 		channels = vorbisInfo->channels;
 		sampleRate = (int)vorbisInfo->rate;
+		format = AudioDataFormat::UNKNOWN;
 		handle = (void*)vorbisFile;
 
 		return true;
@@ -174,7 +175,7 @@ namespace lime {
 
 		}
 
-		return 0;
+		return -1;
 
 	}
 

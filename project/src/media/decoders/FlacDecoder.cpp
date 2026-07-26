@@ -93,6 +93,7 @@ namespace lime {
 
 		channels = flacFile->channels;
 		sampleRate = flacFile->sampleRate;
+		format = AudioDataFormat::UNKNOWN;
 		handle = (void*) flacFile;
 
 		return true;
@@ -106,13 +107,17 @@ namespace lime {
 
 			return drflac_read_pcm_frames_s16 ((drflac*) handle, frames, (drflac_int16*) ptr);
 
+		} else if (format == AudioDataFormat::S32) {
+
+			return drflac_read_pcm_frames_s32 ((drflac*) handle, frames, (drflac_int32*) ptr);
+
 		} else if (format == AudioDataFormat::F32) {
 
 			return drflac_read_pcm_frames_f32 ((drflac*) handle, frames, (float*) ptr);
 
 		}
 
-		return 0;
+		return -1;
 
 	}
 

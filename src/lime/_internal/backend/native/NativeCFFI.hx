@@ -390,7 +390,7 @@ class NativeCFFI
 
 	@:cffi private static function lime_audio_decoder_info(handle:Dynamic):Dynamic;
 
-	@:cffi private static function lime_audio_decoder_decode(handle:Dynamic, bytes:Dynamic, frames:Int, format:Int):Dynamic;
+	@:cffi private static function lime_audio_decoder_decode(handle:Dynamic, output:Dynamic, offset:Int, frames:Int, format:Int):Int;
 
 	@:cffi private static function lime_audio_decoder_rewind(handle:Dynamic):Bool;
 
@@ -690,8 +690,8 @@ class NativeCFFI
 	private static var lime_audio_decoder_open_bytes = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime",
 		"lime_audio_decoder_open_bytes", "oio", false));
 	private static var lime_audio_decoder_info = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_info", "oo", false));
-	private static var lime_audio_decoder_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime",
-		"lime_audio_decoder_decode", "ooiio", false));
+	private static var lime_audio_decoder_decode = new cpp.Callable<cpp.Object->cpp.Object->Int->Int->Int->Int>(cpp.Prime._loadPrime("lime",
+		"lime_audio_decoder_decode", "ooiiii", false));
 	private static var lime_audio_decoder_rewind = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_rewind", "ob", false));
 	private static var lime_audio_decoder_seek = new cpp.Callable<cpp.Object->Int->Int->Bool>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_seek", "oiib",
 		false));
@@ -873,7 +873,7 @@ class NativeCFFI
 	private static var lime_audio_decoder_open_file = CFFI.load("lime", "lime_audio_decoder_open_file", 2);
 	private static var lime_audio_decoder_open_bytes = CFFI.load("lime", "lime_audio_decoder_open_bytes", 2);
 	private static var lime_audio_decoder_info = CFFI.load("lime", "lime_audio_decoder_info", 1);
-	private static var lime_audio_decoder_decode = CFFI.load("lime", "lime_audio_decoder_decode", 4);
+	private static var lime_audio_decoder_decode = CFFI.load("lime", "lime_audio_decoder_decode", 5);
 	private static var lime_audio_decoder_rewind = CFFI.load("lime", "lime_audio_decoder_rewind", 1);
 	private static var lime_audio_decoder_seek = CFFI.load("lime", "lime_audio_decoder_seek", 3);
 	private static var lime_audio_decoder_can_seek = CFFI.load("lime", "lime_audio_decoder_can_seek", 1);
@@ -1568,10 +1568,10 @@ class NativeCFFI
 		return null;
 	}
 
-	@:hlNative("lime", "hl_audio_decoder_decode") private static function lime_audio_decoder_decode(handle:CFFIPointer, bytes:Bytes, frames:Int,
-			format:Int):Bytes
+	@:hlNative("lime", "hl_audio_decoder_decode") private static function lime_audio_decoder_decode(handle:CFFIPointer, output:Bytes, offset:Int,
+			frames:Int, format:Int):Int
 	{
-		return null;
+		return 0;
 	}
 
 	@:hlNative("lime", "hl_audio_decoder_rewind") private static function lime_audio_decoder_rewind(handle:CFFIPointer):Bool

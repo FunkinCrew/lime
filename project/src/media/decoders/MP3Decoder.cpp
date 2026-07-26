@@ -97,6 +97,7 @@ namespace lime {
 
 		channels = mp3File->channels;
 		sampleRate = mp3File->sampleRate;
+		format = AudioDataFormat::UNKNOWN;
 		handle = (void*) mp3File;
 
 		return true;
@@ -116,7 +117,7 @@ namespace lime {
 
 		}
 
-		return 0;
+		return -1;
 
 	}
 

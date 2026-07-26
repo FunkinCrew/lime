@@ -150,6 +150,18 @@ class AudioDecoder
 	**/
 	public var sampleRate(default, null):Int = 0;
 
+	/**
+		The audio data source format.
+		
+		- `UNKNOWN` = Unknown data format, recognized/decoded as `S16` anyway if loaded
+		- `U8` = Unsigned 8 bit data format (512 possible values)
+		- `S16` = Signed 16 bit data format (65536 possible values)
+		- `S24` = Signed 24 bit data format (16777216 possible values, not recommended)
+		- `S32` = Signed 32 bit data format (4294967296 possible values)
+		- `F32` = Float 32 bit data format (2130706434+ possible values, can be outside of -1.0..1.0 range)
+	**/
+	public var dataFormat:AudioDataFormat = UNKNOWN;
+
 	@:noCompletion
 	private var handle:Dynamic;
 
@@ -167,6 +179,7 @@ class AudioDecoder
 			{
 				this.channels = info.channels;
 				this.sampleRate = info.sampleRate;
+				this.dataFormat = cast info.dataFormat;
 			}
 		}
 		#end
@@ -175,30 +188,24 @@ class AudioDecoder
 	/**
 		Decodes a number of audio frames into raw PCM data.
 
+		@param output A `Bytes` output to pass the decoded PCM audio data to.
+		@param offset The offset in byte for the output.
 		@param frames The number of frames to decode.
-		@param format The output format (`S16` or `F32`).
-		@return A `Bytes` object containing decoded PCM audio data.
+		@param format The output data format (Will use `dataFormat` if blank).
+		@return The number of bytes filled/read into the output, if unable to decode to output data format, will return `-1`.
 	**/
-	public function decode(frames:Int, format:AudioDataFormat = S16):Bytes
+	public function decode(output:Bytes, offset:Int, frames:Int, ?format:AudioDataFormat):Int
 	{
+		if (format == null) format = dataFormat == UNKNOWN ? S16 : dataFormat;
+
 		#if (lime_cffi && !macro)
 		if (handle != null)
 		{
-			switch (format)
-			{
-				case S16:
-					var bytes = Bytes.alloc(frames * channels * 2);
-					var decoded = NativeCFFI.lime_audio_decoder_decode(handle, bytes, frames, cast format);
-					return decoded;
-				case F32:
-					var bytes = Bytes.alloc(frames * channels * 4);
-					var decoded = NativeCFFI.lime_audio_decoder_decode(handle, bytes, frames, cast format);
-					return decoded;
-			}
+			return NativeCFFI.lime_audio_decoder_decode(handle, output, offset, frames, cast format);
 		}
 		#end
 
-		return null;
+		return 0;
 	}
 
 	/**

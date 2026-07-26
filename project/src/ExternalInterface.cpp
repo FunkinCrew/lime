@@ -4476,6 +4476,7 @@ namespace lime {
 		value info = alloc_empty_object ();
 		alloc_field (info, val_id ("channels"), alloc_int (targetAudioDecoder->channels));
 		alloc_field (info, val_id ("sampleRate"), alloc_int (targetAudioDecoder->sampleRate));
+		alloc_field (info, val_id ("dataFormat"), alloc_int (targetAudioDecoder->dataFormat));
 		return info;
 
 	}
@@ -4488,63 +4489,31 @@ namespace lime {
 		vdynamic *info = (vdynamic*)hl_alloc_dynobj();
 		hl_dyn_seti (info, hl_hash_utf8 ("channels"), &hlt_i32, targetAudioDecoder->channels);
 		hl_dyn_seti (info, hl_hash_utf8 ("sampleRate"), &hlt_i32, targetAudioDecoder->sampleRate);
+		hl_dyn_seti (info, hl_hash_utf8 ("dataFormat"), &hlt_i32, targetAudioDecoder->dataFormat);
 		return info;
 
 	}
 
 
-	value lime_audio_decoder_decode (value audio_decoder, value bytes, int frames, int format) {
+	int lime_audio_decoder_decode (value audio_decoder, value output, int offset, int frames, int format) {
 
 		AudioDecoder* targetAudioDecoder = (AudioDecoder*)val_data (audio_decoder);
+		AudioDataFormat targetAudioDataFormat = (AudioDataFormat)format;
 
-		Bytes data = Bytes (bytes);
+		Bytes data;
+		bytes.Set (output);
 
-		AudioDataFormat targetAudioDataFormat = (AudioDataFormat) format;
-
-		int framesDecoded = targetAudioDecoder->Decode (data.b, frames, targetAudioDataFormat);
-
-		switch (targetAudioDataFormat) {
-
-			case AudioDataFormat::S16:
-
-				data.Resize(framesDecoded * targetAudioDecoder->channels * 2);
-				break;
-
-			case AudioDataFormat::F32:
-
-				data.Resize(framesDecoded * targetAudioDecoder->channels * 4);
-				break;
-
-		}
-
-		return data.Value (bytes);
+		return targetAudioDecoder->Decode (data.b + offset, frames, targetAudioDataFormat);
 
 	}
 
 
-	HL_PRIM Bytes* HL_NAME(hl_audio_decoder_decode) (HL_CFFIPointer* audio_decoder, Bytes* bytes, int frames, int format) {
+	HL_PRIM int HL_NAME(hl_audio_decoder_decode) (HL_CFFIPointer* audio_decoder, Bytes* output, int offset, int frames, int format) {
 
 		AudioDecoder* targetAudioDecoder = (AudioDecoder*)audio_decoder->ptr;
+		AudioDataFormat targetAudioDataFormat = (AudioDataFormat)format;
 
-		AudioDataFormat targetAudioDataFormat = (AudioDataFormat) format;
-
-		int framesDecoded = targetAudioDecoder->Decode (bytes->b, frames, targetAudioDataFormat);
-
-		switch (targetAudioDataFormat) {
-
-			case AudioDataFormat::S16:
-
-				bytes->Resize(framesDecoded * targetAudioDecoder->channels * 2);
-				break;
-
-			case AudioDataFormat::F32:
-
-				bytes->Resize(framesDecoded * targetAudioDecoder->channels * 4);
-				break;
-
-		}
-
-		return bytes;
+		return targetAudioDecoder->Decode (bytes->b + offset, frames, targetAudioDataFormat);
 
 	}
 
@@ -4629,6 +4598,9 @@ namespace lime {
 		return hl_allocInt64 (targetAudioDecoder->Total ());
 
 	}
+
+
+	// audio_data_util
 
 
 	value lime_zlib_compress (value buffer, value bytes) {
@@ -4857,7 +4829,7 @@ namespace lime {
 	DEFINE_PRIME2 (lime_audio_decoder_open_file);
 	DEFINE_PRIME2 (lime_audio_decoder_open_bytes);
 	DEFINE_PRIME1 (lime_audio_decoder_info);
-	DEFINE_PRIME4 (lime_audio_decoder_decode);
+	DEFINE_PRIME5 (lime_audio_decoder_decode);
 	DEFINE_PRIME1 (lime_audio_decoder_rewind);
 	DEFINE_PRIME3 (lime_audio_decoder_seek);
 	DEFINE_PRIME1 (lime_audio_decoder_can_seek);
@@ -5068,7 +5040,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_file, _STRING _I32);
 	DEFINE_HL_PRIM (_TCFFIPOINTER, hl_audio_decoder_open_bytes, _TBYTES _I32);
 	DEFINE_HL_PRIM (_DYN, hl_audio_decoder_info, _TCFFIPOINTER);
-	DEFINE_HL_PRIM (_TBYTES, hl_audio_decoder_decode, _TCFFIPOINTER _TBYTES _I32 _I32);
+	DEFINE_HL_PRIM (_I32, hl_audio_decoder_decode, _TCFFIPOINTER _TBYTES _I32 _I32 _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_rewind, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_seek, _TCFFIPOINTER _I32 _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_audio_decoder_can_seek, _TCFFIPOINTER);
