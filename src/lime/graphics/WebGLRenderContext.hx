@@ -157,7 +157,6 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 		this.uniformMatrix4fv(location, transpose, v);
 	}
 
-
 	public inline function blendBarrier():Void
 	{
 		// Not supported on Web

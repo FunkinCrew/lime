@@ -71,12 +71,14 @@ class Window
 		Fired when the user presses a key down when this window has focus.
 	**/
 	public var onKeyDown(default, null) = new Event<KeyCode->KeyModifier->Void>();
+
 	public var onKeyDownPrecise(default, null) = new Event<KeyCode->KeyModifier->haxe.Int64->Void>();
 
 	/**
 		Fired when the user releases a key that was down.
 	**/
 	public var onKeyUp(default, null) = new Event<KeyCode->KeyModifier->Void>();
+
 	public var onKeyUpPrecise(default, null) = new Event<KeyCode->KeyModifier->haxe.Int64->Void>();
 
 	public var onLeave(default, null) = new Event<Void->Void>();
@@ -100,6 +102,7 @@ class Window
 		Fired when the mouse is moved over the window.
 	**/
 	public var onMouseMove(default, null) = new Event<Float->Float->Void>();
+
 	public var onMouseMoveRelative(default, null) = new Event<Float->Float->Void>();
 
 	/**
@@ -116,6 +119,7 @@ class Window
 		Fired when the window is moved to a new position.
 	**/
 	public var onMove(default, null) = new Event<Float->Float->Void>();
+
 	public var onRender(default, null) = new Event<RenderContext->Void>();
 	public var onRenderContextLost(default, null) = new Event<Void->Void>();
 	public var onRenderContextRestored(default, null) = new Event<RenderContext->Void>();
@@ -296,7 +300,8 @@ class Window
 
 		__minWidth = width;
 		__minHeight = height;
-		if (__width < __minWidth || __height < __minHeight) {
+		if (__width < __minWidth || __height < __minHeight)
+		{
 			resize(__width, __height);
 		}
 	}
@@ -307,7 +312,8 @@ class Window
 
 		__maxWidth = width;
 		__maxHeight = height;
-		if (__width > __maxWidth || __height > __maxHeight) {
+		if (__width > __maxWidth || __height > __maxHeight)
+		{
 			resize(__width, __height);
 		}
 	}

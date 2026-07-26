@@ -64,7 +64,8 @@ class NativeAudioSource
 
 		if (hasDirectChannelsExt == null)
 		{
-			hasDirectChannelsExt = AL.isExtensionPresent("AL_SOFT_direct_channels") && AL.isExtensionPresent("AL_SOFT_direct_channels_remix");
+			hasDirectChannelsExt = AL.isExtensionPresent("AL_SOFT_direct_channels")
+				&& AL.isExtensionPresent("AL_SOFT_direct_channels_remix");
 		}
 
 		format = 0;

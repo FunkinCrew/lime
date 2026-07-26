@@ -2,7 +2,6 @@ package haxe;
 
 #if (!lime_cffi || macro)
 // Original haxe.Timer class
-
 /*
  * Copyright (C)2005-2019 Haxe Foundation
  *
@@ -24,7 +23,6 @@ package haxe;
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-
 #if (target.threaded && !cppia)
 import sys.thread.Thread;
 import sys.thread.EventLoop;
@@ -49,7 +47,8 @@ import sys.thread.EventLoop;
 	Main thread of a Haxe program always contains an event loop. For other cases use
 	`sys.thread.Thread.createWithEventLoop` and `sys.thread.Thread.runWithEventLoop` methods.
 **/
-class Timer {
+class Timer
+{
 	#if (flash || js)
 	private var id:Null<Int>;
 	#elseif (target.threaded && !cppia)
@@ -70,10 +69,12 @@ class Timer {
 
 		The accuracy of this may be platform-dependent.
 	**/
-	public function new(time_ms:Int) {
+	public function new(time_ms:Int)
+	{
 		#if flash
 		var me = this;
-		id = untyped __global__["flash.utils.setInterval"](function() {
+		id = untyped __global__["flash.utils.setInterval"](function()
+		{
 			me.run();
 		}, time_ms);
 		#elseif js
@@ -84,7 +85,8 @@ class Timer {
 		eventHandler = thread.events.repeat(() -> this.run(), time_ms);
 		#else
 		var dt = time_ms / 1000;
-		event = MainLoop.add(function() {
+		event = MainLoop.add(function()
+		{
 			@:privateAccess event.nextRun += dt;
 			run();
 		});
@@ -100,10 +102,10 @@ class Timer {
 
 		It is not possible to restart `this` Timer once stopped.
 	**/
-	public function stop() {
+	public function stop()
+	{
 		#if (flash || js)
-		if (id == null)
-			return;
+		if (id == null) return;
 		#if flash
 		untyped __global__["flash.utils.clearInterval"](id);
 		#elseif js
@@ -113,7 +115,8 @@ class Timer {
 		#elseif (target.threaded && !cppia)
 		thread.events.cancel(eventHandler);
 		#else
-		if (event != null) {
+		if (event != null)
+		{
 			event.stop();
 			event = null;
 		}
@@ -145,9 +148,11 @@ class Timer {
 
 		If `f` is `null`, the result is unspecified.
 	**/
-	public static function delay(f:Void->Void, time_ms:Int) {
+	public static function delay(f:Void->Void, time_ms:Int)
+	{
 		var t = new haxe.Timer(time_ms);
-		t.run = function() {
+		t.run = function()
+		{
 			t.stop();
 			f();
 		};
@@ -165,7 +170,8 @@ class Timer {
 
 		If `f` is `null`, the result is unspecified.
 	**/
-	public static function measure<T>(f:Void->T, ?pos:PosInfos):T {
+	public static function measure<T>(f:Void->T, ?pos:PosInfos):T
+	{
 		var t0 = stamp();
 		var r = f();
 		Log.trace((stamp() - t0) + "s", pos);
@@ -178,7 +184,8 @@ class Timer {
 		The value itself might differ depending on platforms, only differences
 		between two values make sense.
 	**/
-	public static inline function stamp():Float {
+	public static inline function stamp():Float
+	{
 		#if flash
 		return flash.Lib.getTimer() / 1000;
 		#elseif js
@@ -201,7 +208,6 @@ class Timer {
 }
 #else
 // This override mainly exists so targets like iOS wont be freezing because of the way the mainloop works on the target
-
 import lime.system.System;
 
 class Timer

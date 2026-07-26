@@ -302,7 +302,8 @@ class IconHelper
 			}
 
 			if (Math.abs(iconDifference) < Math.abs(matchDifference)
-				|| iconDifference == matchDifference && icon.priority >= match.priority)
+				|| iconDifference == matchDifference
+				&& icon.priority >= match.priority)
 			{
 				match = icon;
 				matchDifference = iconDifference;

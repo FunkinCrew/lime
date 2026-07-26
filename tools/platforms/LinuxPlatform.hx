@@ -118,7 +118,9 @@ class LinuxPlatform extends PlatformTarget
 
 		for (architecture in project.architectures)
 		{
-			if (!targetFlags.exists("32") && !targetFlags.exists("x86_32") && (architecture == Architecture.X64 || architecture == Architecture.ARM64))
+			if (!targetFlags.exists("32")
+				&& !targetFlags.exists("x86_32")
+				&& (architecture == Architecture.X64 || architecture == Architecture.ARM64))
 			{
 				is64 = true;
 			}
@@ -177,7 +179,17 @@ class LinuxPlatform extends PlatformTarget
 			}
 			else
 			{
-				copyIfNewer(Path.combine(dependency.path, "Linux" + (( System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64)?"Arm":"") + (is64 ? "64" : "") + "/" + dependency.name + ".so"), applicationDirectory + "/" + dependency.name + ".so");
+				copyIfNewer(Path.combine(dependency.path,
+					"Linux"
+					+ ((System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64) ? "Arm" : "")
+					+ (is64 ? "64" : "")
+					+ "/"
+					+ dependency.name
+					+ ".so"),
+					applicationDirectory
+					+ "/"
+					+ dependency.name
+					+ ".so");
 			}
 		}
 
@@ -189,7 +201,9 @@ class LinuxPlatform extends PlatformTarget
 			}
 			else
 			{
-				ProjectHelper.copyLibrary(project, ndll, "Linux" + (( System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64)?"Arm":"") + (is64 ? "64" : ""), "", ".ndll", applicationDirectory, project.debug);
+				ProjectHelper.copyLibrary(project, ndll,
+					"Linux" + ((System.hostArchitecture == ARMV7 || System.hostArchitecture == ARM64) ? "Arm" : "") + (is64 ? "64" : ""), "", ".ndll",
+					applicationDirectory, project.debug);
 			}
 		}
 
@@ -204,7 +218,19 @@ class LinuxPlatform extends PlatformTarget
 			if (project.targetFlags.exists("hlc"))
 			{
 				var compiler = project.targetFlags.exists("clang") ? "clang" : "gcc";
-				var command = [compiler, "-O3", "-o", executablePath, "-std=c11", "-Wl,-rpath,$ORIGIN", "-I", Path.combine(targetDirectory, "obj"), Path.combine(targetDirectory, "obj/ApplicationMain.c"), "-L", applicationDirectory];
+				var command = [
+					compiler,
+					"-O3",
+					"-o",
+					executablePath,
+					"-std=c11",
+					"-Wl,-rpath,$ORIGIN",
+					"-I",
+					Path.combine(targetDirectory, "obj"),
+					Path.combine(targetDirectory, "obj/ApplicationMain.c"),
+					"-L",
+					applicationDirectory
+				];
 				for (file in System.readDirectory(applicationDirectory))
 				{
 					switch Path.extension(file)
@@ -333,7 +359,7 @@ class LinuxPlatform extends PlatformTarget
 
 	private function generateContext():Dynamic
 	{
-		if(targetFlags.exists('rpi'))
+		if (targetFlags.exists('rpi'))
 		{
 			project.haxedefs.set("rpi", 1);
 		}
@@ -381,7 +407,8 @@ class LinuxPlatform extends PlatformTarget
 
 				var output:String = Path.combine(waylandOutputPath, '${haxe.io.Path.withoutExtension(xml)}-client-protocol');
 
-				if (FileSystem.exists(haxe.io.Path.withExtension(output, "h")) && FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
+				if (FileSystem.exists(haxe.io.Path.withExtension(output, "h"))
+					&& FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
 				{
 					return false;
 				}
@@ -397,7 +424,8 @@ class LinuxPlatform extends PlatformTarget
 				{
 					var output:String = Path.combine(waylandOutputPath, '${haxe.io.Path.withoutExtension(xml)}-client-protocol');
 
-					if (FileSystem.exists(haxe.io.Path.withExtension(output, "h")) && FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
+					if (FileSystem.exists(haxe.io.Path.withExtension(output, "h"))
+						&& FileSystem.exists(haxe.io.Path.withExtension(output, "c")))
 					{
 						continue;
 					}
@@ -406,9 +434,17 @@ class LinuxPlatform extends PlatformTarget
 
 					Log.println(' - \x1b[1;33m$file\x1b[0m');
 
-					System.runCommand("", "wayland-scanner", ["client-header", Path.combine(waylandProtocolsPath, xml), haxe.io.Path.withExtension(output, "h")]);
+					System.runCommand("", "wayland-scanner", [
+						"client-header",
+						Path.combine(waylandProtocolsPath, xml),
+						haxe.io.Path.withExtension(output, "h")
+					]);
 
-					System.runCommand("", "wayland-scanner", ["private-code", Path.combine(waylandProtocolsPath, xml), haxe.io.Path.withExtension(output, "c")]);
+					System.runCommand("", "wayland-scanner", [
+						"private-code",
+						Path.combine(waylandProtocolsPath, xml),
+						haxe.io.Path.withExtension(output, "c")
+					]);
 				}
 			}
 		}
@@ -422,7 +458,8 @@ class LinuxPlatform extends PlatformTarget
 		// modified more recently than the .hxml, then the .hxml cannot be
 		// considered valid anymore. it may cause errors in editors like vscode.
 		if (FileSystem.exists(path)
-			&& (project.projectFilePath == null || !FileSystem.exists(project.projectFilePath)
+			&& (project.projectFilePath == null
+				|| !FileSystem.exists(project.projectFilePath)
 				|| (FileSystem.stat(path).mtime.getTime() > FileSystem.stat(project.projectFilePath).mtime.getTime())))
 		{
 			return File.getContent(path);
@@ -455,7 +492,7 @@ class LinuxPlatform extends PlatformTarget
 
 		var commands:Array<Array<String>> = [];
 
-		if (targetFlags.exists('rpi') && System.hostArchitecture == ARM64 )
+		if (targetFlags.exists('rpi') && System.hostArchitecture == ARM64)
 		{
 			commands.push([
 				"-Dlinux",
@@ -488,14 +525,9 @@ class LinuxPlatform extends PlatformTarget
 			// TODO: Support single binary
 			commands.push(["-Dlinux", "-DHXCPP_M64", "-Dhashlink"]);
 		}
-		else if (System.hostArchitecture == ARM64 )
+		else if (System.hostArchitecture == ARM64)
 		{
-			commands.push([
-				"-Dlinux",
-				"-Dtoolchain=linux",
-				"-DBINDIR=LinuxArm64",
-				"-DHXCPP_ARM64",
-			]);
+			commands.push(["-Dlinux", "-Dtoolchain=linux", "-DBINDIR=LinuxArm64", "-DHXCPP_ARM64",]);
 		}
 		else
 		{

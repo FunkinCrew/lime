@@ -38,6 +38,7 @@ class Gesture
 		Offset by x coordinate
 	**/
 	public var panTranslationX:Float;
+
 	/**
 		Offset by y coordinate
 	**/
@@ -73,8 +74,8 @@ class Gesture
 	**/
 	public var momentumScrollY:Float;
 
-
-	public function new(type:GestureType = UNSPECIFIED, magnification:Float = 0.0, rotation:Float = 0.0, panTranslationX:Float = 0.0, panTranslationY:Float = 0.0, panVelocityX:Float = 0.0, panVelocityY:Float = 0.0)
+	public function new(type:GestureType = UNSPECIFIED, magnification:Float = 0.0, rotation:Float = 0.0, panTranslationX:Float = 0.0,
+			panTranslationY:Float = 0.0, panVelocityX:Float = 0.0, panVelocityY:Float = 0.0)
 	{
 		this.type = type;
 		this.magnification = magnification;

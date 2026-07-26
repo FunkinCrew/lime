@@ -104,7 +104,7 @@ class HXProject extends Script
 		var classRef = Type.resolveClass(inputData.name);
 		if (classRef == null)
 		{
-			Log.error('Unable to find class ${ inputData.name } in ${ inputData.projectFile }');
+			Log.error('Unable to find class ${inputData.name} in ${inputData.projectFile}');
 			return;
 		}
 		var instance = Type.createInstance(classRef, []);
@@ -200,7 +200,7 @@ class HXProject extends Script
 		splashScreens = new Array<SplashScreen>();
 		targetHandlers = new Map<String, String>();
 
-		config.set("android", { manifest:{}, application:{}, activity:{} });
+		config.set("android", {manifest: {}, application: {}, activity: {}});
 		config.get("android.manifest").xmlChildren = [];
 		config.get("android.application").xmlChildren = [];
 		config.get("android.activity").xmlChildren = [];
@@ -396,11 +396,12 @@ class HXProject extends Script
 		var args = [
 			name,
 			#if lime
-			"-lib", "lime",
-			"-lib", "hxp",
+			"-lib", "lime", "-lib", "hxp",
 			#end
-			"-cp", tempDirectory,
-			"-cp", Path.combine(Haxelib.getPath(new Haxelib("hxp")), "src")
+			"-cp",
+			tempDirectory,
+			"-cp",
+			Path.combine(Haxelib.getPath(new Haxelib("hxp")), "src")
 		];
 		var input = File.read(classFile, false);
 		var tag = "@:compiler(";
@@ -675,6 +676,7 @@ class HXProject extends Script
 		@:privateAccess projectXML.parseXML(new Access(Xml.parse(xml).firstElement()), "");
 		merge(projectXML);
 	}
+
 	// #end
 
 	private function initializeDefines():Void

@@ -2,7 +2,6 @@ package lime.utils;
 
 #if (js && !doc_gen)
 import js.lib.Uint8Array as JSUInt8Array;
-
 @:forward
 @:transitive
 abstract UInt8Array(JSUInt8Array) from JSUInt8Array to JSUInt8Array

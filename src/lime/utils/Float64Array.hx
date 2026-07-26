@@ -3,7 +3,6 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Float64Array as JSFloat64Array;
 import js.lib.Uint8Array as JSUInt8Array;
-
 @:forward
 @:transitive
 abstract Float64Array(JSFloat64Array) from JSFloat64Array to JSFloat64Array

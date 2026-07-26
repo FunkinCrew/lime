@@ -415,7 +415,15 @@ class AndroidHelper
 
 		System.runCommand(adbPath, adbName, args.concat(["force-stop", activityName]));
 
-		System.runCommand(adbPath, adbName, args.concat(["start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", "-n", activityName]));
+		System.runCommand(adbPath, adbName, args.concat([
+			"start",
+			"-a",
+			"android.intent.action.MAIN",
+			"-c",
+			"android.intent.category.LAUNCHER",
+			"-n",
+			activityName
+		]));
 	}
 
 	public static function trace(project:HXProject, debug:Bool, deviceID:String = null, customFilter:String = null):Void
@@ -445,8 +453,7 @@ class AndroidHelper
 
 		var pidInt = Std.parseInt(pidString);
 
-		if (pidInt != null)
-			args.push('--pid=' + pidInt);
+		if (pidInt != null) args.push('--pid=' + pidInt);
 
 		args.push("-v");
 		args.push("brief");

@@ -378,24 +378,35 @@ class IOSPlatform extends PlatformTarget
 				switch (fileType)
 				{
 					case "wrapper.plug-in":
-						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Resources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Resources */ = {isa = PBXBuildFile; fileRef = "
+							+ fileID + " /* " + name + " */; };\n";
 						context.ADDL_PBX_RESOURCES_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Resources */,\n";
 						context.ADDL_PBX_RESOURCE_GROUP += "                " + fileID + " /* " + name + " */,\n";
 					case "wrapper.framework", "wrapper.xcframework", "sourcecode.text-based-dylib-definition":
-						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; };\n";
+						context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + name + " in Frameworks */ = {isa = PBXBuildFile; fileRef = "
+							+ fileID + " /* " + name + " */; };\n";
 						context.ADDL_PBX_FRAMEWORKS_BUILD_PHASE += "                " + buildFileID + " /* " + name + " in Frameworks */,\n";
 						context.ADDL_PBX_FRAMEWORK_GROUP += "                " + fileID + " /* " + name + " */,\n";
 
 						if (embed)
 						{
-							context.ADDL_PBX_BUILD_FILE += "        " + embedFileID + " /* " + name + " in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + name + " */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy); }; };\n";
+							context.ADDL_PBX_BUILD_FILE += "        "
+								+ embedFileID
+								+ " /* "
+								+ name
+								+ " in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = "
+								+ fileID
+								+ " /* "
+								+ name
+								+ " */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy); }; };\n";
 							context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE += "                " + embedFileID + " /* " + name + " in Embed Frameworks */,\n";
 						}
 
 						ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
 				}
 
-				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
+				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType
+					+ "\"; name = \"" + name + "\"; path = \"" + path + "\"; sourceTree = SDKROOT; };\n";
 			}
 		}
 
@@ -422,10 +433,12 @@ class IOSPlatform extends PlatformTarget
 			var buildFileID = "11C0000000000018" + StringTools.getUniqueID();
 			var fileID = "11C0000000000018" + StringTools.getUniqueID();
 
-			context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + file + " in Sources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* " + file + " */; };\n";
+			context.ADDL_PBX_BUILD_FILE += "        " + buildFileID + " /* " + file + " in Sources */ = {isa = PBXBuildFile; fileRef = " + fileID + " /* "
+				+ file + " */; };\n";
 			context.ADDL_PBX_SOURCES_BUILD_PHASE += "                " + buildFileID + " /* " + file + " in Sources */,\n";
 			context.ADDL_PBX_SOURCE_GROUP += "                " + fileID + " /* " + file + " */,\n";
-			context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + file + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType + "\"; name = \"" + file + "\"; path = \"" + path + "\"; sourceTree = SOURCE_ROOT; };\n";
+			context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + file + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType
+				+ "\"; name = \"" + file + "\"; path = \"" + path + "\"; sourceTree = SOURCE_ROOT; };\n";
 		}
 
 		context.HXML_PATH = System.findTemplate(project.templatePaths, "ios/template/{{app.file}}/haxe/Build.hxml");
@@ -436,7 +449,7 @@ class IOSPlatform extends PlatformTarget
 
 		if (allowInsecureHTTP != "*" && allowInsecureHTTP != "true")
 		{
-			var sites:Array<{domain: String}> = [];
+			var sites:Array<{domain:String}> = [];
 
 			if (allowInsecureHTTP != "false")
 			{
@@ -475,7 +488,8 @@ class IOSPlatform extends PlatformTarget
 		// modified more recently than the .hxml, then the .hxml cannot be
 		// considered valid anymore. it may cause errors in editors like vscode.
 		if (FileSystem.exists(path)
-			&& (project.projectFilePath == null || !FileSystem.exists(project.projectFilePath)
+			&& (project.projectFilePath == null
+				|| !FileSystem.exists(project.projectFilePath)
 				|| (FileSystem.stat(path).mtime.getTime() > FileSystem.stat(project.projectFilePath).mtime.getTime())))
 		{
 			return File.getContent(path);
@@ -496,7 +510,8 @@ class IOSPlatform extends PlatformTarget
 	{
 		var arm64 = (command == "rebuild" && !project.targetFlags.exists("simulator"));
 		var arm64sim = (command == "rebuild" && project.targetFlags.exists("simulator"));
-		var x86_64 = (command == "rebuild" || (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
+		var x86_64 = (command == "rebuild"
+			|| (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
 
 		var arc = (project.targetFlags.exists("arc"));
 
@@ -572,7 +587,8 @@ class IOSPlatform extends PlatformTarget
 
 		context.HAS_ICON = true;
 
-		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile) {
+		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile)
+		{
 			context.IOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
 			ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, Path.combine(projectDirectory, "AppIcon.icon"), context);
 		}
@@ -795,11 +811,7 @@ class IOSPlatform extends PlatformTarget
 
 			if (arch == "x86_64" && (!context.X64 || !project.targetFlags.exists("simulator"))) continue;
 
-			var libExt = [
-				".iphoneos-64.a",
-				".iphonesim-arm64.a",
-				".iphonesim-64.a"
-			][archID];
+			var libExt = [".iphoneos-64.a", ".iphonesim-arm64.a", ".iphonesim-64.a"][archID];
 
 			System.mkdir(projectDirectory + "/lib/" + arch);
 			System.mkdir(projectDirectory + "/lib/" + arch + "-debug");
@@ -878,7 +890,6 @@ class IOSPlatform extends PlatformTarget
 		context.HAS_LAUNCH_IMAGE = has_launch_image;
 
 	}*/
-
 	public override function install():Void {}
 
 	public override function trace():Void {}

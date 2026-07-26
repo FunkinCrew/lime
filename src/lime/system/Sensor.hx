@@ -41,8 +41,7 @@ class Sensor
 
 	private static function registerSensor(type:SensorType, id:Int):Sensor
 	{
-		if (id < 0)
-			return null;
+		if (id < 0) return null;
 
 		var sensor = new Sensor(type, id);
 

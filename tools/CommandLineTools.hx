@@ -372,8 +372,7 @@ class CommandLineTools
 				}
 
 			case "installer", "copy-if-newer":
-
-			// deprecated?
+				// deprecated?
 
 			default:
 				Log.error("'" + command + "' is not a valid command");
@@ -458,7 +457,7 @@ class CommandLineTools
 			case LINUX:
 				var arguments = Sys.args();
 
-				if (System.hostArchitecture == ARMV7 )
+				if (System.hostArchitecture == ARMV7)
 				{
 					untyped $loader.path = $array(path + "LinuxArm/", $loader.path);
 				}
@@ -707,14 +706,22 @@ class CommandLineTools
 	{
 		var commands = [
 
-			         "config" => "Display or set command-line configuration values",    "create" => "Create a new project or extension using templates",
-			                    "clean" => "Clean the specified project and target",     "update" => "Copy assets for the specified project and target",
-			  "build" => "Compile and package for the specified project and target",    "run" => "Install and run for the specified project and target",
-			                       "test" => "Update, build and run in one command",                                  "help" => "Show this information",
-			          "trace" => "Trace output for the specifed project and target",                            "deploy" => "Archive and upload builds",
-			"display" => "Display information for the specified project and target",             "rebuild" => "Recompile native binaries for libraries",
-			       "install" => "Install a library from haxelib, plus dependencies",                        "remove" => "Remove a library from haxelib",
-			                          "upgrade" => "Upgrade a library from haxelib", "setup" => "Setup " + defaultLibraryName + " or a specific platform"
+			"config" => "Display or set command-line configuration values",
+			"create" => "Create a new project or extension using templates",
+			"clean" => "Clean the specified project and target",
+			"update" => "Copy assets for the specified project and target",
+			"build" => "Compile and package for the specified project and target",
+			"run" => "Install and run for the specified project and target",
+			"test" => "Update, build and run in one command",
+			"help" => "Show this information",
+			"trace" => "Trace output for the specifed project and target",
+			"deploy" => "Archive and upload builds",
+			"display" => "Display information for the specified project and target",
+			"rebuild" => "Recompile native binaries for libraries",
+			"install" => "Install a library from haxelib, plus dependencies",
+			"remove" => "Remove a library from haxelib",
+			"upgrade" => "Upgrade a library from haxelib",
+			"setup" => "Setup " + defaultLibraryName + " or a specific platform"
 
 		];
 
@@ -1649,7 +1656,9 @@ class CommandLineTools
 
 					var projectDirectory = Path.directory(projectFile);
 					var localRepository = Path.combine(projectDirectory, ".haxelib");
-					if (FileSystem.exists(localRepository) && FileSystem.isDirectory(localRepository) && StringTools.startsWith(path, localRepository))
+					if (FileSystem.exists(localRepository)
+						&& FileSystem.isDirectory(localRepository)
+						&& StringTools.startsWith(path, localRepository))
 					{
 						args.push("-nolocalrepocheck");
 					}

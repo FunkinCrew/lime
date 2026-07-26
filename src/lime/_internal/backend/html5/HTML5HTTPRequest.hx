@@ -39,9 +39,7 @@ class HTML5HTTPRequest
 	private var parent:_IHTTPRequest;
 	private var request:XMLHttpRequest;
 
-	public function new()
-	{
-	}
+	public function new() {}
 
 	public function cancel():Void
 	{
@@ -62,8 +60,7 @@ class HTML5HTTPRequest
 
 		if (parent.method == POST)
 		{
-			if(request.upload != null)
-				request.upload.addEventListener("progress", progress, false);
+			if (request.upload != null) request.upload.addEventListener("progress", progress, false);
 		}
 		else
 		{

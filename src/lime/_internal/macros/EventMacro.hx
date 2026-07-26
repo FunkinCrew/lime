@@ -29,8 +29,8 @@ class EventMacro
 				return null;
 
 			case TInst(_, paramTypes):
-				Context.fatalError("Expected only one type parameter. Did you mean Event<"
-					+ paramTypes.map(haxe.macro.TypeTools.toString).join(" -> ") + ">?", Context.currentPos());
+				Context.fatalError("Expected only one type parameter. Did you mean Event<" + paramTypes.map(haxe.macro.TypeTools.toString).join(" -> ") + ">?",
+					Context.currentPos());
 				return null;
 
 			default:
@@ -148,7 +148,7 @@ class EventMacro
 							args: args,
 							expr: dispatch,
 							params: [],
-							ret: macro:Void
+							ret: macro :Void
 						}),
 					pos: pos
 				});

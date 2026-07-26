@@ -3,7 +3,6 @@ package lime.utils;
 import lime.utils.ArrayBufferView;
 #if (js && !doc_gen)
 import js.lib.DataView as JSDataView;
-
 @:forward
 abstract DataView(JSDataView) from JSDataView to JSDataView to ArrayBufferView
 {

@@ -33,7 +33,8 @@ class FileDialog
 		@param defaultPath   The default folder or file to start the dialog at.
 		@param allowMultiple Whether the user can select multiple directories.
 	**/
-	public static function openDirectory(window:Window = null, title:String = null, callback:Array<String>->Void = null, ?defaultPath:String = null, allowMultiple:Bool = false):Void
+	public static function openDirectory(window:Window = null, title:String = null, callback:Array<String>->Void = null, ?defaultPath:String = null,
+			allowMultiple:Bool = false):Void
 	{
 		#if (lime_cffi && !macro)
 		#if hl
@@ -67,8 +68,8 @@ class FileDialog
 		@param defaultPath   The default folder or file to start the dialog at.
 		@param allowMultiple Whether the user can select multiple files.
 	**/
-	public static function openFile(window:Window = null, title:String = null, callback:Array<String>->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			?defaultPath:String = null, ?allowMultiple:Bool = false):Void
+	public static function openFile(window:Window = null, title:String = null, callback:Array<String>->FileDialogFilter->Void = null,
+			filters:Array<FileDialogFilter> = null, ?defaultPath:String = null, ?allowMultiple:Bool = false):Void
 	{
 		#if (lime_cffi && !macro)
 		var count = filters != null ? filters.length : 0;
@@ -115,8 +116,8 @@ class FileDialog
 		@param filters     A list of `FileDialogFilter` to show in the dialog's filter dropdown. If `null`, no filter is applied.
 		@param defaultPath The default folder or file to start the dialog at.
 	**/
-	public static function saveFile(window:Window = null, title:String = null, callback:String->FileDialogFilter->Void = null, filters:Array<FileDialogFilter> = null,
-			?defaultPath:String = null):Void
+	public static function saveFile(window:Window = null, title:String = null, callback:String->FileDialogFilter->Void = null,
+			filters:Array<FileDialogFilter> = null, ?defaultPath:String = null):Void
 	{
 		#if (lime_cffi && !macro)
 		var count = filters != null ? filters.length : 0;

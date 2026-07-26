@@ -3,7 +3,6 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Int32Array as JSInt32Array;
 import js.lib.Uint8Array as JSUInt8Array;
-
 @:forward
 @:transitive
 abstract Int32Array(JSInt32Array) from JSInt32Array to JSInt32Array

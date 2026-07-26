@@ -2,7 +2,6 @@ package lime.media.howlerjs;
 
 #if (!lime_doc_gen || lime_howlerjs)
 import lime.media.WebAudioContext;
-
 #if (!lime_howlerjs || display)
 class Howler
 {

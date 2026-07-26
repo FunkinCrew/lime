@@ -45,7 +45,8 @@ enum abstract Architecture(String) to String
 		{
 			return X86;
 		}
-		else /* if (hostArchitecture == HostArchitecture.X64) */
+		else
+			/* if (hostArchitecture == HostArchitecture.X64) */
 		{
 			return X64;
 		}

@@ -3,7 +3,6 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Float32Array as JSFloat32Array;
 import js.lib.Uint8Array as JSUInt8Array;
-
 @:forward
 @:arrayAccess
 @:transitive

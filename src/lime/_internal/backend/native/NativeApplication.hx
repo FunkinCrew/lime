@@ -1080,8 +1080,8 @@ private enum abstract TouchEventType(Int)
 	public var momentumScrollY:Float;
 
 	public function new(x:Float = 0.0, y:Float = 0.0, state:GestureEventType = GESTURE_END, magnification:Float = 0.0, rotation:Float = 0.0,
-			panTranslationX:Float = 0.0, panTranslationY:Float = 0.0, panVelocityX:Float = 0.0, panVelocityY:Float = 0.0,
-			scrollX:Float = 0.0, scrollY:Float = 0.0, momentumScrollX:Float = 0.0, momentumScrollY:Float = 0.0)
+			panTranslationX:Float = 0.0, panTranslationY:Float = 0.0, panVelocityX:Float = 0.0, panVelocityY:Float = 0.0, scrollX:Float = 0.0,
+			scrollY:Float = 0.0, momentumScrollX:Float = 0.0, momentumScrollY:Float = 0.0)
 	{
 		this.x = 0.0;
 		this.y = 0.0;

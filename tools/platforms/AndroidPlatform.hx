@@ -154,8 +154,20 @@ class AndroidPlatform extends PlatformTarget
 		for (architecture in architectures)
 		{
 			var minSDKVer = project.config.getInt("android.minimum-sdk-version", 28);
-			var haxeParams = [hxml, "-D", "android", "-D", 'HXCPP_ANDROID_PLATFORM=$minSDKVer', "-D", 'PLATFORM=android-$minSDKVer'];
-			var cppParams = ["-Dandroid", '-DHXCPP_ANDROID_PLATFORM=$minSDKVer', '-DPLATFORM=android-$minSDKVer'];
+			var haxeParams = [
+				hxml,
+				"-D",
+				"android",
+				"-D",
+				'HXCPP_ANDROID_PLATFORM=$minSDKVer',
+				"-D",
+				'PLATFORM=android-$minSDKVer'
+			];
+			var cppParams = [
+				"-Dandroid",
+				'-DHXCPP_ANDROID_PLATFORM=$minSDKVer',
+				'-DPLATFORM=android-$minSDKVer'
+			];
 			var path = sourceSet + "/jniLibs/";
 			var suffix = ".so";
 
@@ -274,11 +286,13 @@ class AndroidPlatform extends PlatformTarget
 			{
 				if (targetFlags.exists("bundle"))
 				{
-					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle"));
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory),
+						Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle"));
 				}
 				else
 				{
-					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk"));
+					outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory),
+						Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk"));
 				}
 			}
 
@@ -298,7 +312,8 @@ class AndroidPlatform extends PlatformTarget
 		// modified more recently than the .hxml, then the .hxml cannot be
 		// considered valid anymore. it may cause errors in editors like vscode.
 		if (FileSystem.exists(path)
-			&& (project.projectFilePath == null || !FileSystem.exists(project.projectFilePath)
+			&& (project.projectFilePath == null
+				|| !FileSystem.exists(project.projectFilePath)
 				|| (FileSystem.stat(path).mtime.getTime() > FileSystem.stat(project.projectFilePath).mtime.getTime())))
 		{
 			return File.getContent(path);
@@ -353,11 +368,13 @@ class AndroidPlatform extends PlatformTarget
 		{
 			if (targetFlags.exists("bundle"))
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle/" + build));
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory),
+					Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/bundle/" + build));
 			}
 			else
 			{
-				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory), Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk/" + build));
+				outputDirectory = Path.combine(FileSystem.fullPath(targetDirectory),
+					Path.combine(project.config.getString("android.gradle-project-directory", "bin"), "app/build/outputs/apk/" + build));
 			}
 		}
 
@@ -441,7 +458,13 @@ class AndroidPlatform extends PlatformTarget
 
 					var padContext:Dynamic = {};
 					padContext.ANDROID_PLAY_ASSETS_DELIVERY_PACK = asset.deliveryPackName;
-					System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle", targetDirectory + "/" + gradleProject + "/" + asset.deliveryPackName + "/build.gradle", padContext);
+					System.copyFileTemplate(project.templatePaths, "android/asset-pack/build.gradle",
+						targetDirectory
+						+ "/"
+						+ gradleProject
+						+ "/"
+						+ asset.deliveryPackName
+						+ "/build.gradle", padContext);
 
 					context.ANDROID_PLAY_ASSETS_DELIVERY_PACKS.push(asset.deliveryPackName);
 				}
@@ -459,36 +482,49 @@ class AndroidPlatform extends PlatformTarget
 		context.ANDROID_GRADLE_PROPERTIES = project.config.getKeyValueArray("android.gradle-properties");
 		context.ANDROID_DISPLAY_CUTOUT = project.config.getString("android.layoutInDisplayCutoutMode", "shortEdges");
 
-		context.ANDROID_MANIFEST = project.config.getKeyValueArray("android.manifest", {
-			"android:versionCode": project.meta.buildNumber,
-			"android:versionName": project.meta.version,
-			"android:installLocation": project.config.getString("android.install-location", "auto")
-		});
+		context.ANDROID_MANIFEST = project.config.getKeyValueArray("android.manifest",
+			{
+				"android:versionCode": project.meta.buildNumber,
+				"android:versionName": project.meta.version,
+				"android:installLocation": project.config.getString("android.install-location", "auto")
+			});
 		context.ANDROID_MANIFEST_CHILDREN = project.config.get("android.manifest").xmlChildren;
-		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application", {
-			"android:label": project.meta.title,
-			"android:allowBackup": "true",
-			"android:allowAudioPlaybackCapture": "true",
-			"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
-			"android:enableOnBackInvokedCallback": "false",
-			"android:hardwareAccelerated": "true",
-			"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
-			"android:largeHeap": "true"
-		});
+		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application",
+			{
+				"android:label": project.meta.title,
+				"android:allowBackup": "true",
+				"android:allowAudioPlaybackCapture": "true",
+				"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
+				"android:enableOnBackInvokedCallback": "false",
+				"android:hardwareAccelerated": "true",
+				"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
+				"android:largeHeap": "true"
+			});
 		context.ANDROID_APPLICATION_CHILDREN = project.config.get("android.application").xmlChildren;
-		context.ANDROID_ACTIVITY = project.config.getKeyValueArray("android.activity", {
-			"android:name": "MainActivity",
-			"android:exported": "true",
-			"android:alwaysRetainTaskState": "true",
-			"android:launchMode": "singleTop",
-			"android:preferMinimalPostProcessing": "true",
-			"android:label": project.meta.title,
-			"android:resizeableActivity": project.window.resizable,
-			"android:configChanges": project.config.getArrayString("android.configChanges",
-				["layoutDirection", "locale", "orientation", "uiMode", "screenLayout", "screenSize", "smallestScreenSize", "keyboard", "keyboardHidden", "navigation"])
-				.join("|"),
-			"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
-		});
+		context.ANDROID_ACTIVITY = project.config.getKeyValueArray("android.activity",
+			{
+				"android:name": "MainActivity",
+				"android:exported": "true",
+				"android:alwaysRetainTaskState": "true",
+				"android:launchMode": "singleTop",
+				"android:preferMinimalPostProcessing": "true",
+				"android:label": project.meta.title,
+				"android:resizeableActivity": project.window.resizable,
+				"android:configChanges": project.config.getArrayString("android.configChanges",
+					[
+						"layoutDirection",
+						"locale",
+						"orientation",
+						"uiMode",
+						"screenLayout",
+						"screenSize",
+						"smallestScreenSize",
+						"keyboard",
+						"keyboardHidden",
+						"navigation"
+					]).join("|"),
+				"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
+			});
 		context.ANDROID_ACTIVITY_CHILDREN = project.config.get("android.activity").xmlChildren;
 		context.ANDROID_ACCEPT_FILE_INTENT = project.config.getArrayString("android.accept-file-intent", []);
 
@@ -564,9 +600,7 @@ class AndroidPlatform extends PlatformTarget
 					}
 				}
 			}
-			catch (e:Dynamic)
-			{
-			}
+			catch (e:Dynamic) {}
 		}
 
 		if (Reflect.hasField(context, "KEY_STORE")) context.KEY_STORE = StringTools.replace(context.KEY_STORE, "\\", "\\\\");
@@ -618,10 +652,10 @@ class AndroidPlatform extends PlatformTarget
 			{
 				ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, destination + "/app/src/main/res/", context);
 				context.HAS_ICON = true;
-				context.ANDROID_APPLICATION.push({ key: "android:icon", value: "@mipmap/ic_launcher" });
+				context.ANDROID_APPLICATION.push({key: "android:icon", value: "@mipmap/ic_launcher"});
 				if (project.adaptiveIcon.hasRoundIcon)
 				{
-					context.ANDROID_APPLICATION.push({ key: "android:roundIcon", value: "@mipmap/ic_launcher_round" });
+					context.ANDROID_APPLICATION.push({key: "android:roundIcon", value: "@mipmap/ic_launcher_round"});
 				}
 			}
 			else
@@ -637,7 +671,7 @@ class AndroidPlatform extends PlatformTarget
 						&& !context.HAS_ICON)
 					{
 						context.HAS_ICON = true;
-						context.ANDROID_APPLICATION.push({ key: "android:icon", value: "@drawable/icon" });
+						context.ANDROID_APPLICATION.push({key: "android:icon", value: "@drawable/icon"});
 					}
 				}
 				IconHelper.createIcon(icons, 732, 412, sourceSet + "/res/drawable-xhdpi/ouya_icon.png");
@@ -729,7 +763,9 @@ class AndroidPlatform extends PlatformTarget
 				}
 				else
 				{
-					var path = Path.combine(asset.deliveryPackName != '' ? (outputDirectory + "/" + asset.deliveryPackName + "/src/main/assets/") : assetDirectory, asset.targetPath);
+					var path = Path.combine(asset.deliveryPackName != '' ? (outputDirectory + "/" + asset.deliveryPackName +
+						"/src/main/assets/") : assetDirectory,
+						asset.targetPath);
 					System.mkdir(Path.directory(path));
 					AssetHelper.copyAssetIfNewer(asset, path);
 				}

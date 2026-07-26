@@ -24,7 +24,6 @@ import js.html.Audio;
 #if hl
 @:keep
 #end
-
 /**
 	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`.
 	It supports a variety of audio formats and platforms, providing a consistent API for loading and managing audio data.
