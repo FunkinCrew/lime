@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 #include <stdint.h>
 
@@ -21,7 +21,6 @@ namespace lime {
 
 	struct MouseEvent {
 
-		hl_type* t;
 		int button;
 		double movementX;
 		double movementY;

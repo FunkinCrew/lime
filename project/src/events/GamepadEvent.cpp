@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/GamepadEvent.h>
 
 
@@ -25,29 +25,14 @@ namespace lime {
 
 		if (GamepadEvent::callback) {
 
-			if (GamepadEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)GamepadEvent::eventObject->Get ();
 
-				value object = (value)GamepadEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("axis"), alloc_int (event->axis));
-				alloc_field (object, val_id ("button"), alloc_int (event->button));
-				alloc_field (object, val_id ("id"), alloc_int (event->id));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("axisValue"), alloc_float (event->axisValue));
-				alloc_field (object, val_id ("timestamp"), alloc_float (event->timestamp));
-
-			} else {
-
-				GamepadEvent* eventObject = (GamepadEvent*)GamepadEvent::eventObject->Get ();
-
-				eventObject->axis = event->axis;
-				eventObject->button = event->button;
-				eventObject->id = event->id;
-				eventObject->type = event->type;
-				eventObject->axisValue = event->axisValue;
-				eventObject->timestamp = event->timestamp;
-
-			}
+			alloc_field (object, val_id ("axis"), alloc_int (event->axis));
+			alloc_field (object, val_id ("button"), alloc_int (event->button));
+			alloc_field (object, val_id ("id"), alloc_int (event->id));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("axisValue"), alloc_float (event->axisValue));
+			alloc_field (object, val_id ("timestamp"), alloc_float (event->timestamp));
 
 			GamepadEvent::callback->Call ();
 

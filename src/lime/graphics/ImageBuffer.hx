@@ -18,9 +18,6 @@ import js.lib.Uint8ClampedArray;
 
 	For higher-level operations, use the `Image` class.
 **/
-#if hl
-@:keep
-#end
 @:allow(lime.graphics.Image)
 class ImageBuffer
 {

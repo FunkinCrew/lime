@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <utils/QuickVec.h>
 
 
@@ -10,7 +10,6 @@ namespace lime {
 
 	struct Bytes {
 
-		hl_type* t;
 		int length;
 		unsigned char* b;
 

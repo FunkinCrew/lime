@@ -100,7 +100,6 @@ Lime currently supports the following targets:
     lime test android
     lime test ios
     lime test html5
-    lime test hl
 
 Desktop builds are currently designed to be built on the same host OS
 

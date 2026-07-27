@@ -232,7 +232,7 @@ class System
 		{
 			var display = new Display();
 			display.id = id;
-			display.name = CFFI.stringValue(displayInfo.name);
+			display.name = displayInfo.name;
 			display.bounds = new Rectangle(displayInfo.bounds.x, displayInfo.bounds.y, displayInfo.bounds.width, displayInfo.bounds.height);
 			display.orientation = displayInfo.orientation;
 			display.safeArea = new Rectangle(displayInfo.safeArea.x, displayInfo.safeArea.y, displayInfo.safeArea.width, displayInfo.safeArea.height);
@@ -241,11 +241,8 @@ class System
 
 			var displayMode;
 
-			#if hl
-			var supportedModes:hl.NativeArray<Dynamic> = displayInfo.supportedModes;
-			#else
 			var supportedModes:Array<Dynamic> = displayInfo.supportedModes;
-			#end
+
 			for (mode in supportedModes)
 			{
 				displayMode = new DisplayMode(mode.width, mode.height, mode.refreshRate, mode.pixelFormat);
@@ -408,7 +405,7 @@ class System
 		if (key != null)
 		{
 			#if (lime_cffi && !macro)
-			return CFFI.stringValue(NativeCFFI.lime_system_get_hint(key));
+			return NativeCFFI.lime_system_get_hint(key);
 			#end
 		}
 
@@ -467,11 +464,11 @@ class System
 					}
 				}
 
-				path = CFFI.stringValue(NativeCFFI.lime_system_get_directory(type, company, file));
+				path = NativeCFFI.lime_system_get_directory(type, company, file);
 			}
 			else
 			{
-				path = CFFI.stringValue(NativeCFFI.lime_system_get_directory(type, null, null));
+				path = NativeCFFI.lime_system_get_directory(type, null, null);
 			}
 
 			#if windows
@@ -671,7 +668,7 @@ class System
 		if (__deviceModel == null)
 		{
 			#if (lime_cffi && !macro && (windows || ios))
-			__deviceModel = CFFI.stringValue(NativeCFFI.lime_system_get_device_model());
+			__deviceModel = NativeCFFI.lime_system_get_device_model();
 			#elseif android
 			var manufacturer:String = JNI.createStaticField("android/os/Build", "MANUFACTURER", "Ljava/lang/String;").get();
 			var model:String = JNI.createStaticField("android/os/Build", "MODEL", "Ljava/lang/String;").get();
@@ -702,7 +699,7 @@ class System
 		if (__deviceVendor == null)
 		{
 			#if (lime_cffi && !macro && windows && !html5)
-			__deviceVendor = CFFI.stringValue(NativeCFFI.lime_system_get_device_vendor());
+			__deviceVendor = NativeCFFI.lime_system_get_device_vendor();
 			#elseif android
 			var vendor:String = JNI.createStaticField("android/os/Build", "MANUFACTURER", "Ljava/lang/String;").get();
 			if (vendor != null)
@@ -794,7 +791,7 @@ class System
 		if (__platformLabel == null)
 		{
 			#if (lime_cffi && !macro && windows && !html5)
-			var label:String = CFFI.stringValue(NativeCFFI.lime_system_get_platform_label());
+			var label:String = NativeCFFI.lime_system_get_platform_label();
 			if (label != null) __platformLabel = StringTools.trim(label);
 			#elseif linux
 			__platformLabel = __runProcess("lsb_release", ["-ds"]);
@@ -836,7 +833,7 @@ class System
 		if (__platformVersion == null)
 		{
 			#if (lime_cffi && !macro && windows && !html5)
-			__platformVersion = CFFI.stringValue(NativeCFFI.lime_system_get_platform_version());
+			__platformVersion = NativeCFFI.lime_system_get_platform_version();
 			#elseif android
 			var release = JNI.createStaticField("android/os/Build$VERSION", "RELEASE", "Ljava/lang/String;").get();
 			var api = JNI.createStaticField("android/os/Build$VERSION", "SDK_INT", "I").get();

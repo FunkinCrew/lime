@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
 
@@ -21,9 +21,8 @@ namespace lime {
 
 	struct DropEvent {
 
-		hl_type* t;
-		vbyte* data;
-		vbyte* source;
+		char* data;
+		char* source;
 		int windowID;
 		double x;
 		double y;

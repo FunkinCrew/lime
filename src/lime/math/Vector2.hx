@@ -4,9 +4,6 @@ package lime.math;
 	The `Vector2` class can be used for calculating math with
 	basic (x, y) coordinates
 **/
-#if hl
-@:keep
-#end
 class Vector2
 {
 	/**

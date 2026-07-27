@@ -2,7 +2,7 @@
 #include <app/Application.h>
 #include <graphics/ImageBuffer.h>
 #include <math/Rectangle.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/DisplayMode.h>
 #include <ui/Cursor.h>
 #include <stdint.h>

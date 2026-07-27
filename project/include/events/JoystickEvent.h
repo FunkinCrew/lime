@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
 
@@ -22,7 +22,6 @@ namespace lime {
 
 	struct JoystickEvent {
 
-		hl_type* t;
 		int id;
 		int index;
 		JoystickEventType type;

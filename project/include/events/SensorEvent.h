@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
 
@@ -18,7 +18,6 @@ namespace lime {
 
 	struct SensorEvent {
 
-		hl_type* t;
 		int id;
 		double x;
 		double y;

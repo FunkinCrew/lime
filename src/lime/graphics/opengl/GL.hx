@@ -2605,9 +2605,6 @@ class GL
 
 #if (!js || !html5 || doc_gen)
 @:access(lime._internal.backend.native.NativeCFFI)
-#if hl
-@:keep
-#end
 @:dox(hide) @:noCompletion class GLObject
 {
 	@:noCompletion private var id:Int;

@@ -41,8 +41,7 @@ class AssetsMacro
 			}
 		}
 
-		var superCall = Context.defined("html5") ? macro super(bytes.b.buffer) : Context.defined("hl") ? macro super(bytes.b,
-			bytes.length) : macro super(bytes.length, bytes.b);
+		var superCall = Context.defined("html5") ? macro super(bytes.b.buffer) : macro super(bytes.length, bytes.b);
 
 		var definition = macro class Temp
 			{

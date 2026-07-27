@@ -197,9 +197,9 @@ class NativeApplication
 			switch (dropEventInfo.type)
 			{
 				case DROP_FILE:
-					window.onDropFile.dispatch(CFFI.stringValue(dropEventInfo.data), CFFI.stringValue(dropEventInfo.source), dropEventInfo.x, dropEventInfo.y);
+					window.onDropFile.dispatch(dropEventInfo.data, dropEventInfo.source, dropEventInfo.x, dropEventInfo.y);
 				case DROP_TEXT:
-					window.onDropText.dispatch(CFFI.stringValue(dropEventInfo.data), CFFI.stringValue(dropEventInfo.source), dropEventInfo.x, dropEventInfo.y);
+					window.onDropText.dispatch(dropEventInfo.data, dropEventInfo.source, dropEventInfo.x, dropEventInfo.y);
 				case DROP_BEGIN:
 					window.onDropBegin.dispatch();
 				case DROP_COMPLETE:
@@ -467,10 +467,10 @@ class NativeApplication
 			switch (textEventInfo.type)
 			{
 				case TEXT_INPUT:
-					window.onTextInput.dispatch(CFFI.stringValue(textEventInfo.text));
+					window.onTextInput.dispatch(textEventInfo.text);
 
 				case TEXT_EDIT:
-					window.onTextEdit.dispatch(CFFI.stringValue(textEventInfo.text), textEventInfo.start, textEventInfo.length);
+					window.onTextEdit.dispatch(textEventInfo.text, textEventInfo.start, textEventInfo.length);
 
 				default:
 			}
@@ -778,8 +778,8 @@ private enum abstract ClipboardEventType(Int)
 
 @:keep /*private*/ class DropEventInfo
 {
-	public var data:#if hl hl.Bytes #else String #end;
-	public var source:#if hl hl.Bytes #else String #end;
+	public var data:String;
+	public var source:String;
 	public var windowID:Int;
 	public var x:Float;
 	public var y:Float;
@@ -1002,7 +1002,7 @@ private enum abstract SensorEventType(Int)
 	public var id:Int;
 	public var length:Int;
 	public var start:Int;
-	public var text:#if hl hl.Bytes #else String #end;
+	public var text:String;
 	public var type:TextEventType;
 	public var windowID:Int;
 

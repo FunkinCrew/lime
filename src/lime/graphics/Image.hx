@@ -63,9 +63,6 @@ import sys.io.File;
 @:access(lime.math.ColorMatrix)
 @:access(lime.math.Rectangle)
 @:access(lime.math.Vector2)
-#if hl
-@:keep
-#end
 #if (js && html5 && !display)
 @:access(lime._internal.backend.html5.HTML5HTTPRequest)
 #end

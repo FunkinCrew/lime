@@ -233,10 +233,6 @@ class CommandLineTools
 							target = System.hostPlatform;
 							targetFlags.set("cpp", "");
 
-						case "hl", "hashlink":
-							target = System.hostPlatform;
-							targetFlags.set("hl", "");
-
 						case "iphone", "iphoneos":
 							target = Platform.IOS;
 
@@ -862,8 +858,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println("  \x1b[1mcpp\x1b[0m -- Alias for host platform (using \x1b[1m-cpp\x1b[0m)");
 			Log.println("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
-			Log.println("  \x1b[1mhl/hashlink\x1b[0m -- Alias for host platform (using \x1b[1m-hl\x1b[0m)");
-			Log.println("  \x1b[1mhlc\x1b[0m -- Alias for host platform (using \x1b[1m-hlc\x1b[0m)");
 			Log.println("  \x1b[1mrpi\x1b[0;3m/\x1b[0m\x1b[1mraspberrypi\x1b[0m -- Alias for \x1b[1mlinux -rpi\x1b[0m");
 			Log.println("  \x1b[1melectron\x1b[0m -- Alias for \x1b[1mhtml5 -electron\x1b[0m");
 		}
@@ -956,8 +950,6 @@ class CommandLineTools
 			Log.println("");
 			Log.println("  \x1b[1m-watch\x1b[0m -- Execute the current command when the source changes");
 			Log.println("  \x1b[3m(linux)\x1b[0m \x1b[1m-rpi\x1b[0m -- Build for Raspberry Pi");
-			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-hl\x1b[0m -- Build for HashLink/JIT instead of C++");
-			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-hlc\x1b[0m -- Build for HashLink/C instead of C++");
 			Log.println("  \x1b[3m(html5)\x1b[0m \x1b[1m-electron\x1b[0m -- Target Electron instead of the browser");
 
 			if (command != "run" && command != "trace")
@@ -1391,15 +1383,6 @@ class CommandLineTools
 				{
 					overrides.haxedefs.set("macos", "");
 				}
-
-			case "hl", "hashlink":
-				target = System.hostPlatform;
-				targetFlags.set("hl", "");
-
-			case "hlc":
-				target = cast System.hostPlatform;
-				targetFlags.set("hl", "");
-				targetFlags.set("hlc", "");
 
 			case "iphone", "iphoneos":
 				target = Platform.IOS;

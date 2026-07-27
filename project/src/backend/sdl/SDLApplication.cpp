@@ -349,8 +349,8 @@ namespace lime {
 
 			dropEvent.x = event->drop.x;
 			dropEvent.y = event->drop.y;
-			dropEvent.data = (vbyte*)event->drop.data;
-			dropEvent.source = (vbyte*)event->drop.source;
+			dropEvent.data = (char*)event->drop.data;
+			dropEvent.source = (char*)event->drop.source;
 			dropEvent.windowID = event->drop.windowID;
 			DropEvent::Dispatch (&dropEvent);
 
@@ -650,7 +650,7 @@ namespace lime {
 
 			}
 
-			textEvent.text = (vbyte*)malloc (strlen (event->text.text) + 1);
+			textEvent.text = (char*)malloc (strlen (event->text.text) + 1);
 			strcpy ((char*)textEvent.text, event->text.text);
 
 			textEvent.windowID = event->text.windowID;

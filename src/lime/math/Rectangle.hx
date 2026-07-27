@@ -4,9 +4,6 @@ package lime.math;
 	The `Rectangle` class provides a simple object for storing
 	and manipulating a logical rectangle for calculations
 **/
-#if hl
-@:keep
-#end
 class Rectangle
 {
 	/**

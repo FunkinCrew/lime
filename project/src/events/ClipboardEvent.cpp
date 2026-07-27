@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/ClipboardEvent.h>
 
 
@@ -20,19 +20,9 @@ namespace lime {
 
 		if (ClipboardEvent::callback) {
 
-			if (ClipboardEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)ClipboardEvent::eventObject->Get ();
 
-				value object = (value)ClipboardEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-
-			} else {
-
-				ClipboardEvent* eventObject = (ClipboardEvent*)ClipboardEvent::eventObject->Get ();
-
-				eventObject->type = event->type;
-
-			}
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
 
 			ClipboardEvent::callback->Call ();
 

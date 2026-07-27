@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/SensorEvent.h>
 
 
@@ -24,27 +24,13 @@ namespace lime {
 
 		if (SensorEvent::callback) {
 
-			if (SensorEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)SensorEvent::eventObject->Get ();
 
-				value object = (value)SensorEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("id"), alloc_int (event->id));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("x"), alloc_float (event->x));
-				alloc_field (object, val_id ("y"), alloc_float (event->y));
-				alloc_field (object, val_id ("z"), alloc_float (event->z));
-
-			} else {
-
-				SensorEvent* eventObject = (SensorEvent*)SensorEvent::eventObject->Get ();
-
-				eventObject->id = event->id;
-				eventObject->type = event->type;
-				eventObject->x = event->x;
-				eventObject->y = event->y;
-				eventObject->z = event->z;
-
-			}
+			alloc_field (object, val_id ("id"), alloc_int (event->id));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("x"), alloc_float (event->x));
+			alloc_field (object, val_id ("y"), alloc_float (event->y));
+			alloc_field (object, val_id ("z"), alloc_float (event->z));
 
 			SensorEvent::callback->Call ();
 

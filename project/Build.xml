@@ -19,7 +19,6 @@
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
 	<set name="LIME_FREETYPE" value="1" />
 	<set name="LIME_HARFBUZZ" value="1" />
-	<set name="LIME_HASHLINK" value="1" if="hashlink" />
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
@@ -98,20 +97,6 @@
 				<file name="src/bindings/harfbuzz/HarfbuzzBindings.cpp" />
 
 			</section>
-
-		</section>
-
-		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/hashlink/src" />
-
-		<section if="LIME_HASHLINK">
-
-			<compilerflag value="-DLIME_HASHLINK" />
-
-		</section>
-
-		<section unless="LIME_HASHLINK">
-
-			<compilerflag value="-DLIBHL_EXPORTS" />
 
 		</section>
 
@@ -248,7 +233,6 @@
 		<file name="src/math/Matrix3.cpp" />
 		<file name="src/math/Rectangle.cpp" />
 		<file name="src/math/Vector2.cpp" />
-		<file name="src/system/CFFI.cpp" />
 		<file name="src/system/CFFIPointer.cpp" />
 		<file name="src/system/Clipboard.cpp" />
 		<file name="src/system/DisplayMode.cpp" />
@@ -334,7 +318,6 @@
 
 			<ext value=".so" />
 			<ext value=".ndll" if="windows || mac || linux" />
-			<ext value=".hdll" if="LIME_HASHLINK" />
 
 			<section if="windows">
 
@@ -391,15 +374,6 @@
 
 				</section>
 
-				<section if="LIME_HASHLINK">
-
-					<lib name="-libpath:../templates/bin/hl/${BINDIR}"  />
-
-					<lib name="libhl.lib" />
-
-				</section>
-
-
 			</section>
 
 			<section if="linux">
@@ -407,14 +381,6 @@
 				<lib name="-lpthread" />
 				<lib name="-lrt" />
 				<lib name='-ludev' />
-
-				<section if="LIME_HASHLINK">
-
-					<lib name="-L../templates/bin/hl/${BINDIR}" />
-
-					<lib name="-lhl" />
-
-				</section>
 
 			</section>
 
@@ -443,16 +409,6 @@
 				<vflag name="-framework" value="SystemConfiguration" />
 				<vflag name="-framework" value="UniformTypeIdentifiers" />
 				<vflag name="-framework" value="UserNotifications" />
-
-				<section if="LIME_HASHLINK">
-
-					<vflag name="-install_name" value="@executable_path/lime.hdll" />
-
-					<lib name="-L../templates/bin/hl/${BINDIR}" />
-
-					<lib name="-lhl" />
-
-				</section>
 
 			</section>
 
@@ -496,16 +452,5 @@
 		<cppflag value="objective-c++" />
 
 	</compiler>
-
-	<section if="LIME_HASHLINK">
-
-		<section if="windows">
-
-			<copyFile name="lime.lib" from="obj/lib" overwrite="true" toolId="dll" unless="debug" />
-			<copyFile name="lime-debug.lib" from="obj/lib" overwrite="true" toolId="dll" if="debug" />
-
-		</section>
-
-	</section>
 
 </xml>

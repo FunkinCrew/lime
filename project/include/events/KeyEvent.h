@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 #include <stdint.h>
 
@@ -19,7 +19,6 @@ namespace lime {
 
 	struct KeyEvent {
 
-		hl_type* t;
 		double keyCode;
 		int modifier;
 		KeyEventType type;

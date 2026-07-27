@@ -1272,12 +1272,6 @@ class NativeOpenGLRenderContext
 	public function drawBuffers(buffers:Array<Int>):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _buffers = new hl.NativeArray<Int>(buffers.length);
-		for (i in 0...buffers.length)
-			_buffers[i] = buffers[i];
-		var buffers = _buffers;
-		#end
 		NativeCFFI.lime_gl_draw_buffers(buffers);
 		#end
 	}
@@ -1392,23 +1386,7 @@ class NativeOpenGLRenderContext
 	public function getActiveAttrib(program:GLProgram, index:Int):GLActiveInfo
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var result = NativeCFFI.lime_gl_get_active_attrib(__getObjectID(program), index);
-		if (result != null)
-		{
-			return {
-				size: result.size,
-				type: result.type,
-				name: CFFI.stringValue(result.name)
-			};
-		}
-		else
-		{
-			return null;
-		}
-		#else
 		return NativeCFFI.lime_gl_get_active_attrib(__getObjectID(program), index);
-		#end
 		#else
 		return null;
 		#end
@@ -1417,23 +1395,7 @@ class NativeOpenGLRenderContext
 	public function getActiveUniform(program:GLProgram, index:Int):GLActiveInfo
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var result = NativeCFFI.lime_gl_get_active_uniform(__getObjectID(program), index);
-		if (result != null)
-		{
-			return {
-				size: result.size,
-				type: result.type,
-				name: CFFI.stringValue(result.name)
-			};
-		}
-		else
-		{
-			return null;
-		}
-		#else
 		return NativeCFFI.lime_gl_get_active_uniform(__getObjectID(program), index);
-		#end
 		#else
 		return null;
 		#end
@@ -1458,8 +1420,7 @@ class NativeOpenGLRenderContext
 	public function getActiveUniformBlockName(program:GLProgram, uniformBlockIndex:Int):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_active_uniform_block_name(__getObjectID(program), uniformBlockIndex);
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_active_uniform_block_name(__getObjectID(program), uniformBlockIndex);
 		#else
 		return null;
 		#end
@@ -1482,12 +1443,6 @@ class NativeOpenGLRenderContext
 	public function getActiveUniformsiv(program:GLProgram, uniformIndices:Array<Int>, pname:Int, params:DataPointer):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _uniformIndices = new hl.NativeArray<Int>(uniformIndices.length);
-		for (i in 0...uniformIndices.length)
-			_uniformIndices[i] = uniformIndices[i];
-		var uniformIndices = _uniformIndices;
-		#end
 		NativeCFFI.lime_gl_get_active_uniformsiv(__getObjectID(program), uniformIndices, pname, params);
 		#end
 	}
@@ -1495,16 +1450,7 @@ class NativeOpenGLRenderContext
 	public function getAttachedShaders(program:GLProgram):Array<GLShader>
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_attached_shaders(__getObjectID(program));
-		#if hl
-		var _result = new Array();
-		for (i in 0...result.length)
-		{
-			_result.push(GLShader.fromInt(result[i]));
-		}
-		var result = _result;
-		#end
-		return result;
+		return NativeCFFI.lime_gl_get_attached_shaders(__getObjectID(program));
 		#else
 		return null;
 		#end
@@ -1901,8 +1847,7 @@ class NativeOpenGLRenderContext
 	public function getProgramInfoLog(program:GLProgram):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_program_info_log(__getObjectID(program));
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_program_info_log(__getObjectID(program));
 		#else
 		return null;
 		#end
@@ -2036,8 +1981,7 @@ class NativeOpenGLRenderContext
 	public function getShaderInfoLog(shader:GLShader):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_shader_info_log(__getObjectID(shader));
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_shader_info_log(__getObjectID(shader));
 		#else
 		return null;
 		#end
@@ -2060,8 +2004,7 @@ class NativeOpenGLRenderContext
 	public function getShaderSource(shader:GLShader):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_shader_source(__getObjectID(shader));
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_shader_source(__getObjectID(shader));
 		#else
 		return null;
 		#end
@@ -2070,8 +2013,7 @@ class NativeOpenGLRenderContext
 	public function getString(name:Int):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_string(name);
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_string(name);
 		#else
 		return null;
 		#end
@@ -2080,8 +2022,7 @@ class NativeOpenGLRenderContext
 	public function getStringi(name:Int, index:Int):String
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		var result = NativeCFFI.lime_gl_get_stringi(name, index);
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_gl_get_stringi(name, index);
 		#else
 		return null;
 		#end
@@ -2186,24 +2127,7 @@ class NativeOpenGLRenderContext
 	public function getTransformFeedbackVarying(program:GLProgram, index:Int):GLActiveInfo
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var result = NativeCFFI.lime_gl_get_transform_feedback_varying(__getObjectID(program), index);
-		if (result != null)
-		{
-			return {
-				size: result.size,
-				type: result.type,
-				name: CFFI.stringValue(result.name)
-			};
-		}
-		else
-		{
-			return null;
-		}
-		#else
-		var result:Dynamic = NativeCFFI.lime_gl_get_transform_feedback_varying(__getObjectID(program), index);
-		return result;
-		#end
+		return NativeCFFI.lime_gl_get_transform_feedback_varying(__getObjectID(program), index);
 		#else
 		return null;
 		#end
@@ -2472,12 +2396,6 @@ class NativeOpenGLRenderContext
 	public function invalidateFramebuffer(target:Int, attachments:Array<Int>):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _attachments = new hl.NativeArray<Int>(attachments.length);
-		for (i in 0...attachments.length)
-			_attachments[i] = attachments[i];
-		var attachments = _attachments;
-		#end
 		NativeCFFI.lime_gl_invalidate_framebuffer(target, attachments);
 		#end
 	}
@@ -2485,12 +2403,6 @@ class NativeOpenGLRenderContext
 	public function invalidateSubFramebuffer(target:Int, attachments:Array<Int>, x:Int, y:Int, width:Int, height:Int):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _attachments = new hl.NativeArray<Int>(attachments.length);
-		for (i in 0...attachments.length)
-			_attachments[i] = attachments[i];
-		var attachments = _attachments;
-		#end
 		NativeCFFI.lime_gl_invalidate_sub_framebuffer(target, attachments, x, y, width, height);
 		#end
 	}
@@ -2739,12 +2651,6 @@ class NativeOpenGLRenderContext
 	public function shaderBinary(shaders:Array<GLShader>, binaryformat:Int, binary:DataPointer, length:Int):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _shaders = new hl.NativeArray<Int>(shaders.length);
-		for (i in 0...shaders.length)
-			_shaders[i] = shaders[i].id;
-		var shaders = _shaders;
-		#end
 		NativeCFFI.lime_gl_shader_binary(shaders, binaryformat, binary, length);
 		#end
 	}
@@ -2864,12 +2770,6 @@ class NativeOpenGLRenderContext
 	public function transformFeedbackVaryings(program:GLProgram, varyings:Array<String>, bufferMode:Int):Void
 	{
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
-		#if hl
-		var _varyings = new hl.NativeArray<Int>(varyings.length);
-		for (i in 0...varyings.length)
-			_varyings[i] = varyings[i].charCodeAt(0);
-		var varyings = _varyings;
-		#end
 		NativeCFFI.lime_gl_transform_feedback_varyings(__getObjectID(program), varyings, bufferMode);
 		#end
 	}

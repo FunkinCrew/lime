@@ -175,7 +175,7 @@ class AudioManager
 	}
 
 	@:noCompletion
-	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:#if hl hl.Bytes #else String #end):Void
+	private static function deviceEventCallback(eventType:Int, deviceType:Int, handle:CFFIPointer, message:String):Void
 	{
 		#if !lime_doc_gen
 		if (eventType == ALC.EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT && deviceType == ALC.PLAYBACK_DEVICE_SOFT)

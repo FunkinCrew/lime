@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -9,7 +9,6 @@ namespace lime {
 
 	struct Vector2 {
 
-		hl_type* t;
 		double x;
 		double y;
 

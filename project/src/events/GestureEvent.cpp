@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/GestureEvent.h>
 
 
@@ -31,43 +31,21 @@ namespace lime {
 
 		if (GestureEvent::callback) {
 
-			if (GestureEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)GestureEvent::eventObject->Get ();
 
-				value object = (value)GestureEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("x"), alloc_float (event->x));
-				alloc_field (object, val_id ("y"), alloc_float (event->y));
-				alloc_field (object, val_id ("state"), alloc_int (event->state));
-				alloc_field (object, val_id ("magnification"), alloc_float (event->magnification));
-				alloc_field (object, val_id ("rotation"), alloc_float (event->rotation));
-				alloc_field (object, val_id ("panTranslationX"), alloc_float (event->panTranslationX));
-				alloc_field (object, val_id ("panTranslationY"), alloc_float (event->panTranslationY));
-				alloc_field (object, val_id ("panVelocityX"), alloc_float (event->panVelocityX));
-				alloc_field (object, val_id ("panVelocityY"), alloc_float (event->panVelocityY));
-				alloc_field (object, val_id ("scrollX"), alloc_float (event->scrollX));
-				alloc_field (object, val_id ("scrollY"), alloc_float (event->scrollY));
-				alloc_field (object, val_id ("momentumScrollX"), alloc_float (event->momentumScrollX));
-				alloc_field (object, val_id ("momentumScrollY"), alloc_float (event->momentumScrollY));
-
-			} else {
-
-				GestureEvent* eventObject = (GestureEvent*)GestureEvent::eventObject->Get ();
-
-				eventObject->x = event->x;
-				eventObject->y = event->y;
-				eventObject->state = event->state;
-				eventObject->magnification = event->magnification;
-				eventObject->rotation = event->rotation;
-				eventObject->panTranslationX = event->panTranslationX;
-				eventObject->panTranslationY = event->panTranslationY;
-				eventObject->panVelocityX = event->panVelocityX;
-				eventObject->panVelocityY = event->panVelocityY;
-				eventObject->scrollX = event->scrollX;
-				eventObject->scrollY = event->scrollY;
-				eventObject->momentumScrollX = event->momentumScrollX;
-				eventObject->momentumScrollY = event->momentumScrollY;
-
-			}
+			alloc_field (object, val_id ("x"), alloc_float (event->x));
+			alloc_field (object, val_id ("y"), alloc_float (event->y));
+			alloc_field (object, val_id ("state"), alloc_int (event->state));
+			alloc_field (object, val_id ("magnification"), alloc_float (event->magnification));
+			alloc_field (object, val_id ("rotation"), alloc_float (event->rotation));
+			alloc_field (object, val_id ("panTranslationX"), alloc_float (event->panTranslationX));
+			alloc_field (object, val_id ("panTranslationY"), alloc_float (event->panTranslationY));
+			alloc_field (object, val_id ("panVelocityX"), alloc_float (event->panVelocityX));
+			alloc_field (object, val_id ("panVelocityY"), alloc_float (event->panVelocityY));
+			alloc_field (object, val_id ("scrollX"), alloc_float (event->scrollX));
+			alloc_field (object, val_id ("scrollY"), alloc_float (event->scrollY));
+			alloc_field (object, val_id ("momentumScrollX"), alloc_float (event->momentumScrollX));
+			alloc_field (object, val_id ("momentumScrollY"), alloc_float (event->momentumScrollY));
 
 			GestureEvent::callback->Call ();
 

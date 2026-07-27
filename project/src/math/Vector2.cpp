@@ -6,8 +6,6 @@ namespace lime {
 
 	Vector2::Vector2 (double x, double y) {
 
-		t = 0;
-
 		SetTo (x, y);
 
 	}

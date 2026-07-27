@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -9,7 +9,6 @@ namespace lime {
 
 	struct Rectangle {
 
-		hl_type* t;
 		double height;
 		double width;
 		double x;

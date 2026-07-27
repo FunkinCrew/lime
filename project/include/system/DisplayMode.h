@@ -2,7 +2,7 @@
 
 
 #include <graphics/PixelFormat.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -12,7 +12,6 @@ namespace lime {
 
 		public:
 
-			hl_type* t;
 			int height;
 			PixelFormat pixelFormat;
 			int refreshRate;

@@ -18,9 +18,6 @@ import lime.utils.Float32Array;
 
 	Values are stored in column-major order for GLSL compatibility.
 **/
-#if hl
-@:keep
-#end
 abstract Matrix3(Float32Array) to Float32Array
 {
 	/**

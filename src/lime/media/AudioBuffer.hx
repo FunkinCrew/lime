@@ -19,11 +19,6 @@ import lime.media.howlerjs.Howl;
 import js.html.Audio;
 #end
 
-@:access(lime._internal.backend.native.NativeCFFI)
-@:access(lime.utils.Assets)
-#if hl
-@:keep
-#end
 /**
 	The `AudioBuffer` class represents a buffer of audio data that can be played back using an `AudioSource`.
 	It supports a variety of audio formats and platforms, providing a consistent API for loading and managing audio data.
@@ -33,6 +28,8 @@ import js.html.Audio;
 
 	@see lime.media.AudioSource
 **/
+@:access(lime._internal.backend.native.NativeCFFI)
+@:access(lime.utils.Assets)
 class AudioBuffer
 {
 	/**

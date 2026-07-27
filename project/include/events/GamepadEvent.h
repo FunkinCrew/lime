@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
 
@@ -21,7 +21,6 @@ namespace lime {
 
 	struct GamepadEvent {
 
-		hl_type* t;
 		int axis;
 		int button;
 		int id;

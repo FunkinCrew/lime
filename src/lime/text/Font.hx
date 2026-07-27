@@ -172,16 +172,12 @@ class Font
 	public function decompose(forceAutoHint:Bool = true):NativeFontData
 	{
 		#if (lime_cffi && !macro)
-		if (src == null) throw "Uninitialized font handle.";
-		var data:Dynamic = NativeCFFI.lime_font_outline_decompose(src, 1024 * 20, forceAutoHint);
-		#if hl
-		if (data != null)
+		if (src == null)
 		{
-			data.family_name = @:privateAccess String.fromUCS2(data.family_name);
-			data.style_name = @:privateAccess String.fromUTF8(data.style_name);
+			throw "Uninitialized font handle.";
 		}
-		#end
-		return data;
+
+		return NativeCFFI.lime_font_outline_decompose(src, 1024 * 20, forceAutoHint);
 		#else
 		return null;
 		#end
@@ -300,13 +296,7 @@ class Font
 	public function getGlyphs(characters:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^`'\"/\\&*()[]{}<>|:;_-+=?,. "):Array<Glyph>
 	{
 		#if (lime_cffi && !macro)
-		#if hl
-		return [
-			for (index in NativeCFFI.lime_font_get_glyph_indices(src, characters)) new Glyph(index)
-		];
-		#else
 		return NativeCFFI.lime_font_get_glyph_indices(src, characters);
-		#end
 		#else
 		return null;
 		#end
@@ -431,17 +421,6 @@ class Font
 		{
 			glyphList.push(key);
 		}
-
-		#if hl
-		var _glyphList = new hl.NativeArray<Glyph>(glyphList.length);
-
-		for (i in 0...glyphList.length)
-		{
-			_glyphList[i] = glyphList[i];
-		}
-
-		var glyphList = _glyphList;
-		#end
 
 		__setSize(fontSize, dpi);
 
@@ -643,7 +622,7 @@ class Font
 		{
 			if (name == null)
 			{
-				name = CFFI.stringValue(cast NativeCFFI.lime_font_get_family_name(src));
+				name = NativeCFFI.lime_font_get_family_name(src);
 			}
 
 			ascender = NativeCFFI.lime_font_get_ascender(src);
