@@ -11,7 +11,7 @@ import lime.media.AudioSource;
 import lime.utils.UInt8Array;
 
 @:access(lime.media.AudioBuffer)
-class NativeAudioSource
+class NativeOpenALAudioSource
 {
 	private static var hasDirectChannelsExt:Null<Bool>;
 	private static var hasALSoftLatencyExt:Null<Bool>;
