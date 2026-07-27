@@ -195,7 +195,7 @@ class Timer
 	}
 }
 #else
-// This override mainly exists so targets like iOS wont be freezing because of the way the mainloop works on the target
+// This override mainly exists so targets like iOS won't be freezing because of the way the mainloop works on the target
 import lime.system.System;
 
 class Timer

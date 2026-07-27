@@ -327,8 +327,8 @@ class LinuxPlatform extends PlatformTarget
 	{
 		if (project.haxelibs.length == 0)
 		{
-			// If there are no haxelibs, we know its only lime that is being rebuilt (weird hack but works),
-			// Wayland shoudnt be rebuilt for anything else other than lime!
+			// If there are no haxelibs, we know it's only lime that is being rebuilt (weird hack but works),
+			// Wayland shouldn't be rebuilt for anything else other than lime!
 			generateWaylandProtocols();
 		}
 

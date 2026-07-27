@@ -105,7 +105,7 @@ class URIParser
 	/**
 		The "#hash" part of the URI.
 		In `"https://example.com/index.php?action=upload&token=12345#header"` this would be `"header"`.
-		In a more sophisicated example `"https://example.com/index.php?action=upload#header=/abc/1234"`
+		In a more sophisticated example `"https://example.com/index.php?action=upload#header=/abc/1234"`
 		that would be `"header=/abc/1234"`.
 		`null` if unspecified or malformed.
 	**/
