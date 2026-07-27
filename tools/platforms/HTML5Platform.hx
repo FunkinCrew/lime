@@ -467,7 +467,7 @@ class HTML5Platform extends PlatformTarget
 			}
 		}
 
-		// For some reason it seems to crash in here if the shutdown runs, should be figured out later but it shoudnt cause any issues for now ig
+		// For some reason it seems to crash in here if the shutdown runs, should be figured out later but it shouldn't cause any issues for now ig
 		// Font.shutdown();
 
 		ProjectHelper.recursiveSmartCopyTemplate(project, "html5/template", destination, context);

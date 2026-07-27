@@ -793,7 +793,7 @@ class PlatformSetup
 
 		if (hasApt)
 		{
-			// check if this is ubuntu saucy 64bit, which uses different packages.
+			// check if this is Ubuntu Saucy 64-bit, which uses different packages.
 			var lsbId = System.runProcess("", "lsb_release", ["-si"], true, true, true);
 			var lsbRelease = System.runProcess("", "lsb_release", ["-sr"], true, true, true);
 			var arch = System.runProcess("", "uname", ["-m"], true, true, true);

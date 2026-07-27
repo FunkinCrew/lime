@@ -6,7 +6,7 @@ import lime.tools.HXProject;
 class XCodeHelper
 {
 	// different computers may have different sets of simulators installed
-	// so there isn't necessarily a reasonable default for ipads
+	// so there isn't necessarily a reasonable default for iPads
 	private static var DEFAULT_IPAD_SIMULATOR_NAMES = ["ipad", "ipad-air"];
 	private static var DEFAULT_IPAD_AIR_SIMULATOR_FALLBACK_REGEX = ~/ipad-air-.+/g;
 	private static var DEFAULT_IPAD_SIMULATOR_FALLBACK_REGEX = ~/ipad-.+/g;
@@ -100,7 +100,7 @@ class XCodeHelper
 			{
 				for (device in DEFAULT_IPAD_SIMULATOR_NAMES)
 				{
-					// try to find a relatively standard ipad simulator
+					// try to find a relatively standard iPad simulator
 					currentDevice = devices.get(device);
 					if (currentDevice != null)
 					{
@@ -121,7 +121,7 @@ class XCodeHelper
 					}
 				}
 				// worst case, if we still haven't found a good name, choose the
-				// first ipad that we find. it could be a mini or pro, which
+				// first iPad that we find. it could be a mini or pro, which
 				// might not necessarily be ideal, but it's better than nothing.
 				if (currentDevice == null)
 				{
@@ -139,7 +139,7 @@ class XCodeHelper
 			{
 				for (device in devices.keys())
 				{
-					// try to find a standard iphone, which should have an name
+					// try to find a standard iPhone, which should have a name
 					// like iphone-15 or iphone-16
 					if (DEFAULT_IPHONE_SIMULATOR_REGEX.match(device))
 					{
@@ -147,8 +147,8 @@ class XCodeHelper
 						break;
 					}
 				}
-				// of we can't find a standard iphone for some reason, choose
-				// the first iphone- name that we find. it could be a plus, pro,
+				// if we can't find a standard iPhone for some reason, choose
+				// the first iPhone- name that we find. it could be a plus, pro,
 				// se, or something that might not necessarily be ideal, but
 				// it's better than nothing at all.
 				if (currentDevice == null)

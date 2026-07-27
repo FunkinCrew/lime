@@ -245,7 +245,7 @@ class HTML5Application
 				var observer = new IntersectionObserver(function(entries) {
 					var visible = entries[0].isIntersecting;
 
-					// idk if js has a event for what i want but that works for now
+					// idk if js has an event for what i want but that works for now
 					var event = new CustomEvent('canvasVisibilityChange', {
 						detail: { visible: visible }
 					});

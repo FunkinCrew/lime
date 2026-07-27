@@ -751,7 +751,7 @@ class ArrayBufferView
 	}
 
 	// Internal
-	// clamp a Int to a 0-255 Uint8 (for Uint8Clamped array)
+	// clamp an Int to a 0-255 Uint8 (for Uint8Clamped array)
 	static inline extern function _clamp(_in:Float):Int
 	{
 		var _out = Std.int(_in);

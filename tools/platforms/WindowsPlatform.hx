@@ -124,7 +124,7 @@ class WindowsPlatform extends PlatformTarget
 			haxeArgs.push("mingw");
 			flags.push("-Dmingw");
 
-			// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+			// For some reason `MinGW` uses the shared deps by default, which we don't really want, do we?
 			haxeArgs.push("-D");
 			haxeArgs.push("no_shared_libs");
 			flags.push("-Dno_shared_libs");
@@ -241,7 +241,7 @@ class WindowsPlatform extends PlatformTarget
 			{
 				args.push("-Dmingw");
 
-				// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+				// For some reason `MinGW` uses the shared deps by default, which we don't really want, do we?
 				args.push("-Dno_shared_libs");
 			}
 
@@ -256,7 +256,7 @@ class WindowsPlatform extends PlatformTarget
 			{
 				args.push("-Dmingw");
 
-				// For some reason `MinGW` uses the shared deps by default, which we dont really want do we?
+				// For some reason `MinGW` uses the shared deps by default, which we don't really want, do we?
 				args.push("-Dno_shared_libs");
 			}
 

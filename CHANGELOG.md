@@ -8,7 +8,7 @@ Changelog
 - Added verbose log message when rebuilding a Haxelib's tools to show the name of the Haxelib.
 - Added warning log message when rebuilding a Haxelib's tools when no rebuild script is found.
 - Added warning log message when `<architecture/>` value is unrecognized.
-- Added error when attemping to rebuild HashLink for ARM64.
+- Added error when attempting to rebuild HashLink for ARM64.
 - Added internal exception message to error reported when NDLL loading fails.
 - Fixed exception on some targets in `AudioBuffer` when trying to read codec signature string from bytes.
 - Fixed `length` value of `Bytes` on HTML5 target when using `Bytes.fromBytes()`.
