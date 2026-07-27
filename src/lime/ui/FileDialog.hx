@@ -37,15 +37,6 @@ class FileDialog
 			allowMultiple:Bool = false):Void
 	{
 		#if (lime_cffi && !macro)
-		#if hl
-		var dialogCallback = function(list:hl.NativeArray<hl.Bytes>):Void
-		{
-			if (callback != null)
-			{
-				callback([for (i in 0...list.length) CFFI.stringValue(list[i])]);
-			}
-		}
-		#else
 		var dialogCallback = function(list:Array<String>):Void
 		{
 			if (callback != null)
@@ -53,7 +44,6 @@ class FileDialog
 				callback(list);
 			}
 		}
-		#end
 
 		NativeCFFI.lime_file_dialog_open_directory(window.__backend.handle, title, dialogCallback, defaultPath, allowMultiple);
 		#end
@@ -73,28 +63,8 @@ class FileDialog
 	{
 		#if (lime_cffi && !macro)
 		var count = filters != null ? filters.length : 0;
-
-		#if hl
-		var names = new hl.NativeArray<String>(count);
-		var patterns = new hl.NativeArray<String>(count);
-
-		for (i in 0...count)
-		{
-			names[i] = filters[i].name;
-			patterns[i] = filters[i].pattern;
-		}
-
-		var dialogCallback = function(list:hl.NativeArray<hl.Bytes>, filterIndex:Int):Void
-		{
-			if (callback != null)
-			{
-				callback([for (i in 0...list.length) CFFI.stringValue(list[i])], filters != null ? filters[filterIndex] : null);
-			}
-		}
-		#else
 		var names = filters != null ? filters.map(f -> f.name) : [];
 		var patterns = filters != null ? filters.map(f -> f.pattern) : [];
-
 		var dialogCallback = function(filelist:Array<String>, filterIndex:Int):Void
 		{
 			if (callback != null)
@@ -102,7 +72,6 @@ class FileDialog
 				callback(filelist, filters != null ? filters[filterIndex] : null);
 			}
 		}
-		#end
 
 		NativeCFFI.lime_file_dialog_open_file(window.__backend.handle, title, dialogCallback, names, patterns, count, defaultPath, allowMultiple);
 		#end
@@ -121,30 +90,8 @@ class FileDialog
 	{
 		#if (lime_cffi && !macro)
 		var count = filters != null ? filters.length : 0;
-
-		#if hl
-		var names = new hl.NativeArray<String>(count);
-		var patterns = new hl.NativeArray<String>(count);
-
-		for (i in 0...count)
-		{
-			names[i] = filters[i].name;
-			patterns[i] = filters[i].pattern;
-		}
-
-		var dialogCallback = function(filename:hl.Bytes, filterIndex:Int):Void
-		{
-			if (callback != null)
-			{
-				var filter = filters != null && filterIndex >= 0 ? filters[filterIndex] : null;
-
-				callback(__applySaveFilterExtension(filename != null ? CFFI.stringValue(filename) : null, filter), filter);
-			}
-		}
-		#else
 		var names = filters != null ? filters.map(f -> f.name) : [];
 		var patterns = filters != null ? filters.map(f -> f.pattern) : [];
-
 		var dialogCallback = function(filename:String, filterIndex:Int):Void
 		{
 			if (callback != null)
@@ -154,7 +101,6 @@ class FileDialog
 				callback(__applySaveFilterExtension(filename, filter), filter);
 			}
 		}
-		#end
 
 		NativeCFFI.lime_file_dialog_save_file(window.__backend.handle, title, dialogCallback, names, patterns, count, defaultPath);
 		#end

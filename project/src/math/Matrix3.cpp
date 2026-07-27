@@ -6,8 +6,6 @@ namespace lime {
 
 	Matrix3::Matrix3 (double a, double b, double c, double d, double tx, double ty) {
 
-		t = 0;
-
 		SetTo (a, b, c, d, tx, ty);
 
 	}

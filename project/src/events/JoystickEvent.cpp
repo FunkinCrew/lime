@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/JoystickEvent.h>
 
 
@@ -25,29 +25,14 @@ namespace lime {
 
 		if (JoystickEvent::callback) {
 
-			if (JoystickEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)JoystickEvent::eventObject->Get ();
 
-				value object = (value)JoystickEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("id"), alloc_int (event->id));
-				alloc_field (object, val_id ("index"), alloc_int (event->index));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("eventValue"), alloc_int (event->eventValue));
-				alloc_field (object, val_id ("x"), alloc_float (event->x));
-				alloc_field (object, val_id ("y"), alloc_float (event->y));
-
-			} else {
-
-				JoystickEvent* eventObject = (JoystickEvent*)JoystickEvent::eventObject->Get ();
-
-				eventObject->id = event->id;
-				eventObject->index = event->index;
-				eventObject->type = event->type;
-				eventObject->eventValue = event->eventValue;
-				eventObject->x = event->x;
-				eventObject->y = event->y;
-
-			}
+			alloc_field (object, val_id ("id"), alloc_int (event->id));
+			alloc_field (object, val_id ("index"), alloc_int (event->index));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("eventValue"), alloc_int (event->eventValue));
+			alloc_field (object, val_id ("x"), alloc_float (event->x));
+			alloc_field (object, val_id ("y"), alloc_float (event->y));
 
 			JoystickEvent::callback->Call ();
 

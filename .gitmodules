@@ -42,10 +42,6 @@
 	path = project/lib/efsw
 	url = https://github.com/SpartanJ/efsw
 	shallow = true
-[submodule "project/lib/hashlink"]
-	path = project/lib/hashlink
-	url = https://github.com/HaxeFoundation/hashlink
-	shallow = true
 [submodule "project/lib/sdl_image"]
 	path = project/lib/sdl_image
 	url = https://github.com/libsdl-org/SDL_image.git

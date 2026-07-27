@@ -1,5 +1,5 @@
 #include <events/RenderEvent.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -20,19 +20,9 @@ namespace lime {
 
 		if (RenderEvent::callback) {
 
-			if (RenderEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)RenderEvent::eventObject->Get ();
 
-				value object = (value)RenderEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-
-			} else {
-
-				RenderEvent* eventObject = (RenderEvent*)RenderEvent::eventObject->Get ();
-
-				eventObject->type = event->type;
-
-			}
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
 
 			RenderEvent::callback->Call ();
 

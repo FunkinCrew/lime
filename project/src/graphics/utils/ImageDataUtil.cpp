@@ -18,8 +18,6 @@ namespace lime {
 		PixelFormat format = image->buffer->format;
 		bool premultiplied = image->buffer->premultiplied;
 		uint8_t* data = (uint8_t*)image->buffer->data->buffer->b;
-
-		Rectangle* _rect = (Rectangle*)(image->type);
 		ImageDataView dataView = ImageDataView (image, rect);
 
 		colorMatrix->GetAlphaTable (alphaTable);

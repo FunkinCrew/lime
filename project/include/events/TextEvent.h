@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 #include <stdint.h>
 
@@ -19,11 +19,10 @@ namespace lime {
 
 	struct TextEvent {
 
-		hl_type* t;
 		int id;
 		int length;
 		int start;
-		vbyte* text;
+		char* text;
 		TextEventType type;
 		int windowID;
 

@@ -44,7 +44,7 @@ class CFFI
 	 */
 	public static function load(library:String, method:String, args:Int = 0, lazy:Bool = false):Dynamic
 	{
-		#if (disable_cffi || macro || hl)
+		#if (disable_cffi || macro)
 		var enabled = false;
 		#end
 
@@ -180,15 +180,6 @@ class CFFI
 		}
 
 		return {call: CFFI.load(library, method, args, lazy)};
-		#end
-	}
-
-	@:dox(hide) #if !hl inline #end public static function stringValue(#if hl value:hl.Bytes #else value:String #end):String
-	{
-		#if hl
-		return value != null ? @:privateAccess String.fromUTF8(value) : null;
-		#else
-		return value;
 		#end
 	}
 

@@ -34,7 +34,7 @@ class Clipboard
 		_text = null;
 
 		#if (lime_cffi && !macro)
-		_text = CFFI.stringValue(NativeCFFI.lime_clipboard_get_text());
+		_text = NativeCFFI.lime_clipboard_get_text();
 		#elseif (js || html5)
 		_text = cacheText;
 		#end

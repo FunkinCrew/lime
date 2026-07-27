@@ -84,7 +84,7 @@ class Joystick
 	@:noCompletion private inline function get_guid():String
 	{
 		#if (lime_cffi && !macro)
-		return CFFI.stringValue(NativeCFFI.lime_joystick_get_device_guid(this.id));
+		return NativeCFFI.lime_joystick_get_device_guid(this.id);
 		#elseif (js && html5)
 		var devices = __getDeviceData();
 		return devices[this.id].id;
@@ -96,7 +96,7 @@ class Joystick
 	@:noCompletion private inline function get_name():String
 	{
 		#if (lime_cffi && !macro)
-		return CFFI.stringValue(NativeCFFI.lime_joystick_get_device_name(this.id));
+		return NativeCFFI.lime_joystick_get_device_name(this.id);
 		#elseif (js && html5)
 		var devices = __getDeviceData();
 		return devices[this.id].id;

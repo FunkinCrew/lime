@@ -5,7 +5,7 @@
 
 	<log error="Lime ${lime} is not compatible with Haxe ${haxe} (version 4.2.5 or higher is required)" if="${haxe &lt; 4.2.5}" />
 
-	<define name="native" if="cpp || hl" />
+	<define name="native" if="cpp" />
 
 	<define name="lime-funkin" />
 	<define name="lime-cairo" if="native" />

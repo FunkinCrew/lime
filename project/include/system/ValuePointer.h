@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -12,9 +12,6 @@ namespace lime {
 
 		public:
 
-			ValuePointer (vobj* handle);
-			ValuePointer (vdynamic* handle);
-			ValuePointer (vclosure* handle);
 			ValuePointer (value handle);
 			~ValuePointer ();
 
@@ -25,16 +22,12 @@ namespace lime {
 			void* Call (void* arg0, void* arg1, void* arg2, void* arg3);
 			void* Call (void* arg0, void* arg1, void* arg2, void* arg3, void* arg4);
 			void* Get () const;
-			bool IsCFFIValue ();
-			bool IsHLValue ();
-			void Set (vobj* handle);
 			void Set (value handle);
 
 		private:
 
 			gcroot cffiRoot;
 			value* cffiValue;
-			vobj* hlValue;
 
 	};
 

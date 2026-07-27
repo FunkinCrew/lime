@@ -1,5 +1,5 @@
 #pragma once
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/Mutex.h>
 #include <map>
 #include <string>

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -9,7 +9,6 @@ namespace lime {
 
 	struct Matrix3 {
 
-		hl_type* t;
 		double a;
 		double b;
 		double c;

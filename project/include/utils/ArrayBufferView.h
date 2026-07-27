@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <utils/Bytes.h>
 
 
@@ -10,7 +10,6 @@ namespace lime {
 
 	struct ArrayBufferView {
 
-		hl_type* t;
 		/*TypedArrayType*/ int type;
 		Bytes* buffer;
 		int byteOffset;

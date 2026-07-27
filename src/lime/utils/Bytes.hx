@@ -22,8 +22,6 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 		this = new HaxeBytes(bytesData);
 		// bytesData may have extra bytes. See https://github.com/HaxeFoundation/haxe/issues/8974
 		this.length = length;
-		#elseif hl
-		this = new HaxeBytes(bytesData, length);
 		#else
 		this = new HaxeBytes(length, bytesData);
 		#end
@@ -31,9 +29,6 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 
 	public static function alloc(length:Int):Bytes
 	{
-		#if hl
-		if (length == 0) return new Bytes(0, null);
-		#end
 		return HaxeBytes.alloc(length);
 	}
 

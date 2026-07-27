@@ -2,7 +2,7 @@
 
 
 #include <graphics/ImageBuffer.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/System.h>
 #include <utils/Resource.h>
 
@@ -47,13 +47,13 @@ namespace lime {
 			Font (Resource *resource, int faceIndex = 0);
 			~Font ();
 
-			void* Decompose (bool useCFFIValue, int size, bool forceAutoHint = true);
+			void* Decompose (int size, bool forceAutoHint = true);
 			int GetAscender ();
 			int GetDescender ();
 			wchar_t *GetFamilyName ();
 			int GetGlyphIndex (const char* character);
-			void* GetGlyphIndices (bool useCFFIValue, const char* characters);
-			void* GetGlyphMetrics (bool useCFFIValue, int index);
+			void* GetGlyphIndices (const char* characters);
+			void* GetGlyphMetrics (int index);
 			int GetHeight ();
 			int GetNumGlyphs ();
 			int GetUnderlinePosition ();

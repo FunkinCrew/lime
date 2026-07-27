@@ -177,7 +177,7 @@ class HXProject extends Script
 		else
 		{
 			environment = Sys.environment();
-			for (conflict in ["android", "cpp", "hl", "html5", "ios", "linux", "mac", "windows"])
+			for (conflict in ["android", "cpp", "html5", "ios", "linux", "mac", "windows"])
 			{
 				environment.remove(conflict);
 			}
@@ -708,16 +708,6 @@ class HXProject extends Script
 				defines.set("native", "1");
 				defines.set("cpp", "1");
 				defines.set("mingw", "1");
-			}
-		}
-		else if (targetFlags.exists("hl"))
-		{
-			defines.set("targetType", "hl");
-			defines.set("native", "1");
-			defines.set("hl", "1");
-			if (targetFlags.exists("hlc"))
-			{
-				defines.set("hlc", "1");
 			}
 		}
 		else if (targetFlags.exists("cpp") || ((platformType != PlatformType.WEB) && !targetFlags.exists("html5")))

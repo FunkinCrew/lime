@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <stdio.h>
 #include <string>
 
@@ -48,7 +48,7 @@ namespace lime {
 			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
 
 			static int GetNumDisplays ();
-			static void* GetDisplay (bool useCFFIValue, int id);
+			static void* GetDisplay (int id);
 
 			static int GetFirstGyroscopeSensorId ();
 			static int GetFirstAccelerometerSensorId ();

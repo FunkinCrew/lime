@@ -15,9 +15,8 @@ namespace lime {
 	static Mutex mutex;
 
 
-	inline void _initializeBytes () {
+	Bytes::Bytes () {
 
-		#ifndef LIME_HASHLINK
 		if (!init) {
 
 			buffer _buffer = alloc_buffer_len (1);
@@ -31,14 +30,6 @@ namespace lime {
 			init = true;
 
 		}
-		#endif
-
-	}
-
-
-	Bytes::Bytes () {
-
-		_initializeBytes ();
 
 		b = 0;
 		length = 0;
@@ -48,7 +39,19 @@ namespace lime {
 
 	Bytes::Bytes (value bytes) {
 
-		_initializeBytes ();
+		if (!init) {
+
+			buffer _buffer = alloc_buffer_len (1);
+
+			if (buffer_data (_buffer)) {
+
+				useBuffer = true;
+
+			}
+
+			init = true;
+
+		}
 
 		b = 0;
 		length = 0;

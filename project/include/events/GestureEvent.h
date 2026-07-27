@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
 
@@ -20,7 +20,6 @@ namespace lime {
 
 	struct GestureEvent {
 
-		hl_type* t;
 		double x;
 		double y;
 		GestureState state;

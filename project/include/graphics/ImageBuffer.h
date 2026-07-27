@@ -2,7 +2,7 @@
 
 
 #include <graphics/PixelFormat.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <utils/ArrayBufferView.h>
 
 
@@ -11,7 +11,6 @@ namespace lime {
 
 	struct ImageBuffer {
 
-		hl_type* t;
 		int bitsPerPixel;
 		ArrayBufferView* data;
 		PixelFormat format;

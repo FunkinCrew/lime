@@ -17,9 +17,6 @@ import openfl.display.Stage;
 typedef Stage = Dynamic;
 #end
 
-#if hl
-@:keep
-#end
 class Window
 {
 	public var application(default, null):Application;

@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/TouchEvent.h>
 
 
@@ -27,33 +27,16 @@ namespace lime {
 
 		if (TouchEvent::callback) {
 
-			if (TouchEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)TouchEvent::eventObject->Get ();
 
-				value object = (value)TouchEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("device"), alloc_int (event->device));
-				alloc_field (object, val_id ("dx"), alloc_float (event->dx));
-				alloc_field (object, val_id ("dy"), alloc_float (event->dy));
-				alloc_field (object, val_id ("id"), alloc_int (event->id));
-				alloc_field (object, val_id ("pressure"), alloc_float (event->pressure));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("x"), alloc_float (event->x));
-				alloc_field (object, val_id ("y"), alloc_float (event->y));
-
-			} else {
-
-				TouchEvent* eventObject = (TouchEvent*)TouchEvent::eventObject->Get ();
-
-				eventObject->device = event->device;
-				eventObject->dx = event->dx;
-				eventObject->dy = event->dy;
-				eventObject->id = event->id;
-				eventObject->pressure = event->pressure;
-				eventObject->type = event->type;
-				eventObject->x = event->x;
-				eventObject->y = event->y;
-
-			}
+			alloc_field (object, val_id ("device"), alloc_int (event->device));
+			alloc_field (object, val_id ("dx"), alloc_float (event->dx));
+			alloc_field (object, val_id ("dy"), alloc_float (event->dy));
+			alloc_field (object, val_id ("id"), alloc_int (event->id));
+			alloc_field (object, val_id ("pressure"), alloc_float (event->pressure));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("x"), alloc_float (event->x));
+			alloc_field (object, val_id ("y"), alloc_float (event->y));
 
 			TouchEvent::callback->Call ();
 

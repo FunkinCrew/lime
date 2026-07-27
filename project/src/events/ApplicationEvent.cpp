@@ -1,5 +1,5 @@
 #include <events/ApplicationEvent.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 
 
 namespace lime {
@@ -21,21 +21,10 @@ namespace lime {
 
 		if (ApplicationEvent::callback) {
 
-			if (ApplicationEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)ApplicationEvent::eventObject->Get ();
 
-				value object = (value)ApplicationEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("deltaTime"), alloc_float (event->deltaTime));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-
-			} else {
-
-				ApplicationEvent* eventObject = (ApplicationEvent*)ApplicationEvent::eventObject->Get ();
-
-				eventObject->deltaTime = event->deltaTime;
-				eventObject->type = event->type;
-
-			}
+			alloc_field (object, val_id ("deltaTime"), alloc_float (event->deltaTime));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
 
 			ApplicationEvent::callback->Call ();
 

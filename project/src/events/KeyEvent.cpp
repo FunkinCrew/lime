@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/KeyEvent.h>
 
 
@@ -24,27 +24,13 @@ namespace lime {
 
 		if (KeyEvent::callback) {
 
-			if (KeyEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)KeyEvent::eventObject->Get ();
 
-				value object = (value)KeyEvent::eventObject->Get ();
-
-				alloc_field (object, val_id ("keyCode"), alloc_float (event->keyCode));
-				alloc_field (object, val_id ("modifier"), alloc_int (event->modifier));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
-				alloc_field (object, val_id ("timestamp"), alloc_float (event->timestamp));
-
-			} else {
-
-				KeyEvent* eventObject = (KeyEvent*)KeyEvent::eventObject->Get ();
-
-				eventObject->keyCode = event->keyCode;
-				eventObject->modifier = event->modifier;
-				eventObject->type = event->type;
-				eventObject->windowID = event->windowID;
-				eventObject->timestamp = event->timestamp;
-
-			}
+			alloc_field (object, val_id ("keyCode"), alloc_float (event->keyCode));
+			alloc_field (object, val_id ("modifier"), alloc_int (event->modifier));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
+			alloc_field (object, val_id ("timestamp"), alloc_float (event->timestamp));
 
 			KeyEvent::callback->Call ();
 

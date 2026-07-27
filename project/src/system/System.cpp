@@ -27,36 +27,28 @@ namespace lime {
 
 	void System::GCEnterBlocking () {
 
-		#ifndef LIME_HASHLINK
 		gc_enter_blocking ();
-		#endif
 
 	}
 
 
 	void System::GCExitBlocking () {
 
-		#ifndef LIME_HASHLINK
 		gc_exit_blocking ();
-		#endif
 
 	}
 
 
 	void System::GCTryEnterBlocking () {
 
-		#ifndef LIME_HASHLINK
 		gc_try_blocking ();
-		#endif
 
 	}
 
 
 	void System::GCTryExitBlocking () {
 
-		#ifndef LIME_HASHLINK
 		gc_try_unblocking ();
-		#endif
 
 	}
 
@@ -284,260 +276,118 @@ namespace lime {
 
 	}
 
-	void* System::GetDisplay (bool useCFFIValue, int id) {
+	void* System::GetDisplay (int id) {
 
 		if (id == 0)
 			id = SDL_GetPrimaryDisplay();
 
-		if (useCFFIValue) {
+		const char* displayName = SDL_GetDisplayName (id);
 
-			const char* displayName = SDL_GetDisplayName (id);
-			if (displayName == NULL) {
+		if (displayName == NULL) {
 
-				return alloc_null ();
-
-			}
-
-			value display = alloc_empty_object ();
-			alloc_field (display, val_id ("name"), alloc_string (displayName));
-
-			SDL_Rect bounds = { 0, 0, 0, 0 };
-			SDL_GetDisplayBounds (id, &bounds);
-			alloc_field (display, val_id ("bounds"), Rectangle (bounds.x, bounds.y, bounds.w, bounds.h).Value ());
-
-			SDL_Rect usable = { 0, 0, 0, 0 };
-			SDL_GetDisplayUsableBounds(id, &usable);
-			alloc_field(display, val_id ("safeArea"), Rectangle (usable.x, usable.y, usable.w, usable.h).Value ());
-
-			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
-
-			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
-
-			float contentScale = SDL_GetDisplayContentScale (id);
-
-			if (contentScale == 0.0f) {
-
-				contentScale = 1.0f;
-
-			}
-
-			#if defined (ANDROID) || defined (IPHONE)
-			float dpi = pixelDensity * contentScale * 160.0f;
-			#else
-			float dpi = pixelDensity * contentScale * 96.0f;
-			#endif
-
-			alloc_field (display, val_id ("dpi"), alloc_float (dpi));
-
-			alloc_field (display, val_id ("orientation"), alloc_int ((int) SDL_GetCurrentDisplayOrientation (id)));
-
-			DisplayMode mode;
-
-			mode.height = displayMode->h;
-
-			switch (displayMode->format) {
-
-				case SDL_PIXELFORMAT_ARGB8888:
-
-					mode.pixelFormat = ARGB32;
-					break;
-
-				case SDL_PIXELFORMAT_BGRA8888:
-				case SDL_PIXELFORMAT_BGRX8888:
-
-					mode.pixelFormat = BGRA32;
-					break;
-
-				default:
-
-					mode.pixelFormat = RGBA32;
-
-			}
-
-			mode.refreshRate = displayMode->refresh_rate;
-			mode.width = displayMode->w;
-
-			alloc_field (display, val_id ("currentMode"), (value)mode.Value ());
-
-			int numDisplayModes;
-			SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes (id, &numDisplayModes);
-			value supportedModes = alloc_array (numDisplayModes);
-
-			for (int i = 0; i < numDisplayModes; i++) {
-
-				const SDL_DisplayMode *sdlDisplayMode = displayModes[i];
-
-				mode.height = sdlDisplayMode->h;
-
-				switch (sdlDisplayMode->format) {
-
-					case SDL_PIXELFORMAT_ARGB8888:
-
-						mode.pixelFormat = ARGB32;
-						break;
-
-					case SDL_PIXELFORMAT_BGRA8888:
-					case SDL_PIXELFORMAT_BGRX8888:
-
-						mode.pixelFormat = BGRA32;
-						break;
-
-					default:
-
-						mode.pixelFormat = RGBA32;
-
-				}
-
-				mode.refreshRate = sdlDisplayMode->refresh_rate;
-				mode.width = sdlDisplayMode->w;
-
-				val_array_set_i (supportedModes, i, (value)mode.Value ());
-
-			}
-
-			alloc_field (display, val_id ("supportedModes"), supportedModes);
-			return display;
-
-		} else {
-
-			const char* displayName = SDL_GetDisplayName (id);
-			if (displayName == NULL) {
-
-				return 0;
-
-			}
-
-			vdynamic* display = (vdynamic*)hl_alloc_dynobj ();
-
-			char* _displayName = (char*)malloc(strlen(displayName) + 1);
-			strcpy (_displayName, displayName);
-			hl_dyn_setp (display, hl_hash_utf8 ("bounds"), &hlt_bytes, _displayName);
-
-			SDL_Rect bounds = { 0, 0, 0, 0 };
-			SDL_GetDisplayBounds (id, &bounds);
-
-			vdynamic* _bounds = (vdynamic*)hl_alloc_dynobj ();
-			hl_dyn_seti (_bounds, hl_hash_utf8 ("x"), &hlt_i32, bounds.x);
-			hl_dyn_seti (_bounds, hl_hash_utf8 ("y"), &hlt_i32, bounds.y);
-			hl_dyn_seti (_bounds, hl_hash_utf8 ("width"), &hlt_i32, bounds.w);
-			hl_dyn_seti (_bounds, hl_hash_utf8 ("height"), &hlt_i32, bounds.h);
-
-			hl_dyn_setp (display, hl_hash_utf8 ("bounds"), &hlt_dynobj, _bounds);
-
-			SDL_Rect usable = { 0, 0, 0, 0 };
-			SDL_GetDisplayUsableBounds(id, &usable);
-
-			vdynamic* _usable = (vdynamic*)hl_alloc_dynobj ();
-			hl_dyn_seti (_usable, hl_hash_utf8 ("x"), &hlt_i32, usable.x);
-			hl_dyn_seti (_usable, hl_hash_utf8 ("y"), &hlt_i32, usable.y);
-			hl_dyn_seti (_usable, hl_hash_utf8 ("width"), &hlt_i32, usable.w);
-			hl_dyn_seti (_usable, hl_hash_utf8 ("height"), &hlt_i32, usable.h);
-
-			hl_dyn_setp (display, hl_hash_utf8 ("safeArea"), &hlt_dynobj, _usable);
-
-			const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
-
-			float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
-
-			float contentScale = SDL_GetDisplayContentScale (id);
-
-			if (contentScale == 0.0f) {
-
-				contentScale = 1.0f;
-
-			}
-
-			#if defined (ANDROID) || defined (IPHONE)
-			float dpi = pixelDensity * contentScale * 160.0f;
-			#else
-			float dpi = pixelDensity * contentScale * 96.0f;
-			#endif
-
-			hl_dyn_setf (display, hl_hash_utf8 ("dpi"), dpi);
-
-			hl_dyn_seti (display, hl_hash_utf8 ("orientation"), &hlt_i32, (int) SDL_GetCurrentDisplayOrientation (id));
-
-			DisplayMode mode;
-
-			mode.height = displayMode->h;
-
-			switch (displayMode->format) {
-
-				case SDL_PIXELFORMAT_ARGB8888:
-
-					mode.pixelFormat = ARGB32;
-					break;
-
-				case SDL_PIXELFORMAT_BGRA8888:
-				case SDL_PIXELFORMAT_BGRX8888:
-
-					mode.pixelFormat = BGRA32;
-					break;
-
-				default:
-
-					mode.pixelFormat = RGBA32;
-
-			}
-
-			mode.refreshRate = displayMode->refresh_rate;
-			mode.width = displayMode->w;
-
-			vdynamic* _displayMode = (vdynamic*)hl_alloc_dynobj ();
-			hl_dyn_seti (_displayMode, hl_hash_utf8 ("height"), &hlt_i32, mode.height);
-			hl_dyn_seti (_displayMode, hl_hash_utf8 ("pixelFormat"), &hlt_i32, mode.pixelFormat);
-			hl_dyn_seti (_displayMode, hl_hash_utf8 ("refreshRate"), &hlt_i32, mode.refreshRate);
-			hl_dyn_seti (_displayMode, hl_hash_utf8 ("width"), &hlt_i32, mode.width);
-			hl_dyn_setp (display, hl_hash_utf8 ("currentMode"), &hlt_dynobj, _displayMode);
-
-			int numDisplayModes;
-			SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes (id, &numDisplayModes);
-
-			hl_varray* supportedModes = (hl_varray*)hl_alloc_array (&hlt_dynobj, numDisplayModes);
-			vdynamic** supportedModesData = hl_aptr (supportedModes, vdynamic*);
-
-			for (int i = 0; i < numDisplayModes; i++) {
-
-				const SDL_DisplayMode *sdlDisplayMode = displayModes[i];
-
-				mode.height = sdlDisplayMode->h;
-
-				switch (sdlDisplayMode->format) {
-
-					case SDL_PIXELFORMAT_ARGB8888:
-
-						mode.pixelFormat = ARGB32;
-						break;
-
-					case SDL_PIXELFORMAT_BGRA8888:
-					case SDL_PIXELFORMAT_BGRX8888:
-
-						mode.pixelFormat = BGRA32;
-						break;
-
-					default:
-
-						mode.pixelFormat = RGBA32;
-
-				}
-
-				mode.refreshRate = sdlDisplayMode->refresh_rate;
-				mode.width = sdlDisplayMode->w;
-
-				vdynamic* _displayMode = (vdynamic*)hl_alloc_dynobj ();
-				hl_dyn_seti (_displayMode, hl_hash_utf8 ("height"), &hlt_i32, mode.height);
-				hl_dyn_seti (_displayMode, hl_hash_utf8 ("pixelFormat"), &hlt_i32, mode.pixelFormat);
-				hl_dyn_seti (_displayMode, hl_hash_utf8 ("refreshRate"), &hlt_i32, mode.refreshRate);
-				hl_dyn_seti (_displayMode, hl_hash_utf8 ("width"), &hlt_i32, mode.width);
-
-				*supportedModesData++ = _displayMode;
-
-			}
-
-			hl_dyn_setp (display, hl_hash_utf8 ("supportedModes"), &hlt_array, supportedModes);
-			return display;
+			return alloc_null ();
 
 		}
+
+		value display = alloc_empty_object ();
+		alloc_field (display, val_id ("name"), alloc_string (displayName));
+
+		SDL_Rect bounds = { 0, 0, 0, 0 };
+		SDL_GetDisplayBounds (id, &bounds);
+		alloc_field (display, val_id ("bounds"), Rectangle (bounds.x, bounds.y, bounds.w, bounds.h).Value ());
+
+		SDL_Rect usable = { 0, 0, 0, 0 };
+		SDL_GetDisplayUsableBounds(id, &usable);
+		alloc_field(display, val_id ("safeArea"), Rectangle (usable.x, usable.y, usable.w, usable.h).Value ());
+
+		const SDL_DisplayMode *displayMode = SDL_GetDesktopDisplayMode (id);
+
+		float pixelDensity = displayMode ? displayMode->pixel_density : 1.0f;
+
+		float contentScale = SDL_GetDisplayContentScale (id);
+
+		if (contentScale == 0.0f) {
+
+			contentScale = 1.0f;
+
+		}
+
+		#if defined (ANDROID) || defined (IPHONE)
+		float dpi = pixelDensity * contentScale * 160.0f;
+		#else
+		float dpi = pixelDensity * contentScale * 96.0f;
+		#endif
+
+		alloc_field (display, val_id ("dpi"), alloc_float (dpi));
+
+		alloc_field (display, val_id ("orientation"), alloc_int ((int) SDL_GetCurrentDisplayOrientation (id)));
+
+		DisplayMode mode;
+
+		mode.height = displayMode->h;
+
+		switch (displayMode->format) {
+
+			case SDL_PIXELFORMAT_ARGB8888:
+
+				mode.pixelFormat = ARGB32;
+				break;
+
+			case SDL_PIXELFORMAT_BGRA8888:
+			case SDL_PIXELFORMAT_BGRX8888:
+
+				mode.pixelFormat = BGRA32;
+				break;
+
+			default:
+
+				mode.pixelFormat = RGBA32;
+
+		}
+
+		mode.refreshRate = displayMode->refresh_rate;
+		mode.width = displayMode->w;
+
+		alloc_field (display, val_id ("currentMode"), (value)mode.Value ());
+
+		int numDisplayModes;
+		SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes (id, &numDisplayModes);
+		value supportedModes = alloc_array (numDisplayModes);
+
+		for (int i = 0; i < numDisplayModes; i++) {
+
+			const SDL_DisplayMode *sdlDisplayMode = displayModes[i];
+
+			mode.height = sdlDisplayMode->h;
+
+			switch (sdlDisplayMode->format) {
+
+				case SDL_PIXELFORMAT_ARGB8888:
+
+					mode.pixelFormat = ARGB32;
+					break;
+
+				case SDL_PIXELFORMAT_BGRA8888:
+				case SDL_PIXELFORMAT_BGRX8888:
+
+					mode.pixelFormat = BGRA32;
+					break;
+
+				default:
+
+					mode.pixelFormat = RGBA32;
+
+			}
+
+			mode.refreshRate = sdlDisplayMode->refresh_rate;
+			mode.width = sdlDisplayMode->w;
+
+			val_array_set_i (supportedModes, i, (value)mode.Value ());
+
+		}
+
+		alloc_field (display, val_id ("supportedModes"), supportedModes);
+		return display;
 
 	}
 

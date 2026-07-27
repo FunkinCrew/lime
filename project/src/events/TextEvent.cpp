@@ -1,4 +1,4 @@
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <events/TextEvent.h>
 
 
@@ -23,40 +23,18 @@ namespace lime {
 
 		if (TextEvent::callback) {
 
-			if (TextEvent::eventObject->IsCFFIValue ()) {
+			value object = (value)TextEvent::eventObject->Get ();
 
-				value object = (value)TextEvent::eventObject->Get ();
+			if (event->type != TEXT_INPUT) {
 
-				if (event->type != TEXT_INPUT) {
-
-					alloc_field (object, val_id ("length"), alloc_int (event->length));
-					alloc_field (object, val_id ("start"), alloc_int (event->start));
-
-				}
-
-				alloc_field (object, val_id ("text"), alloc_string ((const char*)event->text));
-				alloc_field (object, val_id ("type"), alloc_int (event->type));
-				alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
-
-			} else {
-
-				TextEvent* eventObject = (TextEvent*)TextEvent::eventObject->Get ();
-
-				if (event->type != TEXT_INPUT) {
-
-					eventObject->length = event->length;
-					eventObject->start = event->start;
-
-				}
-
-				int length = strlen ((const char*)event->text);
-				char* text = (char*)malloc (length + 1);
-				strcpy (text, (const char*)event->text);
-				eventObject->text = (vbyte*)text;
-				eventObject->type = event->type;
-				eventObject->windowID = event->windowID;
+				alloc_field (object, val_id ("length"), alloc_int (event->length));
+				alloc_field (object, val_id ("start"), alloc_int (event->start));
 
 			}
+
+			alloc_field (object, val_id ("text"), alloc_string ((const char*)event->text));
+			alloc_field (object, val_id ("type"), alloc_int (event->type));
+			alloc_field (object, val_id ("windowID"), alloc_int (event->windowID));
 
 			TextEvent::callback->Call ();
 

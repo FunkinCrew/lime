@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 #include <stdint.h>
 
@@ -20,7 +20,6 @@ namespace lime {
 
 	struct TouchEvent {
 
-		hl_type* t;
 		int device;
 		double dx;
 		double dy;

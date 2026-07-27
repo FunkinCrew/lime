@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <utils/Bytes.h>
 
 
@@ -13,7 +13,6 @@ namespace lime {
 
 		Resource () : data (NULL), path (NULL) {}
 		Resource (const char* path) : data (NULL), path (path) {}
-		Resource (hl_vstring* path) : data (NULL), path (path ? hl_to_utf8 ((const uchar*)path->bytes) : NULL) {}
 		Resource (Bytes* data) : data (data), path (NULL) {}
 
 		Bytes* data;

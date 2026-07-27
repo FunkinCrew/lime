@@ -64,16 +64,6 @@ class ALC
 	public static function createContext(device:ALDevice, attrlist:Array<Int> = null):ALContext
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		#if hl
-		var _attrlist = null;
-		if (attrlist != null)
-		{
-			_attrlist = new hl.NativeArray<Int>(attrlist.length);
-			for (i in 0...attrlist.length)
-				_attrlist[i] = attrlist[i];
-		}
-		var attrlist = _attrlist;
-		#end
 		var handle = NativeCFFI.lime_alc_create_context(device, attrlist);
 
 		if (handle != null)
@@ -145,16 +135,7 @@ class ALC
 	public static function getIntegerv(device:ALDevice, param:Int, count:Int = 1):Array<Int>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_alc_get_integerv(device, param, count);
-		#if hl
-		if (result == null) return [];
-		var _result = [];
-		for (i in 0...result.length)
-			_result[i] = result[i];
-		return _result;
-		#else
-		return result;
-		#end
+		return NativeCFFI.lime_alc_get_integerv(device, param, count);
 		#else
 		return null;
 		#end
@@ -163,8 +144,7 @@ class ALC
 	public static function getString(device:ALDevice, param:Int):String
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_alc_get_string(device, param);
-		return CFFI.stringValue(result);
+		return NativeCFFI.lime_alc_get_string(device, param);
 		#else
 		return null;
 		#end
@@ -173,16 +153,7 @@ class ALC
 	public static function getStringList(device:ALDevice, param:Int):Array<String>
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		var result = NativeCFFI.lime_alc_get_string_list(device, param);
-		#if hl
-		if (result == null) return [];
-		var _result = [];
-		for (i in 0...result.length)
-			_result[i] = CFFI.stringValue(result[i]);
-		return _result;
-		#else
-		return result;
-		#end
+		return NativeCFFI.lime_alc_get_string_list(device, param);
 		#else
 		return null;
 		#end
@@ -251,16 +222,6 @@ class ALC
 	public static function eventControlSOFT(events:Array<Int>, enable:Bool):Void
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		#if hl
-		var _events = null;
-		if (events != null)
-		{
-			_events = new hl.NativeArray<Int>(events.length);
-			for (i in 0...events.length)
-				_events[i] = events[i];
-		}
-		var events = _events;
-		#end
 		NativeCFFI.lime_alc_event_control_soft(events.length, events, enable);
 		#end
 	}
@@ -275,16 +236,6 @@ class ALC
 	public static function reopenDeviceSOFT(device:ALDevice, newDeviceName:String, attributes:Array<Int>):Bool
 	{
 		#if (lime_cffi && lime_openal && !macro)
-		#if hl
-		var _attributes = null;
-		if (attributes != null)
-		{
-			_attributes = new hl.NativeArray<Int>(attributes.length);
-			for (i in 0...attributes.length)
-				_attributes[i] = attributes[i];
-		}
-		var attributes = _attributes;
-		#end
 		return NativeCFFI.lime_alc_reopen_device_soft(device, newDeviceName, attributes);
 		#else
 		return false;

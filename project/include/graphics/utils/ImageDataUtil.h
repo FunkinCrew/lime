@@ -6,7 +6,7 @@
 #include <math/ColorMatrix.h>
 #include <math/Rectangle.h>
 #include <math/Vector2.h>
-#include <system/CFFI.h>
+#include <hx/CFFIPrime.h>
 #include <system/Endian.h>
 #include <system/System.h>
 #include <utils/Bytes.h>
