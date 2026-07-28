@@ -27,8 +27,7 @@ jobs:
           libegl1-mesa-dev libgl1-mesa-dev libibus-1.0-dev libdbus-1-dev libdecor-0-dev libudev-dev libgbm-dev libdrm-dev \
           libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libglu1-mesa-dev libmbedtls-dev libuv1-dev libsqlite3-dev \
           libx11-dev libxext-dev libxfixes-dev libxi-dev libxinerama-dev libxkbcommon-dev libxcursor-dev libxrandr-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxxf86vm-dev \
-          libpulse-dev libasound2-dev libpipewire-0.3-dev \
-          g++-multilib gcc-multilib
+          libpulse-dev libasound2-dev libpipewire-0.3-dev
 
       - name: Install Haxe dependencies
         run: |
@@ -50,19 +49,9 @@ jobs:
       - name: Rebuild Lime (x86_64)
         run: haxelib run lime rebuild linux -64 -nocolor -eval
 
-      - name: Rebuild Lime (Hashlink)
-        run: haxelib run lime rebuild hl -nocolor
-
       - name: Upload Artifact (ndll/Linux64)
         uses: actions/upload-artifact@v7.0.0
         with:
           name: Linux64-NDLL
           path: ndll/Linux64
-          if-no-files-found: error
-
-      - name: Upload Artifact (templates/bin/hl/Linux64)
-        uses: actions/upload-artifact@v7
-        with:
-          name: Linux64-Hashlink
-          path: templates/bin/hl/Linux64
           if-no-files-found: error
