@@ -26,11 +26,10 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Delete old NDLL's and Hashlink Templates
+      - name: Delete old NDLL's
         run: |
           rm -rf ndll
           mkdir ndll
-          rm -rf templates/bin/hl/*/
 
       - name: Download Android-NDLL artifact
         uses: actions/download-artifact@v8
@@ -49,12 +48,6 @@ jobs:
         with:
           name: Linux64-NDLL
           path: ndll/Linux64
-
-      - name: Download Linux64-Hashlink artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: Linux64-Hashlink
-          path: templates/bin/hl/Linux64
 
       - name: Download Mac64-NDLL artifact
         uses: actions/download-artifact@v8
@@ -79,12 +72,6 @@ jobs:
         with:
           name: Windows-NDLL
           path: ndll/Windows
-
-      - name: Download Windows64-Hashlink artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: Windows64-Hashlink
-          path: templates/bin/hl/Windows64
 
       - name: Download Miscellaneous artifact
         uses: actions/download-artifact@v8

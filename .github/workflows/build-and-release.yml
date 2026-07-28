@@ -48,12 +48,6 @@ jobs:
           name: Linux64-NDLL
           path: ndll/Linux64
 
-      - name: Download Linux64-Hashlink artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: Linux64-Hashlink
-          path: templates/bin/hl/Linux64
-
       - name: Download Mac64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
@@ -77,12 +71,6 @@ jobs:
         with:
           name: Windows-NDLL
           path: ndll/Windows
-
-      - name: Download Windows64-Hashlink artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: Windows64-Hashlink
-          path: templates/bin/hl/Windows64
 
       - name: ZIP Repo
         run: |

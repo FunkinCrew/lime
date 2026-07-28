@@ -41,9 +41,6 @@ jobs:
       - name: Rebuild Lime (x86)
         run: haxelib run lime rebuild windows -32 -nocolor -eval
 
-      - name: Rebuild Lime (Hashlink)
-        run: haxelib run lime rebuild hl -nocolor -eval
-
       - name: Upload Artifact (ndll/Windows64)
         uses: actions/upload-artifact@v7.0.0
         with:
@@ -56,11 +53,4 @@ jobs:
         with:
           name: Windows-NDLL
           path: ndll/Windows
-          if-no-files-found: error
-
-      - name: Upload Artifact (templates/bin/hl/Windows64)
-        uses: actions/upload-artifact@v7.0.0
-        with:
-          name: Windows64-Hashlink
-          path: templates/bin/hl/Windows64
           if-no-files-found: error
