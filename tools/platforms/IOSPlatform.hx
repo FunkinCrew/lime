@@ -328,6 +328,7 @@ class IOSPlatform extends PlatformTarget
 			var path:String = null;
 			var fileType:String = null;
 			var embed:Bool = false;
+			var system:Bool = false;
 
 			if (Path.extension(dependency.name) == "tbd")
 			{
@@ -335,6 +336,7 @@ class IOSPlatform extends PlatformTarget
 				path = "/usr/lib/" + dependency.name;
 				fileType = "sourcecode.text-based-dylib-definition";
 				embed = false;
+				system = true;
 			}
 			else if (Path.extension(dependency.name) == "framework")
 			{
@@ -342,6 +344,7 @@ class IOSPlatform extends PlatformTarget
 				path = "/System/Library/Frameworks/" + dependency.name;
 				fileType = "wrapper.framework";
 				embed = false;
+				system = true;
 			}
 			else if (Path.extension(dependency.path) == "framework")
 			{
@@ -398,7 +401,10 @@ class IOSPlatform extends PlatformTarget
 							context.ADDL_PBX_EMBED_FRAMEWORKS_BUILD_PHASE += "                " + embedFileID + " /* " + name + " in Embed Frameworks */,\n";
 						}
 
-						ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
+						if (!system)
+						{
+							ArrayTools.addUnique(context.frameworkSearchPaths, Path.directory(path));
+						}
 				}
 
 				context.ADDL_PBX_FILE_REFERENCE += "        " + fileID + " /* " + name + " */ = {isa = PBXFileReference; lastKnownFileType = \"" + fileType
