@@ -390,6 +390,12 @@ class NativeCFFI
 	@:cffi private static function lime_zlib_compress(data:Dynamic, bytes:Dynamic):Dynamic;
 
 	@:cffi private static function lime_zlib_decompress(data:Dynamic, bytes:Dynamic):Dynamic;
+
+	@:cffi private static function lime_touch_get_devices():Array<Int>;
+
+	@:cffi private static function lime_touch_get_device_name(id:Int):Dynamic;
+
+	@:cffi private static function lime_touch_get_device_type(id:Int):Int;
 	#else
 	private static var lime_application_create = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_application_create", "o", false));
 	private static var lime_application_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
@@ -689,6 +695,9 @@ class NativeCFFI
 		false));
 	private static var lime_zlib_decompress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_decompress", "ooo",
 		false));
+	private static var lime_touch_get_devices = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_touch_get_devices", "o", false));
+	private static var lime_touch_get_device_name = new cpp.Callable<Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_touch_get_device_name", "io", false));
+	private static var lime_touch_get_device_type = new cpp.Callable<Int->Int>(cpp.Prime._loadPrime("lime", "lime_touch_get_device_type", "ii", false));
 	#end
 	#end
 	#if neko
@@ -866,6 +875,9 @@ class NativeCFFI
 	private static var lime_audio_decoder_total = CFFI.load("lime", "lime_audio_decoder_total", 1);
 	private static var lime_zlib_compress = CFFI.load("lime", "lime_zlib_compress", 2);
 	private static var lime_zlib_decompress = CFFI.load("lime", "lime_zlib_decompress", 2);
+	private static var lime_touch_get_devices = CFFI.load("lime", "lime_touch_get_devices", 0);
+	private static var lime_touch_get_device_name = CFFI.load("lime", "lime_touch_get_device_name", 1);
+	private static var lime_touch_get_device_type = CFFI.load("lime", "lime_touch_get_device_type", 1);
 	#end
 	#end
 	#if (lime_cffi && !macro && android)

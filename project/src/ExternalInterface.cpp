@@ -55,6 +55,7 @@
 #include <ui/Joystick.h>
 #include <ui/KeyCode.h>
 #include <ui/Window.h>
+#include <ui/Touch.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
 
@@ -2452,6 +2453,26 @@ namespace lime {
 
 	}
 
+	value lime_touch_get_devices () {
+
+		return Touch::GetDevices ();
+
+	}
+
+	value lime_touch_get_device_name (int id) {
+
+		const char* name = Touch::GetDeviceName (id);
+
+		return name ? alloc_string (name) : alloc_null ();
+
+	}
+
+	int lime_touch_get_device_type (int id) {
+
+		return Touch::GetDeviceType (id);
+
+	}
+
 
 	DEFINE_PRIME0 (lime_application_create);
 	DEFINE_PRIME2v (lime_application_event_manager_register);
@@ -2631,6 +2652,9 @@ namespace lime {
 	DEFINE_PRIME1 (lime_audio_decoder_total);
 	DEFINE_PRIME2 (lime_zlib_compress);
 	DEFINE_PRIME2 (lime_zlib_decompress);
+	DEFINE_PRIME0 (lime_touch_get_devices);
+	DEFINE_PRIME1 (lime_touch_get_device_name);
+	DEFINE_PRIME1 (lime_touch_get_device_type);
 
 
 }
