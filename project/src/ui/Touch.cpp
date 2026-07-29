@@ -4,29 +4,39 @@
 namespace lime {
 
 
-    value Touch::GetDevices () {
-      int count = 0;
+	value Touch::GetDevices () {
 
-      SDL_TouchID *devices = SDL_GetTouchDevices (&count);
+		int count = 0;
 
-      value result = alloc_array (count);
+		SDL_TouchID *devices = SDL_GetTouchDevices (&count);
 
-      for (int i = 0; i < count; i++) {
-        val_array_set_i (result, i, alloc_int (devices[i]));
-      }
+		value result = alloc_array (count);
 
-      SDL_free (devices);
+		for (int i = 0; i < count; i++) {
 
-      return result;
-    }
+			val_array_set_i (result, i, alloc_int (devices[i]));
 
-		const char* Touch::GetDeviceName (int id) {
-      return SDL_GetTouchDeviceName (id);
-    };
+		}
 
-		int Touch::GetDeviceType (int id) {
-      return SDL_GetTouchDeviceType (id);
-    }
+		SDL_free (devices);
+
+		return result;
+
+	}
+
+
+	const char* Touch::GetDeviceName (int id) {
+
+		return SDL_GetTouchDeviceName (id);
+
+	}
+
+
+	int Touch::GetDeviceType (int id) {
+
+		return SDL_GetTouchDeviceType (id);
+
+	}
 
 
 }
