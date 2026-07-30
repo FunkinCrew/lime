@@ -7,8 +7,8 @@
 #include <list>
 #include <vector>
 
-#ifdef LIME_FREETYPE
 #include <ft2build.h>
+
 #include FT_FREETYPE_H
 #include FT_BITMAP_H
 #include FT_SFNT_NAMES_H
@@ -16,7 +16,6 @@
 #include FT_TRUETYPE_TABLES_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
-#endif
 
 #ifdef GetGlyphIndices
 #undef GetGlyphIndices
@@ -578,8 +577,6 @@ namespace lime {
 
 	wchar_t *Font::GetFamilyName () {
 
-		#ifdef LIME_FREETYPE
-
 		wchar_t *family_name = NULL;
 		FT_SfntName sfnt_name;
 		FT_UInt num_sfnt_names, sfnt_name_index;
@@ -623,8 +620,6 @@ namespace lime {
 			}
 
 		}
-
-		#endif
 
 		return NULL;
 

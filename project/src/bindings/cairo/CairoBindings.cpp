@@ -261,7 +261,6 @@ namespace lime {
 
 	value lime_cairo_ft_font_face_create (value face, int flags) {
 
-		#ifdef LIME_FREETYPE
 		Font* font = (Font*)val_data (face);
 		cairo_font_face_t* cairoFont = cairo_ft_font_face_create_for_ft_face ((FT_Face)font->face, flags);
 
@@ -273,9 +272,6 @@ namespace lime {
 		cairoObjects[cairoFont] = object;
 		cairoObjects_Mutex.Unlock ();
 		return object;
-		#else
-		return 0;
-		#endif
 
 	}
 

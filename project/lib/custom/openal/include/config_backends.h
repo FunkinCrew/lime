@@ -34,7 +34,7 @@
 
 #define HAVE_WAVE 0
 
-#if defined (NATIVE_TOOLKIT_HAVE_SDL) && !(defined(__APPLE__) || defined(__MACH__))
+#if !(defined(__APPLE__) || defined(__MACH__))
 # define HAVE_SDL3 1
 #else
 # define HAVE_SDL3 0

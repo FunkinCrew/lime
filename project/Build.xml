@@ -34,12 +34,6 @@
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
 
-	<set name="NATIVE_TOOLKIT_HAVE_CAIRO" value="1" if="LIME_CAIRO" />
-	<set name="NATIVE_TOOLKIT_HAVE_FREETYPE" value="1" if="LIME_FREETYPE" />
-	<set name="NATIVE_TOOLKIT_HAVE_HARFBUZZ" value="1" if="LIME_HARFBUZZ" />
-	<set name="NATIVE_TOOLKIT_HAVE_PNG" value="1" if="LIME_PNG" />
-	<set name="NATIVE_TOOLKIT_HAVE_SDL" value="1" if="LIME_SDL" />
-
 	<files id="lime">
 
 		<compilerflag value="-Iinclude" />
@@ -258,6 +252,7 @@
 	<files id="android-cpufeatures">
 
 		<compilerflag value="-I${ANDROID_NDK_ROOT}/sources/android/cpufeatures" if="android" />
+
 		<file name="${ANDROID_NDK_ROOT}/sources/android/cpufeatures/cpu-features.c" />
 
 	</files>

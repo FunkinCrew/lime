@@ -28,17 +28,11 @@
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
-#ifdef LIME_DR_LIBS
 #include <media/decoders/FlacDecoder.h>
 #include <media/decoders/MP3Decoder.h>
 #include <media/decoders/WavDecoder.h>
-#endif
-#ifdef LIME_OGG
 #include <media/decoders/OggDecoder.h>
-#endif
-#ifdef LIME_OPUS
 #include <media/decoders/OpusDecoder.h>
-#endif
 #include <hx/CFFIPrime.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
@@ -92,10 +86,8 @@ namespace lime {
 
 	void gc_font (value handle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (handle);
 		delete font;
-		#endif
 
 	}
 
@@ -346,32 +338,24 @@ namespace lime {
 
 	value lime_deflate_compress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Compress (DEFLATE, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null();
-		#endif
 
 	}
 
 
 	value lime_deflate_decompress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Decompress (DEFLATE, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
@@ -550,166 +534,113 @@ namespace lime {
 
 	int lime_font_get_ascender (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetAscender ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_descender (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetDescender ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	value lime_font_get_family_name (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		wchar_t *name = font->GetFamilyName ();
 		value result = alloc_wstring (name);
 		delete name;
 		return result;
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	int lime_font_get_glyph_index (value fontHandle, HxString character) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetGlyphIndex (hxs_utf8 (character, nullptr));
-		#else
-		return -1;
-		#endif
 
 	}
 
 
 	value lime_font_get_glyph_indices (value fontHandle, HxString characters) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return (value)font->GetGlyphIndices (hxs_utf8 (characters, nullptr));
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	value lime_font_get_glyph_metrics (value fontHandle, int index) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return (value)font->GetGlyphMetrics (index);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	int lime_font_get_height (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetHeight ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_num_glyphs (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetNumGlyphs ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_underline_position (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetUnderlinePosition ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_underline_thickness (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetUnderlineThickness ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_strikethrough_position (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetStrikethroughPosition ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_strikethrough_thickness (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetStrikethroughThickness ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	int lime_font_get_units_per_em (value fontHandle) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return font->GetUnitsPerEM ();
-		#else
-		return 0;
-		#endif
 
 	}
 
 
 	value lime_font_load_bytes (value data) {
 
-		#ifdef LIME_FREETYPE
 		Resource resource;
 		Bytes bytes;
 
@@ -731,7 +662,6 @@ namespace lime {
 			}
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -740,7 +670,6 @@ namespace lime {
 
 	value lime_font_load_file (value data) {
 
-		#ifdef LIME_FREETYPE
 		Resource resource = Resource (val_string (data));
 
 		Font *font = new Font (&resource, 0);
@@ -758,7 +687,6 @@ namespace lime {
 			}
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -767,19 +695,14 @@ namespace lime {
 
 	value lime_font_outline_decompose (value fontHandle, int size, bool forceAutoHint) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		return (value)font->Decompose (size, forceAutoHint);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	value lime_font_render_glyph (value fontHandle, int index, value data, int flags) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		Bytes bytes (data);
 
@@ -788,7 +711,6 @@ namespace lime {
 			return bytes.Value (data);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -797,7 +719,6 @@ namespace lime {
 
 	value lime_font_render_glyphs (value fontHandle, value indices, value data, int flags) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		Bytes bytes (data);
 		std::vector<int> _indices;
@@ -813,7 +734,6 @@ namespace lime {
 			return bytes.Value (data);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -822,28 +742,22 @@ namespace lime {
 
 	void lime_font_set_size (value fontHandle, int fontSize, int dpi) {
 
-		#ifdef LIME_FREETYPE
 		Font *font = (Font*)val_data (fontHandle);
 		font->SetSize (fontSize, dpi);
-		#endif
 
 	}
 
 
 	void lime_font_initialize_library () {
 
-		#ifdef LIME_FREETYPE
 		Font::InitializeLibrary();
-		#endif
 
 	}
 
 
 	void lime_font_shutdown_library () {
 
-		#ifdef LIME_FREETYPE
 		Font::ShutdownLibrary();
-		#endif
 
 	}
 
@@ -912,32 +826,24 @@ namespace lime {
 
 	value lime_gzip_compress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Compress (GZIP, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	value lime_gzip_decompress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Decompress (GZIP, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
@@ -953,7 +859,6 @@ namespace lime {
 
 	value lime_image_encode (value buffer, int type, int quality, value bytes) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
 		Bytes data = Bytes (bytes);
 
@@ -989,7 +894,6 @@ namespace lime {
 			default: break;
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -998,7 +902,6 @@ namespace lime {
 
 	value lime_image_load_bytes (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		Bytes bytes = Bytes (data);
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
 		Resource resource = Resource (&bytes);
@@ -1026,7 +929,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1035,7 +937,6 @@ namespace lime {
 
 	value lime_image_load_file (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		Resource resource = Resource (val_string (data));
 
 		ImageBuffer imageBuffer = ImageBuffer (buffer);
@@ -1063,7 +964,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1339,32 +1239,24 @@ namespace lime {
 
 	value lime_lzma_compress (value buffer, value bytes) {
 
-		#ifdef LIME_LZMA
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		LZMA::Compress (&data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	value lime_lzma_decompress (value buffer, value bytes) {
 
-		#ifdef LIME_LZMA
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		LZMA::Decompress (&data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
@@ -1387,7 +1279,6 @@ namespace lime {
 
 	value lime_png_decode_bytes (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
@@ -1397,7 +1288,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1406,7 +1296,6 @@ namespace lime {
 
 	value lime_png_decode_file (HxString path, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
@@ -1415,7 +1304,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1424,7 +1312,6 @@ namespace lime {
 
 	value lime_jpeg_decode_bytes (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
@@ -1434,7 +1321,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1443,7 +1329,6 @@ namespace lime {
 
 	value lime_jpeg_decode_file (HxString path, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
@@ -1452,7 +1337,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1460,7 +1344,6 @@ namespace lime {
 
 	value lime_bmp_decode_bytes (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
@@ -1470,7 +1353,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1479,7 +1361,6 @@ namespace lime {
 
 	value lime_bmp_decode_file (HxString path, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
@@ -1488,7 +1369,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1497,7 +1377,6 @@ namespace lime {
 
 	value lime_svg_decode_bytes (value data, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
@@ -1507,7 +1386,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1516,7 +1394,6 @@ namespace lime {
 
 	value lime_svg_decode_file (HxString path, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
@@ -1525,7 +1402,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1534,7 +1410,6 @@ namespace lime {
 
 	value lime_svg_decode_sized_bytes (value data, int width, int height, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Bytes bytes (data);
 		Resource resource = Resource (&bytes);
@@ -1544,7 +1419,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -1553,7 +1427,6 @@ namespace lime {
 
 	value lime_svg_decode_sized_file (HxString path, int width, int height, value buffer) {
 
-		#ifdef LIME_SDL_IMAGE
 		ImageBuffer imageBuffer (buffer);
 		Resource resource = Resource (hxs_utf8 (path, nullptr));
 
@@ -1562,7 +1435,6 @@ namespace lime {
 			return imageBuffer.Value (buffer);
 
 		}
-		#endif
 
 		return alloc_null ();
 
@@ -2234,19 +2106,14 @@ namespace lime {
 
 		switch (codec) {
 
-			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
-			#endif
 
-			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
-			#endif
 
-			#ifdef LIME_DR_LIBS
 			case 2:
 				decoder = new FlacDecoder ();
 				break;
@@ -2258,7 +2125,6 @@ namespace lime {
 			case 4:
 				decoder = new WavDecoder ();
 				break;
-			#endif
 
 			default:
 				return alloc_null ();
@@ -2286,19 +2152,14 @@ namespace lime {
 
 		switch (codec) {
 
-			#ifdef LIME_OGG
 			case 0:
 				decoder = new OggDecoder ();
 				break;
-			#endif
 
-			#ifdef LIME_OPUS
 			case 1:
 				decoder = new OpusDecoder ();
 				break;
-			#endif
 
-			#ifdef LIME_DR_LIBS
 			case 2:
 				decoder = new FlacDecoder ();
 				break;
@@ -2310,7 +2171,6 @@ namespace lime {
 			case 4:
 				decoder = new WavDecoder ();
 				break;
-			#endif
 
 			default:
 				return alloc_null ();
@@ -2418,32 +2278,24 @@ namespace lime {
 
 	value lime_zlib_compress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Compress (ZLIB, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
 
 	value lime_zlib_decompress (value buffer, value bytes) {
 
-		#ifdef LIME_ZLIB
 		Bytes data (buffer);
 		Bytes result (bytes);
 
 		Zlib::Decompress (ZLIB, &data, &result);
 
 		return result.Value (bytes);
-		#else
-		return alloc_null ();
-		#endif
 
 	}
 
