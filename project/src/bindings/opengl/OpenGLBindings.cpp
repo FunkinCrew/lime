@@ -7,9 +7,7 @@
 #include <string>
 #include <vector>
 
-#ifdef LIME_SDL
 #include <SDL3/SDL.h>
-#endif
 
 namespace lime {
 
@@ -2701,7 +2699,7 @@ namespace lime {
 
 		if (!initialized) {
 
-			#if defined (LIME_SDL) && defined (LIME_GLAD)
+			#if defined (LIME_GLAD)
 
 			#ifdef LIME_OPENGL_GLES2
 			gladLoadGLES2 ((GLADloadfunc)SDL_GL_GetProcAddress);

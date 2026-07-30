@@ -1,9 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
-#ifdef LIME_SDL
 #include "../backend/sdl/SDLWindow.h"
-#endif
 #include <events/GestureEvent.h>
 #include <ui/Gesture.h>
 #include <SDL3/SDL.h>

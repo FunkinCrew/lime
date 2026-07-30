@@ -386,7 +386,6 @@ namespace lime {
 
 	void lime_file_dialog_open_directory (value window, HxString title, value callback, HxString defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 		const char* targetTitle = hxs_utf8 (title, nullptr);
 		ValuePointer* targetCallback = new ValuePointer (callback);
@@ -409,14 +408,12 @@ namespace lime {
 				delete targetCallback;
 			}
 		}, targetDefaultPath, allowMultiple);
-		#endif
 
 	}
 
 
 	void lime_file_dialog_open_file (value window, HxString title, value callback, value names, value patterns, int filterCount, HxString defaultPath, bool allowMultiple) {
 
-		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 		const char* targetTitle = hxs_utf8 (title, nullptr);
 		ValuePointer* targetCallback = new ValuePointer (callback);
@@ -461,14 +458,12 @@ namespace lime {
 
 			}
 		}, targetNames.data(), targetPatterns.data(), targetCount, targetDefaultPath, allowMultiple);
-		#endif
 
 	}
 
 
 	void lime_file_dialog_save_file (value window, HxString title, value callback, value names, value patterns, int filterCount, HxString defaultPath) {
 
-		#ifdef LIME_SDL
 		Window* targetWindow = window ? (Window*)val_data (window) : nullptr;
 		const char* targetTitle = hxs_utf8 (title, nullptr);
 		ValuePointer* targetCallback = new ValuePointer (callback);
@@ -505,7 +500,6 @@ namespace lime {
 
 			}
 		}, targetNames.data(), targetPatterns.data(), targetCount, targetDefaultPath);
-		#endif
 
 	}
 

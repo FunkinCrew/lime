@@ -37,7 +37,6 @@ namespace lime {
 	void ArrayBufferView::Resize (int size) {
 
 		buffer->Resize (size);
-
 		byteLength = size;
 		length = size;
 
