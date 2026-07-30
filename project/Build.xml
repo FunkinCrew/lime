@@ -198,7 +198,6 @@
 		<section if="LIME_ZLIB">
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
-			<compilerflag value="-DSTATIC_LINK" if="iphone" />
 			<compilerflag value="-DLIME_ZLIB" />
 
 			<file name="src/utils/compress/Zlib.cpp" />
