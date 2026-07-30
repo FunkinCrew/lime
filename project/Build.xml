@@ -446,11 +446,5 @@
 
 	</target>
 
-	<compiler exe="g++" if="apple">
-
-		<cppflag value="-x" />
-		<cppflag value="objective-c++" />
-
-	</compiler>
 
 </xml>
