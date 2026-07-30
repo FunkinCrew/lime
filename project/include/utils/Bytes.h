@@ -12,6 +12,7 @@ namespace lime {
 
 		int length;
 		unsigned char* b;
+		bool ownsMemory;
 
 		Bytes ();
 		Bytes (value bytes);

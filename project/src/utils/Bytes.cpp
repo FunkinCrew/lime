@@ -2,7 +2,8 @@
 #include <system/System.h>
 #include <utils/Bytes.h>
 #include <utils/File.h>
-#include <map>
+#include <stdlib.h>
+#include <string.h>
 
 
 namespace lime {
@@ -10,9 +11,6 @@ namespace lime {
 
 	static bool init = false;
 	static bool useBuffer = false;
-	static std::map<Bytes*, bool> hadValue;
-	static std::map<Bytes*, bool> usingValue;
-	static Mutex mutex;
 
 
 	Bytes::Bytes () {
@@ -33,6 +31,7 @@ namespace lime {
 
 		b = 0;
 		length = 0;
+		ownsMemory = true;
 
 	}
 
@@ -55,6 +54,7 @@ namespace lime {
 
 		b = 0;
 		length = 0;
+		ownsMemory = true;
 
 		Set (bytes);
 
@@ -63,27 +63,11 @@ namespace lime {
 
 	Bytes::~Bytes () {
 
-		mutex.Lock ();
+		if (ownsMemory && b) {
 
-		if (hadValue.find (this) != hadValue.end ()) {
-
-			hadValue.erase (this);
-
-			if (usingValue.find (this) == usingValue.end () && b) {
-
-				free (b);
-
-			}
+			free (b);
 
 		}
-
-		if (usingValue.find (this) != usingValue.end ()) {
-
-			usingValue.erase (this);
-
-		}
-
-		mutex.Unlock ();
 
 	}
 
@@ -147,91 +131,101 @@ namespace lime {
 
 		}
 
-		mutex.Lock ();
-
 		if (size <= 0) {
 
-			if (b) {
+			if (ownsMemory && b) {
 
-				if (usingValue.find (this) == usingValue.end ()) {
-
-					free (b);
-
-				}
-
-				b = 0;
-				length = 0;
+				free (b);
 
 			}
+
+			b = 0;
+			length = 0;
+			ownsMemory = true;
 
 		} else {
 
-			unsigned char* data = (unsigned char*)malloc (sizeof (char) * size);
+			if (ownsMemory) {
 
-			if (b && length > 0) {
+				unsigned char* data = (unsigned char*)realloc (b, size);
 
-				memcpy (data, b, length < size ? length : size);
+				if (data) {
 
-				if (usingValue.find (this) == usingValue.end ()) {
-
-					free (b);
+					b = data;
 
 				}
 
+			} else {
+
+				unsigned char* data = (unsigned char*)malloc (size);
+
+				if (b && length > 0) {
+
+					memcpy (data, b, length < size ? length : size);
+
+				}
+
+				b = data;
+
+				ownsMemory = true;
+
 			}
 
-			usingValue.erase (this);
-			b = data;
 			length = size;
 
 		}
 
-		mutex.Unlock ();
-
 	}
 
 
-	void Bytes::Set(value bytes) {
+	void Bytes::Set (value bytes) {
 
-	    int newLength = 0;
-	    unsigned char* newB = 0;
-	    bool isNull = val_is_null (bytes);
+		int newLength = 0;
+		unsigned char* newB = 0;
+		bool isNull = val_is_null (bytes);
 
-	    if (!isNull) {
+		if (!isNull) {
 
-	        value lengthVal = val_field (bytes, val_id ("length"));
-	        value bVal = val_field (bytes, val_id ("b"));
+			value lengthVal = val_field (bytes, val_id ("length"));
+			value bVal = val_field (bytes, val_id ("b"));
 
-	        newLength = val_int(lengthVal);
+			newLength = val_int (lengthVal);
 
-	        if (newLength > 0) {
+			if (newLength > 0) {
 
-	            if (val_is_string (bVal)) {
-	                newB = (unsigned char*)val_string (bVal);
-	            } else {
-	                newB = (unsigned char*)buffer_data (val_to_buffer (bVal));
-	            }
-	        }
-	    }
+				if (val_is_string (bVal)) {
 
-	    mutex.Lock ();
+					newB = (unsigned char*)val_string (bVal);
 
-	    if (isNull) {
+				} else {
 
-	        usingValue.erase (this);
-	        length = 0;
-	        b = 0;
+					newB = (unsigned char*)buffer_data (val_to_buffer (bVal));
 
-	    } else {
+				}
 
-	        hadValue[this] = true;
-	        usingValue[this] = true;
-	        length = newLength;
-	        b = newB;
+			}
 
-	    }
+		}
 
-	    mutex.Unlock ();
+		if (ownsMemory && b) {
+
+			free (b);
+
+		}
+
+		if (isNull) {
+
+			length = 0;
+			b = 0;
+			ownsMemory = true;
+
+		} else {
+
+			length = newLength;
+			b = newB;
+			ownsMemory = false;
+
+		}
 
 	}
 
@@ -248,15 +242,7 @@ namespace lime {
 
 		} else {
 
-			mutex.Lock ();
-
-			if (usingValue.find (this) != usingValue.end ()) {
-
-				usingValue.erase (this);
-
-			}
-
-			if (b) {
+			if (ownsMemory && b) {
 
 				free (b);
 
@@ -264,8 +250,7 @@ namespace lime {
 
 			b = 0;
 			length = 0;
-
-			mutex.Unlock ();
+			ownsMemory = true;
 
 		}
 
