@@ -1,5 +1,6 @@
 <xml>
 
+
 	<compiler exe="g++" if="apple">
 
 		<cppflag value="-x" />
@@ -32,6 +33,9 @@
 	<set name="LIME_ZLIB" value="1" />
 
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
+	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
+	<set name="LIBSUFFIX" value="${HX_TARGET_SUFFIX}" if="HX_TARGET_SUFFIX" />
+	<set name="LIBSUFFIX" value="${LIBEXTRA}" unless="LIBSUFFIX" />
 	<set name="NATIVE_TOOLKIT_PATH" value="lib" unless="NATIVE_TOOLKIT_PATH" />
 
 	<files id="lime">
@@ -278,15 +282,13 @@
 	<include name="lib/sdl_image-files.xml" />
 	<include name="lib/zlib-files.xml" />
 
-	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
-	<set name="LIBSUFFIX" value="${HX_TARGET_SUFFIX}" if="HX_TARGET_SUFFIX" />
-	<set name="LIBSUFFIX" value="${LIBEXTRA}" unless="LIBSUFFIX" />
 
 	<target id="lime" output="${LIBPREFIX}lime${DEBUGEXTRA}${LIBSUFFIX}" tool="linker" toolid="${STD_MODULE_LINK}">
 
 		<outdir name="${OUTPUT_DIR}/${BINDIR}" />
 
 		<files id="lime" />
+
 		<files id="android-cpufeatures" if="android" />
 
 		<files id="native-toolkit-cairo" if="LIME_CAIRO" />
@@ -310,6 +312,7 @@
 		<section unless="static_link">
 
 			<ext value=".so" />
+
 			<ext value=".ndll" if="windows || mac || linux" />
 
 			<section if="windows">
@@ -320,18 +323,18 @@
 					<lib name="avrt.lib" if="LIME_OPENAL" />
 					<lib name="comdlg32.lib" />
 					<lib name="comsuppw.lib" />
-					<lib name="dwrite.lib" if="LIME_HARFBUZZ" />
+					<lib name="dwrite.lib" />
 					<lib name="gdi32.lib" />
 					<lib name="imm32.lib" />
 					<lib name="kernel32.lib" />
 					<lib name="ole32.lib" />
 					<lib name="oleaut32.lib" />
 					<lib name="opengl32.lib" />
-					<lib name="rpcrt4.lib" if="LIME_HARFBUZZ" />
+					<lib name="rpcrt4.lib" />
 					<lib name="setupapi.lib" />
 					<lib name="shell32.lib" />
 					<lib name="user32.lib" />
-					<lib name="usp10.lib" if="LIME_HARFBUZZ" />
+					<lib name="usp10.lib" />
 					<lib name="version.lib" />
 					<lib name="wbemuuid.lib" />
 					<lib name="winmm.lib" />
@@ -345,7 +348,7 @@
 					<lib name="-ladvapi32" />
 					<lib name="-lavrt" if="LIME_OPENAL" />
 					<lib name="-lcomdlg32" />
-					<lib name="-ldwrite" if="LIME_HARFBUZZ" />
+					<lib name="-ldwrite" />
 					<lib name="-lgdi32" />
 					<lib name="-lhid" />
 					<lib name="-limm32" />
@@ -353,11 +356,11 @@
 					<lib name="-lole32" />
 					<lib name="-loleaut32" />
 					<lib name="-lopengl32" />
-					<lib name="-lrpcrt4" if="LIME_HARFBUZZ" />
+					<lib name="-lrpcrt4" />
 					<lib name="-lsetupapi" />
 					<lib name="-lshell32" />
 					<lib name="-luser32" />
-					<lib name="-lusp10" if="LIME_HARFBUZZ" />
+					<lib name="-lusp10" />
 					<lib name="-luuid" />
 					<lib name="-lversion" />
 					<lib name="-lwbemuuid" />
