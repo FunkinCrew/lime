@@ -518,8 +518,7 @@ class IOSPlatform extends PlatformTarget
 	{
 		var arm64 = (command == "rebuild" && !project.targetFlags.exists("simulator"));
 		var arm64sim = (command == "rebuild" && project.targetFlags.exists("simulator"));
-		var x86_64 = (command == "rebuild"
-			|| (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
+		var x86_64 = (command == "rebuild" && (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
 
 		var arc = (project.targetFlags.exists("arc"));
 
