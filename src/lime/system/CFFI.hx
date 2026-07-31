@@ -20,7 +20,7 @@ class CFFI
 	{
 		#if lime_cffi
 		available = true;
-		enabled = #if disable_cffi false; #else true; #end
+		enabled = true;
 		#else
 		available = false;
 		enabled = false;
@@ -44,7 +44,7 @@ class CFFI
 	 */
 	public static function load(library:String, method:String, args:Int = 0, lazy:Bool = false):Dynamic
 	{
-		#if (disable_cffi || macro)
+		#if macro
 		var enabled = false;
 		#end
 
@@ -62,7 +62,8 @@ class CFFI
 
 		var result:Dynamic = null;
 
-		#if (!disable_cffi && !macro)
+		#if !macro
+
 		#if (sys && !html5)
 		if (__moduleNames == null) __moduleNames = new Map<String, String>();
 
@@ -156,7 +157,9 @@ class CFFI
 			__loadNekoAPI(lazy);
 		}
 		#end
+
 		#end
+
 		#else
 		result = function(_, _, _, _, _, _)
 		{
@@ -169,7 +172,7 @@ class CFFI
 
 	public static macro function loadPrime(library:String, method:String, signature:String, lazy:Bool = false):Dynamic
 	{
-		#if (!display && !macro && cpp && !disable_cffi)
+		#if (!display && !macro && cpp)
 		return cpp.Prime.load(library, method, signature, lazy);
 		#else
 		var args = signature.length - 1;

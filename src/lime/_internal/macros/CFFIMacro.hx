@@ -60,7 +60,7 @@ class CFFIMacro
 							var typeSignature = type.signature;
 							var expr = "";
 
-							if (Context.defined("display") || Context.defined("disable_cffi"))
+							if (Context.defined("display"))
 							{
 								switch (type.result.toString())
 								{
@@ -158,7 +158,7 @@ class CFFIMacro
 
 	private static function __getFunctionType(args:Array<{name:String, opt:Bool, t:Type}>, result:Type)
 	{
-		#if (!disable_cffi && !display)
+		#if !display
 		var useCPPTypes = Context.defined("cpp");
 		#else
 		var useCPPTypes = false;

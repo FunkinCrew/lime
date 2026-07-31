@@ -161,37 +161,35 @@ class ImageDataUtil
 		var data = image.buffer.data;
 		if (data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_color_transform(image, rect, colorMatrix);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_color_transform(image, rect, colorMatrix);
+		#else
+		var format = image.buffer.format;
+		var premultiplied = image.buffer.premultiplied;
+
+		var dataView = new ImageDataView(image, rect);
+
+		var alphaTable = colorMatrix.getAlphaTable();
+		var redTable = colorMatrix.getRedTable();
+		var greenTable = colorMatrix.getGreenTable();
+		var blueTable = colorMatrix.getBlueTable();
+
+		var row, offset, pixel:RGBA = 0;
+
+		for (y in 0...dataView.height)
 		{
-			var format = image.buffer.format;
-			var premultiplied = image.buffer.premultiplied;
+			row = dataView.row(y);
 
-			var dataView = new ImageDataView(image, rect);
-
-			var alphaTable = colorMatrix.getAlphaTable();
-			var redTable = colorMatrix.getRedTable();
-			var greenTable = colorMatrix.getGreenTable();
-			var blueTable = colorMatrix.getBlueTable();
-
-			var row, offset, pixel:RGBA = 0;
-
-			for (y in 0...dataView.height)
+			for (x in 0...dataView.width)
 			{
-				row = dataView.row(y);
+				offset = row + (x * 4);
 
-				for (x in 0...dataView.width)
-				{
-					offset = row + (x * 4);
-
-					pixel.readUInt8(data, offset, format, premultiplied);
-					pixel.set(redTable[pixel.r], greenTable[pixel.g], blueTable[pixel.b], alphaTable[pixel.a]);
-					pixel.writeUInt8(data, offset, format, premultiplied);
-				}
+				pixel.readUInt8(data, offset, format, premultiplied);
+				pixel.set(redTable[pixel.r], greenTable[pixel.g], blueTable[pixel.b], alphaTable[pixel.a]);
+				pixel.writeUInt8(data, offset, format, premultiplied);
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -221,62 +219,60 @@ class ImageDataUtil
 
 		if (srcData == null || destData == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_copy_channel(image, sourceImage, sourceRect, destPoint, srcIdx, destIdx);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_copy_channel(image, sourceImage, sourceRect, destPoint, srcIdx, destIdx);
+		#else
+		var srcView = new ImageDataView(sourceImage, sourceRect);
+		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
+
+		var srcFormat = sourceImage.buffer.format;
+		var destFormat = image.buffer.format;
+		var srcPremultiplied = sourceImage.buffer.premultiplied;
+		var destPremultiplied = image.buffer.premultiplied;
+
+		var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, value = 0;
+
+		for (y in 0...destView.height)
 		{
-			var srcView = new ImageDataView(sourceImage, sourceRect);
-			var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
+			srcPosition = srcView.row(y);
+			destPosition = destView.row(y);
 
-			var srcFormat = sourceImage.buffer.format;
-			var destFormat = image.buffer.format;
-			var srcPremultiplied = sourceImage.buffer.premultiplied;
-			var destPremultiplied = image.buffer.premultiplied;
-
-			var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, value = 0;
-
-			for (y in 0...destView.height)
+			for (x in 0...destView.width)
 			{
-				srcPosition = srcView.row(y);
-				destPosition = destView.row(y);
+				srcPixel.readUInt8(srcData, srcPosition, srcFormat, srcPremultiplied);
+				destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
 
-				for (x in 0...destView.width)
+				switch (srcIdx)
 				{
-					srcPixel.readUInt8(srcData, srcPosition, srcFormat, srcPremultiplied);
-					destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-					switch (srcIdx)
-					{
-						case 0:
-							value = srcPixel.r;
-						case 1:
-							value = srcPixel.g;
-						case 2:
-							value = srcPixel.b;
-						case 3:
-							value = srcPixel.a;
-					}
-
-					switch (destIdx)
-					{
-						case 0:
-							destPixel.r = value;
-						case 1:
-							destPixel.g = value;
-						case 2:
-							destPixel.b = value;
-						case 3:
-							destPixel.a = value;
-					}
-
-					destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-					srcPosition += 4;
-					destPosition += 4;
+					case 0:
+						value = srcPixel.r;
+					case 1:
+						value = srcPixel.g;
+					case 2:
+						value = srcPixel.b;
+					case 3:
+						value = srcPixel.a;
 				}
+
+				switch (destIdx)
+				{
+					case 0:
+						destPixel.r = value;
+					case 1:
+						destPixel.g = value;
+					case 2:
+						destPixel.b = value;
+					case 3:
+						destPixel.a = value;
+				}
+
+				destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
+
+				srcPosition += 4;
+				destPosition += 4;
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -302,198 +298,196 @@ class ImageDataUtil
 		}
 		else
 		{
-			#if (lime_cffi && !disable_cffi && !macro)
-			if (CFFI.enabled) NativeCFFI.lime_image_data_util_copy_pixels(image, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
-			else
-			#end
+			#if (lime_cffi && !macro)
+			NativeCFFI.lime_image_data_util_copy_pixels(image, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
+			#else
+			var sourceData = sourceImage.buffer.data;
+			var destData = image.buffer.data;
+
+			if (sourceData == null || destData == null) return;
+
+			var sourceView = new ImageDataView(sourceImage, sourceRect);
+			var destRect = new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height);
+			var destView = new ImageDataView(image, destRect);
+
+			var sourceFormat = sourceImage.buffer.format;
+			var destFormat = image.buffer.format;
+
+			var sourcePosition:Int;
+			var destPosition:Int;
+			var sourceAlpha:Float;
+			var destAlpha:Float;
+			var oneMinusSourceAlpha:Float;
+			var blendAlpha:Float;
+			var sourcePixel:RGBA = 0;
+			var destPixel:RGBA = 0;
+
+			var sourcePremultiplied = sourceImage.buffer.premultiplied;
+			var destPremultiplied = image.buffer.premultiplied;
+			var sourceBytesPerPixel = Std.int(sourceImage.buffer.bitsPerPixel / 8);
+			var destBytesPerPixel = Std.int(image.buffer.bitsPerPixel / 8);
+
+			var useAlphaImage = (alphaImage != null && alphaImage.transparent);
+			var blend = (mergeAlpha || (useAlphaImage && !image.transparent))
+				|| (!mergeAlpha && !image.transparent && sourceImage.transparent);
+
+			if (!useAlphaImage)
 			{
-				var sourceData = sourceImage.buffer.data;
-				var destData = image.buffer.data;
-
-				if (sourceData == null || destData == null) return;
-
-				var sourceView = new ImageDataView(sourceImage, sourceRect);
-				var destRect = new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height);
-				var destView = new ImageDataView(image, destRect);
-
-				var sourceFormat = sourceImage.buffer.format;
-				var destFormat = image.buffer.format;
-
-				var sourcePosition:Int;
-				var destPosition:Int;
-				var sourceAlpha:Float;
-				var destAlpha:Float;
-				var oneMinusSourceAlpha:Float;
-				var blendAlpha:Float;
-				var sourcePixel:RGBA = 0;
-				var destPixel:RGBA = 0;
-
-				var sourcePremultiplied = sourceImage.buffer.premultiplied;
-				var destPremultiplied = image.buffer.premultiplied;
-				var sourceBytesPerPixel = Std.int(sourceImage.buffer.bitsPerPixel / 8);
-				var destBytesPerPixel = Std.int(image.buffer.bitsPerPixel / 8);
-
-				var useAlphaImage = (alphaImage != null && alphaImage.transparent);
-				var blend = (mergeAlpha || (useAlphaImage && !image.transparent))
-					|| (!mergeAlpha && !image.transparent && sourceImage.transparent);
-
-				if (!useAlphaImage)
+				if (blend)
 				{
-					if (blend)
+					for (y in 0...destView.height)
 					{
-						for (y in 0...destView.height)
+						sourcePosition = sourceView.row(y);
+						destPosition = destView.row(y);
+
+						for (x in 0...destView.width)
 						{
-							sourcePosition = sourceView.row(y);
-							destPosition = destView.row(y);
+							sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
+							destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
 
-							for (x in 0...destView.width)
+							sourceAlpha = sourcePixel.a / 255.0;
+							destAlpha = destPixel.a / 255.0;
+							oneMinusSourceAlpha = 1 - sourceAlpha;
+							blendAlpha = sourceAlpha + (destAlpha * oneMinusSourceAlpha);
+
+							if (blendAlpha == 0)
 							{
-								sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
-								destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
+								destPixel = 0;
+							}
+							else
+							{
+								destPixel.r = RGBA.__clamp[
+									Math.round((sourcePixel.r * sourceAlpha + destPixel.r * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.g = RGBA.__clamp[
+									Math.round((sourcePixel.g * sourceAlpha + destPixel.g * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.b = RGBA.__clamp[
+									Math.round((sourcePixel.b * sourceAlpha + destPixel.b * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.a = RGBA.__clamp[Math.round(blendAlpha * 255.0)];
+							}
 
-								sourceAlpha = sourcePixel.a / 255.0;
+							destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
+
+							sourcePosition += 4;
+							destPosition += 4;
+						}
+					}
+				}
+				else if (sourceFormat == destFormat
+					&& sourcePremultiplied == destPremultiplied
+					&& sourceBytesPerPixel == destBytesPerPixel)
+				{
+					for (y in 0...destView.height)
+					{
+						sourcePosition = sourceView.row(y);
+						destPosition = destView.row(y);
+
+						#if js
+						// TODO: Is this faster on HTML5 than the normal copy method?
+						destData.set(sourceData.subarray(sourcePosition, sourcePosition + destView.width * destBytesPerPixel), destPosition);
+						#else
+						destData.buffer.blit(destPosition, sourceData.buffer, sourcePosition, destView.width * destBytesPerPixel);
+						#end
+					}
+				}
+				else
+				{
+					for (y in 0...destView.height)
+					{
+						sourcePosition = sourceView.row(y);
+						destPosition = destView.row(y);
+
+						for (x in 0...destView.width)
+						{
+							sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
+							sourcePixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
+
+							sourcePosition += 4;
+							destPosition += 4;
+						}
+					}
+				}
+			}
+			else
+			{
+				var alphaData = alphaImage.buffer.data;
+				var alphaFormat = alphaImage.buffer.format;
+				var alphaPosition, alphaPixel:RGBA = 0;
+
+				var alphaView = new ImageDataView(alphaImage,
+					new Rectangle(sourceView.x + (alphaPoint == null ? 0 : alphaPoint.x), sourceView.y + (alphaPoint == null ? 0 : alphaPoint.y),
+						sourceView.width, sourceView.height));
+
+				destView.clip(Std.int(destPoint.x), Std.int(destPoint.y), alphaView.width, alphaView.height);
+
+				if (blend)
+				{
+					for (y in 0...destView.height)
+					{
+						sourcePosition = sourceView.row(y);
+						destPosition = destView.row(y);
+						alphaPosition = alphaView.row(y);
+
+						for (x in 0...destView.width)
+						{
+							sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
+							destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
+							alphaPixel.readUInt8(alphaData, alphaPosition, alphaFormat, false);
+
+							sourceAlpha = (alphaPixel.a / 255.0) * (sourcePixel.a / 255.0);
+
+							if (sourceAlpha > 0)
+							{
 								destAlpha = destPixel.a / 255.0;
 								oneMinusSourceAlpha = 1 - sourceAlpha;
 								blendAlpha = sourceAlpha + (destAlpha * oneMinusSourceAlpha);
 
-								if (blendAlpha == 0)
-								{
-									destPixel = 0;
-								}
-								else
-								{
-									destPixel.r = RGBA.__clamp[
-										Math.round((sourcePixel.r * sourceAlpha + destPixel.r * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.g = RGBA.__clamp[
-										Math.round((sourcePixel.g * sourceAlpha + destPixel.g * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.b = RGBA.__clamp[
-										Math.round((sourcePixel.b * sourceAlpha + destPixel.b * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.a = RGBA.__clamp[Math.round(blendAlpha * 255.0)];
-								}
+								destPixel.r = RGBA.__clamp[
+									Math.round((sourcePixel.r * sourceAlpha + destPixel.r * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.g = RGBA.__clamp[
+									Math.round((sourcePixel.g * sourceAlpha + destPixel.g * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.b = RGBA.__clamp[
+									Math.round((sourcePixel.b * sourceAlpha + destPixel.b * destAlpha * oneMinusSourceAlpha) / blendAlpha)
+								];
+								destPixel.a = RGBA.__clamp[Math.round(blendAlpha * 255.0)];
 
 								destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-								sourcePosition += 4;
-								destPosition += 4;
 							}
-						}
-					}
-					else if (sourceFormat == destFormat
-						&& sourcePremultiplied == destPremultiplied
-						&& sourceBytesPerPixel == destBytesPerPixel)
-					{
-						for (y in 0...destView.height)
-						{
-							sourcePosition = sourceView.row(y);
-							destPosition = destView.row(y);
 
-							#if js
-							// TODO: Is this faster on HTML5 than the normal copy method?
-							destData.set(sourceData.subarray(sourcePosition, sourcePosition + destView.width * destBytesPerPixel), destPosition);
-							#else
-							destData.buffer.blit(destPosition, sourceData.buffer, sourcePosition, destView.width * destBytesPerPixel);
-							#end
-						}
-					}
-					else
-					{
-						for (y in 0...destView.height)
-						{
-							sourcePosition = sourceView.row(y);
-							destPosition = destView.row(y);
-
-							for (x in 0...destView.width)
-							{
-								sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
-								sourcePixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-								sourcePosition += 4;
-								destPosition += 4;
-							}
+							sourcePosition += 4;
+							destPosition += 4;
+							alphaPosition += 4;
 						}
 					}
 				}
 				else
 				{
-					var alphaData = alphaImage.buffer.data;
-					var alphaFormat = alphaImage.buffer.format;
-					var alphaPosition, alphaPixel:RGBA = 0;
-
-					var alphaView = new ImageDataView(alphaImage,
-						new Rectangle(sourceView.x + (alphaPoint == null ? 0 : alphaPoint.x), sourceView.y + (alphaPoint == null ? 0 : alphaPoint.y),
-							sourceView.width, sourceView.height));
-
-					destView.clip(Std.int(destPoint.x), Std.int(destPoint.y), alphaView.width, alphaView.height);
-
-					if (blend)
+					for (y in 0...destView.height)
 					{
-						for (y in 0...destView.height)
+						sourcePosition = sourceView.row(y);
+						destPosition = destView.row(y);
+						alphaPosition = alphaView.row(y);
+
+						for (x in 0...destView.width)
 						{
-							sourcePosition = sourceView.row(y);
-							destPosition = destView.row(y);
-							alphaPosition = alphaView.row(y);
+							sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
+							alphaPixel.readUInt8(alphaData, alphaPosition, alphaFormat, false);
 
-							for (x in 0...destView.width)
-							{
-								sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
-								destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
-								alphaPixel.readUInt8(alphaData, alphaPosition, alphaFormat, false);
+							sourcePixel.a = Math.round(sourcePixel.a * (alphaPixel.a / 0xFF));
+							sourcePixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
 
-								sourceAlpha = (alphaPixel.a / 255.0) * (sourcePixel.a / 255.0);
-
-								if (sourceAlpha > 0)
-								{
-									destAlpha = destPixel.a / 255.0;
-									oneMinusSourceAlpha = 1 - sourceAlpha;
-									blendAlpha = sourceAlpha + (destAlpha * oneMinusSourceAlpha);
-
-									destPixel.r = RGBA.__clamp[
-										Math.round((sourcePixel.r * sourceAlpha + destPixel.r * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.g = RGBA.__clamp[
-										Math.round((sourcePixel.g * sourceAlpha + destPixel.g * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.b = RGBA.__clamp[
-										Math.round((sourcePixel.b * sourceAlpha + destPixel.b * destAlpha * oneMinusSourceAlpha) / blendAlpha)
-									];
-									destPixel.a = RGBA.__clamp[Math.round(blendAlpha * 255.0)];
-
-									destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-								}
-
-								sourcePosition += 4;
-								destPosition += 4;
-								alphaPosition += 4;
-							}
-						}
-					}
-					else
-					{
-						for (y in 0...destView.height)
-						{
-							sourcePosition = sourceView.row(y);
-							destPosition = destView.row(y);
-							alphaPosition = alphaView.row(y);
-
-							for (x in 0...destView.width)
-							{
-								sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
-								alphaPixel.readUInt8(alphaData, alphaPosition, alphaFormat, false);
-
-								sourcePixel.a = Math.round(sourcePixel.a * (alphaPixel.a / 0xFF));
-								sourcePixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-								sourcePosition += 4;
-								destPosition += 4;
-								alphaPosition += 4;
-							}
+							sourcePosition += 4;
+							destPosition += 4;
+							alphaPosition += 4;
 						}
 					}
 				}
 			}
+			#end
 		}
 
 		image.dirty = true;
@@ -522,29 +516,26 @@ class ImageDataUtil
 		var data = image.buffer.data;
 		if (data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_fill_rect(image, rect, (fillColor >> 16) & 0xFFFF, (fillColor) & 0xFFFF);
-		else
-			// TODO: Better Int32 solution
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_fill_rect(image, rect, (fillColor >> 16) & 0xFFFF, (fillColor) & 0xFFFF);
+		#else
+		var format = image.buffer.format;
+		var premultiplied = image.buffer.premultiplied;
+		if (premultiplied) fillColor.multiplyAlpha();
+
+		var dataView = new ImageDataView(image, rect);
+		var row;
+
+		for (y in 0...dataView.height)
 		{
-			var format = image.buffer.format;
-			var premultiplied = image.buffer.premultiplied;
-			if (premultiplied) fillColor.multiplyAlpha();
+			row = dataView.row(y);
 
-			var dataView = new ImageDataView(image, rect);
-			var row;
-
-			for (y in 0...dataView.height)
+			for (x in 0...dataView.width)
 			{
-				row = dataView.row(y);
-
-				for (x in 0...dataView.width)
-				{
-					fillColor.writeUInt8(data, row + (x * 4), format, false);
-				}
+				fillColor.writeUInt8(data, row + (x * 4), format, false);
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -557,72 +548,69 @@ class ImageDataUtil
 
 		if (format == ARGB32) color = ((color & 0xFFFFFF) << 8) | ((color >> 24) & 0xFF);
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_flood_fill(image, x, y, (color >> 16) & 0xFFFF, (color) & 0xFFFF);
-		else
-			// TODO: Better Int32 solution
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_flood_fill(image, x, y, (color >> 16) & 0xFFFF, (color) & 0xFFFF);
+		#else
+		var format = image.buffer.format;
+		var premultiplied = image.buffer.premultiplied;
+
+		var fillColor:RGBA = color;
+
+		var hitColor:RGBA = 0;
+		hitColor.readUInt8(data, ((y + image.offsetY) * (image.buffer.width * 4)) + ((x + image.offsetX) * 4), format, premultiplied);
+
+		if (!image.transparent)
 		{
-			var format = image.buffer.format;
-			var premultiplied = image.buffer.premultiplied;
+			fillColor.a = 0xFF;
+			hitColor.a = 0xFF;
+		}
 
-			var fillColor:RGBA = color;
+		if (fillColor == hitColor) return;
 
-			var hitColor:RGBA = 0;
-			hitColor.readUInt8(data, ((y + image.offsetY) * (image.buffer.width * 4)) + ((x + image.offsetX) * 4), format, premultiplied);
+		if (premultiplied) fillColor.multiplyAlpha();
 
-			if (!image.transparent)
+		var dx = [0, -1, 1, 0];
+		var dy = [-1, 0, 0, 1];
+
+		var minX = -image.offsetX;
+		var minY = -image.offsetY;
+		var maxX = minX + image.width;
+		var maxY = minY + image.height;
+
+		var queue = new Array<Int>();
+		queue.push(x);
+		queue.push(y);
+
+		var curPointX, curPointY, nextPointX, nextPointY, nextPointOffset, readColor:RGBA = 0;
+
+		while (queue.length > 0)
+		{
+			curPointY = queue.pop();
+			curPointX = queue.pop();
+
+			for (i in 0...4)
 			{
-				fillColor.a = 0xFF;
-				hitColor.a = 0xFF;
-			}
+				nextPointX = curPointX + dx[i];
+				nextPointY = curPointY + dy[i];
 
-			if (fillColor == hitColor) return;
-
-			if (premultiplied) fillColor.multiplyAlpha();
-
-			var dx = [0, -1, 1, 0];
-			var dy = [-1, 0, 0, 1];
-
-			var minX = -image.offsetX;
-			var minY = -image.offsetY;
-			var maxX = minX + image.width;
-			var maxY = minY + image.height;
-
-			var queue = new Array<Int>();
-			queue.push(x);
-			queue.push(y);
-
-			var curPointX, curPointY, nextPointX, nextPointY, nextPointOffset, readColor:RGBA = 0;
-
-			while (queue.length > 0)
-			{
-				curPointY = queue.pop();
-				curPointX = queue.pop();
-
-				for (i in 0...4)
+				if (nextPointX < minX || nextPointY < minY || nextPointX >= maxX || nextPointY >= maxY)
 				{
-					nextPointX = curPointX + dx[i];
-					nextPointY = curPointY + dy[i];
+					continue;
+				}
 
-					if (nextPointX < minX || nextPointY < minY || nextPointX >= maxX || nextPointY >= maxY)
-					{
-						continue;
-					}
+				nextPointOffset = (nextPointY * image.width + nextPointX) * 4;
+				readColor.readUInt8(data, nextPointOffset, format, premultiplied);
 
-					nextPointOffset = (nextPointY * image.width + nextPointX) * 4;
-					readColor.readUInt8(data, nextPointOffset, format, premultiplied);
+				if (readColor == hitColor)
+				{
+					fillColor.writeUInt8(data, nextPointOffset, format, false);
 
-					if (readColor == hitColor)
-					{
-						fillColor.writeUInt8(data, nextPointOffset, format, false);
-
-						queue.push(nextPointX);
-						queue.push(nextPointY);
-					}
+					queue.push(nextPointX);
+					queue.push(nextPointY);
 				}
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -844,50 +832,48 @@ class ImageDataUtil
 		var length = Std.int(rect.width * rect.height);
 		var bytes = Bytes.alloc(length * 4);
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_get_pixels(image, rect, format, bytes);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_get_pixels(image, rect, format, bytes);
+		#else
+		var data = image.buffer.data;
+		var sourceFormat = image.buffer.format;
+		var premultiplied = image.buffer.premultiplied;
+
+		var dataView = new ImageDataView(image, rect);
+		var position;
+		var argb:ARGB = 0;
+		var bgra:BGRA = 0;
+		var pixel:RGBA = 0;
+		var destPosition = 0;
+
+		for (y in 0...dataView.height)
 		{
-			var data = image.buffer.data;
-			var sourceFormat = image.buffer.format;
-			var premultiplied = image.buffer.premultiplied;
+			position = dataView.row(y);
 
-			var dataView = new ImageDataView(image, rect);
-			var position;
-			var argb:ARGB = 0;
-			var bgra:BGRA = 0;
-			var pixel:RGBA = 0;
-			var destPosition = 0;
-
-			for (y in 0...dataView.height)
+			for (x in 0...dataView.width)
 			{
-				position = dataView.row(y);
+				pixel.readUInt8(data, position, sourceFormat, premultiplied);
 
-				for (x in 0...dataView.width)
+				switch (format)
 				{
-					pixel.readUInt8(data, position, sourceFormat, premultiplied);
-
-					switch (format)
-					{
-						case ARGB32:
-							argb = pixel;
-							pixel = cast argb;
-						case BGRA32:
-							bgra = pixel;
-							pixel = cast bgra;
-						default:
-					}
-
-					bytes.set(destPosition++, pixel.r);
-					bytes.set(destPosition++, pixel.g);
-					bytes.set(destPosition++, pixel.b);
-					bytes.set(destPosition++, pixel.a);
-
-					position += 4;
+					case ARGB32:
+						argb = pixel;
+						pixel = cast argb;
+					case BGRA32:
+						bgra = pixel;
+						pixel = cast bgra;
+					default:
 				}
+
+				bytes.set(destPosition++, pixel.r);
+				bytes.set(destPosition++, pixel.g);
+				bytes.set(destPosition++, pixel.b);
+				bytes.set(destPosition++, pixel.a);
+
+				position += 4;
 			}
 		}
+		#end
 
 		return bytes;
 	}
@@ -897,49 +883,46 @@ class ImageDataUtil
 	{
 		if (image.buffer.data == null || sourceImage.buffer.data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_merge(image, sourceImage, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier,
-			alphaMultiplier);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_merge(image, sourceImage, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
+		#else
+		var sourceView = new ImageDataView(sourceImage, sourceRect);
+		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height));
+
+		var sourceData = sourceImage.buffer.data;
+		var destData = image.buffer.data;
+		var sourceFormat = sourceImage.buffer.format;
+		var destFormat = image.buffer.format;
+		var sourcePremultiplied = sourceImage.buffer.premultiplied;
+		var destPremultiplied = image.buffer.premultiplied;
+
+		var sourcePosition:Int;
+		var destPosition:Int;
+		var sourcePixel:RGBA = 0;
+		var destPixel:RGBA = 0;
+
+		for (y in 0...destView.height)
 		{
-			var sourceView = new ImageDataView(sourceImage, sourceRect);
-			var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height));
+			sourcePosition = sourceView.row(y);
+			destPosition = destView.row(y);
 
-			var sourceData = sourceImage.buffer.data;
-			var destData = image.buffer.data;
-			var sourceFormat = sourceImage.buffer.format;
-			var destFormat = image.buffer.format;
-			var sourcePremultiplied = sourceImage.buffer.premultiplied;
-			var destPremultiplied = image.buffer.premultiplied;
-
-			var sourcePosition:Int;
-			var destPosition:Int;
-			var sourcePixel:RGBA = 0;
-			var destPixel:RGBA = 0;
-
-			for (y in 0...destView.height)
+			for (x in 0...destView.width)
 			{
-				sourcePosition = sourceView.row(y);
-				destPosition = destView.row(y);
+				sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
+				destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
 
-				for (x in 0...destView.width)
-				{
-					sourcePixel.readUInt8(sourceData, sourcePosition, sourceFormat, sourcePremultiplied);
-					destPixel.readUInt8(destData, destPosition, destFormat, destPremultiplied);
+				destPixel.r = Std.int(((sourcePixel.r * redMultiplier) + (destPixel.r * (256 - redMultiplier))) / 256);
+				destPixel.g = Std.int(((sourcePixel.g * greenMultiplier) + (destPixel.g * (256 - greenMultiplier))) / 256);
+				destPixel.b = Std.int(((sourcePixel.b * blueMultiplier) + (destPixel.b * (256 - blueMultiplier))) / 256);
+				destPixel.a = Std.int(((sourcePixel.a * alphaMultiplier) + (destPixel.a * (256 - alphaMultiplier))) / 256);
 
-					destPixel.r = Std.int(((sourcePixel.r * redMultiplier) + (destPixel.r * (256 - redMultiplier))) / 256);
-					destPixel.g = Std.int(((sourcePixel.g * greenMultiplier) + (destPixel.g * (256 - greenMultiplier))) / 256);
-					destPixel.b = Std.int(((sourcePixel.b * blueMultiplier) + (destPixel.b * (256 - blueMultiplier))) / 256);
-					destPixel.a = Std.int(((sourcePixel.a * alphaMultiplier) + (destPixel.a * (256 - alphaMultiplier))) / 256);
+				destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
 
-					destPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-
-					sourcePosition += 4;
-					destPosition += 4;
-				}
+				sourcePosition += 4;
+				destPosition += 4;
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -950,10 +933,9 @@ class ImageDataUtil
 		var data = image.buffer.data;
 		if (data == null || !image.buffer.transparent) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_multiply_alpha(image);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_multiply_alpha(image);
+		#else
 		{
 			var format = image.buffer.format;
 			var length = Std.int(data.length / 4);
@@ -965,6 +947,7 @@ class ImageDataUtil
 				pixel.writeUInt8(data, i * 4, format, true);
 			}
 		}
+		#end
 
 		image.buffer.premultiplied = true;
 		image.dirty = true;
@@ -977,64 +960,62 @@ class ImageDataUtil
 		if (buffer.width == newWidth && buffer.height == newHeight) return;
 		var newBuffer = new ImageBuffer(new UInt8Array(newWidth * newHeight * 4), newWidth, newHeight);
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_resize(image, newBuffer, newWidth, newHeight);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_resize(image, newBuffer, newWidth, newHeight);
+		#else
+		var imageWidth = image.width;
+		var imageHeight = image.height;
+
+		var data = image.data;
+		var newData = newBuffer.data;
+		var sourceIndex:Int, sourceIndexX:Int, sourceIndexY:Int, sourceIndexXY:Int, index:Int;
+		var sourceX:Int, sourceY:Int;
+		var u:Float, v:Float, uRatio:Float, vRatio:Float, uOpposite:Float, vOpposite:Float;
+
+		for (y in 0...newHeight)
 		{
-			var imageWidth = image.width;
-			var imageHeight = image.height;
-
-			var data = image.data;
-			var newData = newBuffer.data;
-			var sourceIndex:Int, sourceIndexX:Int, sourceIndexY:Int, sourceIndexXY:Int, index:Int;
-			var sourceX:Int, sourceY:Int;
-			var u:Float, v:Float, uRatio:Float, vRatio:Float, uOpposite:Float, vOpposite:Float;
-
-			for (y in 0...newHeight)
+			for (x in 0...newWidth)
 			{
-				for (x in 0...newWidth)
+				// TODO: Handle more color formats
+
+				u = ((x + 0.5) / newWidth) * imageWidth - 0.5;
+				v = ((y + 0.5) / newHeight) * imageHeight - 0.5;
+
+				sourceX = Std.int(u);
+				sourceY = Std.int(v);
+
+				sourceIndex = (sourceY * imageWidth + sourceX) * 4;
+				sourceIndexX = (sourceX < imageWidth - 1) ? sourceIndex + 4 : sourceIndex;
+				sourceIndexY = (sourceY < imageHeight - 1) ? sourceIndex + (imageWidth * 4) : sourceIndex;
+				sourceIndexXY = (sourceIndexX != sourceIndex) ? sourceIndexY + 4 : sourceIndexY;
+
+				index = (y * newWidth + x) * 4;
+
+				uRatio = u - sourceX;
+				vRatio = v - sourceY;
+				uOpposite = 1 - uRatio;
+				vOpposite = 1 - vRatio;
+
+				newData[index] = Std.int((data[sourceIndex] * uOpposite + data[sourceIndexX] * uRatio) * vOpposite
+					+ (data[sourceIndexY] * uOpposite + data[sourceIndexXY] * uRatio) * vRatio);
+				newData[index + 1] = Std.int((data[sourceIndex + 1] * uOpposite + data[sourceIndexX + 1] * uRatio) * vOpposite
+					+ (data[sourceIndexY + 1] * uOpposite + data[sourceIndexXY + 1] * uRatio) * vRatio);
+				newData[index + 2] = Std.int((data[sourceIndex + 2] * uOpposite + data[sourceIndexX + 2] * uRatio) * vOpposite
+					+ (data[sourceIndexY + 2] * uOpposite + data[sourceIndexXY + 2] * uRatio) * vRatio);
+
+				// Maybe it would be better to not weigh colors with an alpha of zero, but the below should help prevent black fringes caused by transparent pixels made visible
+
+				if (data[sourceIndexX + 3] == 0 || data[sourceIndexY + 3] == 0 || data[sourceIndexXY + 3] == 0)
 				{
-					// TODO: Handle more color formats
-
-					u = ((x + 0.5) / newWidth) * imageWidth - 0.5;
-					v = ((y + 0.5) / newHeight) * imageHeight - 0.5;
-
-					sourceX = Std.int(u);
-					sourceY = Std.int(v);
-
-					sourceIndex = (sourceY * imageWidth + sourceX) * 4;
-					sourceIndexX = (sourceX < imageWidth - 1) ? sourceIndex + 4 : sourceIndex;
-					sourceIndexY = (sourceY < imageHeight - 1) ? sourceIndex + (imageWidth * 4) : sourceIndex;
-					sourceIndexXY = (sourceIndexX != sourceIndex) ? sourceIndexY + 4 : sourceIndexY;
-
-					index = (y * newWidth + x) * 4;
-
-					uRatio = u - sourceX;
-					vRatio = v - sourceY;
-					uOpposite = 1 - uRatio;
-					vOpposite = 1 - vRatio;
-
-					newData[index] = Std.int((data[sourceIndex] * uOpposite + data[sourceIndexX] * uRatio) * vOpposite
-						+ (data[sourceIndexY] * uOpposite + data[sourceIndexXY] * uRatio) * vRatio);
-					newData[index + 1] = Std.int((data[sourceIndex + 1] * uOpposite + data[sourceIndexX + 1] * uRatio) * vOpposite
-						+ (data[sourceIndexY + 1] * uOpposite + data[sourceIndexXY + 1] * uRatio) * vRatio);
-					newData[index + 2] = Std.int((data[sourceIndex + 2] * uOpposite + data[sourceIndexX + 2] * uRatio) * vOpposite
-						+ (data[sourceIndexY + 2] * uOpposite + data[sourceIndexXY + 2] * uRatio) * vRatio);
-
-					// Maybe it would be better to not weigh colors with an alpha of zero, but the below should help prevent black fringes caused by transparent pixels made visible
-
-					if (data[sourceIndexX + 3] == 0 || data[sourceIndexY + 3] == 0 || data[sourceIndexXY + 3] == 0)
-					{
-						newData[index + 3] = 0;
-					}
-					else
-					{
-						newData[index + 3] = data[sourceIndex + 3];
-					}
+					newData[index + 3] = 0;
+				}
+				else
+				{
+					newData[index + 3] = data[sourceIndex + 3];
 				}
 			}
 		}
+		#end
 
 		buffer.data = newBuffer.data;
 		buffer.width = newWidth;
@@ -1092,83 +1073,81 @@ class ImageDataUtil
 		var data = image.buffer.data;
 		if (data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_set_format(image, format);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_set_format(image, format);
+		#else
+		var index:Int;
+		var length = Std.int(data.length / 4);
+		var r1:Int;
+		var g1:Int;
+		var b1:Int;
+		var a1:Int;
+		var r2:Int;
+		var g2:Int;
+		var b2:Int;
+		var a2:Int;
+		var r:Int;
+		var g:Int;
+		var b:Int;
+		var a:Int;
+
+		switch (image.format)
 		{
-			var index:Int;
-			var length = Std.int(data.length / 4);
-			var r1:Int;
-			var g1:Int;
-			var b1:Int;
-			var a1:Int;
-			var r2:Int;
-			var g2:Int;
-			var b2:Int;
-			var a2:Int;
-			var r:Int;
-			var g:Int;
-			var b:Int;
-			var a:Int;
+			case RGBA32:
+				r1 = 0;
+				g1 = 1;
+				b1 = 2;
+				a1 = 3;
 
-			switch (image.format)
-			{
-				case RGBA32:
-					r1 = 0;
-					g1 = 1;
-					b1 = 2;
-					a1 = 3;
+			case ARGB32:
+				r1 = 1;
+				g1 = 2;
+				b1 = 3;
+				a1 = 0;
 
-				case ARGB32:
-					r1 = 1;
-					g1 = 2;
-					b1 = 3;
-					a1 = 0;
-
-				case BGRA32:
-					r1 = 2;
-					g1 = 1;
-					b1 = 0;
-					a1 = 3;
-			}
-
-			switch (format)
-			{
-				case RGBA32:
-					r2 = 0;
-					g2 = 1;
-					b2 = 2;
-					a2 = 3;
-
-				case ARGB32:
-					r2 = 1;
-					g2 = 2;
-					b2 = 3;
-					a2 = 0;
-
-				case BGRA32:
-					r2 = 2;
-					g2 = 1;
-					b2 = 0;
-					a2 = 3;
-			}
-
-			for (i in 0...length)
-			{
-				index = i * 4;
-
-				r = data[index + r1];
-				g = data[index + g1];
-				b = data[index + b1];
-				a = data[index + a1];
-
-				data[index + r2] = r;
-				data[index + g2] = g;
-				data[index + b2] = b;
-				data[index + a2] = a;
-			}
+			case BGRA32:
+				r1 = 2;
+				g1 = 1;
+				b1 = 0;
+				a1 = 3;
 		}
+
+		switch (format)
+		{
+			case RGBA32:
+				r2 = 0;
+				g2 = 1;
+				b2 = 2;
+				a2 = 3;
+
+			case ARGB32:
+				r2 = 1;
+				g2 = 2;
+				b2 = 3;
+				a2 = 0;
+
+			case BGRA32:
+				r2 = 2;
+				g2 = 1;
+				b2 = 0;
+				a2 = 3;
+		}
+
+		for (i in 0...length)
+		{
+			index = i * 4;
+
+			r = data[index + r1];
+			g = data[index + g1];
+			b = data[index + b1];
+			a = data[index + a1];
+
+			data[index + r2] = r;
+			data[index + g2] = g;
+			data[index + b2] = b;
+			data[index + a2] = a;
+		}
+		#end
 
 		image.buffer.format = format;
 		image.dirty = true;
@@ -1229,54 +1208,52 @@ class ImageDataUtil
 	{
 		if (image.buffer.data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_set_pixels(image, rect, bytePointer.bytes, bytePointer.offset, format, endian == BIG_ENDIAN ? 1 : 0);
-		else
-		#end
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_set_pixels(image, rect, bytePointer.bytes, bytePointer.offset, format, endian == BIG_ENDIAN ? 1 : 0);
+		#else
+		var data = image.buffer.data;
+		var sourceFormat = image.buffer.format;
+		var premultiplied = image.buffer.premultiplied;
+		var dataView = new ImageDataView(image, rect);
+		var row, color, pixel:RGBA;
+		var transparent = image.transparent;
+		var bytes = bytePointer.bytes;
+		var dataPosition = bytePointer.offset;
+		var littleEndian = (endian != BIG_ENDIAN);
+
+		for (y in 0...dataView.height)
 		{
-			var data = image.buffer.data;
-			var sourceFormat = image.buffer.format;
-			var premultiplied = image.buffer.premultiplied;
-			var dataView = new ImageDataView(image, rect);
-			var row, color, pixel:RGBA;
-			var transparent = image.transparent;
-			var bytes = bytePointer.bytes;
-			var dataPosition = bytePointer.offset;
-			var littleEndian = (endian != BIG_ENDIAN);
+			row = dataView.row(y);
 
-			for (y in 0...dataView.height)
+			for (x in 0...dataView.width)
 			{
-				row = dataView.row(y);
-
-				for (x in 0...dataView.width)
+				if (littleEndian)
 				{
-					if (littleEndian)
-					{
-						color = bytes.getInt32(dataPosition); // can this be trusted on big endian systems?
-					}
-					else
-					{
-						color = bytes.get(dataPosition + 3) | (bytes.get(dataPosition + 2) << 8) | (bytes.get(dataPosition +
-							1) << 16) | (bytes.get(dataPosition) << 24);
-					}
-
-					dataPosition += 4;
-
-					switch (format)
-					{
-						case ARGB32:
-							pixel = (color : ARGB);
-						case BGRA32:
-							pixel = (color : BGRA);
-						default:
-							pixel = color;
-					}
-
-					if (!transparent) pixel.a = 0xFF;
-					pixel.writeUInt8(data, row + (x * 4), sourceFormat, premultiplied);
+					color = bytes.getInt32(dataPosition); // can this be trusted on big endian systems?
 				}
+				else
+				{
+					color = bytes.get(dataPosition + 3) | (bytes.get(dataPosition + 2) << 8) | (bytes.get(dataPosition +
+						1) << 16) | (bytes.get(dataPosition) << 24);
+				}
+
+				dataPosition += 4;
+
+				switch (format)
+				{
+					case ARGB32:
+						pixel = (color : ARGB);
+					case BGRA32:
+						pixel = (color : BGRA);
+					default:
+						pixel = color;
+				}
+
+				if (!transparent) pixel.a = 0xFF;
+				pixel.writeUInt8(data, row + (x * 4), sourceFormat, premultiplied);
 			}
 		}
+		#end
 
 		image.dirty = true;
 		image.version++;
@@ -1325,61 +1302,59 @@ class ImageDataUtil
 
 		var hits = 0;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) hits = NativeCFFI.lime_image_data_util_threshold(image, sourceImage, sourceRect, destPoint, _operation, (_threshold >> 16) & 0xFFFF,
+		#if (lime_cffi && !macro)
+		hits = NativeCFFI.lime_image_data_util_threshold(image, sourceImage, sourceRect, destPoint, _operation, (_threshold >> 16) & 0xFFFF,
 			(_threshold) & 0xFFFF, (_color >> 16) & 0xFFFF, (_color) & 0xFFFF, (_mask >> 16) & 0xFFFF, (_mask) & 0xFFFF, copySource);
-		else
-		#end
+		#else
+		var srcView = new ImageDataView(sourceImage, sourceRect);
+		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
+
+		var srcFormat = sourceImage.buffer.format;
+		var destFormat = image.buffer.format;
+		var srcPremultiplied = sourceImage.buffer.premultiplied;
+		var destPremultiplied = image.buffer.premultiplied;
+
+		var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, pixelMask:UInt, test:Bool, value:Int;
+
+		for (y in 0...destView.height)
 		{
-			var srcView = new ImageDataView(sourceImage, sourceRect);
-			var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
+			srcPosition = srcView.row(y);
+			destPosition = destView.row(y);
 
-			var srcFormat = sourceImage.buffer.format;
-			var destFormat = image.buffer.format;
-			var srcPremultiplied = sourceImage.buffer.premultiplied;
-			var destPremultiplied = image.buffer.premultiplied;
-
-			var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, pixelMask:UInt, test:Bool, value:Int;
-
-			for (y in 0...destView.height)
+			for (x in 0...destView.width)
 			{
-				srcPosition = srcView.row(y);
-				destPosition = destView.row(y);
+				srcPixel.readUInt8(srcData, srcPosition, srcFormat, srcPremultiplied);
 
-				for (x in 0...destView.width)
+				pixelMask = srcPixel & _mask;
+
+				value = __pixelCompare(pixelMask, _threshold);
+
+				test = switch (_operation)
 				{
-					srcPixel.readUInt8(srcData, srcPosition, srcFormat, srcPremultiplied);
-
-					pixelMask = srcPixel & _mask;
-
-					value = __pixelCompare(pixelMask, _threshold);
-
-					test = switch (_operation)
-					{
-						case NOT_EQUALS: (value != 0);
-						case EQUALS: (value == 0);
-						case LESS_THAN: (value == -1);
-						case LESS_THAN_OR_EQUAL_TO: (value == 0 || value == -1);
-						case GREATER_THAN: (value == 1);
-						case GREATER_THAN_OR_EQUAL_TO: (value == 0 || value == 1);
-						default: false;
-					}
-
-					if (test)
-					{
-						_color.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-						hits++;
-					}
-					else if (copySource)
-					{
-						srcPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
-					}
-
-					srcPosition += 4;
-					destPosition += 4;
+					case NOT_EQUALS: (value != 0);
+					case EQUALS: (value == 0);
+					case LESS_THAN: (value == -1);
+					case LESS_THAN_OR_EQUAL_TO: (value == 0 || value == -1);
+					case GREATER_THAN: (value == 1);
+					case GREATER_THAN_OR_EQUAL_TO: (value == 0 || value == 1);
+					default: false;
 				}
+
+				if (test)
+				{
+					_color.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
+					hits++;
+				}
+				else if (copySource)
+				{
+					srcPixel.writeUInt8(destData, destPosition, destFormat, destPremultiplied);
+				}
+
+				srcPosition += 4;
+				destPosition += 4;
 			}
 		}
+		#end
 
 		if (hits > 0)
 		{
@@ -1395,21 +1370,19 @@ class ImageDataUtil
 		var data = image.buffer.data;
 		if (data == null) return;
 
-		#if (lime_cffi && !disable_cffi && !macro)
-		if (CFFI.enabled) NativeCFFI.lime_image_data_util_unmultiply_alpha(image);
-		else
-		#end
-		{
-			var format = image.buffer.format;
-			var length = Std.int(data.length / 4);
-			var pixel:RGBA = 0;
+		#if (lime_cffi && !macro)
+		NativeCFFI.lime_image_data_util_unmultiply_alpha(image);
+		#else
+		var format = image.buffer.format;
+		var length = Std.int(data.length / 4);
+		var pixel:RGBA = 0;
 
-			for (i in 0...length)
-			{
-				pixel.readUInt8(data, i * 4, format, true);
-				pixel.writeUInt8(data, i * 4, format, false);
-			}
+		for (i in 0...length)
+		{
+			pixel.readUInt8(data, i * 4, format, true);
+			pixel.writeUInt8(data, i * 4, format, false);
 		}
+		#end
 
 		image.buffer.premultiplied = false;
 		image.dirty = true;
