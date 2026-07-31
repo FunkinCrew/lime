@@ -384,7 +384,7 @@
 
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/SDL_locale.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/android/SDL_syslocale.c" if="android" />
-            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/macos/SDL_syslocale.m" if="macos" />
+            <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/macos/SDL_syslocale.m" if="apple" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/unix/SDL_syslocale.c" if="linux" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/locale/windows/SDL_syslocale.c" if="windows" />
 
