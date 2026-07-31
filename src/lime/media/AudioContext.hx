@@ -5,7 +5,6 @@ import lime.media.howlerjs.Howler;
 #end
 import lime.utils.Log;
 
-@:access(lime.media.FlashAudioContext)
 @:access(lime.media.HTML5AudioContext)
 @:access(lime.media.OpenALAudioContext)
 @:access(lime.media.WebAudioContext)
@@ -58,10 +57,7 @@ class AudioContext
 				Log.info("Unable to create AudioContext for Web!");
 			}
 			#end
-			#elseif flash
-			flash = new FlashAudioContext();
-			this.type = FLASH;
-			#else
+			#elseif lime_openal
 			openal = new OpenALAudioContext();
 			this.type = OPENAL;
 			#end
