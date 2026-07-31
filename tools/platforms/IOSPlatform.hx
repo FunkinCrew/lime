@@ -538,6 +538,7 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		IOSHelper.getIOSVersion(project);
+
 		var iphoneVer = project.environment.get("IPHONE_VER");
 
 		for (command in commands)
@@ -771,32 +772,14 @@ class IOSPlatform extends PlatformTarget
 		System.mkdir(projectDirectory + "/resources");
 		System.mkdir(projectDirectory + "/haxe/build");
 
-		// Long deprecated template path
-
-		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/resources", projectDirectory + "/resources", context, true, false);
-
-		// New template path
-
 		ProjectHelper.recursiveSmartCopyTemplate(project, "ios/template", targetDirectory, context);
-
-		// Recently deprecated template paths
-
-		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/haxe", projectDirectory + "/haxe", context, true, false);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", projectDirectory + "/haxe", context, true, false);
-		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/Classes", projectDirectory + "/Classes", context, true, false);
-		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/Images.xcassets", projectDirectory + "/Images.xcassets", context, true, false);
-		System.copyFileTemplate(project.templatePaths, "iphone/PROJ/PROJ-Info.plist", projectDirectory + "/" + project.app.file + "-Info.plist", context,
-			true, false);
-		System.copyFileTemplate(project.templatePaths, "iphone/PROJ/PROJ-Prefix.pch", projectDirectory + "/" + project.app.file + "-Prefix.pch", context,
-			true, false);
-		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ.xcodeproj", targetDirectory + "/" + project.app.file + ".xcodeproj", context, true,
-			false);
 
-		// Merge plist files
 		var plistFiles = System.readDirectory(projectDirectory).filter(function(fileName:String)
 		{
 			return fileName.substr(-11) == "-Info.plist" && fileName != projectDirectory + "/" + project.app.file + "-Info.plist";
 		});
+
 		for (plist in plistFiles)
 		{
 			System.runCommand(project.workingDirectory, "/usr/libexec/PlistBuddy", [
@@ -879,25 +862,6 @@ class IOSPlatform extends PlatformTarget
 		}
 	}
 
-	/*private function updateLaunchImage () {
-
-		var destination = buildDirectory + "/ios";
-		System.mkdir (destination);
-
-		var has_launch_image = false;
-		if (launchImages.length > 0) has_launch_image = true;
-
-		for (launchImage in launchImages) {
-
-			var splitPath = launchImage.name.split ("/");
-			var path = destination + "/" + splitPath[splitPath.length - 1];
-			System.copyFile (launchImage.name, path, context, false);
-
-		}
-
-		context.HAS_LAUNCH_IMAGE = has_launch_image;
-
-	}*/
 	public override function install():Void {}
 
 	public override function trace():Void {}
