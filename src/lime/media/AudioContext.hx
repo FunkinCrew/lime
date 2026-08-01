@@ -60,6 +60,8 @@ class AudioContext
 			#elseif lime_openal
 			openal = new OpenALAudioContext();
 			this.type = OPENAL;
+			#else
+			this.type = CUSTOM;
 			#end
 		}
 		else
