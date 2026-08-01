@@ -49,7 +49,7 @@ import sys.thread.EventLoop;
 **/
 class Timer
 {
-	#if (flash || js)
+	#if js
 	private var id:Null<Int>;
 	#elseif (target.threaded && !cppia)
 	var thread:Thread;
@@ -71,13 +71,7 @@ class Timer
 	**/
 	public function new(time_ms:Int)
 	{
-		#if flash
-		var me = this;
-		id = untyped __global__["flash.utils.setInterval"](function()
-		{
-			me.run();
-		}, time_ms);
-		#elseif js
+		#if js
 		var me = this;
 		id = untyped setInterval(function() me.run(), time_ms);
 		#elseif (target.threaded && !cppia)
@@ -104,13 +98,9 @@ class Timer
 	**/
 	public function stop()
 	{
-		#if (flash || js)
+		#if js
 		if (id == null) return;
-		#if flash
-		untyped __global__["flash.utils.clearInterval"](id);
-		#elseif js
 		untyped clearInterval(id);
-		#end
 		id = null;
 		#elseif (target.threaded && !cppia)
 		thread.events.cancel(eventHandler);
@@ -186,9 +176,7 @@ class Timer
 	**/
 	public static inline function stamp():Float
 	{
-		#if flash
-		return flash.Lib.getTimer() / 1000;
-		#elseif js
+		#if js
 		#if nodejs
 		var hrtime = js.Syntax.code('process.hrtime()'); // [seconds, remaining nanoseconds]
 		return hrtime[0] + hrtime[1] / 1e9;

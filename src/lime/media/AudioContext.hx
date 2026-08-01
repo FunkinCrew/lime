@@ -58,9 +58,6 @@ class AudioContext
 				Log.info("Unable to create AudioContext for Web!");
 			}
 			#end
-			#elseif flash
-			flash = new FlashAudioContext();
-			this.type = FLASH;
 			#else
 			openal = new OpenALAudioContext();
 			this.type = OPENAL;
