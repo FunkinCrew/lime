@@ -32,6 +32,8 @@
 
         </section>
 
+        <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src/core/windows/gameinput" if="windows" />
+
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/src" />
 
         <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols" if="linux" />
@@ -149,6 +151,12 @@
             </section>
 
             <section if="windows">
+
+                <section>
+
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/windows/gameinput/gameinput.cpp" />
+
+                </section>
 
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/windows/pch.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/windows/pch_cpp.cpp" />

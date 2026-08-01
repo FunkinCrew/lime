@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.LocaleList;
+import android.os.Looper;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
@@ -51,6 +52,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -785,6 +788,50 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         }
     }
 
+    static OnBackInvokedCallback backButtonCallback;
+    static boolean mBackKeyTrapEnabled = false;
+    public static void setBackButtonTrapEnabled(boolean enabled) {
+
+        if ( Build.VERSION.SDK_INT < 33 ) {
+            // We're old enough that we just use the old onBackPressed behavior.
+            return;
+        }
+
+        // Check so we don't register the same callback twice.
+        if (enabled == mBackKeyTrapEnabled) {
+            return;
+        }
+
+        if (backButtonCallback == null) {
+            backButtonCallback = new OnBackInvokedCallback() {
+                Handler mBackKeyHandler;
+
+                @Override
+                public void onBackInvoked() {
+                    if (mBackKeyHandler == null) {
+                        mBackKeyHandler = new Handler(Looper.getMainLooper());
+                    }
+
+                    onNativeKeyDown(KeyEvent.KEYCODE_BACK);
+                    mBackKeyHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onNativeKeyUp(KeyEvent.KEYCODE_BACK);
+                        }
+                    }, 500);
+                }
+            };
+        }
+
+        if (enabled) {
+            mSingleton.getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, backButtonCallback);
+        }
+        else {
+            mSingleton.getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backButtonCallback);
+        }
+        mBackKeyTrapEnabled = enabled;
+    }
+
     // File dialog types
     private static final int SDL_FILEDIALOG_OPENFILE = 0;
     private static final int SDL_FILEDIALOG_SAVEFILE = 1;
@@ -1013,10 +1060,22 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                             }
                             SDLActivity.mFullscreenModeActive = true;
                         } else {
-                            int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_VISIBLE;
-                            window.getDecorView().setSystemUiVisibility(flags);
-                            window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                            if (Build.VERSION.SDK_INT >= 30 /* Android 11 (R) */) {
+                                // The legacy setSystemUiVisibility() flags are ignored on
+                                // API 30+, so the bars hidden by the modern enter path above
+                                // would never come back. Restore them via WindowInsetsController.
+                                final WindowInsetsController controller = window.getInsetsController();
+                                if (controller != null) {
+                                    controller.setSystemBarsBehavior(
+                                            WindowInsetsController.BEHAVIOR_DEFAULT);
+                                    controller.show(WindowInsets.Type.systemBars());
+                                }
+                            } else {
+                                int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_VISIBLE;
+                                window.getDecorView().setSystemUiVisibility(flags);
+                                window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                            }
                             SDLActivity.mFullscreenModeActive = false;
                         }
                         if (Build.VERSION.SDK_INT >= 30 /* Android 11 (R) */) {

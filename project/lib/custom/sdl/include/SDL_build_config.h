@@ -387,9 +387,7 @@
 # define HAVE_DXGI_H 1                    /**< DirectX Graphics Infrastructure */
 # define HAVE_DXGI1_5_H 1                 /**< DXGI 1.5 features */
 # define HAVE_DXGI1_6_H 1                 /**< DXGI 1.6 features */
-# if defined(__has_include) && __has_include(<gameinput.h>)
-#  define HAVE_GAMEINPUT_H 1              /**< GameInput API joystick support */
-# endif
+# define HAVE_GAMEINPUT_H 1               /**< GameInput API joystick support */
 # define HAVE_MALLOC_H 1                  /**< Memory allocation */
 # define HAVE_MEMORY_H 1                  /**< Memory operations (deprecated) */
 # define HAVE_MMDEVICEAPI_H 1             /**< Core Audio device enumeration */
@@ -450,9 +448,7 @@
 # define SDL_FILESYSTEM_WINDOWS 1             /**< Windows filesystem operations */
 # define SDL_HAPTIC_DINPUT 1                  /**< DirectInput haptic (force feedback) support */
 # define SDL_JOYSTICK_DINPUT 1                /**< DirectInput joystick support */
-# ifdef HAVE_GAMEINPUT_H
-#  define SDL_JOYSTICK_GAMEINPUT 1            /**< GameInput API joystick support */
-# endif
+# define SDL_JOYSTICK_GAMEINPUT 1             /**< GameInput API joystick support */
 # define SDL_JOYSTICK_RAWINPUT 1              /**< Raw Input joystick support */
 # define SDL_JOYSTICK_WGI 1                   /**< Windows.Gaming.Input joystick support */
 # define SDL_JOYSTICK_XINPUT 1                /**< XInput controller support */
