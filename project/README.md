@@ -1,5 +1,5 @@
 # C++ backend project
-Lime uses this C/C++ code to build reusable binaries for native targets, stored in the [ndll directory](https://github.com/openfl/lime/tree/develop/ndll). Binaries for common targets are included in the Haxelib download, so you won't need to build those yourself unless you make changes.
+Lime uses this C/C++ code to build reusable binaries for native targets, stored in the [ndll directory](https://github.com/openfl/lime/tree/develop/ndll). Binaries for common targets are included in Haxelib, but you can rebuild them if you're developing Lime or if you need to use a custom version.
 
 Tip: if you install Lime from Git, you can still copy the ndlls from Lime's latest Haxelib release.
 
@@ -23,14 +23,13 @@ This directory contains two categories of code.
    - While Raspberry Pi OS also uses `apt`, it requires a slightly different set of packages.
 
       ```bash
-      sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libxcursor-dev libdbus-1-dev libdrm-dev libgbm-dev libudev-dev
+      sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libxcursor-dev libdbus-1-dev libdrm-dev libgbm-dev libudev-dev libgbm-dev libdrm-dev
       ```
    - Fedora requires the following packages.
 
       ```bash
       sudo dnf install g++ glibc-devel.x86_64 libstdc++-devel.x86_64 glibc-devel.i686 libstdc++-devel.i686 alsa-lib-devel pulseaudio-libs-devel libX11-devel libXi-devel libXrandr-devel libglvnd-devel
       ```
-- Building HashLink requires [additional packages](https://github.com/HaxeFoundation/hashlink#readme).
 
 ### Rebuilding
 Use `lime rebuild <target>` to build or rebuild a set of binaries. Once finished, you can find them in the [ndll directory](https://github.com/openfl/lime/tree/develop/ndll).
@@ -39,7 +38,6 @@ Use `lime rebuild <target>` to build or rebuild a set of binaries. Once finished
 lime rebuild windows #Recompile the Windows binary (lime.ndll).
 lime rebuild android -clean #Compile the Android binaries (liblime-##.so) from scratch, even if no changes are detected.
 lime rebuild mac -64 #Recompile only the x86-64 binary (lime.ndll) for Mac.
-lime rebuild hl #Recompile the HashLink binaries (lime.hdll and others).
 ```
 
 See `lime help rebuild` for details and additional options.
@@ -59,7 +57,7 @@ lime rebuild tools
 For errors that appeared after changing a source file, you may need to update the build configuration.
 
 - Errors in the [src](src) and [include](include) directories usually require updating [Build.xml](Build.xml).
-- Errors in the [lib](lib) directory usually require updating that submodule's xml file. So for instance, if the error message points to lib/cairo/src/cairo.c, you most likely need to edit [cairo-files.xml](lib/cairo-files.xml). If the error message points to lib/hashlink/src/main.c, look at [BuildHashlink.xml](BuildHashlink.xml). (Though libraries do reference one another sometimes, so this isn't a hard rule.)
+- Errors in the [lib](lib) directory usually require updating that submodule's xml file. So for instance, if the error message points to lib/cairo/src/cairo.c, you most likely need to edit [cairo-files.xml](cairo-files.xml).
 
 Common errors and their solutions:
 
@@ -106,7 +104,7 @@ To update to a more recent version of a submodule:
    HEAD is now at [commit ID] [commit message]
    ```
 
-   If you get a "reference is not a tree" error, run `git fetch --unshallow`, then try again. (Lime downloads submodules in "shallow" mode to save time and space, and not all commits are fetched until you explicitly fetch them.)
+   If you get a "reference is not a tree" error, run `git fetch --unshallow`, then try again. (Lime downloads submodules in "shallow" mode to save time and space, and not all commits are fetched by default.)
 6. If you exit the submodule and run `git status`, you'll find an unstaged change representing the update. Once you [finish testing](#rebuilding), you can commit this change and submit it as a pull request.
 
 ### Submodule troubleshooting
@@ -114,7 +112,7 @@ Here are some submodule-specific problems you might run into while rebuilding.
 
 - The project is missing a crucial header file, or has `[header].h.in` instead of the header you need:
 
-   1. Look for an `autogen.sh` file. If it exists, run it. (On Windows, you may need [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), or you might be able to find a .bat file that does what you need.)
+   1. Look for an `autogen.sh` file. If it exists, run it. (On Windows, you may need [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), or you might be able to find a .bat file that does the same thing.)
    2. If step 1 fails, look for instructions on how to configure the project. This will often involving using `make`, `cmake`, and/or `./configure`. (Again, Windows users may need WSL.)
    3. One of the above steps should hopefully generate the missing header. Place the generated file inside [the custom folder](#custom-headers-and-source-files).
 
@@ -127,7 +125,7 @@ Here are some submodule-specific problems you might run into while rebuilding.
       <compilerflag value="-I${NATIVE_TOOLKIT_PATH}/cairo/src/" />
       ```
 
-   2. If the header is in the same directory as the corresponding source files, you cannot override it. Try setting compiler flags to get the result you want, or look for a different file to override.
+   2. If the header is in the same directory as the corresponding source files, you cannot override it. Try setting compiler flags to get the result you want, or look for a different file to override instead.
 
       ```xml
       <compilerflag value="-DDISABLE_FEATURE" />
