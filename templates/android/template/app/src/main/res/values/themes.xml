@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<style name="LimeAppMainThemeFullscreen" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
-		<!-- Ensure content draws behind the system bars -->
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-
 		<!-- Prevent swipe-to-dismiss behavior -->
 		<item name="android:windowSwipeToDismiss">false</item>
 
@@ -12,14 +9,17 @@
 		<item name="android:windowLayoutInDisplayCutoutMode">::ANDROID_DISPLAY_CUTOUT::</item>
 		::end::
 
+		<!-- Ensure content draws behind the system bars -->
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
 		<!-- Make the status bar transparent -->
 		<item name="android:statusBarColor">@android:color/transparent</item>
+
+		<!-- Make the navigation bar transparent -->
+		<item name="android:navigationBarColor">@android:color/transparent</item>
 	</style>
 
 	<style name="LimeAppMainTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar">
-		<!-- Ensure content draws behind the system bars -->
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-
 		<!-- Prevent swipe-to-dismiss behavior -->
 		<item name="android:windowSwipeToDismiss">false</item>
 
@@ -28,7 +28,13 @@
 		<item name="android:windowLayoutInDisplayCutoutMode">::ANDROID_DISPLAY_CUTOUT::</item>
 		::end::
 
+		<!-- Ensure content draws behind the system bars -->
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
 		<!-- Make the status bar transparent -->
 		<item name="android:statusBarColor">@android:color/transparent</item>
+
+		<!-- Make the navigation bar transparent -->
+		<item name="android:navigationBarColor">@android:color/transparent</item>
 	</style>
 </resources>
