@@ -41,10 +41,6 @@ class ApplicationMain
 
 		var app = new ::APP_MAIN::(appMeta);
 
-		#if !disable_preloader_assets
-		ManifestResources.init(config);
-		#end
-
 		::foreach windows::
 		var attributes:lime.ui.WindowAttributes =
 			{
@@ -52,7 +48,6 @@ class ApplicationMain
 				alwaysOnTop: ::alwaysOnTop::,
 				transparent: ::transparent::,
 				borderless: ::borderless::,
-				// display: ::display::,
 				element: null,
 				frameRate: ::fps::,
 				#if !web
@@ -103,9 +98,9 @@ class ApplicationMain
 		app.createWindow(attributes);
 		::end::
 
-		// preloader.create ();
-
 		#if !disable_preloader_assets
+		ManifestResources.init(config);
+
 		for (library in ManifestResources.preloadLibraries)
 		{
 			app.preloader.addLibrary(library);
