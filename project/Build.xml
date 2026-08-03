@@ -161,7 +161,7 @@
 			</section>
 
 			<compilerflag value="-DLIME_OPENGL_GL" if="windows || mac || linux" />
-			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || rpi || iphone" />
+			<compilerflag value="-DLIME_OPENGL_GLES2" if="android || iphone" />
 			<compilerflag value="-DLIME_OPENGL" />
 
 			<file name="src/bindings/opengl/OpenGLBindings.cpp" />
@@ -417,16 +417,6 @@
 				<lib name="-lEGL" />
 				<lib name="-lGLESv2" />
 				<lib name="-lOpenSLES" />
-
-			</section>
-
-			<section if="rpi">
-
-				<lib name="-ldl" />
-				<lib name="-ldrm" />
-				<lib name="-lm" />
-				<lib name="-lEGL" />
-				<lib name="-lGLESv2" />
 
 			</section>
 
