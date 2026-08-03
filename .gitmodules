@@ -70,3 +70,6 @@
 	path = project/lib/dr_libs
 	url = https://github.com/mackron/dr_libs.git
 	shallow = true
+[submodule "project/lib/miniaudio"]
+	path = project/lib/miniaudio
+	url = https://github.com/mackron/miniaudio

@@ -15,6 +15,7 @@ namespace lime {
 
 			File (const char* path, const char* mode);
 			File (Bytes* bytes);
+			File (void* handle);
 
 			bool Close ();
 			bool Flush ();

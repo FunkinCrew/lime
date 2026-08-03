@@ -87,16 +87,25 @@ class AudioManager
 		if (active) return;
 
 		#if !lime_doc_gen
-		if (context != null && context.type == OPENAL)
+		if (context != null)
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-
-			if (currentContext != null)
+			if (context.type == OPENAL)
 			{
-				var device = alc.getContextsDevice(currentContext);
-				alc.resumeDevice(device);
-				alc.processContext(currentContext);
+				var alc = context.openal;
+				var currentContext = alc.getCurrentContext();
+
+				if (currentContext != null)
+				{
+					var device = alc.getContextsDevice(currentContext);
+					alc.resumeDevice(device);
+					alc.processContext(currentContext);
+				}
+			}
+			else if (context.type == MINIAUDIO)
+			{
+				#if (lime_cffi && lime_miniaudio && !macro)
+				NativeCFFI.lime_miniaudio_backend_engine_start(context.maEngine);
+				#end
 			}
 		}
 		#end
@@ -107,21 +116,30 @@ class AudioManager
 	public static function shutdown():Void
 	{
 		#if !lime_doc_gen
-		if (context != null && context.type == OPENAL)
+		if (context != null)
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-			var device = alc.getContextsDevice(currentContext);
+			if (context.type == OPENAL) {
+				var alc = context.openal;
+				var currentContext = alc.getCurrentContext();
+				var device = alc.getContextsDevice(currentContext);
 
-			if (currentContext != null)
-			{
-				alc.makeContextCurrent(null);
-				alc.destroyContext(currentContext);
-
-				if (device != null)
+				if (currentContext != null)
 				{
-					alc.closeDevice(device);
+					alc.makeContextCurrent(null);
+					alc.destroyContext(currentContext);
+
+					if (device != null)
+					{
+						alc.closeDevice(device);
+					}
 				}
+			}
+			else if (context.type == MINIAUDIO)
+			{
+				#if (lime_cffi && lime_miniaudio && !macro)
+				NativeCFFI.lime_miniaudio_backend_engine_uninit(context.maEngine);
+				NativeCFFI.lime_miniaudio_backend_uninit();
+				#end
 			}
 		}
 		#end
@@ -134,20 +152,28 @@ class AudioManager
 		if (!active) return;
 
 		#if !lime_doc_gen
-		if (context != null && context.type == OPENAL)
+		if (context != null)
 		{
-			var alc = context.openal;
-			var currentContext = alc.getCurrentContext();
-			var device = alc.getContextsDevice(currentContext);
+			if (context.type == OPENAL) {
+				var alc = context.openal;
+				var currentContext = alc.getCurrentContext();
+				var device = alc.getContextsDevice(currentContext);
 
-			if (currentContext != null)
-			{
-				alc.suspendContext(currentContext);
-
-				if (device != null)
+				if (currentContext != null)
 				{
-					alc.pauseDevice(device);
+					alc.suspendContext(currentContext);
+
+					if (device != null)
+					{
+						alc.pauseDevice(device);
+					}
 				}
+			}
+			else if (context.type == MINIAUDIO)
+			{
+				#if (lime_cffi && lime_miniaudio && !macro)
+				NativeCFFI.lime_miniaudio_backend_engine_stop(context.maEngine);
+				#end
 			}
 		}
 		#end
@@ -207,41 +233,43 @@ class AudioManager
 	private static function setupConfig():Void
 	{
 		#if (lime_openal && (windows || mac || linux || android || ios))
-		final alConfig:Array<String> = [];
+		if (context.type == OPENAL) {
+			final alConfig:Array<String> = [];
 
-		alConfig.push('[general]');
-		alConfig.push('frequency=48000');
-		alConfig.push('sample-type=float32');
-		alConfig.push('stereo-mode=speakers');
-		alConfig.push('stereo-encoding=basic');
-		alConfig.push('cf_level=0');
-		alConfig.push('output-limiter=false');
-		alConfig.push('front-stablizer=false');
-		alConfig.push('volume-adjust=0');
-		alConfig.push('period_size=480');
-		alConfig.push('periods=4');
-		alConfig.push('sends=64');
-		alConfig.push('dither=false');
-		alConfig.push('dither-depth=0');
+			alConfig.push('[general]');
+			alConfig.push('frequency=48000');
+			alConfig.push('sample-type=float32');
+			alConfig.push('stereo-mode=speakers');
+			alConfig.push('stereo-encoding=basic');
+			alConfig.push('cf_level=0');
+			alConfig.push('output-limiter=false');
+			alConfig.push('front-stablizer=false');
+			alConfig.push('volume-adjust=0');
+			alConfig.push('period_size=480');
+			alConfig.push('periods=4');
+			alConfig.push('sends=64');
+			alConfig.push('dither=false');
+			alConfig.push('dither-depth=0');
 
-		alConfig.push('[decoder]');
-		alConfig.push('hq-mode=false');
-		alConfig.push('distance-comp=false');
-		alConfig.push('nfc=false');
+			alConfig.push('[decoder]');
+			alConfig.push('hq-mode=false');
+			alConfig.push('distance-comp=false');
+			alConfig.push('nfc=false');
 
-		try
-		{
-			final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
-			final path:String = Path.withExtension(Path.join([directory, 'audio-config-${AUDIO_CONFIG_VERSION}']), #if windows 'ini' #else 'conf' #end);
-			final content:String = alConfig.join('\n');
+			try
+			{
+				final directory:String = Path.directory(Path.withoutExtension(System.applicationStorageDirectory));
+				final path:String = Path.withExtension(Path.join([directory, 'audio-config-${AUDIO_CONFIG_VERSION}']), #if windows 'ini' #else 'conf' #end);
+				final content:String = alConfig.join('\n');
 
-			if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
+				if (!FileSystem.exists(directory)) FileSystem.createDirectory(directory);
 
-			if (!FileSystem.exists(path)) File.saveContent(path, content);
+				if (!FileSystem.exists(path)) File.saveContent(path, content);
 
-			Sys.putEnv('ALSOFT_CONF', path);
+				Sys.putEnv('ALSOFT_CONF', path);
+			}
+			catch (e:Dynamic) {}
 		}
-		catch (e:Dynamic) {}
 		#end
 	}
 }

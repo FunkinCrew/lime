@@ -4,6 +4,13 @@ import lime.app.Event;
 import lime.media.openal.AL;
 import lime.media.openal.ALSource;
 import lime.math.Vector4;
+import lime.utils.UInt8Array;
+
+#if miniaudio
+import lime._internal.backend.native.NativeMiniaudioAudioSource.MiniaudioAudioSourceReadbackData;
+#end
+
+import haxe.io.Bytes;
 
 /**
 	The `AudioSource` class provides a way to control audio playback in a Lime application.
@@ -21,10 +28,17 @@ class AudioSource
 	**/
 	public var onComplete = new Event<Void->Void>();
 
+	#if miniaudio
+	/**
+		The audio data, if passed as bytes in the constructor.
+	**/
+	public var data:Bytes = null;
+	#else
 	/**
 		The `AudioBuffer` associated with this `AudioSource`.
 	**/
 	public var buffer:AudioBuffer;
+	#end
 
 	/**
 		The current playback position of the audio, in milliseconds.
@@ -68,6 +82,41 @@ class AudioSource
 
 	@:noCompletion private var __backend:AudioSourceBackend;
 
+	#if miniaudio
+	/**
+		Creates a new `AudioSource` instance.
+		@param bytes the bytes of an audio file.
+			NOTE: messing with Bytes object after it is passed here, like resizing, pushing etc., may cause undefined behaviour because of reallocation, unless `stream` is set to `false`
+		@param path The path to an audio file.
+		@param stream wheather audio data should be streamed. takes effect only if initializing from bytes. creating an `AudioSource` with this set to `false` is EXPENSIVE, use only if you need readback.
+		@param offset The starting offset within the audio buffer, in milliseconds.
+		@param length The length of the audio to play, in milliseconds. If `null`, the whole audio data is used.
+		@param loops The number of times to loop the audio. `0` means no looping.
+	**/
+	public function new(?bytes:Bytes, ?path:String, stream:Bool = true, offset:Float = 0, length:Null<Int> = null, loops:Int = 0)
+	{
+		this.offset = offset;
+
+		__backend = new AudioSourceBackend(this, stream);
+
+		if (bytes != null) {
+			data = bytes;
+			initFromBytes();
+			if (!stream) data = null; // drop the reference after storing the decoded pcm in cpp, so that the GC can free this
+		} else if (path != null) {
+			initFromFile(path);
+		} else {
+			lime.utils.Log.error("AudioSource's both *bytes* and *path* arguments were not provided, this will most likely result in a crash");
+		}
+
+		if (length != null && length != 0)
+		{
+			this.length = length;
+		}
+
+		this.loops = loops;
+	}
+	#else
 	/**
 		Creates a new `AudioSource` instance.
 		@param buffer The `AudioBuffer` to associate with this `AudioSource`.
@@ -94,6 +143,7 @@ class AudioSource
 			init();
 		}
 	}
+	#end
 
 	/**
 		Releases any resources used by this `AudioSource`.
@@ -103,10 +153,22 @@ class AudioSource
 		__backend.dispose();
 	}
 
+	#if miniaudio
+	@:noCompletion private function initFromBytes():Void
+	{
+		__backend.initFromBytes();
+	}
+
+	@:noCompletion private function initFromFile(path:String):Void
+	{
+		__backend.initFromFile(path);
+	}
+	#else
 	@:noCompletion private function init():Void
 	{
 		__backend.init();
 	}
+	#end
 
 	/**
 		Starts or resumes audio playback.
@@ -131,6 +193,17 @@ class AudioSource
 	{
 		__backend.stop();
 	}
+
+	#if miniaudio
+	/**
+		Reads back pcm frames from the source.
+		note that streaming must have been turned off and the `AudioSource` must have been created from bytes in order for this to work.
+	**/
+	public function readbackPcm():MiniaudioAudioSourceReadbackData
+	{
+		return __backend.readbackPcm();
+	}
+	#end
 
 	// Get & Set Methods
 	@:noCompletion private function get_currentTime():Float
@@ -201,6 +274,8 @@ class AudioSource
 
 #if (js && html5)
 @:noCompletion private typedef AudioSourceBackend = lime._internal.backend.html5.HTML5AudioSource;
+#elseif miniaudio
+@:noCompletion private typedef AudioSourceBackend = lime._internal.backend.native.NativeMiniaudioAudioSource;
 #elseif lime_openal
 @:noCompletion private typedef AudioSourceBackend = lime._internal.backend.native.NativeOpenALAudioSource;
 #end

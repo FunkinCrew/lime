@@ -41,6 +41,13 @@ namespace lime {
 	}
 
 
+	File::File (void* handle) {
+
+		this->handle = handle;
+
+	}
+
+
 	bool File::Close () {
 
 		if (handle) {

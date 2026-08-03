@@ -28,6 +28,9 @@
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
+#ifdef LIME_MINIAUDIO
+#include <media/miniaudio/MiniaudioBackend.h>
+#endif
 #ifdef LIME_DR_LIBS
 #include <media/decoders/FlacDecoder.h>
 #include <media/decoders/MP3Decoder.h>
@@ -58,6 +61,10 @@
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
 
+#ifdef LIME_MINIAUDIO
+#include <miniaudio.h>
+#endif
+
 #ifdef HX_WINDOWS
 #include <locale>
 #include <codecvt>
@@ -66,8 +73,10 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <cinttypes>
 
 DEFINE_KIND (k_finalizer);
+DEFINE_KIND (k_miniaudio_backend_engine)
 
 
 namespace lime {
@@ -4259,6 +4268,194 @@ namespace lime {
 	}
 
 
+	void lime_miniaudio_backend_init () {
+
+		miniaudio_backend_init ();
+		
+	}
+
+
+	void lime_miniaudio_backend_uninit () {
+
+		miniaudio_backend_uninit ();
+
+	}
+
+
+	int lime_miniaudio_backend_engine_init (int sampleRate, int channels, int periodSizeInFrames, int gainSmoothTimeInFrames) {
+		
+		return miniaudio_backend_engine_init (sampleRate, channels, periodSizeInFrames, gainSmoothTimeInFrames);
+
+	}
+
+
+	void lime_miniaudio_backend_engine_uninit (int engineIndex) {
+
+		miniaudio_backend_engine_uninit (engineIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_engine_start (int engineIndex) {
+
+		miniaudio_backend_engine_start (engineIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_engine_stop (int engineIndex) {
+
+		miniaudio_backend_engine_stop (engineIndex);
+
+	}
+
+
+	int lime_miniaudio_backend_sound_init_from_file (int engineIndex, float offset, const char* path) {
+
+		return miniaudio_backend_sound_init_from_file(engineIndex, offset, path);
+
+	}
+
+
+	int lime_miniaudio_backend_sound_init_from_bytes (int engineIndex, float offset, bool stream, value bytes) {
+
+		return miniaudio_backend_sound_init_from_bytes (engineIndex, offset, stream, bytes);
+
+	}
+
+	void lime_miniaudio_backend_sound_uninit (int soundIndex) {
+
+		miniaudio_backend_sound_uninit (soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_start (int soundIndex) {
+
+		miniaudio_backend_sound_start (soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_stop(int soundIndex) {
+
+		miniaudio_backend_sound_stop(soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_reset(int soundIndex, float offset) {
+
+		miniaudio_backend_sound_reset(soundIndex, offset);
+
+	}
+
+
+	float lime_miniaudio_backend_sound_get_time(int soundIndex, float offset) {
+
+		return miniaudio_backend_sound_get_time(soundIndex, offset);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_time(int soundIndex, float offset, float t) {
+
+		miniaudio_backend_sound_set_time(soundIndex, offset, t);
+
+	}
+
+
+	float lime_miniaudio_backend_sound_get_volume(int soundIndex) {
+
+		return miniaudio_backend_sound_get_volume(soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_volume(int soundIndex, float v) {
+
+		miniaudio_backend_sound_set_volume(soundIndex, v);
+
+	}
+
+
+	float lime_miniaudio_backend_sound_get_pitch(int soundIndex) {
+
+		return miniaudio_backend_sound_get_pitch(soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_pitch(int soundIndex, float p) {
+
+		miniaudio_backend_sound_set_pitch(soundIndex, p);
+
+	}
+
+
+	value lime_miniaudio_backend_sound_get_position(int soundIndex) {
+
+		ma_vec3f pos = miniaudio_backend_sound_get_position(soundIndex);
+
+		value arr = alloc_array(3);
+
+		val_array_set_i(arr, 0, alloc_float(pos.x));
+		val_array_set_i(arr, 1, alloc_float(pos.y));
+		val_array_set_i(arr, 2, alloc_float(pos.z));
+
+		return arr;
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_position(int soundIndex, float x, float y, float z) {
+
+		miniaudio_backend_sound_set_position(soundIndex, x, y, z);
+
+	}
+
+
+	float lime_miniaudio_backend_sound_get_length(int soundIndex, float offset) {
+
+		return miniaudio_backend_sound_get_length(soundIndex, offset);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_length(int soundIndex, float offset, float length) {
+
+		miniaudio_backend_sound_set_length(soundIndex, offset, length);
+
+	}
+
+
+	int lime_miniaudio_backend_sound_get_loops(int soundIndex) {
+
+		return miniaudio_backend_sound_get_loops(soundIndex);
+
+	}
+
+
+	void lime_miniaudio_backend_sound_set_loops(int soundIndex, int loops) {
+
+		miniaudio_backend_sound_set_loops(soundIndex, loops);
+	}
+
+
+	bool lime_miniaudio_backend_sound_is_playing(int soundIndex) {
+
+		return miniaudio_backend_sound_is_playing(soundIndex);
+
+	}
+
+
+	value lime_miniaudio_backend_sound_readback_pcm(int soundIndex) {
+
+		return miniaudio_backend_sound_readback_pcm(soundIndex);
+
+	}
+
+
 	value lime_audio_decoder_open_file (value data, int codec) {
 
 		AudioDecoder* decoder;
@@ -4854,6 +5051,32 @@ namespace lime {
 	DEFINE_PRIME3v (lime_window_warp_mouse);
 	DEFINE_PRIME1 (lime_window_get_opacity);
 	DEFINE_PRIME2v (lime_window_set_opacity);
+	DEFINE_PRIME0v (lime_miniaudio_backend_init);
+	DEFINE_PRIME0v (lime_miniaudio_backend_uninit);
+	DEFINE_PRIME4 (lime_miniaudio_backend_engine_init);
+	DEFINE_PRIME1v (lime_miniaudio_backend_engine_uninit);
+	DEFINE_PRIME1v (lime_miniaudio_backend_engine_start);
+	DEFINE_PRIME1v (lime_miniaudio_backend_engine_stop);
+	DEFINE_PRIME3 (lime_miniaudio_backend_sound_init_from_file);
+	DEFINE_PRIME4 (lime_miniaudio_backend_sound_init_from_bytes);
+	DEFINE_PRIME1v (lime_miniaudio_backend_sound_uninit);
+	DEFINE_PRIME1v (lime_miniaudio_backend_sound_start);
+	DEFINE_PRIME1v (lime_miniaudio_backend_sound_stop);
+	DEFINE_PRIME2v (lime_miniaudio_backend_sound_reset);
+	DEFINE_PRIME2 (lime_miniaudio_backend_sound_get_time);
+	DEFINE_PRIME3v (lime_miniaudio_backend_sound_set_time);
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_get_volume);
+	DEFINE_PRIME2v (lime_miniaudio_backend_sound_set_volume);
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_get_pitch);
+	DEFINE_PRIME2v (lime_miniaudio_backend_sound_set_pitch);
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_get_position);
+	DEFINE_PRIME4v (lime_miniaudio_backend_sound_set_position);
+	DEFINE_PRIME2 (lime_miniaudio_backend_sound_get_length)
+	DEFINE_PRIME3v (lime_miniaudio_backend_sound_set_length)
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_get_loops)
+	DEFINE_PRIME2v (lime_miniaudio_backend_sound_set_loops)
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_is_playing);
+	DEFINE_PRIME1 (lime_miniaudio_backend_sound_readback_pcm);
 	DEFINE_PRIME2 (lime_audio_decoder_open_file);
 	DEFINE_PRIME2 (lime_audio_decoder_open_bytes);
 	DEFINE_PRIME1 (lime_audio_decoder_info);

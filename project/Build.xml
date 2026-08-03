@@ -24,6 +24,7 @@
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
+	<set name="LIME_MINIAUDIO" value="1" if="windows || linux || mac || android || iphone" />
 	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone" />
@@ -154,6 +155,19 @@
 			<file name="src/media/decoders/FlacDecoder.cpp" />
 			<file name="src/media/decoders/MP3Decoder.cpp" />
 			<file name="src/media/decoders/WavDecoder.cpp" />
+
+		</section>
+
+		<section if="LIME_MINIAUDIO">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio/extras/decoders/libopus" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio/extras/decoders/libvorbis" />
+			<compilerflag value="-DLIME_MINIAUDIO" />
+
+			<file name="src/media/miniaudio/MiniaudioBackend.cpp" />
+			<file name="${NATIVE_TOOLKIT_PATH}/miniaudio/extras/decoders/libopus/miniaudio_libopus.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/miniaudio/extras/decoders/libvorbis/miniaudio_libvorbis.c" />
 
 		</section>
 
