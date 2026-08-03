@@ -98,10 +98,6 @@ class ApplicationMain
 					}
 				}
 			}
-
-			#if sys
-			lime.system.System.__parseArguments(attributes);
-			#end
 		}
 
 		app.createWindow(attributes);
