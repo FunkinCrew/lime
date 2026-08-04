@@ -339,9 +339,7 @@ class PlatformTarget
 				packageName: "com.example.myapp",
 				version: "1.0.0",
 				company: "",
-				companyUrl: "",
-				buildNumber: null,
-				companyId: ""
+				buildNumber: null
 			};
 
 		defaults.app =
@@ -349,9 +347,7 @@ class PlatformTarget
 				main: "Main",
 				file: "MyApplication",
 				path: "bin",
-				preloader: "",
-				url: "",
-				init: null
+				preloader: ""
 			};
 
 		defaults.window =
