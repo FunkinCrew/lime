@@ -1,4 +1,4 @@
-package utils;
+package;
 
 import hxp.*;
 import lime.tools.HXProject;

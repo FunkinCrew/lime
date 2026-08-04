@@ -4,5 +4,5 @@
 -D lime
 -cp platforms
 -cp ../src
--lib format
+-lib lime
 -lib hxp

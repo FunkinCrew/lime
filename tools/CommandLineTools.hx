@@ -1,21 +1,13 @@
 package;
 
-// import openfl.text.Font;
-// import openfl.utils.ByteArray;
-// import openfl.utils.CompressionAlgorithm;
 import haxe.Serializer;
-import haxe.Unserializer;
-import haxe.rtti.Meta;
 import hxp.*;
 import lime.system.CFFI;
-import lime.tools.HXProject;
 import lime.tools.*;
+import lime.tools.HXProject;
+import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
-import sys.FileSystem;
-import utils.publish.*;
-import utils.CreateTemplate;
-import utils.PlatformSetup;
 
 @:access(lime.tools.HXProject)
 class CommandLineTools
