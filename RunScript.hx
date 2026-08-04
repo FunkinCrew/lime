@@ -122,12 +122,12 @@ class RunScript
 		}
 
 		var tools_n = Path.combine(toolsDirectory, "tools.n");
+
 		if (!FileSystem.exists(tools_n) || args.indexOf("-rebuild") > -1)
 		{
 			rebuildTools(limeDirectory, toolsDirectory);
 		}
 
-		var args = [tools_n].concat(args);
-		Sys.exit(runCommand("", "neko", args));
+		Sys.exit(runCommand("", "neko", [tools_n].concat(args)));
 	}
 }
