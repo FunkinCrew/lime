@@ -38,10 +38,10 @@ jobs:
           mkdir ./ndll
 
       - name: Rebuild Lime (x86_64)
-        run: haxelib run lime rebuild mac -64 -nocolor -eval
+        run: haxelib run lime rebuild mac -64
 
       - name: Rebuild Lime (ARM64)
-        run: haxelib run lime rebuild mac -arm64 -nocolor -eval -D HXCPP_ARM64
+        run: haxelib run lime rebuild mac -arm64 -D HXCPP_ARM64
 
       - name: Upload Artifact (ndll/Mac64)
         uses: actions/upload-artifact@v7.0.0

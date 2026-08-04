@@ -37,7 +37,7 @@ jobs:
       - name: Rebuild Lime
         run: |
           haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild ios -eval -nocolor -release
+          haxelib run lime rebuild ios -release
 
       - name: Upload Artifact (ndll/iPhone)
         uses: actions/upload-artifact@v7.0.0
