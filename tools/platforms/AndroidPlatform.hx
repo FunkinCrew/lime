@@ -324,6 +324,7 @@ class AndroidPlatform extends PlatformTarget
 			var hxml = HXML.fromString(context.HAXE_FLAGS);
 			hxml.addClassName(context.APP_MAIN);
 			hxml.cpp = "_";
+			hxml.define("android");
 			hxml.noOutput = true;
 			return hxml;
 		}
@@ -721,7 +722,7 @@ class AndroidPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "android/template", destination, context);
 		System.copyFileTemplate(project.templatePaths, "android/MainActivity.java", packageDirectory + "/MainActivity.java", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
-		ProjectHelper.recursiveSmartCopyTemplate(project, "android/hxml", targetDirectory + "/haxe", context);
+		ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/hxml", targetDirectory + "/haxe", context);
 
 		copyProjectAssets(destination, sourceSet + "/assets/");
 	}
