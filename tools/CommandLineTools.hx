@@ -597,52 +597,41 @@ class CommandLineTools
 				sampleName = words[0].substr(colonIndex + 1);
 			}
 
-			if (projectName == "project" || sampleName == "project")
+			if (sampleName == null)
 			{
-				CreateTemplate.createProject(words, userDefines, overrides);
-			}
-			else if (projectName == "extension" || sampleName == "extension")
-			{
-				CreateTemplate.createExtension(words, userDefines);
-			}
-			else
-			{
-				if (sampleName == null)
+				var sampleExists = false;
+				var defines = new Map<String, Dynamic>();
+				defines.set("create", 1);
+				var project = HXProject.fromHaxelib(new Haxelib(defaultLibrary), defines);
+
+				for (samplePath in project.samplePaths)
 				{
-					var sampleExists = false;
-					var defines = new Map<String, Dynamic>();
-					defines.set("create", 1);
-					var project = HXProject.fromHaxelib(new Haxelib(defaultLibrary), defines);
-
-					for (samplePath in project.samplePaths)
+					if (FileSystem.exists(Path.combine(samplePath, projectName)))
 					{
-						if (FileSystem.exists(Path.combine(samplePath, projectName)))
-						{
-							sampleExists = true;
-						}
-					}
-
-					if (sampleExists)
-					{
-						CreateTemplate.createSample(words, userDefines);
-					}
-					else if (Haxelib.getPath(new Haxelib(projectName)) != "")
-					{
-						CreateTemplate.listSamples(projectName, userDefines);
-					}
-					else if (projectName == "" || projectName == null)
-					{
-						CreateTemplate.listSamples(defaultLibrary, userDefines);
-					}
-					else
-					{
-						CreateTemplate.listSamples(null, userDefines);
+						sampleExists = true;
 					}
 				}
-				else
+
+				if (sampleExists)
 				{
 					CreateTemplate.createSample(words, userDefines);
 				}
+				else if (Haxelib.getPath(new Haxelib(projectName)) != "")
+				{
+					CreateTemplate.listSamples(projectName, userDefines);
+				}
+				else if (projectName == "" || projectName == null)
+				{
+					CreateTemplate.listSamples(defaultLibrary, userDefines);
+				}
+				else
+				{
+					CreateTemplate.listSamples(null, userDefines);
+				}
+			}
+			else
+			{
+				CreateTemplate.createSample(words, userDefines);
 			}
 		}
 		else
