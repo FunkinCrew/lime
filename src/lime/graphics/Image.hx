@@ -38,16 +38,6 @@ import js.html.Image as JSImage;
 import js.html.ImageElement;
 import lime._internal.backend.html5.HTML5Thread;
 #end
-#if format
-import format.png.Data;
-import format.png.Reader;
-import format.png.Tools;
-import format.png.Writer;
-import format.tools.Deflate;
-#if sys
-import sys.io.File;
-#end
-#end
 
 /**
 	`Image` is a convenience class for working with bitmap images in Lime.
