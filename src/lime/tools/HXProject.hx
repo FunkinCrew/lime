@@ -448,13 +448,9 @@ class HXProject extends Script
 
 		try
 		{
-			#if (lime && !eval)
 			var nekoOutput = Path.combine(tempDirectory, name + ".n");
 			System.runCommand("", "haxe", args.concat(["--main", "lime.tools.HXProject", "-neko", nekoOutput]));
 			System.runCommand("", "neko", [nekoOutput, inputFile, outputFile]);
-			#else
-			System.runCommand("", "haxe", args.concat(["--run", "lime.tools.HXProject", inputFile, outputFile]));
-			#end
 		}
 		catch (e:Dynamic)
 		{

@@ -24,26 +24,34 @@ class DefineMacro
 			{
 				Compiler.define("native");
 
-				var cffi = (!Context.defined("nocffi") && !Context.defined("eval"));
+				var cffi = !Context.defined("nocffi");
 
 				if (Context.defined("ios") || Context.defined("android"))
 				{
 					Compiler.define("mobile");
-					if (cffi) Compiler.define("lime-opengles");
+
+					if (cffi)
+					{
+						Compiler.define("lime-opengles");
+					}
 				}
 				else
 				{
 					Compiler.define("desktop");
-					if (cffi) Compiler.define("lime-opengl");
+
+					if (cffi)
+					{
+						Compiler.define("lime-opengl");
+					}
 				}
 
 				if (cffi)
 				{
-					Compiler.define("lime-cffi");
-
 					Compiler.define("lime-openal");
 					Compiler.define("lime-cairo");
 					Compiler.define("lime-harfbuzz");
+
+					Compiler.define("lime-cffi");
 				}
 				else
 				{
