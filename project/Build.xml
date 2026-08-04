@@ -14,7 +14,7 @@
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
 	<set name="HXCPP_IOS_MIN_VERSION" value="16.0" if="iphone" />
-	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="13" if="mac" />
+	<setenv name="MACOSX_DEPLOYMENT_TARGET" value="11" if="mac" />
 
 	<set name="LIME_CAIRO" value="1" />
 	<set name="LIME_EFSW" value="1" if="windows || mac || linux" />
