@@ -216,8 +216,7 @@ class LinuxPlatform extends PlatformTarget
 	private function generateContext():Dynamic
 	{
 		var context = project.templateContext;
-		context.CPP_DIR = targetDirectory + "/obj/";
-		context.BUILD_DIR = project.app.path + "/linux" + (is64 ? "64" : "");
+		context.CPP_DIR = targetDirectory + "/obj";
 		return context;
 	}
 

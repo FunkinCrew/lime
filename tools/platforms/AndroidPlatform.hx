@@ -571,47 +571,50 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		for (attribute in context.ANDROID_APPLICATION)
-		{
-			if (attribute.key == "android:icon")
-			{
-				context.HAS_ICON = true;
-				break;
-			}
-		}
-
 		if (context.HAS_ICON == null)
 		{
-			var iconTypes = ["ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
-			var iconSizes = [36, 48, 72, 96, 144, 192];
-			var icons = project.icons;
-
-			if (project.adaptiveIcon != null)
+			for (attribute in context.ANDROID_APPLICATION)
 			{
-				ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, destination + "/app/src/main/res/", context);
-				context.HAS_ICON = true;
-				context.ANDROID_APPLICATION.push({key: "android:icon", value: "@mipmap/ic_launcher"});
-				if (project.adaptiveIcon.hasRoundIcon)
+				if (attribute.key == "android:icon")
 				{
-					context.ANDROID_APPLICATION.push({key: "android:roundIcon", value: "@mipmap/ic_launcher_round"});
+					context.HAS_ICON = true;
+					break;
 				}
 			}
-			else
+
+			if (context.HAS_ICON == null)
 			{
-				if (icons.length == 0)
+				var iconTypes = ["ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
+				var iconSizes = [36, 48, 72, 96, 144, 192];
+				var icons = project.icons;
+
+				if (project.adaptiveIcon != null)
 				{
-					icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
-				}
-				for (i in 0...iconTypes.length)
-				{
-					if (IconHelper.createIcon(icons, iconSizes[i], iconSizes[i], sourceSet + "/res/drawable-" + iconTypes[i] + "/icon.png")
-						&& !context.HAS_ICON)
+					ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, destination + "/app/src/main/res/", context);
+
+					context.ANDROID_APPLICATION.push({key: "android:icon", value: "@mipmap/ic_launcher"});
+
+					if (project.adaptiveIcon.hasRoundIcon)
 					{
-						context.HAS_ICON = true;
-						context.ANDROID_APPLICATION.push({key: "android:icon", value: "@drawable/icon"});
+						context.ANDROID_APPLICATION.push({key: "android:roundIcon", value: "@mipmap/ic_launcher_round"});
 					}
 				}
-				IconHelper.createIcon(icons, 732, 412, sourceSet + "/res/drawable-xhdpi/ouya_icon.png");
+				else
+				{
+					if (icons.length == 0)
+					{
+						icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
+					}
+
+					for (i in 0...iconTypes.length)
+					{
+						IconHelper.createIcon(icons, iconSizes[i], iconSizes[i], sourceSet + "/res/drawable-" + iconTypes[i] + "/icon.png");
+					}
+
+					context.ANDROID_APPLICATION.push({key: "android:icon", value: "@drawable/icon"});
+				}
+
+				context.HAS_ICON = true;
 			}
 		}
 

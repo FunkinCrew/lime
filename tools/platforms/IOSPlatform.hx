@@ -87,8 +87,8 @@ class IOSPlatform extends PlatformTarget
 	private function generateContext():Dynamic
 	{
 		project.sources.unshift("");
+
 		project.sources = Path.relocatePaths(project.sources, Path.combine(targetDirectory, project.app.file + "/haxe"));
-		// project.dependencies.push ("stdc++");
 
 		if (project.targetFlags.exists("xml"))
 		{
@@ -122,10 +122,12 @@ class IOSPlatform extends PlatformTarget
 
 		var context = project.templateContext;
 
-		context.HAS_ICON = false;
-		context.HAS_LAUNCH_IMAGE = false;
+		if (context.APP_TITLE != null && context.APP_TITLE != "")
+		{
+			context.APP_TITLE = ~/ /ig.replace(context.APP_TITLE, "\u2002");
+		}
+
 		context.OBJC_ARC = false;
-		context.KEY_STORE_IDENTITY = project.config.getString("ios.identity");
 
 		if (project.config.exists("ios.provisioning-profile"))
 		{
@@ -201,7 +203,6 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		context.VALID_ARCHS = valid_archs.join(" ");
-		context.THUMB_SUPPORT = "";
 
 		var requiredCapabilities:Array<{name:String, value:Bool}> = [];
 
@@ -211,14 +212,14 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		context.REQUIRED_CAPABILITY = requiredCapabilities;
-		context.ARM64 = arm64;
-		context.X64 = x64;
+
 		context.TARGET_DEVICES = switch (project.config.getString("ios.device", "universal"))
 		{
 			case "iphone": "1";
 			case "ipad": "2";
 			default: "1,2";
 		}
+
 		context.DEPLOYMENT = project.config.getString("ios.deployment", "16.0");
 
 		if (project.config.getString("ios.compiler") == "llvm" || project.config.getString("ios.compiler", "clang") == "clang")
@@ -226,10 +227,8 @@ class IOSPlatform extends PlatformTarget
 			context.OBJC_ARC = true;
 		}
 
-		context.IOS_COMPILER = project.config.getString("ios.compiler", "clang");
-		context.CPP_BUILD_LIBRARY = project.config.getString("cpp.buildLibrary", "hxcpp");
-		context.CPP_CACHE_WORKAROUND = "unset HXCPP_COMPILE_CACHE;";
 		context.IOS_LINKER_FLAGS = project.config.getArrayString("ios.linker-flags");
+
 		context.IOS_NON_EXEMPT_ENCRYPTION = project.config.getBool("ios.non-exempt-encryption", false);
 
 		switch (project.window.orientation)
@@ -240,8 +239,6 @@ class IOSPlatform extends PlatformTarget
 				context.IOS_APP_ORIENTATION = "<array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>";
 			case ALL:
 				context.IOS_APP_ORIENTATION = "<array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationPortraitUpsideDown</string></array>";
-			// case "allButUpsideDown":
-			// context.IOS_APP_ORIENTATION = "<array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string><string>UIInterfaceOrientationPortrait</string></array>";
 			default:
 				context.IOS_APP_ORIENTATION = "<array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationPortraitUpsideDown</string></array>";
 		}
@@ -389,8 +386,6 @@ class IOSPlatform extends PlatformTarget
 
 		context.HXML_PATH = System.findTemplate(project.templatePaths, "ios/template/{{app.file}}/haxe/Build.hxml");
 
-		context.PRERENDERED_ICON = project.config.getBool("ios.prerenderedIcon", false);
-
 		var allowInsecureHTTP = project.config.getString("ios.allow-insecure-http", "*");
 
 		if (allowInsecureHTTP != "*" && allowInsecureHTTP != "true")
@@ -532,8 +527,6 @@ class IOSPlatform extends PlatformTarget
 			{name: "Icon-Marketing.png", size: 1024}
 		];
 
-		context.HAS_ICON = true;
-
 		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile)
 		{
 			context.IOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
@@ -541,6 +534,7 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		var iconPath = Path.combine(projectDirectory, "Images.xcassets/AppIcon.appiconset");
+
 		System.mkdir(iconPath);
 
 		var icons = project.icons;
@@ -552,10 +546,7 @@ class IOSPlatform extends PlatformTarget
 
 		for (iconSize in iconSizes)
 		{
-			if (!IconHelper.createIcon(icons, iconSize.size, iconSize.size, Path.combine(iconPath, iconSize.name)))
-			{
-				context.HAS_ICON = false;
-			}
+			IconHelper.createIcon(icons, iconSize.size, iconSize.size, Path.combine(iconPath, iconSize.name));
 		}
 
 		if (project.launchStoryboard != null)
@@ -703,8 +694,6 @@ class IOSPlatform extends PlatformTarget
 					}
 				}
 			}
-
-			context.HAS_LAUNCH_IMAGE = true;
 		}
 
 		System.mkdir(projectDirectory + "/resources");

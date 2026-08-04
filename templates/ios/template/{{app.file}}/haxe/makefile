@@ -53,7 +53,7 @@ $(HAXE_BUILDS): build-haxe-%:
 	@echo "Haxe $(if $(filter $*,$(SIMULATOR_ARCH)),simulator,device) build: $(CONFIG)$(SUFFIX_$*)"
 	haxe Build.hxml -D message.no-color $(HXCPP_FLAGS_$*) -cpp build/$(CONFIG)$(SUFFIX_$*) $(DEBUG)
 	cd build/$(CONFIG)$(SUFFIX_$*); ::HAXELIB_PATH:: export HXCPP_NO_COLOR=1; \
-		haxelib run ::CPP_BUILD_LIBRARY:: Build.xml haxe -Ddestination="$(CURDIR)/../lib/$(BUILD_NAME_$*)$(LIB_DEST)" \
+		haxelib run hxcpp Build.xml haxe -Ddestination="$(CURDIR)/../lib/$(BUILD_NAME_$*)$(LIB_DEST)" \
 		-options Options.txt $(DEBUG)
 	::if (IOS_CLASS_FILES)::::foreach (IOS_CLASS_FILES)::
 	touch ../Classes/::__current__::
