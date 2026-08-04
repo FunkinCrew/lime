@@ -56,9 +56,7 @@ class HTML5Helper
 			}
 		}
 
-		var templatePaths = [
-			Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
-		].concat(project.templatePaths);
+		var templatePaths = [Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates")].concat(project.templatePaths);
 		var webify = System.findTemplate(templatePaths, "bin/webify" + suffix);
 		if (System.hostPlatform != WINDOWS)
 		{
@@ -83,9 +81,7 @@ class HTML5Helper
 		}
 		else
 		{
-			var templatePaths = [
-				Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
-			].concat(project.templatePaths);
+			var templatePaths = [Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates")].concat(project.templatePaths);
 			var server = System.findTemplate(templatePaths, "bin/node/http-server/bin/http-server");
 
 			var args = [server, path, "-c-1", "--cors"];

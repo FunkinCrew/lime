@@ -63,7 +63,6 @@ class CFFI
 		var result:Dynamic = null;
 
 		#if !macro
-
 		#if (sys && !html5)
 		if (__moduleNames == null) __moduleNames = new Map<String, String>();
 
@@ -157,9 +156,7 @@ class CFFI
 			__loadNekoAPI(lazy);
 		}
 		#end
-
 		#end
-
 		#else
 		result = function(_, _, _, _, _, _)
 		{

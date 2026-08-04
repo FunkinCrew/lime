@@ -1,6 +1,5 @@
 package lime.ui;
 
-
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Event;
 

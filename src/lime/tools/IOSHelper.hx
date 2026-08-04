@@ -496,10 +496,8 @@ class IOSHelper
 
 	private static function fallbackLaunch(project:HXProject, applicationPath:String):Void
 	{
-		var templatePaths = [
-			Path.combine(Haxelib.getPath(new Haxelib(#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end)
-		].concat(project.templatePaths);
-		var launcher = System.findTemplate(templatePaths, "bin/ios-deploy");
+		var launcher = System.findTemplate([Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates")].concat(project.templatePaths), "bin/ios-deploy");
+
 		Sys.command("chmod", ["+x", launcher]);
 
 		System.runCommand("", launcher, [

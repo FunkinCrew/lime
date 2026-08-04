@@ -1,24 +1,19 @@
 package;
 
-import hxp.Haxelib;
 import hxp.HXML;
-import hxp.Path;
 import hxp.Log;
-import hxp.NDLL;
+import hxp.Path;
 import hxp.System;
 import lime.tools.Architecture;
 import lime.tools.AssetHelper;
-import lime.tools.AssetType;
 import lime.tools.CPPHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
 import lime.tools.Orientation;
-import lime.tools.Platform;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
-import sys.io.File;
-import sys.io.Process;
 import sys.FileSystem;
+import sys.io.File;
 
 class LinuxPlatform extends PlatformTarget
 {

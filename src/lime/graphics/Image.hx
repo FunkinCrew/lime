@@ -48,6 +48,7 @@ import format.tools.Deflate;
 import sys.io.File;
 #end
 #end
+
 /**
 	`Image` is a convenience class for working with bitmap images in Lime.
 

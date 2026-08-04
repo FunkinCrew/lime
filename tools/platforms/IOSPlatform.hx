@@ -2,35 +2,26 @@ package;
 
 import haxe.Json;
 import hxp.ArrayTools;
-import hxp.Haxelib;
 import hxp.HXML;
 import hxp.Log;
 import hxp.NDLL;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
-#if lime
 import lime.graphics.Image;
-#end
 import lime.tools.Architecture;
-import lime.tools.Asset;
 import lime.tools.AssetHelper;
-import lime.tools.AssetType;
 import lime.tools.CPPHelper;
-import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
+import lime.tools.IOSHelper;
 import lime.tools.Icon;
 import lime.tools.IconHelper;
 import lime.tools.ImageHelper;
-import lime.tools.IOSHelper;
-import lime.tools.Keystore;
 import lime.tools.LaunchStoryboard;
-import lime.tools.Orientation;
-import lime.tools.Platform;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
-import sys.io.File;
 import sys.FileSystem;
+import sys.io.File;
 
 class IOSPlatform extends PlatformTarget
 {
@@ -465,7 +456,8 @@ class IOSPlatform extends PlatformTarget
 	{
 		var arm64 = (command == "rebuild" && !project.targetFlags.exists("simulator"));
 		var arm64sim = (command == "rebuild" && project.targetFlags.exists("simulator"));
-		var x86_64 = (command == "rebuild" && (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
+		var x86_64 = (command == "rebuild"
+			&& (project.architectures.indexOf(Architecture.X64) > -1 && project.targetFlags.exists("simulator")));
 
 		var arc = (project.targetFlags.exists("arc"));
 

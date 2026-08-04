@@ -1,7 +1,6 @@
 package;
 
 import hxp.ArrayTools;
-import hxp.Haxelib;
 import hxp.HXML;
 import hxp.Log;
 import hxp.Path;
@@ -14,13 +13,11 @@ import lime.tools.CPPHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
 import lime.tools.Icon;
-import lime.tools.AdaptiveIcon;
 import lime.tools.IconHelper;
-import lime.tools.Orientation;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
-import sys.io.File;
 import sys.FileSystem;
+import sys.io.File;
 
 class AndroidPlatform extends PlatformTarget
 {
@@ -471,7 +468,7 @@ class AndroidPlatform extends PlatformTarget
 
 		if (!project.environment.exists("ANDROID_SDK") || !project.environment.exists("ANDROID_NDK_ROOT"))
 		{
-			var command = #if lime "lime" #else "hxp" #end;
+			var command = "lime";
 			var toolsBase = Type.resolveClass("CommandLineTools");
 			if (toolsBase != null) command = Reflect.field(toolsBase, "commandName");
 
@@ -607,7 +604,6 @@ class AndroidPlatform extends PlatformTarget
 				}
 				for (i in 0...iconTypes.length)
 				{
-					// create multiple icons, only set "android:icon" once
 					if (IconHelper.createIcon(icons, iconSizes[i], iconSizes[i], sourceSet + "/res/drawable-" + iconTypes[i] + "/icon.png")
 						&& !context.HAS_ICON)
 					{
@@ -623,9 +619,7 @@ class AndroidPlatform extends PlatformTarget
 		System.removeDirectory(destination + "/app/libs");
 		System.removeDirectory(destination + "/deps");
 
-		var packageDirectory = project.meta.packageName;
-		packageDirectory = sourceSet + "/java/" + packageDirectory.split(".").join("/");
-		System.mkdir(packageDirectory);
+		System.mkdir(sourceSet + "/java/" + project.meta.packageName.split(".").join("/"));
 
 		for (javaPath in project.javaPaths)
 		{
@@ -648,10 +642,6 @@ class AndroidPlatform extends PlatformTarget
 				}
 			}
 			catch (e:Dynamic) {}
-
-			//	throw"Could not find javaPath " + javaPath +" required by extension.";
-
-			// }
 		}
 
 		for (library in cast(context.ANDROID_LIBRARY_PROJECTS, Array<Dynamic>))
@@ -659,10 +649,15 @@ class AndroidPlatform extends PlatformTarget
 			recursiveCopy(library.source, destination + "/deps/" + library.name, context, true);
 		}
 
-		ProjectHelper.recursiveSmartCopyTemplate(project, "android/template", destination, context);
-		System.copyFileTemplate(project.templatePaths, "android/MainActivity.java", packageDirectory + "/MainActivity.java", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/hxml", targetDirectory + "/haxe", context);
+		ProjectHelper.recursiveSmartCopyTemplate(project, "android/template", destination, context);
+
+		System.copyFileTemplate(project.templatePaths, "android/MainActivity.java",
+			sourceSet
+			+ "/java/"
+			+ project.meta.packageName.split(".").join("/")
+			+ "/MainActivity.java", context);
 
 		copyProjectAssets(destination, sourceSet + "/assets/");
 	}

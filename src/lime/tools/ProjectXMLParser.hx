@@ -1,18 +1,16 @@
 package lime.tools;
 
+import haxe.xml.Access;
 import hxp.*;
-import lime.tools.CommandHelper;
-import lime.tools.ModuleHelper;
 import lime.tools.Asset;
 import lime.tools.AssetType;
+import lime.tools.CommandHelper;
 import lime.tools.Dependency;
 import lime.tools.HXProject;
-#if lime
+import lime.tools.ModuleHelper;
 import lime.utils.AssetManifest;
-#end
-import sys.io.File;
 import sys.FileSystem;
-import haxe.xml.Access;
+import sys.io.File;
 
 class ProjectXMLParser extends HXProject
 {
@@ -595,7 +593,6 @@ class ProjectXMLParser extends HXProject
 
 		if (FileSystem.exists(jsonPath))
 		{
-			#if lime
 			try
 			{
 				var manifest = AssetManifest.fromFile(jsonPath);
@@ -629,7 +626,6 @@ class ProjectXMLParser extends HXProject
 				}
 			}
 			catch (e:Dynamic) {}
-			#end
 		}
 
 		if (!processedLibrary)

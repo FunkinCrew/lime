@@ -264,7 +264,7 @@ class ArrayBufferView
 	}
 
 	// Non-spec
-	function copyFromArray(array:Array< Float>, offset:Int = 0)
+	function copyFromArray(array:Array<Float>, offset:Int = 0)
 	{
 		// Ideally, native semantics could be used, like cpp.NativeArray.blit
 		var i = 0, len = array.length;

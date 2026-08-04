@@ -4,10 +4,7 @@ import hxp.HXML;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
-import haxe.Template;
-#if lime
 import lime.text.Font;
-#end
 import lime.tools.AssetHelper;
 import lime.tools.AssetType;
 import lime.tools.DeploymentHelper;
@@ -17,11 +14,10 @@ import lime.tools.HXProject;
 import lime.tools.Icon;
 import lime.tools.IconHelper;
 import lime.tools.ModuleHelper;
-import lime.tools.Orientation;
-import lime.tools.ProjectHelper;
 import lime.tools.PlatformTarget;
-import sys.io.File;
+import lime.tools.ProjectHelper;
 import sys.FileSystem;
+import sys.io.File;
 
 class HTML5Platform extends PlatformTarget
 {
@@ -382,9 +378,7 @@ class HTML5Platform extends PlatformTarget
 
 		var dir:String = null;
 
-		#if lime
 		Font.init();
-		#end
 
 		for (asset in project.assets)
 		{
@@ -435,7 +429,6 @@ class HTML5Platform extends PlatformTarget
 					{
 						if (embeddedAsset.type == "font" && embeddedAsset.sourcePath == asset.sourcePath)
 						{
-							#if lime
 							var font = Font.fromFile(asset.sourcePath);
 
 							embeddedAsset.fontName = font.name;
@@ -466,8 +459,8 @@ class HTML5Platform extends PlatformTarget
 
 								embeddedAsset.cssFontFace = fontFace;
 							}
+
 							break;
-							#end
 						}
 					}
 				}
@@ -475,9 +468,7 @@ class HTML5Platform extends PlatformTarget
 		}
 
 		// For some reason it seems to crash in here if the shutdown runs, should be figured out later but it shoudnt cause any issues for now ig
-		// #if lime
 		// Font.shutdown();
-		// #end
 
 		ProjectHelper.recursiveSmartCopyTemplate(project, "html5/template", destination, context);
 
