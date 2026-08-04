@@ -1,7 +1,11 @@
 package lime.tools;
 
 import haxe.xml.Access;
-import hxp.*;
+import hxp.ArrayTools;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.NDLL;
+import hxp.Path;
 import lime.tools.Asset;
 import lime.tools.AssetType;
 import lime.tools.CommandHelper;

@@ -1,8 +1,8 @@
 package lime.tools;
 
+import haxe.crypto.Crc32;
 import haxe.crypto.Sha1;
 import haxe.io.Bytes;
-import haxe.crypto.Crc32;
 
 // https://groups.google.com/d/msg/haxelang/N03kf5WSrTU/KU8nmsaqfIIJ
 class GUID

@@ -1,14 +1,17 @@
 package;
 
 import haxe.io.Eof;
-import haxe.zip.Reader;
-import hxp.*;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.StringTools;
+import hxp.System;
+import hxp.Version;
 import lime.tools.CLIHelper;
 import lime.tools.ConfigHelper;
 import lime.tools.HXProject;
 import sys.FileSystem;
 import sys.io.File;
-import sys.io.Process;
 
 class PlatformSetup
 {

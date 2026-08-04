@@ -1,7 +1,7 @@
 package lime.tools;
 
 import haxe.io.Eof;
-import hxp.*;
+import hxp.Log;
 
 class CLIHelper
 {

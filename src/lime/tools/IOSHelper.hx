@@ -1,10 +1,12 @@
 package lime.tools;
 
-import hxp.*;
-import lime.tools.Platform;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
 import lime.tools.HXProject;
-import sys.io.Process;
 import sys.FileSystem;
+import sys.io.Process;
 
 class IOSHelper
 {

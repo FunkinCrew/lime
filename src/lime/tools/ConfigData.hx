@@ -1,7 +1,8 @@
 package lime.tools;
 
-import hxp.*;
 import haxe.xml.Access;
+import hxp.Log;
+import hxp.ObjectTools;
 
 abstract ConfigData(Dynamic) to Dynamic from Dynamic
 {

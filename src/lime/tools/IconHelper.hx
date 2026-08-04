@@ -1,22 +1,18 @@
 package lime.tools;
 
-// import openfl.display.Bitmap;
-// import openfl.display.BitmapData;
-// import openfl.display.Shape;
-// import openfl.geom.Rectangle;
-// import openfl.utils.ByteArray;
-// import format.SVG;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
-import hxp.*;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
+import lime.tools.Icon;
 import lime.tools.ImageHelper;
+import sys.FileSystem;
+import sys.io.File;
 #if (lime && lime_cffi && !macro)
 import lime.graphics.Image;
 import lime.math.Rectangle;
 #end
-import lime.tools.Icon;
-import sys.io.File;
-import sys.FileSystem;
 
 class IconHelper
 {

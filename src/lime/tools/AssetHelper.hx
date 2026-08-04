@@ -1,19 +1,22 @@
 package lime.tools;
 
-import haxe.io.Bytes as HaxeBytes;
 import haxe.Serializer;
 import haxe.Unserializer;
-import hxp.*;
+import haxe.io.Bytes as HaxeBytes;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
 import lime._internal.format.Base64;
-import lime.tools.AssetType;
 import lime.tools.Asset;
+import lime.tools.AssetType;
 import lime.tools.HXProject;
 import lime.tools.Library;
 import lime.utils.AssetManifest;
 import lime.utils.Bytes;
+import sys.FileSystem;
 import sys.io.File;
 import sys.io.FileOutput;
-import sys.FileSystem;
 
 class AssetHelper
 {

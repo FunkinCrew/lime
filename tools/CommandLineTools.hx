@@ -1,10 +1,25 @@
 package;
 
 import haxe.Serializer;
-import hxp.*;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.MapTools;
+import hxp.Path;
+import hxp.StringTools;
+import hxp.System;
 import lime.system.CFFI;
-import lime.tools.*;
+import lime.tools.ApplicationData;
+import lime.tools.Architecture;
+import lime.tools.CommandHelper;
+import lime.tools.ConfigHelper;
+import lime.tools.Dependency;
 import lime.tools.HXProject;
+import lime.tools.Keystore;
+import lime.tools.MetaData;
+import lime.tools.Platform;
+import lime.tools.PlatformTarget;
+import lime.tools.ProjectXMLParser;
+import lime.tools.WindowData;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;

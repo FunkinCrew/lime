@@ -1,6 +1,9 @@
 package lime.tools;
 
-import hxp.*;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
 import sys.io.File;
 import sys.FileSystem;
 

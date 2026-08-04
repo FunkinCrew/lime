@@ -1,12 +1,17 @@
 package lime.tools;
 
 #if !macro
-import hxp.*;
+import hxp.ArrayTools;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.StringTools;
+import hxp.System;
 import lime.tools.Dependency;
 import lime.tools.HXProject;
 import lime.tools.ModuleData;
-import sys.io.File;
 import sys.FileSystem;
+import sys.io.File;
 class ModuleHelper
 {
 	public static function addModuleSource(source:String, moduleData:ModuleData, include:Array<String>, exclude:Array<String>, packageName:String = null)
@@ -225,13 +230,13 @@ class ModuleHelper
 #else
 import haxe.macro.Compiler;
 import haxe.macro.Context;
-import haxe.macro.Type;
 import haxe.macro.Expr;
 import haxe.macro.JSGenApi;
+import haxe.macro.Type;
 
-using haxe.macro.Tools;
 using Lambda;
 using StringTools;
+using haxe.macro.Tools;
 
 class ModuleHelper
 {

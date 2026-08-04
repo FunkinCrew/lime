@@ -1,20 +1,30 @@
 package lime.tools;
 
-import haxe.io.Eof;
 import haxe.Json;
 import haxe.Serializer;
 import haxe.Unserializer;
-import hxp.*;
+import haxe.io.Eof;
+import haxe.xml.Access;
+import hxp.ArrayTools;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.MapTools;
+import hxp.NDLL;
+import hxp.ObjectTools;
+import hxp.Path;
+import hxp.Script;
+import hxp.StringTools;
+import hxp.System;
 import lime.tools.Architecture;
 import lime.tools.AssetType;
 import lime.tools.Platform;
 import sys.FileSystem;
 import sys.io.File;
-import sys.io.Process;
-import haxe.xml.Access;
 #if (lime && lime_cffi && !macro)
 import lime.text.Font;
+#end
 
+#if (lime && lime_cffi && !macro)
 @:access(lime.text.Font)
 #end
 class HXProject extends Script

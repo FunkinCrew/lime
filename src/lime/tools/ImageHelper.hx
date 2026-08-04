@@ -1,16 +1,11 @@
 package lime.tools;
 
-import hxp.*;
+import sys.io.File;
+import sys.io.FileSeek;
 #if (lime && lime_cffi && !macro)
 import lime._internal.format.SVG;
 import lime.graphics.Image;
-import lime.graphics.ImageBuffer;
-import lime.utils.UInt8Array;
 #end
-import lime.tools.Platform;
-import sys.io.File;
-import sys.io.FileSeek;
-import sys.FileSystem;
 
 class ImageHelper
 {

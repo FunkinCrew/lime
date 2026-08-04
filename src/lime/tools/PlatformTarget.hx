@@ -1,7 +1,10 @@
 package lime.tools;
 
 import haxe.rtti.Meta;
-import hxp.*;
+import hxp.HXML;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
 import lime.tools.AssetHelper;
 import lime.tools.CommandHelper;
 import sys.FileSystem;

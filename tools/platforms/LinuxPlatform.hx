@@ -9,7 +9,6 @@ import lime.tools.AssetHelper;
 import lime.tools.CPPHelper;
 import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
-import lime.tools.Orientation;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
 import sys.FileSystem;

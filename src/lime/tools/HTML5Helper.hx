@@ -1,12 +1,13 @@
 package lime.tools;
 
-import hxp.*;
-import lime.tools.Architecture;
+import hxp.Haxelib;
+import hxp.Log;
+import hxp.Path;
+import hxp.System;
+import hxp.Version;
 import lime.tools.Asset;
 import lime.tools.HXProject;
-import lime.tools.Platform;
 import sys.FileSystem;
-import sys.io.File;
 #if cpp
 import cpp.vm.Thread;
 #end
