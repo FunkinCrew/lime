@@ -136,7 +136,7 @@ class IOSPlatform extends PlatformTarget
 
 		if (project.config.exists("ios.team-id"))
 		{
-			context.DEVELOPMENT_TEAM_ID = project.config.getString("ios.team-id");
+			context.IOS_DEVELOPMENT_TEAM_ID = project.config.getString("ios.team-id");
 		}
 
 		context.linkedLibraries = [];

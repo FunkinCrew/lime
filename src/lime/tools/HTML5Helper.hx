@@ -35,45 +35,6 @@ class HTML5Helper
 		}
 	}
 
-	public static function generateWebfonts(project:HXProject, font:Asset):Void
-	{
-		var suffix = switch (System.hostPlatform)
-		{
-			case WINDOWS: "-windows.exe";
-			case MAC: "-mac";
-			case LINUX: "-linux";
-			default: return;
-		}
-
-		if (suffix == "-linux")
-		{
-			if (System.hostArchitecture == X86)
-			{
-				suffix += "32";
-			}
-			else
-			{
-				suffix += "64";
-			}
-		}
-
-		var templatePaths = [Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates")].concat(project.templatePaths);
-		var webify = System.findTemplate(templatePaths, "bin/webify" + suffix);
-		if (System.hostPlatform != WINDOWS)
-		{
-			Sys.command("chmod", ["+x", webify]);
-		}
-
-		if (Log.verbose)
-		{
-			System.runCommand("", webify, [FileSystem.fullPath(font.sourcePath)]);
-		}
-		else
-		{
-			System.runProcess("", webify, [FileSystem.fullPath(font.sourcePath)], true, true, true);
-		}
-	}
-
 	public static function launch(project:HXProject, path:String, port:Int = 0):Void
 	{
 		if (project.app.url != null && project.app.url != "")
