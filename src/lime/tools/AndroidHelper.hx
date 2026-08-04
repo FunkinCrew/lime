@@ -217,7 +217,7 @@ class AndroidHelper
 			Log.error("adb not found in Android SDK: " + project.environment.get("ANDROID_SDK"));
 		}
 
-		if (project.targetFlags.exists("emulator") || project.targetFlags.exists("simulator"))
+		if (project.targetFlags.exists("simulator"))
 		{
 			if (!FileSystem.exists(emulatorPath + emulatorName))
 			{

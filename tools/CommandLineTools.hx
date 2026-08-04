@@ -929,9 +929,8 @@ class CommandLineTools
 				Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-xcode\x1b[0m -- Launch the generated Xcode project");
 			}
 
-			Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
+			Log.println("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
 			Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator -ipad\x1b[0m -- Build/test for the iPad Simulator");
-			Log.println("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
 			Log.println("  \x1b[3m(html5)\x1b[0m \x1b[1m-npm\x1b[0m -- Target HTML5 using an NPM project structure");
 
 			if (command == "run" || command == "test")
