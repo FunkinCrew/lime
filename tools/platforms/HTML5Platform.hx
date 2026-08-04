@@ -232,7 +232,7 @@ class HTML5Platform extends PlatformTarget
 
 		for (haxelib in project.haxelibs)
 		{
-			if (haxelib.name == "openfl-html5-dom" || haxelib.name == "openfl-bitfive")
+			if (haxelib.name == "openfl-bitfive")
 			{
 				useWebfonts = false;
 			}

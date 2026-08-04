@@ -19,7 +19,6 @@ Lime does not include a renderer, but exposes the current context:
 
  * Cairo
  * Canvas
- * DOM
  * GL
 
 The GL context is based upon the WebGL standard, implemented for both OpenGL and OpenGL ES as needed.

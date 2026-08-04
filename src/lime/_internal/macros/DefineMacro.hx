@@ -17,7 +17,6 @@ class DefineMacro
 				Compiler.define("html5");
 				Compiler.define("web");
 				Compiler.define("lime-canvas");
-				Compiler.define("lime-dom");
 				Compiler.define("lime-howlerjs");
 				Compiler.define("lime-webgl");
 			}

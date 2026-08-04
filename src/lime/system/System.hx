@@ -127,10 +127,6 @@ class System
 			{
 				htmlElement = cast Browser.document.getElementById(element);
 			}
-			else if (element == null)
-			{
-				htmlElement = cast Browser.document.createElement("div");
-			}
 			else
 			{
 				htmlElement = cast element;
