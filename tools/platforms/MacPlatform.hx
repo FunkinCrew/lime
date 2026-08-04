@@ -38,63 +38,7 @@ class MacPlatform extends PlatformTarget
 	{
 		super(command, _project, targetFlags);
 
-		var defaults = new HXProject();
-
-		defaults.meta =
-			{
-				title: "MyApplication",
-				description: "",
-				packageName: "com.example.myapp",
-				version: "1.0.0",
-				company: "",
-				companyUrl: "",
-				buildNumber: null,
-				companyId: ""
-			};
-
-		defaults.app =
-			{
-				main: "Main",
-				file: "MyApplication",
-				path: "bin",
-				preloader: "",
-				url: "",
-				init: null
-			};
-
-		defaults.window =
-			{
-				width: 800,
-				height: 600,
-				parameters: "{}",
-				background: 0xFFFFFF,
-				fps: 60,
-				hardware: true,
-				display: 0,
-				resizable: true,
-				transparent: false,
-				borderless: false,
-				orientation: Orientation.AUTO,
-				vsync: false,
-				fullscreen: false,
-				allowHighDPI: false,
-				alwaysOnTop: false,
-				antialiasing: 0,
-				allowShaders: true,
-				requireShaders: false,
-				depthBuffer: true,
-				stencilBuffer: true,
-				colorDepth: 32,
-				maximized: false,
-				minimized: false,
-				hidden: false,
-				title: ""
-			};
-
-		for (i in 1...project.windows.length)
-		{
-			defaults.windows.push(defaults.window);
-		}
+		var defaults:HXProject = createDefaultProject();
 
 		defaults.merge(project);
 
@@ -106,6 +50,7 @@ class MacPlatform extends PlatformTarget
 		}
 
 		targetArchitecture = System.hostArchitecture;
+
 		for (architecture in project.architectures)
 		{
 			if (architecture.isARM() || architecture.isX())
