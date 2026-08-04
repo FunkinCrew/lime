@@ -906,9 +906,7 @@ class CommandLineTools
 			Log.println("  \x1b[3m(windows|mac|linux|android)\x1b[0m \x1b[1m-static\x1b[0m -- Compile as a static C++ executable");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-x86_32\x1b[0m -- Compile for x86_32 instead of the OS default");
 			Log.println("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-x86_64\x1b[0m -- Compile for x86_64 instead of the OS default");
-			Log.println("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv6\x1b[0m -- Compile for ARMv6 instead of the OS defaults");
 			Log.println("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7\x1b[0m -- Compile for ARMv7 instead of the OS defaults");
-			Log.println("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7s\x1b[0m -- Compile for ARMv7s instead of the OS defaults");
 			Log.println("  \x1b[3m(mac|ios|android)\x1b[0m \x1b[1m-arm64\x1b[0m -- Compile for ARM64 instead of the OS defaults");
 			Log.println("  \x1b[3m(ios)\x1b[0m \x1b[1m-nosign\x1b[0m -- Compile executable, but skip codesigning");
 		}

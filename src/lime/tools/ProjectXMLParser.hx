@@ -1813,26 +1813,6 @@ class ProjectXMLParser extends HXProject
 						config.set("ios.deployment", deployment);
 					}
 
-					if (element.has.binaries)
-					{
-						var binaries = substitute(element.att.binaries);
-
-						switch (binaries)
-						{
-							case "fat":
-								ArrayTools.addUnique(architectures, Architecture.ARMV6);
-								ArrayTools.addUnique(architectures, Architecture.ARMV7);
-
-							case "armv6":
-								ArrayTools.addUnique(architectures, Architecture.ARMV6);
-								architectures.remove(Architecture.ARMV7);
-
-							case "armv7":
-								ArrayTools.addUnique(architectures, Architecture.ARMV7);
-								architectures.remove(Architecture.ARMV6);
-						}
-					}
-
 					if (element.has.devices)
 					{
 						config.set("ios.device", substitute(element.att.devices).toLowerCase());

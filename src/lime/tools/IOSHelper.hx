@@ -151,11 +151,6 @@ class IOSHelper
 			commands.push("-arch");
 			commands.push("armv7");
 		}
-		else if (project.targetFlags.exists("armv7s"))
-		{
-			commands.push("-arch");
-			commands.push("armv7s");
-		}
 		else if (project.targetFlags.exists("arm64"))
 		{
 			commands.push("-arch");

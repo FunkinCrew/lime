@@ -28,8 +28,6 @@ class LinuxPlatform extends PlatformTarget
 
 		switch (System.hostArchitecture)
 		{
-			case ARMV6:
-				defaults.architectures = [ARMV6];
 			case ARMV7:
 				defaults.architectures = [ARMV7];
 			case ARM64:
