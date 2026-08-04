@@ -353,6 +353,8 @@ class HTML5Platform extends PlatformTarget
 
 							var format = switch (extension)
 							{
+								case "woff2": "woff2";
+								case "woff": "woff";
 								case "otf": "opentype";
 								case "ttf": "truetype";
 								default: "";
