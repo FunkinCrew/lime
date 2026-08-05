@@ -1,0 +1,100 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 500
+
+# --- Tab Settings ---
+UseTab: Always
+TabWidth: 4
+
+# --- Indentation Options ---
+NamespaceIndentation: All
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentExternBlock: AfterExternBlock
+
+# --- Line Ends / Brace Wrapping Options ---
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeElse: true
+  BeforeCatch: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# --- Same Line Options ---
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Inline
+
+# --- Empty Lines Options ---
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# --- Include / Import Options ---
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+
+---
+Language: ObjC
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 500
+
+# --- Tab Settings ---
+UseTab: Always
+TabWidth: 4
+
+# --- Indentation Options ---
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentExternBlock: AfterExternBlock
+
+# --- Objective-C Specific Options ---
+ObjCBlockIndentWidth: 4
+ObjCSpaceAfterProperty: true
+ObjCSpaceBeforeProtocolList: true
+
+# --- Line Ends / Brace Wrapping Options ---
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeElse: true
+  BeforeCatch: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# --- Same Line Options ---
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Inline
+
+# --- Empty Lines Options ---
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# --- Include / Import Options ---
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+...
