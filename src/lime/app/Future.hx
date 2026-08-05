@@ -104,8 +104,10 @@ import lime.utils.Log;
 		var promise = new Promise<T>();
 
 		onComplete.add(promise.complete, true);
-		if (onError != null) onError.add(promise.error, true);
-		if (onProgress != null) onProgress.add(promise.progress, true);
+		if (onError != null)
+			onError.add(promise.error, true);
+		if (onProgress != null)
+			onProgress.add(promise.progress, true);
 
 		return promise.future;
 	}

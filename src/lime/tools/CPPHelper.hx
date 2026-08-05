@@ -5,7 +5,9 @@ import hxp.Log;
 import hxp.MapTools;
 import hxp.Path;
 import hxp.System;
+
 import lime.tools.HXProject;
+
 import sys.FileSystem;
 
 class CPPHelper
@@ -222,7 +224,8 @@ class CPPHelper
 			buildFile = project.config.get("project.rebuild.file");
 		}
 
-		if (buildFile == null) buildFile = "Build.xml";
+		if (buildFile == null)
+			buildFile = "Build.xml";
 
 		if (!FileSystem.exists(Path.combine(path, buildFile)))
 		{

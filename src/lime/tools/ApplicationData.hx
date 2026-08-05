@@ -11,13 +11,12 @@ abstract ApplicationData({
 }) from Dynamic
 {
 	@:noCompletion
-	public static var expectedFields:ApplicationData =
-		{
-			file: "",
-			init: "",
-			main: "",
-			path: "",
-			preloader: "",
-			url: ""
-		};
+	public static var expectedFields:ApplicationData = {
+		file: "",
+		init: "",
+		main: "",
+		path: "",
+		preloader: "",
+		url: ""
+	};
 }

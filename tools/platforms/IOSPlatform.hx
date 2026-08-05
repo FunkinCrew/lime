@@ -1,6 +1,7 @@
 package;
 
 import haxe.Json;
+
 import hxp.ArrayTools;
 import hxp.HXML;
 import hxp.Log;
@@ -8,6 +9,7 @@ import hxp.NDLL;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
+
 import lime.graphics.Image;
 import lime.tools.Architecture;
 import lime.tools.AssetHelper;
@@ -20,6 +22,7 @@ import lime.tools.ImageHelper;
 import lime.tools.LaunchStoryboard;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -58,7 +61,8 @@ class IOSPlatform extends PlatformTarget
 		{
 			IOSHelper.build(project, targetDirectory);
 
-			if (noOutput) return;
+			if (noOutput)
+				return;
 
 			if (!project.targetFlags.exists("simulator"))
 			{
@@ -458,9 +462,12 @@ class IOSPlatform extends PlatformTarget
 
 		var commands:Array<Array<String>> = [];
 
-		if (arm64) commands.push(["-Dios", "-Dstatic_link", "-DHXCPP_ARM64"]);
-		if (arm64sim) commands.push(["-Dios", "-Dsimulator", "-Dstatic_link", "-DHXCPP_ARM64"]);
-		if (x86_64) commands.push(["-Dios", "-Dsimulator", "-Dstatic_link", "-DHXCPP_M64"]);
+		if (arm64)
+			commands.push(["-Dios", "-Dstatic_link", "-DHXCPP_ARM64"]);
+		if (arm64sim)
+			commands.push(["-Dios", "-Dsimulator", "-Dstatic_link", "-DHXCPP_ARM64"]);
+		if (x86_64)
+			commands.push(["-Dios", "-Dsimulator", "-Dstatic_link", "-DHXCPP_M64"]);
 
 		if (arc)
 		{
@@ -484,7 +491,8 @@ class IOSPlatform extends PlatformTarget
 
 	public override function run():Void
 	{
-		if (project.targetFlags.exists("xcode")) return;
+		if (project.targetFlags.exists("xcode"))
+			return;
 
 		IOSHelper.launch(project, targetDirectory);
 	}
@@ -589,15 +597,13 @@ class IOSPlatform extends PlatformTarget
 							}
 						}
 
-						var contents =
-							{
-								images: images,
-								info:
-									{
-										version: "1",
-										author: "xcode"
-									}
-							};
+						var contents = {
+							images: images,
+							info: {
+								version: "1",
+								author: "xcode"
+							}
+						};
 
 						File.saveContent(Path.combine(imagesetPath, "Contents.json"), Json.stringify(contents));
 
@@ -611,12 +617,11 @@ class IOSPlatform extends PlatformTarget
 
 				for (imageset in imagesets)
 				{
-					sb.templateContext.imagesets.push(
-						{
-							name: imageset.name,
-							width: imageset.width,
-							height: imageset.height,
-						});
+					sb.templateContext.imagesets.push({
+						name: imageset.name,
+						width: imageset.width,
+						height: imageset.height,
+					});
 				}
 
 				var deployment:String = context.DEPLOYMENT;
@@ -625,13 +630,12 @@ class IOSPlatform extends PlatformTarget
 				var minor = parts.length >= 2 ? Std.parseInt(parts[1]) : 0;
 				var patch = parts.length >= 3 ? Std.parseInt(parts[2]) : 0;
 
-				Reflect.setField(sb.templateContext, "deploymentVersion",
-					{
-						major: major,
-						minor: minor,
-						patch: patch,
-						code: Std.parseInt("0x" + major + minor + patch)
-					});
+				Reflect.setField(sb.templateContext, "deploymentVersion", {
+					major: major,
+					minor: minor,
+					patch: patch,
+					code: Std.parseInt("0x" + major + minor + patch)
+				});
 
 				System.copyFileTemplate(project.templatePaths, "ios/storyboards/" + sb.template, projectDirectory + sb.template, sb.templateContext, true,
 					true);
@@ -723,11 +727,14 @@ class IOSPlatform extends PlatformTarget
 		{
 			var arch = ["arm64", "arm64-sim", "x86_64"][archID];
 
-			if (arch == "arm64" && (!context.ARM64 || project.targetFlags.exists("simulator"))) continue;
+			if (arch == "arm64" && (!context.ARM64 || project.targetFlags.exists("simulator")))
+				continue;
 
-			if (arch == "arm64-sim" && (!context.ARM64 || !project.targetFlags.exists("simulator"))) continue;
+			if (arch == "arm64-sim" && (!context.ARM64 || !project.targetFlags.exists("simulator")))
+				continue;
 
-			if (arch == "x86_64" && (!context.X64 || !project.targetFlags.exists("simulator"))) continue;
+			if (arch == "x86_64" && (!context.X64 || !project.targetFlags.exists("simulator")))
+				continue;
 
 			var libExt = [".iphoneos-64.a", ".iphonesim-arm64.a", ".iphonesim-64.a"][archID];
 

@@ -1,15 +1,19 @@
 package lime.utils;
 
 import lime.utils.ArrayBufferView;
+
 #if (js && !doc_gen)
 import js.lib.DataView as JSDataView;
+
 @:forward
 abstract DataView(JSDataView) from JSDataView to JSDataView to ArrayBufferView
 {
 	public inline function new(buffer:ArrayBuffer, byteOffset:Null<Int> = null, byteLength:Null<Int> = null)
 	{
-		if (byteOffset != null && byteLength == null) this = new JSDataView(buffer, byteOffset);
-		else if (byteOffset != null && byteLength != null) this = new JSDataView(buffer, byteOffset, byteLength);
+		if (byteOffset != null && byteLength == null)
+			this = new JSDataView(buffer, byteOffset);
+		else if (byteOffset != null && byteLength != null)
+			this = new JSDataView(buffer, byteOffset, byteLength);
 		else
 			this = new JSDataView(buffer);
 	}
@@ -105,20 +109,24 @@ class DataView
 
 	public inline function new(buffer:ArrayBuffer, byteOffset:Int = 0, byteLength:Null<Int> = null)
 	{
-		if (byteOffset < 0) throw TAError.RangeError;
+		if (byteOffset < 0)
+			throw TAError.RangeError;
 
 		var bufferByteLength = buffer.length;
 		var viewByteLength = bufferByteLength - byteOffset;
 
-		if (byteOffset > bufferByteLength) throw TAError.RangeError;
+		if (byteOffset > bufferByteLength)
+			throw TAError.RangeError;
 
 		if (byteLength != null)
 		{
-			if (byteLength < 0) throw TAError.RangeError;
+			if (byteLength < 0)
+				throw TAError.RangeError;
 
 			viewByteLength = byteLength;
 
-			if (byteOffset + viewByteLength > bufferByteLength) throw TAError.RangeError;
+			if (byteOffset + viewByteLength > bufferByteLength)
+				throw TAError.RangeError;
 		}
 
 		this.buffer = buffer;

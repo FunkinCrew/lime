@@ -1,12 +1,14 @@
 package lime._internal.format;
 
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.utils.UInt8Array;
 #if (js && html5)
 import lime._internal.graphics.ImageCanvasUtil;
+
 import js.Browser;
 #end
 

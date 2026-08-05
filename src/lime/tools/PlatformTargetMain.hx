@@ -1,10 +1,13 @@
 package lime.tools;
 
 import haxe.Unserializer;
+
 import hxp.Haxelib;
 import hxp.Log;
 import hxp.Path;
+
 import lime.tools.HXProject;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -30,7 +33,8 @@ class PlatformTargetMain
 			for (i in 0...arguments.length)
 			{
 				lastArgument = arguments.pop();
-				if (lastArgument.length > 0) break;
+				if (lastArgument.length > 0)
+					break;
 			}
 
 			lastArgument = new Path(lastArgument).toString();
@@ -117,7 +121,8 @@ class PlatformTargetMain
 			try
 			{
 				var classRef = Type.resolveClass(className);
-				if (classRef == null) throw "Cannot find class name \"" + className + "\"";
+				if (classRef == null)
+					throw "Cannot find class name \"" + className + "\"";
 
 				var inputPath = words[0];
 				var projectData = File.getContent(inputPath);

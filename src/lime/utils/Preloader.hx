@@ -5,6 +5,7 @@ import haxe.io.Bytes;
 import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.Timer;
+
 import lime.app.Event;
 import lime.media.AudioBuffer;
 import lime.system.System;
@@ -12,10 +13,12 @@ import lime.utils.AssetLibrary;
 import lime.utils.Assets;
 import lime.utils.AssetType;
 import lime.utils.Log;
+
 #if (js && html5)
 import js.html.Image;
 import js.html.SpanElement;
 import js.Browser;
+
 import lime.net.HTTPRequest;
 #end
 
@@ -70,7 +73,8 @@ class Preloader
 		timer.run = function()
 		{
 			currentTime = System.getTimer() - startTime;
-			if (currentTime > preloadTime) currentTime = preloadTime;
+			if (currentTime > preloadTime)
+				currentTime = preloadTime;
 			onProgress.dispatch(currentTime, preloadTime);
 
 			if (currentTime >= preloadTime)
@@ -166,7 +170,8 @@ class Preloader
 		loadedLibraries++;
 
 		var current = loadedLibraries;
-		if (!preloadStarted) current++;
+		if (!preloadStarted)
+			current++;
 
 		var totalLibraries = libraries.length + libraryNames.length;
 
@@ -184,7 +189,8 @@ class Preloader
 
 	@:noCompletion private function start():Void
 	{
-		if (complete || simulateProgress || !preloadComplete) return;
+		if (complete || simulateProgress || !preloadComplete)
+			return;
 
 		complete = true;
 
@@ -220,7 +226,8 @@ class Preloader
 								bytesTotal += (total - 200);
 							}
 
-							if (loaded > total) loaded = total;
+							if (loaded > total)
+								loaded = total;
 
 							if (!bytesLoadedCache2.exists(name))
 							{

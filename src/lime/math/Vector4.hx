@@ -76,7 +76,8 @@ class Vector4
 	**/
 	public inline function add(a:Vector4, result:Vector4 = null):Vector4
 	{
-		if (result == null) result = new Vector4();
+		if (result == null)
+			result = new Vector4();
 		result.setTo(this.x + a.x, this.y + a.y, this.z + a.z);
 		return result;
 	}
@@ -125,7 +126,8 @@ class Vector4
 	**/
 	public inline function crossProduct(a:Vector4, result:Vector4 = null):Vector4
 	{
-		if (result == null) result = new Vector4();
+		if (result == null)
+			result = new Vector4();
 		result.setTo(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
 		result.w = 1;
 		return result;
@@ -296,7 +298,8 @@ class Vector4
 	**/
 	public inline function subtract(a:Vector4, result:Vector4 = null):Vector4
 	{
-		if (result == null) result = new Vector4();
+		if (result == null)
+			result = new Vector4();
 		result.setTo(x - a.x, y - a.y, z - a.z);
 		return result;
 	}

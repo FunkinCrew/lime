@@ -262,7 +262,8 @@ import haxe.ds.ObjectMap;
 
 	@:noCompletion private function __removeInactive(count:Int):Void
 	{
-		if (count <= 0 || inactiveObjects == 0) return;
+		if (count <= 0 || inactiveObjects == 0)
+			return;
 
 		if (__inactiveObject0 != null)
 		{
@@ -272,7 +273,8 @@ import haxe.ds.ObjectMap;
 			count--;
 		}
 
-		if (count == 0 || inactiveObjects == 0) return;
+		if (count == 0 || inactiveObjects == 0)
+			return;
 
 		if (__inactiveObject1 != null)
 		{
@@ -282,7 +284,8 @@ import haxe.ds.ObjectMap;
 			count--;
 		}
 
-		if (count == 0 || inactiveObjects == 0) return;
+		if (count == 0 || inactiveObjects == 0)
+			return;
 
 		for (object in __inactiveObjectList)
 		{
@@ -291,7 +294,8 @@ import haxe.ds.ObjectMap;
 			inactiveObjects--;
 			count--;
 
-			if (count == 0 || inactiveObjects == 0) return;
+			if (count == 0 || inactiveObjects == 0)
+				return;
 		}
 	}
 

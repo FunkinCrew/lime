@@ -9,10 +9,12 @@ import cpp.vm.Deque;
 import cpp.vm.Thread;
 import cpp.vm.Tls;
 #end
+
 #if html5
 import lime._internal.backend.html5.HTML5Thread as Thread;
 import lime._internal.backend.html5.HTML5Thread.Transferable;
 #end
+
 #if macro
 import haxe.macro.Expr;
 

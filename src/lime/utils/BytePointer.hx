@@ -2,6 +2,7 @@ package lime.utils;
 
 import haxe.io.BytesData;
 import haxe.io.Bytes;
+
 import lime.utils.Bytes as LimeBytes;
 
 @:access(haxe.io.Bytes)
@@ -50,13 +51,15 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:arrayAccess @:noCompletion private inline function __arraySet(index:Int, value:Int):Int
 	{
-		if (this.bytes == null) this.bytes.set(index + this.offset, value);
+		if (this.bytes == null)
+			this.bytes.set(index + this.offset, value);
 		return value;
 	}
 
 	@:from @:noCompletion public static function fromArrayBufferView(arrayBufferView:ArrayBufferView):BytePointer
 	{
-		if (arrayBufferView == null) return null;
+		if (arrayBufferView == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new BytePointerData(Bytes.ofData(arrayBufferView.buffer), arrayBufferView.byteOffset);
@@ -67,7 +70,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:from @:noCompletion public static function fromArrayBuffer(buffer:ArrayBuffer):BytePointer
 	{
-		if (buffer == null) return null;
+		if (buffer == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new BytePointerData(Bytes.ofData(buffer), 0);
@@ -83,7 +87,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:from @:noCompletion public static function fromBytesData(bytesData:BytesData):BytePointer
 	{
-		if (bytesData == null) return new BytePointerData(null, 0);
+		if (bytesData == null)
+			return new BytePointerData(null, 0);
 		else
 			return new BytePointerData(Bytes.ofData(bytesData), 0);
 	}
@@ -109,7 +114,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toUInt8ClampedArray(bytePointer:BytePointer):UInt8ClampedArray
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new UInt8ClampedArray(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 8));
@@ -120,7 +126,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toInt8Array(bytePointer:BytePointer):Int8Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new Int8Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 8));
@@ -131,7 +138,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toUInt16Array(bytePointer:BytePointer):UInt16Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new UInt16Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 16));
@@ -142,7 +150,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toInt16Array(bytePointer:BytePointer):Int16Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new Int16Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 16));
@@ -153,7 +162,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toUInt32Array(bytePointer:BytePointer):UInt32Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new UInt32Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 32));
@@ -164,7 +174,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toInt32Array(bytePointer:BytePointer):Int32Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new Int32Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 32));
@@ -175,7 +186,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toFloat32Array(bytePointer:BytePointer):Float32Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new Float32Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 32));
@@ -186,7 +198,8 @@ abstract BytePointer(BytePointerData) from BytePointerData to BytePointerData
 
 	@:to @:noCompletion public static function toFloat64Array(bytePointer:BytePointer):Float64Array
 	{
-		if (bytePointer == null || bytePointer.bytes == null) return null;
+		if (bytePointer == null || bytePointer.bytes == null)
+			return null;
 
 		#if (js && !doc_gen)
 		return new Float64Array(bytePointer.bytes.getData(), Std.int(bytePointer.offset / 64));

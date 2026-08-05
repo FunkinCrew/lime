@@ -3,6 +3,7 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Uint8Array as JSUInt8Array;
 import js.lib.Uint8ClampedArray as JSUInt8ClampedArray;
+
 @:forward
 @:transitive
 abstract UInt8ClampedArray(JSUInt8ClampedArray) from JSUInt8ClampedArray to JSUInt8ClampedArray
@@ -65,8 +66,10 @@ abstract UInt8ClampedArray(JSUInt8ClampedArray) from JSUInt8ClampedArray to JSUI
 	// non spec haxe conversions
 	inline public static function fromBytes(bytes:haxe.io.Bytes, ?byteOffset:Int = 0, ?len:Int):UInt8ClampedArray
 	{
-		if (byteOffset == null) return new JSUInt8ClampedArray(cast bytes.getData());
-		if (len == null) return new JSUInt8ClampedArray(cast bytes.getData(), byteOffset);
+		if (byteOffset == null)
+			return new JSUInt8ClampedArray(cast bytes.getData());
+		if (len == null)
+			return new JSUInt8ClampedArray(cast bytes.getData(), byteOffset);
 		return new JSUInt8ClampedArray(cast bytes.getData(), byteOffset, len);
 	}
 

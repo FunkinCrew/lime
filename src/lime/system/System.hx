@@ -2,6 +2,7 @@ package lime.system;
 
 import haxe.io.Path;
 import haxe.Constraints;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
 import lime.graphics.RenderContextAttributes;
@@ -10,10 +11,12 @@ import lime.ui.WindowAttributes;
 import lime.utils.ArrayBuffer;
 import lime.utils.UInt8Array;
 import lime.utils.UInt16Array;
+
 #if ((js && html5) || electron)
 import js.html.Element;
 import js.Browser;
 #end
+
 #if sys
 import sys.io.Process;
 #end
@@ -117,7 +120,8 @@ class System
 	@:keep @:expose("lime.embed")
 	public static function embed(projectName:String, element:Dynamic, width:Null<Int> = null, height:Null<Int> = null, config:Dynamic = null):Void
 	{
-		if (__applicationEntryPoint == null) return;
+		if (__applicationEntryPoint == null)
+			return;
 
 		if (__applicationEntryPoint.exists(projectName))
 		{
@@ -148,7 +152,8 @@ class System
 				height = 0;
 			}
 
-			if (config == null) config = {};
+			if (config == null)
+				config = {};
 
 			if (Reflect.hasField(config, "background") && (config.background is String))
 			{
@@ -420,7 +425,8 @@ class System
 
 	@:noCompletion private static function __copyMissingFields(target:Dynamic, source:Dynamic):Void
 	{
-		if (source == null || target == null) return;
+		if (source == null || target == null)
+			return;
 
 		for (field in Reflect.fields(source))
 		{
@@ -501,7 +507,8 @@ class System
 		#if sys
 		try
 		{
-			if (args == null) args = [];
+			if (args == null)
+				args = [];
 
 			var process = new Process(command, args);
 			var value = StringTools.trim(process.stdout.readLine().toString());
@@ -637,7 +644,8 @@ class System
 			var uint16array = new UInt16Array(arrayBuffer);
 			uint8Array[0] = 0xAA;
 			uint8Array[1] = 0xBB;
-			if (uint16array[0] == 0xAABB) __endianness = BIG_ENDIAN;
+			if (uint16array[0] == 0xAABB)
+				__endianness = BIG_ENDIAN;
 			else
 				__endianness = LITTLE_ENDIAN;
 			#end
@@ -681,14 +689,17 @@ class System
 		{
 			#if (lime_cffi && !macro && windows && !html5)
 			var label:String = NativeCFFI.lime_system_get_platform_label();
-			if (label != null) __platformLabel = StringTools.trim(label);
+			if (label != null)
+				__platformLabel = StringTools.trim(label);
 			#elseif linux
 			__platformLabel = __runProcess("lsb_release", ["-ds"]);
 			#else
 			var name = System.platformName;
 			var version = System.platformVersion;
-			if (name != null && version != null) __platformLabel = name + " " + version;
-			else if (name != null) __platformLabel = name;
+			if (name != null && version != null)
+				__platformLabel = name + " " + version;
+			else if (name != null)
+				__platformLabel = name;
 			#end
 		}
 
@@ -726,7 +737,8 @@ class System
 			#elseif android
 			var release = JNI.createStaticField("android/os/Build$VERSION", "RELEASE", "Ljava/lang/String;").get();
 			var api = JNI.createStaticField("android/os/Build$VERSION", "SDK_INT", "I").get();
-			if (release != null && api != null) __platformVersion = release + " (API " + api + ")";
+			if (release != null && api != null)
+				__platformVersion = release + " (API " + api + ")";
 			#elseif (lime_cffi && !macro && ios)
 			__platformVersion = NativeCFFI.lime_system_get_platform_version();
 			#elseif mac

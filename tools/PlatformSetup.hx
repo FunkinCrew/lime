@@ -1,15 +1,18 @@
 package;
 
 import haxe.io.Eof;
+
 import hxp.Haxelib;
 import hxp.Log;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
 import hxp.Version;
+
 import lime.tools.CLIHelper;
 import lime.tools.ConfigHelper;
 import lime.tools.HXProject;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -268,7 +271,8 @@ class PlatformSetup
 		{
 			for (lib in project.haxelibs)
 			{
-				if (setupHaxelibs.exists(lib.name)) continue;
+				if (setupHaxelibs.exists(lib.name))
+					continue;
 
 				var path = Haxelib.getPath(lib, false, true);
 

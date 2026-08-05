@@ -1,10 +1,12 @@
 package lime.graphics;
 
 import haxe.io.Bytes;
+
 import lime.graphics.cairo.CairoSurface;
 import lime.utils.UInt8Array;
 #if (js && html5)
 import lime._internal.graphics.ImageCanvasUtil;
+
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.Image as HTMLImage;
@@ -76,11 +78,10 @@ class ImageBuffer
 	private static function __init__()
 	{
 		var p = untyped ImageBuffer.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"src": {get: p.get_src, set: p.set_src},
-				"stride": {get: p.get_stride}
-			});
+		untyped Object.defineProperties(p, {
+			"src": {get: p.get_src, set: p.set_src},
+			"stride": {get: p.get_stride}
+		});
 	}
 	#end
 
@@ -163,7 +164,8 @@ class ImageBuffer
 	@:noCompletion private function get_src():Dynamic
 	{
 		#if (js && html5)
-		if (__srcImage != null) return __srcImage;
+		if (__srcImage != null)
+			return __srcImage;
 		return __srcCanvas;
 		#else
 		return __srcCustom;

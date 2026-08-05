@@ -6,6 +6,7 @@ import js.html.KeyboardEvent;
 import js.html.MediaQueryList;
 import js.html.MediaQueryListEvent;
 import js.Browser;
+
 import lime.app.Application;
 import lime.media.AudioManager;
 import lime.system.Orientation;
@@ -382,7 +383,8 @@ class HTML5Application
 			for (window in parent.__windows)
 			{
 				parent.onUpdate.dispatch(deltaTime);
-				if (window.context != null) window.onRender.dispatch(window.context);
+				if (window.context != null)
+					window.onRender.dispatch(window.context);
 			}
 
 			#if stats
@@ -560,7 +562,8 @@ class HTML5Application
 	private function updateGameDevices():Void
 	{
 		var devices = Joystick.__getDeviceData();
-		if (devices == null) return;
+		if (devices == null)
+			return;
 
 		var id, gamepad, joystick, data:Dynamic, cache;
 
@@ -569,7 +572,8 @@ class HTML5Application
 			id = i;
 			data = devices[id];
 
-			if (data == null) continue;
+			if (data == null)
+				continue;
 
 			if (!gameDeviceCache.exists(id))
 			{
@@ -624,12 +628,14 @@ class HTML5Application
 						if (i == 6)
 						{
 							joystick.onAxisMove.dispatch(data.axes.length, value);
-							if (gamepad != null) gamepad.onAxisMove.dispatch(GamepadAxis.TRIGGER_LEFT, value);
+							if (gamepad != null)
+								gamepad.onAxisMove.dispatch(GamepadAxis.TRIGGER_LEFT, value);
 						}
 						else if (i == 7)
 						{
 							joystick.onAxisMove.dispatch(data.axes.length + 1, value);
-							if (gamepad != null) gamepad.onAxisMove.dispatch(GamepadAxis.TRIGGER_RIGHT, value);
+							if (gamepad != null)
+								gamepad.onAxisMove.dispatch(GamepadAxis.TRIGGER_RIGHT, value);
 						}
 						else
 						{
@@ -688,7 +694,8 @@ class HTML5Application
 					if (data.axes[i] != cache.axes[i])
 					{
 						joystick.onAxisMove.dispatch(i, data.axes[i]);
-						if (gamepad != null) gamepad.onAxisMove.dispatch(i, data.axes[i]);
+						if (gamepad != null)
+							gamepad.onAxisMove.dispatch(i, data.axes[i]);
 						cache.axes[i] = data.axes[i];
 					}
 				}

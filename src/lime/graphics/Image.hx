@@ -4,6 +4,7 @@ import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime._internal.format.Base64;
 import lime._internal.format.BMP;
@@ -32,10 +33,12 @@ import lime.utils.UInt8Array;
 #if !display
 import lime._internal.backend.html5.HTML5HTTPRequest;
 #end
+
 import js.Browser;
 import js.html.CanvasElement;
 import js.html.Image as JSImage;
 import js.html.ImageElement;
+
 import lime._internal.backend.html5.HTML5Thread;
 #end
 
@@ -163,16 +166,15 @@ class Image
 	private static function __init__()
 	{
 		var p = untyped Image.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"data": {get: p.get_data, set: p.set_data},
-				"format": {get: p.get_format, set: p.set_format},
-				"powerOfTwo": {get: p.get_powerOfTwo, set: p.set_powerOfTwo},
-				"premultiplied": {get: p.get_premultiplied, set: p.set_premultiplied},
-				"rect": {get: p.get_rect},
-				"src": {get: p.get_src, set: p.set_src},
-				"transparent": {get: p.get_transparent, set: p.set_transparent}
-			});
+		untyped Object.defineProperties(p, {
+			"data": {get: p.get_data, set: p.set_data},
+			"format": {get: p.get_format, set: p.set_format},
+			"powerOfTwo": {get: p.get_powerOfTwo, set: p.set_powerOfTwo},
+			"premultiplied": {get: p.get_premultiplied, set: p.set_premultiplied},
+			"rect": {get: p.get_rect},
+			"src": {get: p.get_src, set: p.set_src},
+			"transparent": {get: p.get_transparent, set: p.set_transparent}
+		});
 	}
 	#end
 
@@ -286,7 +288,8 @@ class Image
 	public function colorTransform(rect:Rectangle, colorMatrix:ColorMatrix):Void
 	{
 		rect = __clipRect(rect);
-		if (buffer == null || rect == null) return;
+		if (buffer == null || rect == null)
+			return;
 
 		switch (type)
 		{
@@ -315,11 +318,16 @@ class Image
 	public function copyChannel(sourceImage:Image, sourceRect:Rectangle, destPoint:Vector2, sourceChannel:ImageChannel, destChannel:ImageChannel):Void
 	{
 		sourceRect = __clipRect(sourceRect);
-		if (buffer == null || sourceRect == null) return;
-		if (destChannel == ALPHA && !transparent) return;
-		if (sourceRect.width <= 0 || sourceRect.height <= 0) return;
-		if (sourceRect.x + sourceRect.width > sourceImage.width) sourceRect.width = sourceImage.width - sourceRect.x;
-		if (sourceRect.y + sourceRect.height > sourceImage.height) sourceRect.height = sourceImage.height - sourceRect.y;
+		if (buffer == null || sourceRect == null)
+			return;
+		if (destChannel == ALPHA && !transparent)
+			return;
+		if (sourceRect.width <= 0 || sourceRect.height <= 0)
+			return;
+		if (sourceRect.x + sourceRect.width > sourceImage.width)
+			sourceRect.width = sourceImage.width - sourceRect.x;
+		if (sourceRect.y + sourceRect.height > sourceImage.height)
+			sourceRect.height = sourceImage.height - sourceRect.y;
 
 		switch (type)
 		{
@@ -350,12 +358,17 @@ class Image
 	public function copyPixels(sourceImage:Image, sourceRect:Rectangle, destPoint:Vector2, alphaImage:Image = null, alphaPoint:Vector2 = null,
 			mergeAlpha:Bool = false):Void
 	{
-		if (buffer == null || sourceImage == null) return;
-		if (sourceRect.width <= 0 || sourceRect.height <= 0) return;
-		if (width <= 0 || height <= 0) return;
+		if (buffer == null || sourceImage == null)
+			return;
+		if (sourceRect.width <= 0 || sourceRect.height <= 0)
+			return;
+		if (width <= 0 || height <= 0)
+			return;
 
-		if (sourceRect.x + sourceRect.width > sourceImage.width) sourceRect.width = sourceImage.width - sourceRect.x;
-		if (sourceRect.y + sourceRect.height > sourceImage.height) sourceRect.height = sourceImage.height - sourceRect.y;
+		if (sourceRect.x + sourceRect.width > sourceImage.width)
+			sourceRect.width = sourceImage.width - sourceRect.x;
+		if (sourceRect.y + sourceRect.height > sourceImage.height)
+			sourceRect.height = sourceImage.height - sourceRect.y;
 
 		if (sourceRect.x < 0)
 		{
@@ -369,8 +382,10 @@ class Image
 			sourceRect.y = 0;
 		}
 
-		if (destPoint.x + sourceRect.width > width) sourceRect.width = width - destPoint.x;
-		if (destPoint.y + sourceRect.height > height) sourceRect.height = height - destPoint.y;
+		if (destPoint.x + sourceRect.width > width)
+			sourceRect.width = width - destPoint.x;
+		if (destPoint.y + sourceRect.height > height)
+			sourceRect.height = height - destPoint.y;
 
 		if (destPoint.x < 0)
 		{
@@ -405,7 +420,8 @@ class Image
 				{
 					ImageCanvasUtil.convertToData(this);
 					ImageCanvasUtil.convertToData(sourceImage);
-					if (alphaImage != null) ImageCanvasUtil.convertToData(alphaImage);
+					if (alphaImage != null)
+						ImageCanvasUtil.convertToData(alphaImage);
 
 					ImageDataUtil.copyPixels(this, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
 				}
@@ -420,7 +436,8 @@ class Image
 				#if (js && html5)
 				ImageCanvasUtil.convertToData(this);
 				ImageCanvasUtil.convertToData(sourceImage);
-				if (alphaImage != null) ImageCanvasUtil.convertToData(alphaImage);
+				if (alphaImage != null)
+					ImageCanvasUtil.convertToData(alphaImage);
 				#end
 
 				ImageDataUtil.copyPixels(this, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
@@ -468,7 +485,8 @@ class Image
 	public function fillRect(rect:Rectangle, color:Int, format:PixelFormat = null):Void
 	{
 		rect = __clipRect(rect);
-		if (buffer == null || rect == null) return;
+		if (buffer == null || rect == null)
+			return;
 
 		switch (type)
 		{
@@ -480,7 +498,8 @@ class Image
 				ImageCanvasUtil.convertToData(this);
 				#end
 
-				if (buffer.data.length == 0) return;
+				if (buffer.data.length == 0)
+					return;
 
 				ImageDataUtil.fillRect(this, rect, color, format);
 
@@ -500,7 +519,8 @@ class Image
 	**/
 	public function floodFill(x:Int, y:Int, color:Int, format:PixelFormat = null):Void
 	{
-		if (buffer == null) return;
+		if (buffer == null)
+			return;
 
 		switch (type)
 		{
@@ -526,7 +546,8 @@ class Image
 	**/
 	public static function fromBase64(base64:String, type:String):Image
 	{
-		if (base64 == null) return null;
+		if (base64 == null)
+			return null;
 		var image = new Image();
 		image.__fromBase64(base64, type);
 		return image;
@@ -545,7 +566,8 @@ class Image
 	**/
 	public static function fromBytes(bytes:Bytes):Image
 	{
-		if (bytes == null) return null;
+		if (bytes == null)
+			return null;
 		var image = new Image();
 		if (image.__fromBytes(bytes))
 		{
@@ -565,7 +587,8 @@ class Image
 	**/
 	public static function fromCanvas(canvas:#if (js && html5) CanvasElement #else Dynamic #end):Image
 	{
-		if (canvas == null) return null;
+		if (canvas == null)
+			return null;
 		var buffer = new ImageBuffer(null, canvas.width, canvas.height);
 		buffer.src = canvas;
 		var image = new Image(buffer);
@@ -588,7 +611,8 @@ class Image
 	**/
 	public static function fromFile(path:String):Image
 	{
-		if (path == null) return null;
+		if (path == null)
+			return null;
 		var image = new Image();
 		if (image.__fromFile(path))
 		{
@@ -608,7 +632,8 @@ class Image
 	**/
 	public static function fromImageElement(image:#if (js && html5) ImageElement #else Dynamic #end):Image
 	{
-		if (image == null) return null;
+		if (image == null)
+			return null;
 		var buffer = new ImageBuffer(null, image.width, image.height);
 		buffer.src = image;
 		var _image = new Image(buffer);
@@ -629,7 +654,8 @@ class Image
 	**/
 	public function getColorBoundsRect(mask:Int, color:Int, findColor:Bool = true, format:PixelFormat = null):Rectangle
 	{
-		if (buffer == null) return null;
+		if (buffer == null)
+			return null;
 
 		switch (type)
 		{
@@ -657,7 +683,8 @@ class Image
 	**/
 	public function getPixel(x:Int, y:Int, format:PixelFormat = null):Int
 	{
-		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height) return 0;
+		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height)
+			return 0;
 
 		switch (type)
 		{
@@ -685,7 +712,8 @@ class Image
 	**/
 	public function getPixel32(x:Int, y:Int, format:PixelFormat = null):Int
 	{
-		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height) return 0;
+		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height)
+			return 0;
 
 		switch (type)
 		{
@@ -712,7 +740,8 @@ class Image
 	**/
 	public function getPixels(rect:Rectangle, format:PixelFormat = null):Bytes
 	{
-		if (buffer == null) return null;
+		if (buffer == null)
+			return null;
 
 		switch (type)
 		{
@@ -739,7 +768,8 @@ class Image
 	**/
 	public static function loadFromBase64(base64:String, type:String):Future<Image>
 	{
-		if (base64 == null || type == null) return Future.withValue(null);
+		if (base64 == null || type == null)
+			return Future.withValue(null);
 
 		#if (js && html5 && !display)
 		return HTML5HTTPRequest.loadImage("data:" + type + ";base64," + base64);
@@ -762,7 +792,8 @@ class Image
 	**/
 	public static function loadFromBytes(bytes:Bytes):Future<Image>
 	{
-		if (bytes == null) return Future.withValue(null);
+		if (bytes == null)
+			return Future.withValue(null);
 
 		#if (js && html5)
 		var type = "";
@@ -805,7 +836,8 @@ class Image
 	**/
 	public static function loadFromFile(path:String):Future<Image>
 	{
-		if (path == null) return Future.withValue(null);
+		if (path == null)
+			return Future.withValue(null);
 
 		#if (js && html5 && !display)
 		return HTML5HTTPRequest.loadImage(path);
@@ -838,7 +870,8 @@ class Image
 	public function merge(sourceImage:Image, sourceRect:Rectangle, destPoint:Vector2, redMultiplier:Int, greenMultiplier:Int, blueMultiplier:Int,
 			alphaMultiplier:Int):Void
 	{
-		if (buffer == null || sourceImage == null) return;
+		if (buffer == null || sourceImage == null)
+			return;
 
 		switch (type)
 		{
@@ -898,7 +931,8 @@ class Image
 	**/
 	public function scroll(x:Int, y:Int):Void
 	{
-		if (buffer == null) return;
+		if (buffer == null)
+			return;
 
 		switch (type)
 		{
@@ -921,7 +955,8 @@ class Image
 	**/
 	public function setPixel(x:Int, y:Int, color:Int, format:PixelFormat = null):Void
 	{
-		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height) return;
+		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height)
+			return;
 
 		switch (type)
 		{
@@ -948,7 +983,8 @@ class Image
 	**/
 	public function setPixel32(x:Int, y:Int, color:Int, format:PixelFormat = null):Void
 	{
-		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height) return;
+		if (buffer == null || x < 0 || y < 0 || x >= width || y >= height)
+			return;
 
 		switch (type)
 		{
@@ -976,8 +1012,10 @@ class Image
 	public function setPixels(rect:Rectangle, bytePointer:BytePointer, format:PixelFormat = null, endian:Endian = null):Void
 	{
 		rect = __clipRect(rect);
-		if (buffer == null || rect == null) return;
-		if (endian == null) endian = BIG_ENDIAN;
+		if (buffer == null || rect == null)
+			return;
+		if (endian == null)
+			endian = BIG_ENDIAN;
 
 		switch (type)
 		{
@@ -1030,7 +1068,8 @@ class Image
 	public function threshold(sourceImage:Image, sourceRect:Rectangle, destPoint:Vector2, operation:String, threshold:Int, color:Int = 0x00000000,
 			mask:Int = 0xFFFFFFFF, copySource:Bool = false, format:PixelFormat = null):Int
 	{
-		if (buffer == null || sourceImage == null || sourceRect == null) return 0;
+		if (buffer == null || sourceImage == null || sourceRect == null)
+			return 0;
 
 		switch (type)
 		{
@@ -1050,14 +1089,16 @@ class Image
 
 	@:noCompletion private function __clipRect(r:Rectangle):Rectangle
 	{
-		if (r == null) return null;
+		if (r == null)
+			return null;
 
 		if (r.x < 0)
 		{
 			r.width -= -r.x;
 			r.x = 0;
 
-			if (r.x + r.width <= 0) return null;
+			if (r.x + r.width <= 0)
+				return null;
 		}
 
 		if (r.y < 0)
@@ -1065,21 +1106,24 @@ class Image
 			r.height -= -r.y;
 			r.y = 0;
 
-			if (r.y + r.height <= 0) return null;
+			if (r.y + r.height <= 0)
+				return null;
 		}
 
 		if (r.x + r.width >= width)
 		{
 			r.width -= r.x + r.width - width;
 
-			if (r.width <= 0) return null;
+			if (r.width <= 0)
+				return null;
 		}
 
 		if (r.y + r.height >= height)
 		{
 			r.height -= r.y + r.height - height;
 
-			if (r.height <= 0) return null;
+			if (r.height <= 0)
+				return null;
 		}
 
 		return r;
@@ -1249,7 +1293,8 @@ class Image
 
 	private static function __isGIF(bytes:Bytes):Bool
 	{
-		if (bytes == null || bytes.length < 6) return false;
+		if (bytes == null || bytes.length < 6)
+			return false;
 
 		var header = bytes.getString(0, 6);
 		return (header == "GIF87a" || header == "GIF89a");
@@ -1257,7 +1302,8 @@ class Image
 
 	private static function __isJPG(bytes:Bytes):Bool
 	{
-		if (bytes == null || bytes.length < 4) return false;
+		if (bytes == null || bytes.length < 4)
+			return false;
 
 		return bytes.get(0) == 0xFF
 			&& bytes.get(1) == 0xD8
@@ -1267,7 +1313,8 @@ class Image
 
 	private static function __isPNG(bytes:Bytes):Bool
 	{
-		if (bytes == null || bytes.length < 8) return false;
+		if (bytes == null || bytes.length < 8)
+			return false;
 
 		return (bytes.get(0) == 0x89 && bytes.get(1) == "P".code && bytes.get(2) == "N".code && bytes.get(3) == "G".code && bytes.get(4) == "\r".code
 			&& bytes.get(5) == "\n".code && bytes.get(6) == 0x1A && bytes.get(7) == "\n".code);
@@ -1275,7 +1322,8 @@ class Image
 
 	private static function __isWebP(bytes:Bytes):Bool
 	{
-		if (bytes == null || bytes.length < 16) return false;
+		if (bytes == null || bytes.length < 16)
+			return false;
 
 		return (bytes.getString(0, 4) == "RIFF" && bytes.getString(8, 4) == "WEBP");
 	}
@@ -1431,14 +1479,16 @@ class Image
 
 	@:noCompletion private function get_transparent():Bool
 	{
-		if (buffer == null) return false;
+		if (buffer == null)
+			return false;
 		return buffer.transparent;
 	}
 
 	@:noCompletion private function set_transparent(value:Bool):Bool
 	{
 		// TODO, modify data to set transparency
-		if (buffer == null) return false;
+		if (buffer == null)
+			return false;
 		return buffer.transparent = value;
 	}
 }

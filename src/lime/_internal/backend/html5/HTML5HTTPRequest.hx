@@ -1,6 +1,7 @@
 package lime._internal.backend.html5;
 
 import haxe.io.Bytes;
+
 import js.html.AnchorElement;
 import js.html.Blob;
 import js.html.ErrorEvent;
@@ -11,6 +12,7 @@ import js.html.URL;
 import js.html.XMLHttpRequest;
 import js.html.XMLHttpRequestResponseType;
 import js.Browser;
+
 import lime._internal.format.Base64;
 import lime.app.Future;
 import lime.app.Promise;
@@ -60,7 +62,8 @@ class HTML5HTTPRequest
 
 		if (parent.method == POST)
 		{
-			if (request.upload != null) request.upload.addEventListener("progress", progress, false);
+			if (request.upload != null)
+				request.upload.addEventListener("progress", progress, false);
 		}
 		else
 		{
@@ -75,7 +78,8 @@ class HTML5HTTPRequest
 		{
 			for (key in parent.formData.keys())
 			{
-				if (query.length > 0) query += "&";
+				if (query.length > 0)
+					query += "&";
 				var value:Dynamic = parent.formData.get(key);
 				if (key.indexOf("[]") > -1 && (value is Array))
 				{
@@ -180,14 +184,13 @@ class HTML5HTTPRequest
 		}
 		else
 		{
-			requestQueue.add(
-				{
-					instance: this,
-					uri: uri,
-					promise: promise,
-					type: AssetType.BINARY,
-					options: 0
-				});
+			requestQueue.add({
+				instance: this,
+				uri: uri,
+				promise: promise,
+				type: AssetType.BINARY,
+				options: 0
+			});
 		}
 
 		return promise.future;
@@ -204,14 +207,13 @@ class HTML5HTTPRequest
 		}
 		else
 		{
-			requestQueue.add(
-				{
-					instance: null,
-					uri: uri,
-					promise: promise,
-					type: AssetType.IMAGE,
-					options: 0
-				});
+			requestQueue.add({
+				instance: null,
+				uri: uri,
+				promise: promise,
+				type: AssetType.IMAGE,
+				options: 0
+			});
 		}
 
 		return promise.future;
@@ -231,14 +233,13 @@ class HTML5HTTPRequest
 			}
 			else
 			{
-				requestQueue.add(
-					{
-						instance: null,
-						uri: uri,
-						promise: promise,
-						type: AssetType.IMAGE,
-						options: OPTION_REVOKE_URL
-					});
+				requestQueue.add({
+					instance: null,
+					uri: uri,
+					promise: promise,
+					type: AssetType.IMAGE,
+					options: OPTION_REVOKE_URL
+				});
 			}
 
 			return promise.future;
@@ -260,14 +261,13 @@ class HTML5HTTPRequest
 		}
 		else
 		{
-			requestQueue.add(
-				{
-					instance: this,
-					uri: uri,
-					promise: promise,
-					type: AssetType.TEXT,
-					options: 0
-				});
+			requestQueue.add({
+				instance: this,
+				uri: uri,
+				promise: promise,
+				type: AssetType.TEXT,
+				options: 0
+			});
 		}
 
 		return promise.future;
@@ -362,8 +362,10 @@ class HTML5HTTPRequest
 
 	private static function __isSameOrigin(path:String):Bool
 	{
-		if (path == null || path == "") return true;
-		if (__isInMemoryURI(path)) return true;
+		if (path == null || path == "")
+			return true;
+		if (__isInMemoryURI(path))
+			return true;
 
 		if (originElement == null)
 		{
@@ -402,7 +404,8 @@ class HTML5HTTPRequest
 
 		var readyStateChange = function(event)
 		{
-			if (request.readyState != 4) return;
+			if (request.readyState != 4)
+				return;
 
 			var bytes = null;
 			if (request.responseType == NONE)
@@ -528,7 +531,8 @@ class HTML5HTTPRequest
 
 		var readyStateChange = function(event)
 		{
-			if (request.readyState != 4) return;
+			if (request.readyState != 4)
+				return;
 
 			if (request.status != null && ((request.status >= 200 && request.status < 400)))
 			{

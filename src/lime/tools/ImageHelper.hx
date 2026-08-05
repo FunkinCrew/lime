@@ -2,6 +2,7 @@ package lime.tools;
 
 import sys.io.File;
 import sys.io.FileSeek;
+
 #if (lime && lime_cffi && !macro)
 import lime._internal.format.SVG;
 import lime.graphics.Image;
@@ -12,7 +13,8 @@ class ImageHelper
 	public static function rasterizeSVG(path:String, width:Int, height:Int):#if (lime && lime_cffi && !macro) Image #else Dynamic #end
 	{
 		#if (lime && lime_cffi && !macro)
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		var image = SVG.decodeFileSized(path, width, height);
 
@@ -38,11 +40,10 @@ class ImageHelper
 			var width = (fileInput.readByte() << 24) | (fileInput.readByte() << 16) | (fileInput.readByte() << 8) | fileInput.readByte();
 			var height = (fileInput.readByte() << 24) | (fileInput.readByte() << 16) | (fileInput.readByte() << 8) | fileInput.readByte();
 
-			toReturn =
-				{
-					width: width,
-					height: height
-				};
+			toReturn = {
+				width: width,
+				height: height
+			};
 		}
 
 		fileInput.close();
@@ -54,7 +55,8 @@ class ImageHelper
 			height:Int):#if (lime && lime_cffi && !macro) Image #else Dynamic #end
 	{
 		#if (lime && lime_cffi && !macro)
-		if (image == null) return null;
+		if (image == null)
+			return null;
 
 		if (image.width == width && image.height == height)
 		{

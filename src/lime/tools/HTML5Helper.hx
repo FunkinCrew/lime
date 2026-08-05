@@ -5,9 +5,12 @@ import hxp.Log;
 import hxp.Path;
 import hxp.System;
 import hxp.Version;
+
 import lime.tools.Asset;
 import lime.tools.HXProject;
+
 import sys.FileSystem;
+
 #if cpp
 import cpp.vm.Thread;
 #end

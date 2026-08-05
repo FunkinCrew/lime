@@ -4,6 +4,7 @@ import haxe.Http;
 import haxe.Timer;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
+
 import lime.app.Future;
 import lime.app.Promise;
 import lime.net.HTTPRequest;
@@ -118,13 +119,12 @@ class NativeHTTPRequest
 
 		if (instance.bytes != null)
 		{
-			output.sendProgress(
-				{
-					instance: instance,
-					promise: instance.promise,
-					bytesLoaded: instance.bytes.length,
-					bytesTotal: instance.bytes.length
-				});
+			output.sendProgress({
+				instance: instance,
+				promise: instance.promise,
+				bytesLoaded: instance.bytes.length,
+				bytesTotal: instance.bytes.length
+			});
 			output.sendComplete({instance: instance, promise: instance.promise, result: instance.bytes});
 		}
 		else
@@ -266,32 +266,29 @@ class NativeHTTPRequest
 
 			var resultBytes:Bytes = responseOutput.getBytes();
 
-			output.sendProgress(
-				{
-					instance: instance,
-					promise: instance.promise,
-					bytesLoaded: resultBytes.length,
-					bytesTotal: resultBytes.length
-				});
+			output.sendProgress({
+				instance: instance,
+				promise: instance.promise,
+				bytesLoaded: resultBytes.length,
+				bytesTotal: resultBytes.length
+			});
 
-			output.sendComplete(
-				{
-					instance: instance,
-					promise: instance.promise,
-					status: responseStatus,
-					result: resultBytes
-				});
+			output.sendComplete({
+				instance: instance,
+				promise: instance.promise,
+				status: responseStatus,
+				result: resultBytes
+			});
 		}
 		catch (e:Dynamic)
 		{
-			output.sendError(
-				{
-					instance: instance,
-					promise: instance.promise,
-					status: responseStatus,
-					error: Std.string(e),
-					responseData: responseOutput.getBytes()
-				});
+			output.sendError({
+				instance: instance,
+				promise: instance.promise,
+				status: responseStatus,
+				error: Std.string(e),
+				responseData: responseOutput.getBytes()
+			});
 		}
 	}
 

@@ -524,7 +524,8 @@ abstract Matrix4(Float32Array) from Float32Array to Float32Array
 	**/
 	public function deltaTransformVector(v:Vector4, result:Vector4 = null):Vector4
 	{
-		if (result == null) result = new Vector4();
+		if (result == null)
+			result = new Vector4();
 		var x = v.x, y = v.y, z = v.z;
 		result.x = (x * this[0] + y * this[4] + z * this[8] + this[3]);
 		result.y = (x * this[1] + y * this[5] + z * this[9] + this[7]);
@@ -572,7 +573,8 @@ abstract Matrix4(Float32Array) from Float32Array to Float32Array
 	**/
 	public static function interpolate(thisMat:Matrix4, toMat:Matrix4, percent:Float, result:Matrix4 = null):Matrix4
 	{
-		if (result == null) result = new Matrix4();
+		if (result == null)
+			result = new Matrix4();
 
 		for (i in 0...16)
 		{
@@ -909,7 +911,8 @@ abstract Matrix4(Float32Array) from Float32Array to Float32Array
 	**/
 	public function transformVector(v:Vector4, result:Vector4 = null):Vector4
 	{
-		if (result == null) result = new Vector4();
+		if (result == null)
+			result = new Vector4();
 		var x = v.x, y = v.y, z = v.z;
 		result.x = (x * this[0] + y * this[4] + z * this[8] + this[12]);
 		result.y = (x * this[1] + y * this[5] + z * this[9] + this[13]);

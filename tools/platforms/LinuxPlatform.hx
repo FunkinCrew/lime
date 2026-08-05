@@ -4,6 +4,7 @@ import hxp.HXML;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import lime.tools.Architecture;
 import lime.tools.AssetHelper;
 import lime.tools.CPPHelper;
@@ -11,6 +12,7 @@ import lime.tools.DeploymentHelper;
 import lime.tools.HXProject;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -184,7 +186,8 @@ class LinuxPlatform extends PlatformTarget
 
 		System.runCommand("", "haxe", haxeArgs);
 
-		if (noOutput) return;
+		if (noOutput)
+			return;
 
 		CPPHelper.compile(project, targetDirectory + "/obj", flags);
 

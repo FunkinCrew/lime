@@ -73,11 +73,10 @@ class Promise<T>
 	private static function __init__()
 	{
 		var p = untyped Promise.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"isComplete": {get: p.get_isComplete},
-				"isError": {get: p.get_isError}
-			});
+		untyped Object.defineProperties(p, {
+			"isComplete": {get: p.get_isComplete},
+			"isError": {get: p.get_isError}
+		});
 	}
 	#end
 

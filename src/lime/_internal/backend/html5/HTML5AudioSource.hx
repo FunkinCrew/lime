@@ -31,17 +31,16 @@ class HTML5AudioSource
 	{
 		#if lime_howlerjs
 		// Initialize the panner with default values
-		parent.buffer.src.pannerAttr(
-			{
-				coneInnerAngle: 360,
-				coneOuterAngle: 360,
-				coneOuterGain: 0,
-				distanceModel: "inverse",
-				maxDistance: 10000,
-				refDistance: 1,
-				rolloffFactor: 1,
-				panningModel: "equalpower" // Default to equalpower for better performance
-			});
+		parent.buffer.src.pannerAttr({
+			coneInnerAngle: 360,
+			coneOuterAngle: 360,
+			coneOuterGain: 0,
+			distanceModel: "inverse",
+			maxDistance: 10000,
+			refDistance: 1,
+			rolloffFactor: 1,
+			panningModel: "equalpower" // Default to equalpower for better performance
+		});
 		#end
 	}
 
@@ -148,7 +147,8 @@ class HTML5AudioSource
 		else if (parent.buffer != null && parent.buffer.__srcHowl != null)
 		{
 			var time = (parent.buffer.__srcHowl.seek(id) * 1000.0) - parent.offset;
-			if (time < 0) return 0;
+			if (time < 0)
+				return 0;
 			return time;
 		}
 		#end
@@ -163,7 +163,8 @@ class HTML5AudioSource
 		{
 			// if (playing) buffer.__srcHowl.play (id);
 			var pos = (value + parent.offset) / 1000.0;
-			if (pos < 0) pos = 0;
+			if (pos < 0)
+				pos = 0;
 			parent.buffer.__srcHowl.seek(pos, id);
 		}
 		#end
@@ -276,8 +277,8 @@ class HTML5AudioSource
 		position.w = value.w;
 
 		#if lime_howlerjs
-		if (parent.buffer != null && parent.buffer.__srcHowl != null && parent.buffer.__srcHowl.pos != null) parent.buffer.__srcHowl.pos(position.x,
-			position.y, position.z, id);
+		if (parent.buffer != null && parent.buffer.__srcHowl != null && parent.buffer.__srcHowl.pos != null)
+			parent.buffer.__srcHowl.pos(position.x, position.y, position.z, id);
 		// There are more settings to the position of the sound on the "pannerAttr()" function of howler. Maybe somebody who understands sound should look into it?
 		#end
 

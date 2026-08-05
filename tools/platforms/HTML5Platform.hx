@@ -4,6 +4,7 @@ import hxp.HXML;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import lime.text.Font;
 import lime.tools.AssetHelper;
 import lime.tools.AssetType;
@@ -16,6 +17,7 @@ import lime.tools.IconHelper;
 import lime.tools.ModuleHelper;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -74,7 +76,8 @@ class HTML5Platform extends PlatformTarget
 			var hxml = targetDirectory + "/haxe/" + type + ".hxml";
 			System.runCommand("", "haxe", [hxml]);
 
-			if (noOutput) return;
+			if (noOutput)
+				return;
 
 			HTML5Helper.encodeSourceMappingURL(targetDirectory + "/bin/" + project.app.file + ".js");
 
@@ -224,7 +227,8 @@ class HTML5Platform extends PlatformTarget
 		}
 
 		var destination = targetDirectory + "/bin/";
-		if (npm) destination += "dist/";
+		if (npm)
+			destination += "dist/";
 		System.mkdir(destination);
 
 		var fontPath:String;

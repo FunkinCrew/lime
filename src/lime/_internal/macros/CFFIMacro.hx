@@ -32,9 +32,12 @@ class CFFIMacro
 
 							if (Reflect.hasField(m, "params"))
 							{
-								if (m.params.length > 0) library = m.params[0].getValue();
-								if (m.params.length > 1) method = m.params[1].getValue();
-								if (m.params.length > 2) lazy = m.params[2].getValue();
+								if (m.params.length > 0)
+									library = m.params[0].getValue();
+								if (m.params.length > 1)
+									method = m.params[1].getValue();
+								if (m.params.length > 2)
+									lazy = m.params[2].getValue();
 							}
 
 							if (library == null || library == "")
@@ -105,13 +108,12 @@ class CFFIMacro
 
 								cffiType = TPath({pack: ["cpp"], name: "Callable", params: [TPType(TFun(type.args, type.result).toComplexType())]});
 
-								newFields.push(
-									{
-										name: cffiName,
-										access: [APrivate, AStatic],
-										kind: FieldType.FVar(cffiType, Context.parse(cffiExpr, field.pos)),
-										pos: field.pos
-									});
+								newFields.push({
+									name: cffiName,
+									access: [APrivate, AStatic],
+									kind: FieldType.FVar(cffiType, Context.parse(cffiExpr, field.pos)),
+									pos: field.pos
+								});
 
 								if (type.result.toString() != "Void" && type.result.toString() != "cpp.Void")
 								{
@@ -122,7 +124,8 @@ class CFFIMacro
 
 								for (i in 0...type.args.length)
 								{
-									if (i > 0) expr += ", ";
+									if (i > 0)
+										expr += ", ";
 									expr += type.args[i].name;
 								}
 

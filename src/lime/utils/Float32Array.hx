@@ -3,6 +3,7 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Float32Array as JSFloat32Array;
 import js.lib.Uint8Array as JSUInt8Array;
+
 @:forward
 @:arrayAccess
 @:transitive
@@ -66,8 +67,10 @@ abstract Float32Array(JSFloat32Array) from JSFloat32Array to JSFloat32Array
 	// non spec haxe conversions
 	inline public static function fromBytes(bytes:haxe.io.Bytes, ?byteOffset:Int = 0, ?len:Int):Float32Array
 	{
-		if (byteOffset == null) return new JSFloat32Array(cast bytes.getData());
-		if (len == null) return new JSFloat32Array(cast bytes.getData(), byteOffset);
+		if (byteOffset == null)
+			return new JSFloat32Array(cast bytes.getData());
+		if (len == null)
+			return new JSFloat32Array(cast bytes.getData(), byteOffset);
 		return new JSFloat32Array(cast bytes.getData(), byteOffset, len);
 	}
 

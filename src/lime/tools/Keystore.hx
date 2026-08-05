@@ -25,10 +25,14 @@ class Keystore
 	{
 		if (keystore != null)
 		{
-			if (keystore.path != null && keystore.path != "") path = keystore.path;
-			if (keystore.password != null) password = keystore.password;
-			if (keystore.alias != null) alias = keystore.alias;
-			if (keystore.aliasPassword != null) aliasPassword = keystore.aliasPassword;
+			if (keystore.path != null && keystore.path != "")
+				path = keystore.path;
+			if (keystore.password != null)
+				password = keystore.password;
+			if (keystore.alias != null)
+				alias = keystore.alias;
+			if (keystore.aliasPassword != null)
+				aliasPassword = keystore.aliasPassword;
 		}
 	}
 }

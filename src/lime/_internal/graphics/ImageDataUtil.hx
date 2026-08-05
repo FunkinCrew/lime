@@ -3,6 +3,7 @@ package lime._internal.graphics;
 import haxe.ds.Vector;
 import haxe.Int32;
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
@@ -159,7 +160,8 @@ class ImageDataUtil
 	public static function colorTransform(image:Image, rect:Rectangle, colorMatrix:ColorMatrix):Void
 	{
 		var data = image.buffer.data;
-		if (data == null) return;
+		if (data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_color_transform(image, rect, colorMatrix);
@@ -217,7 +219,8 @@ class ImageDataUtil
 		var srcData = sourceImage.buffer.data;
 		var destData = image.buffer.data;
 
-		if (srcData == null || destData == null) return;
+		if (srcData == null || destData == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_copy_channel(image, sourceImage, sourceRect, destPoint, srcIdx, destIdx);
@@ -304,7 +307,8 @@ class ImageDataUtil
 			var sourceData = sourceImage.buffer.data;
 			var destData = image.buffer.data;
 
-			if (sourceData == null || destData == null) return;
+			if (sourceData == null || destData == null)
+				return;
 
 			var sourceView = new ImageDataView(sourceImage, sourceRect);
 			var destRect = new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height);
@@ -514,14 +518,16 @@ class ImageDataUtil
 		}
 
 		var data = image.buffer.data;
-		if (data == null) return;
+		if (data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_fill_rect(image, rect, (fillColor >> 16) & 0xFFFF, (fillColor) & 0xFFFF);
 		#else
 		var format = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
-		if (premultiplied) fillColor.multiplyAlpha();
+		if (premultiplied)
+			fillColor.multiplyAlpha();
 
 		var dataView = new ImageDataView(image, rect);
 		var row;
@@ -544,9 +550,11 @@ class ImageDataUtil
 	public static function floodFill(image:Image, x:Int, y:Int, color:Int, format:PixelFormat):Void
 	{
 		var data = image.buffer.data;
-		if (data == null) return;
+		if (data == null)
+			return;
 
-		if (format == ARGB32) color = ((color & 0xFFFFFF) << 8) | ((color >> 24) & 0xFF);
+		if (format == ARGB32)
+			color = ((color & 0xFFFFFF) << 8) | ((color >> 24) & 0xFF);
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_flood_fill(image, x, y, (color >> 16) & 0xFFFF, (color) & 0xFFFF);
@@ -565,9 +573,11 @@ class ImageDataUtil
 			hitColor.a = 0xFF;
 		}
 
-		if (fillColor == hitColor) return;
+		if (fillColor == hitColor)
+			return;
 
-		if (premultiplied) fillColor.multiplyAlpha();
+		if (premultiplied)
+			fillColor.multiplyAlpha();
 
 		var dx = [0, -1, 1, 0];
 		var dy = [-1, 0, 0, 1];
@@ -623,7 +633,8 @@ class ImageDataUtil
 
 		// TODO: Faster approach
 		var imagePremultiplied = image.premultiplied;
-		if (imagePremultiplied) image.premultiplied = false;
+		if (imagePremultiplied)
+			image.premultiplied = false;
 
 		// TODO: Use ImageDataView
 
@@ -638,7 +649,8 @@ class ImageDataUtil
 		image.dirty = true;
 		image.version++;
 
-		if (imagePremultiplied) image.premultiplied = true;
+		if (imagePremultiplied)
+			image.premultiplied = true;
 
 		return image;
 	}
@@ -687,7 +699,8 @@ class ImageDataUtil
 
 				if (hit)
 				{
-					if (x < left) left = x;
+					if (x < left)
+						left = x;
 					break;
 				}
 			}
@@ -712,7 +725,8 @@ class ImageDataUtil
 
 				if (hit)
 				{
-					if (ix > right) right = ix;
+					if (ix > right)
+						right = ix;
 					break;
 				}
 			}
@@ -734,7 +748,8 @@ class ImageDataUtil
 
 				if (hit)
 				{
-					if (y < top) top = y;
+					if (y < top)
+						top = y;
 					break;
 				}
 			}
@@ -759,7 +774,8 @@ class ImageDataUtil
 
 				if (hit)
 				{
-					if (iy > bottom) bottom = iy;
+					if (iy > bottom)
+						bottom = iy;
 					break;
 				}
 			}
@@ -773,17 +789,25 @@ class ImageDataUtil
 		var w = right - left;
 		var h = bottom - top;
 
-		if (w > 0) w++;
-		if (h > 0) h++;
+		if (w > 0)
+			w++;
+		if (h > 0)
+			h++;
 
-		if (w < 0) w = 0;
-		if (h < 0) h = 0;
+		if (w < 0)
+			w = 0;
+		if (h < 0)
+			h = 0;
 
-		if (left == right) w = 1;
-		if (top == bottom) h = 1;
+		if (left == right)
+			w = 1;
+		if (top == bottom)
+			h = 1;
 
-		if (left > image.width) left = 0;
-		if (top > image.height) top = 0;
+		if (left > image.width)
+			left = 0;
+		if (top > image.height)
+			top = 0;
 
 		return new Rectangle(left, top, w, h);
 	}
@@ -827,7 +851,8 @@ class ImageDataUtil
 
 	public static function getPixels(image:Image, rect:Rectangle, format:PixelFormat):Bytes
 	{
-		if (image.buffer.data == null) return null;
+		if (image.buffer.data == null)
+			return null;
 
 		var length = Std.int(rect.width * rect.height);
 		var bytes = Bytes.alloc(length * 4);
@@ -881,7 +906,8 @@ class ImageDataUtil
 	public static function merge(image:Image, sourceImage:Image, sourceRect:Rectangle, destPoint:Vector2, redMultiplier:Int, greenMultiplier:Int,
 			blueMultiplier:Int, alphaMultiplier:Int):Void
 	{
-		if (image.buffer.data == null || sourceImage.buffer.data == null) return;
+		if (image.buffer.data == null || sourceImage.buffer.data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_merge(image, sourceImage, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
@@ -931,7 +957,8 @@ class ImageDataUtil
 	public static function multiplyAlpha(image:Image):Void
 	{
 		var data = image.buffer.data;
-		if (data == null || !image.buffer.transparent) return;
+		if (data == null || !image.buffer.transparent)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_multiply_alpha(image);
@@ -957,7 +984,8 @@ class ImageDataUtil
 	public static function resize(image:Image, newWidth:Int, newHeight:Int):Void
 	{
 		var buffer = image.buffer;
-		if (buffer.width == newWidth && buffer.height == newHeight) return;
+		if (buffer.width == newWidth && buffer.height == newHeight)
+			return;
 		var newBuffer = new ImageBuffer(new UInt8Array(newWidth * newHeight * 4), newWidth, newHeight);
 
 		#if (lime_cffi && !macro)
@@ -1071,7 +1099,8 @@ class ImageDataUtil
 	public static function setFormat(image:Image, format:PixelFormat):Void
 	{
 		var data = image.buffer.data;
-		if (data == null) return;
+		if (data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_set_format(image, format);
@@ -1196,7 +1225,8 @@ class ImageDataUtil
 				pixel = color;
 		}
 
-		if (!image.transparent) pixel.a = 0xFF;
+		if (!image.transparent)
+			pixel.a = 0xFF;
 		pixel.writeUInt8(image.buffer.data, (4 * (y + image.offsetY) * image.buffer.width + (x + image.offsetX) * 4), image.buffer.format,
 			image.buffer.premultiplied);
 
@@ -1206,7 +1236,8 @@ class ImageDataUtil
 
 	public static function setPixels(image:Image, rect:Rectangle, bytePointer:BytePointer, format:PixelFormat, endian:Endian):Void
 	{
-		if (image.buffer.data == null) return;
+		if (image.buffer.data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_set_pixels(image, rect, bytePointer.bytes, bytePointer.offset, format, endian == BIG_ENDIAN ? 1 : 0);
@@ -1249,7 +1280,8 @@ class ImageDataUtil
 						pixel = color;
 				}
 
-				if (!transparent) pixel.a = 0xFF;
+				if (!transparent)
+					pixel.a = 0xFF;
 				pixel.writeUInt8(data, row + (x * 4), sourceFormat, premultiplied);
 			}
 		}
@@ -1293,12 +1325,14 @@ class ImageDataUtil
 			default: -1;
 		}
 
-		if (_operation == -1) return 0;
+		if (_operation == -1)
+			return 0;
 
 		var srcData = sourceImage.buffer.data;
 		var destData = image.buffer.data;
 
-		if (srcData == null || destData == null) return 0;
+		if (srcData == null || destData == null)
+			return 0;
 
 		var hits = 0;
 
@@ -1368,7 +1402,8 @@ class ImageDataUtil
 	public static function unmultiplyAlpha(image:Image):Void
 	{
 		var data = image.buffer.data;
-		if (data == null) return;
+		if (data == null)
+			return;
 
 		#if (lime_cffi && !macro)
 		NativeCFFI.lime_image_data_util_unmultiply_alpha(image);
@@ -1541,7 +1576,8 @@ class ImageDataUtil
 	{
 		var wIdeal = Math.sqrt((12 * sigma * sigma / n) + 1); // Ideal averaging filter width
 		var wl = Math.floor(wIdeal);
-		if (wl % 2 == 0) wl--;
+		if (wl % 2 == 0)
+			wl--;
 		var wu = wl + 2;
 
 		var mIdeal = ((12 * sigma * sigma) - (n * wl * wl) - (4 * n * wl) - (3 * n)) / ((-4 * wl) - 4);
@@ -1649,12 +1685,18 @@ private class ImageDataView
 		}
 		else
 		{
-			if (rect.x < 0) rect.x = 0;
-			if (rect.y < 0) rect.y = 0;
-			if (rect.x + rect.width > image.width) rect.width = image.width - rect.x;
-			if (rect.y + rect.height > image.height) rect.height = image.height - rect.y;
-			if (rect.width < 0) rect.width = 0;
-			if (rect.height < 0) rect.height = 0;
+			if (rect.x < 0)
+				rect.x = 0;
+			if (rect.y < 0)
+				rect.y = 0;
+			if (rect.x + rect.width > image.width)
+				rect.width = image.width - rect.x;
+			if (rect.y + rect.height > image.height)
+				rect.height = image.height - rect.y;
+			if (rect.width < 0)
+				rect.width = 0;
+			if (rect.height < 0)
+				rect.height = 0;
 			this.rect = rect;
 		}
 
@@ -1665,7 +1707,8 @@ private class ImageDataView
 
 	public function clip(x:Int, y:Int, width:Int, height:Int):Void
 	{
-		if (tempRect == null) tempRect = new Rectangle();
+		if (tempRect == null)
+			tempRect = new Rectangle();
 		tempRect.setTo(x, y, width, height);
 
 		rect.intersection(tempRect, rect);
@@ -1682,7 +1725,8 @@ private class ImageDataView
 		if (x < 0)
 		{
 			rect.x += x;
-			if (rect.x < 0) rect.x = 0;
+			if (rect.x < 0)
+				rect.x = 0;
 		}
 		else
 		{
@@ -1693,7 +1737,8 @@ private class ImageDataView
 		if (y < 0)
 		{
 			rect.y += y;
-			if (rect.y < 0) rect.y = 0;
+			if (rect.y < 0)
+				rect.y = 0;
 		}
 		else
 		{

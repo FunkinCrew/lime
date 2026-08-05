@@ -2,6 +2,7 @@ package lime.media.howlerjs;
 
 #if (!lime_doc_gen || lime_howlerjs)
 import lime.media.WebAudioContext;
+
 #if (!lime_howlerjs || display)
 class Howler
 {
@@ -47,12 +48,14 @@ class Howler
 	 */
 	public static function volume(?vol:Float):Dynamic
 	{
-		if (vol != null) return Howler;
+		if (vol != null)
+			return Howler;
 		return vol;
 	}
 }
 #else
 import haxe.extern.EitherType;
+
 import js.html.audio.GainNode;
 
 #if commonjs

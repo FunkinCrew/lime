@@ -56,9 +56,11 @@ class Joystick
 	@:noCompletion private static function __disconnect(id:Int):Void
 	{
 		var joystick = devices.get(id);
-		if (joystick != null) joystick.connected = false;
+		if (joystick != null)
+			joystick.connected = false;
 		devices.remove(id);
-		if (joystick != null) joystick.onDisconnect.dispatch();
+		if (joystick != null)
+			joystick.onDisconnect.dispatch();
 	}
 
 	#if (js && html5)

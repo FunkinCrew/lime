@@ -8,6 +8,7 @@ import haxe.macro.Type;
 #else
 import lime._internal.backend.native.NativeCFFI;
 #end
+
 #if !lime_doc_gen
 #if target.threaded
 import sys.thread.Thread;
@@ -44,10 +45,12 @@ class JNI
 	private static function transformClassName(className:String):String
 	{
 		var parts:Array<String> = className.split(".");
-		if (parts.length <= 1) return className;
+		if (parts.length <= 1)
+			return className;
 
 		var nestedClassName:String = "";
-		if (~/^[A-Z]/.match(parts[parts.length - 2])) nestedClassName = "$" + parts.pop();
+		if (~/^[A-Z]/.match(parts[parts.length - 2]))
+			nestedClassName = "$" + parts.pop();
 
 		return parts.join("/") + nestedClassName;
 	}
@@ -206,7 +209,8 @@ class JNI
 
 		if (field != null)
 		{
-			if (args == null) args = [];
+			if (args == null)
+				args = [];
 
 			return Reflect.callMethod(object, field, args);
 		}
@@ -437,7 +441,8 @@ class JNISafetyTools
 						args.push(macro $i{arg.name});
 
 						// Account for an unlikely edge case.
-						if (arg.name == field.name) Context.error('${field.name}() should not take an argument named ${field.name}.', field.pos);
+						if (arg.name == field.name)
+							Context.error('${field.name}() should not take an argument named ${field.name}.', field.pos);
 					}
 
 					// Check the thread before running the function.

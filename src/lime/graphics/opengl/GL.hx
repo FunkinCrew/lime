@@ -3,6 +3,7 @@ package lime.graphics.opengl;
 #if (!lime_doc_gen || lime_opengl || lime_opengles || lime_webgl)
 import haxe.io.Bytes;
 import haxe.Int64;
+
 import lime.utils.ArrayBufferView;
 import lime.utils.ArrayBuffer;
 import lime.utils.BytePointer;
@@ -2618,7 +2619,8 @@ class GL
 
 	public static function fromInt(type:GLObjectType, id:Int):GLObject
 	{
-		if (id == 0) return null;
+		if (id == 0)
+			return null;
 
 		#if (lime_cffi && (lime_opengl || lime_opengles) && !macro)
 		var object = NativeCFFI.lime_gl_object_from_id(id, type);

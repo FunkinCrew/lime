@@ -1,6 +1,7 @@
 package lime.text;
 
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Future;
 import lime.app.Promise;
@@ -13,12 +14,14 @@ import lime.system.System;
 import lime.utils.Assets;
 import lime.utils.Log;
 import lime.utils.UInt8Array;
+
 #if (js && html5)
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.SpanElement;
 import js.Browser;
 #end
+
 #if (lime_cffi && !macro)
 import haxe.io.Path;
 #end
@@ -191,7 +194,8 @@ class Font
 	 */
 	public static function fromBytes(bytes:Bytes):Font
 	{
-		if (bytes == null) return null;
+		if (bytes == null)
+			return null;
 
 		var font = new Font();
 		font.__fromBytes(bytes);
@@ -211,7 +215,8 @@ class Font
 	 */
 	public static function fromFile(path:String):Font
 	{
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		var font = new Font();
 		font.__fromFile(path);

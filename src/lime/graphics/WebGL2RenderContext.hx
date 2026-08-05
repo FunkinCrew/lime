@@ -4,6 +4,7 @@ package lime.graphics;
 import lime._internal.backend.html5.HTML5WebGL2RenderContext;
 import lime.graphics.opengl.*;
 import lime.utils.DataPointer;
+
 @:access(lime.graphics.RenderContext)
 @:forward()
 @:transitive
@@ -266,6 +267,7 @@ abstract WebGL2RenderContext(HTML5WebGL2RenderContext) from HTML5WebGL2RenderCon
 }
 #elseif (!lime_doc_gen || lime_opengl || lime_opengles || lime_webgl)
 import haxe.Int64;
+
 import lime.graphics.opengl.*;
 import lime.graphics.OpenGLRenderContext;
 import lime.utils.ArrayBuffer;
@@ -301,11 +303,9 @@ import lime.utils.UInt32Array;
 **/
 @:access(lime.graphics.RenderContext)
 #if !doc_gen
-@:transitive abstract WebGL2RenderContext(OpenGLRenderContext) from OpenGLRenderContext to OpenGLRenderContext
-{
+@:transitive abstract WebGL2RenderContext(OpenGLRenderContext) from OpenGLRenderContext to OpenGLRenderContext {
 #else
-abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
-{
+abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic {
 #end
 	private static var __tempPointer = new BytePointer();
 
@@ -4754,8 +4754,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	#end
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = v.length >> 2;
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = v.length >> 2;
 		__tempPointer.set(v, srcOffset);
 		this.uniformMatrix2fv(location, count, transpose, __tempPointer);
 	}
@@ -4763,8 +4765,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix2x3fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 6);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 6);
 
 		__tempPointer.set(v, srcOffset);
 
@@ -4774,8 +4778,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix2x4fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 8);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 8);
 
 		__tempPointer.set(v, srcOffset);
 
@@ -4789,8 +4795,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	#end
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 9);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 9);
 		__tempPointer.set(v, srcOffset);
 		this.uniformMatrix3fv(location, count, transpose, __tempPointer);
 	}
@@ -4798,8 +4806,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix3x2fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 6);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 6);
 
 		__tempPointer.set(v, srcOffset);
 
@@ -4809,8 +4819,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix3x4fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 12);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 12);
 
 		__tempPointer.set(v, srcOffset);
 
@@ -4824,8 +4836,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	#end
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = v.length >> 4;
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = v.length >> 4;
 		__tempPointer.set(v, srcOffset);
 		this.uniformMatrix4fv(location, count, transpose, __tempPointer);
 	}
@@ -4833,8 +4847,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix4x2fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 8);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 8);
 
 		__tempPointer.set(v, srcOffset);
 
@@ -4844,8 +4860,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic
 	public function uniformMatrix4x3fv(location:GLUniformLocation, transpose:Bool, v:Float32Array, srcOffset:Int = 0, ?srcLength:Int):Void
 	{
 		var count = 0;
-		if (srcLength != null) count = srcLength;
-		else if (v != null) count = Std.int(v.length / 12);
+		if (srcLength != null)
+			count = srcLength;
+		else if (v != null)
+			count = Std.int(v.length / 12);
 
 		__tempPointer.set(v, srcOffset);
 

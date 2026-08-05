@@ -2,6 +2,7 @@ package lime.system;
 
 import lime.app.Application;
 import lime.app.Event;
+
 #if sys
 import sys.thread.Deque;
 import sys.thread.Thread;

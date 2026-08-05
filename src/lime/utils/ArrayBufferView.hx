@@ -27,7 +27,8 @@ class ArrayBufferView
 		// the init calls below
 		if (elements != null && elements != 0)
 		{
-			if (elements < 0) elements = 0;
+			if (elements < 0)
+				elements = 0;
 			// :note:spec: also has, platform specific max int?
 			// elements = min(elements,maxint);
 
@@ -71,8 +72,10 @@ class ArrayBufferView
 	@:allow(lime.utils)
 	inline function initBuffer(in_buffer:ArrayBuffer, in_byteOffset:Int = 0, len:Null<Int> = null)
 	{
-		if (in_byteOffset < 0) throw TAError.RangeError;
-		if (in_byteOffset % bytesPerElement != 0) throw TAError.RangeError;
+		if (in_byteOffset < 0)
+			throw TAError.RangeError;
+		if (in_byteOffset % bytesPerElement != 0)
+			throw TAError.RangeError;
 
 		var bufferByteLength = in_buffer.length;
 		var elementSize = bytesPerElement;
@@ -82,15 +85,18 @@ class ArrayBufferView
 		{
 			newByteLength = bufferByteLength - in_byteOffset;
 
-			if (bufferByteLength % bytesPerElement != 0) throw TAError.RangeError;
-			if (newByteLength < 0) throw TAError.RangeError;
+			if (bufferByteLength % bytesPerElement != 0)
+				throw TAError.RangeError;
+			if (newByteLength < 0)
+				throw TAError.RangeError;
 		}
 		else
 		{
 			newByteLength = len * bytesPerElement;
 
 			var newRange = in_byteOffset + newByteLength;
-			if (newRange > bufferByteLength) throw TAError.RangeError;
+			if (newRange > bufferByteLength)
+				throw TAError.RangeError;
 		}
 
 		buffer = in_buffer;
@@ -162,10 +168,13 @@ class ArrayBufferView
 	@:allow(lime.utils)
 	inline function subarray<T_subarray>(begin:Int, end:Null<Int> = null):T_subarray
 	{
-		if (end == null) end = length;
+		if (end == null)
+			end = length;
 		var len = end - begin;
-		if (len < 0) len = 0;
-		if (len > this.length) len = this.length;
+		if (len < 0)
+			len = 0;
+		if (len > this.length)
+			len = this.length;
 		var byte_offset = toByteLength(begin) + byteOffset;
 
 		var view:ArrayBufferView = switch (type)

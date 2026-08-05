@@ -7,8 +7,10 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 #end
+
 #if (macro && !display)
 import lime._internal.format.Base64;
+
 import sys.io.File;
 import sys.FileSystem;
 #end
@@ -29,7 +31,8 @@ class AssetsMacro
 	macro public static function embedBytes():Array<Field>
 	{
 		var fields = embedData(":file");
-		if (fields == null) return null;
+		if (fields == null)
+			return null;
 
 		for (autoBuild in Context.getLocalClass().get().meta.extract(":autoBuild"))
 		{
@@ -60,7 +63,8 @@ class AssetsMacro
 	macro public static function embedByteArray():Array<Field>
 	{
 		var fields = embedData(":file");
-		if (fields == null) return null;
+		if (fields == null)
+			return null;
 
 		var definition = macro class Temp
 			{
@@ -80,7 +84,8 @@ class AssetsMacro
 
 	private static function embedData(metaName:String, encode:Bool = false):Array<Field>
 	{
-		if (Context.defined("display")) return null;
+		if (Context.defined("display"))
+			return null;
 
 		var classType = Context.getLocalClass().get();
 		var metaData = classType.meta;
@@ -89,7 +94,8 @@ class AssetsMacro
 
 		for (meta in metaData.extract(metaName))
 		{
-			if (meta.params.length == 0) continue;
+			if (meta.params.length == 0)
+				continue;
 
 			switch (meta.params[0].expr)
 			{
@@ -163,7 +169,8 @@ class AssetsMacro
 
 	macro public static function embedFont():Array<Field>
 	{
-		if (Context.defined("display")) return Context.getBuildFields();
+		if (Context.defined("display"))
+			return Context.getBuildFields();
 
 		var fields = null;
 
@@ -243,7 +250,8 @@ class AssetsMacro
 	macro public static function embedImage():Array<Field>
 	{
 		var fields = embedData(":image", Context.defined("html5"));
-		if (fields == null) return null;
+		if (fields == null)
+			return null;
 
 		var definition:TypeDefinition;
 		if (Context.defined("html5"))
@@ -310,7 +318,8 @@ class AssetsMacro
 	{
 		var fields = embedData(":sound");
 		// CFFILoader.h(248) : NOT Implemented:api_buffer_data
-		if (fields == null || Context.defined("html5") || !Context.defined("openfl")) return null;
+		if (fields == null || Context.defined("html5") || !Context.defined("openfl"))
+			return null;
 
 		var definition = macro class Temp
 			{

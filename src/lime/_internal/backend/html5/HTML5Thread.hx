@@ -1,6 +1,7 @@
 package lime._internal.backend.html5;
 
 import lime.app.Event;
+
 #if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
@@ -17,6 +18,7 @@ import js.Lib;
 import js.lib.Function;
 import js.lib.Object;
 import js.lib.Promise;
+
 // Same with classes that import lots of other things.
 import lime.app.Application;
 #end
@@ -78,7 +80,8 @@ class HTML5Thread
 		url.pathname = url.pathname.substr(0, url.pathname.lastIndexOf("/") + 1) + Application.current.meta["file"] + ".js";
 
 		// Use the hash to distinguish workers.
-		if (url.hash.length > 0) url.hash += "_";
+		if (url.hash.length > 0)
+			url.hash += "_";
 		url.hash += __workerCount;
 		__workerCount++;
 
@@ -302,10 +305,9 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 	@:noCompletion @:dox(hide) #if !macro @:from #end
 	public static #if !macro macro #end function fromFunction(func:ExprOf<haxe.Constraints.Function>)
 	{
-		var defaultOutput:Expr = macro
-			{
-				func: $func
-			};
+		var defaultOutput:Expr = macro {
+			func: $func
+		};
 
 		if (!Context.defined("lime-threads"))
 		{
@@ -332,12 +334,11 @@ abstract WorkFunction<T:haxe.Constraints.Function>(WorkFunctionData<T>) from Wor
 			var classPath:String = matcher.matched(1);
 			var functionName:String = matcher.matched(2);
 
-			return macro
-				{
-					func: $func,
-					classPath: $v{classPath},
-					functionName: $v{functionName}
-				};
+			return macro {
+				func: $func,
+				classPath: $v{classPath},
+				functionName: $v{functionName}
+			};
 		}
 	}
 

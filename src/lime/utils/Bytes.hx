@@ -2,6 +2,7 @@ package lime.utils;
 
 import haxe.io.Bytes as HaxeBytes;
 import haxe.io.BytesData;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime._internal.format.Deflate;
 import lime._internal.format.GZip;
@@ -81,7 +82,8 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 
 	public static function fromBytes(bytes:haxe.io.Bytes):Bytes
 	{
-		if (bytes == null) return null;
+		if (bytes == null)
+			return null;
 
 		return new Bytes(bytes.length, bytes.getData());
 	}
@@ -91,7 +93,8 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 		#if (sys && lime_cffi && !macro)
 		var bytes = Bytes.alloc(0);
 		NativeCFFI.lime_bytes_read_file(path, bytes);
-		if (bytes.length > 0) return bytes;
+		if (bytes.length > 0)
+			return bytes;
 		#end
 		return null;
 	}

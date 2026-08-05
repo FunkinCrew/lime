@@ -3,7 +3,9 @@ package lime.tools;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
+
 import lime.tools.AssetType;
+
 import sys.FileSystem;
 
 @:access(lime.tools.AssetHelper)
@@ -27,7 +29,8 @@ class Asset
 
 	public function new(path:String = "", rename:String = "", type:AssetType = null, embed:Null<Bool> = null, setDefaults:Bool = true)
 	{
-		if (!setDefaults) return;
+		if (!setDefaults)
+			return;
 
 		this.embed = embed;
 		sourcePath = Path.standardize(path);
@@ -51,7 +54,8 @@ class Asset
 		if (type == null)
 		{
 			var extension = Path.extension(path);
-			if (extension != null) extension = extension.toLowerCase();
+			if (extension != null)
+				extension = extension.toLowerCase();
 
 			if (AssetHelper.knownExtensions.exists(extension))
 			{

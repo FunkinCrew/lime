@@ -2,6 +2,7 @@ package lime.utils;
 
 import haxe.io.Bytes;
 import haxe.io.Path;
+
 import lime.app.Event;
 import lime.app.Future;
 import lime.app.Promise;
@@ -58,8 +59,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return AudioBuffer.fromBytes(bytes);
 		}
 		#end
@@ -81,8 +84,10 @@ import lime.utils.Bytes;
 		{
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return bytes;
 		}
 	}
@@ -101,8 +106,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Font.fromBytes(bytes);
 		}
 		#end
@@ -119,8 +126,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Image.fromBytes(bytes);
 		}
 	}
@@ -135,8 +144,10 @@ import lime.utils.Bytes;
 		{
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return bytes.getString(0, bytes.length);
 		}
 		else
@@ -170,7 +181,8 @@ import lime.utils.Bytes;
 
 			for (id in preload.keys())
 			{
-				if (!preload.get(id)) continue;
+				if (!preload.get(id))
+					continue;
 
 				switch (types.get(id))
 				{
@@ -199,7 +211,8 @@ import lime.utils.Bytes;
 
 				for (id in preload.keys())
 				{
-					if (!preload.get(id)) continue;
+					if (!preload.get(id))
+						continue;
 
 					switch (types.get(id))
 					{
@@ -246,7 +259,8 @@ import lime.utils.Bytes;
 			{
 				var basePath = rootPath == null || rootPath == "" ? "" : Path.addTrailingSlash(rootPath);
 				var libPath = getPath(id);
-				if (libPath == null) libPath = id;
+				if (libPath == null)
+					libPath = id;
 
 				var path = Path.join([basePath, libPath]);
 				path = __cacheBreak(path);
@@ -277,8 +291,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method, use `loadFromBytes` method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Future.withValue(AudioBuffer.fromBytes(bytes));
 		}
 		#end
@@ -295,8 +311,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Future.withValue(bytes);
 		}
 	}
@@ -315,8 +333,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Font.loadFromBytes(bytes);
 		}
 		#end
@@ -360,8 +380,10 @@ import lime.utils.Bytes;
 			// TODO: More efficient method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Image.loadFromBytes(bytes);
 		}
 	}
@@ -391,8 +413,10 @@ import lime.utils.Bytes;
 		{
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
-			if (type == "gzip") bytes = bytes.decompress(GZIP);
-			else if (type == "zip" || type == "deflate") bytes = bytes.decompress(DEFLATE);
+			if (type == "gzip")
+				bytes = bytes.decompress(GZIP);
+			else if (type == "zip" || type == "deflate")
+				bytes = bytes.decompress(DEFLATE);
 			return Future.withValue(bytes.getString(0, bytes.length));
 		}
 		else

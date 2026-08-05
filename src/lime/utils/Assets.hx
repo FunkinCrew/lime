@@ -3,6 +3,7 @@ package lime.utils;
 import haxe.io.Path;
 import haxe.CallStack;
 import haxe.Unserializer;
+
 import lime.app.Application;
 import lime.app.Event;
 import lime.app.Promise;
@@ -12,6 +13,7 @@ import lime.graphics.Image;
 import lime.text.Font;
 import lime.utils.Bytes;
 import lime.utils.Log;
+
 #if !macro
 import haxe.Json;
 #end
@@ -271,7 +273,8 @@ class Assets
 		#if (tools && !display)
 		if (useCache && cache.enabled)
 		{
-			if (cache.exists(id, type)) return true;
+			if (cache.exists(id, type))
+				return true;
 		}
 
 		var symbol = new LibrarySymbol(id);

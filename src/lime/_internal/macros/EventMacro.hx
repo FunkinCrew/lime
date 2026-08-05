@@ -132,43 +132,38 @@ class EventMacro
 				}
 			}
 
-			fields.push(
-				{
-					name: "__listeners",
-					access: [APublic],
-					kind: FVar(TPath({pack: [], name: "Array", params: [TPType(typeParam.toComplexType())]})),
-					pos: pos
-				});
-			fields.push(
-				{
-					name: "dispatch",
-					access: [APublic],
-					kind: FFun(
-						{
-							args: args,
-							expr: dispatch,
-							params: [],
-							ret: macro :Void
-						}),
-					pos: pos
-				});
+			fields.push({
+				name: "__listeners",
+				access: [APublic],
+				kind: FVar(TPath({pack: [], name: "Array", params: [TPType(typeParam.toComplexType())]})),
+				pos: pos
+			});
+			fields.push({
+				name: "dispatch",
+				access: [APublic],
+				kind: FFun({
+					args: args,
+					expr: dispatch,
+					params: [],
+					ret: macro :Void
+				}),
+				pos: pos
+			});
 
 			var meta:Array<MetadataEntry> = [
 				{name: ":dox", params: [macro hide], pos: pos},
 				{name: ":noCompletion", pos: pos}
 			];
 
-			Context.defineType(
-				{
-					pos: pos,
-					pack: ["lime", "app"],
-					name: name,
-					kind: TDClass(),
-					fields: fields,
-					params: [
-						{name: "T"}],
-					meta: meta
-				});
+			Context.defineType({
+				pos: pos,
+				pack: ["lime", "app"],
+				name: name,
+				kind: TDClass(),
+				fields: fields,
+				params: [{name: "T"}],
+				meta: meta
+			});
 		}
 
 		return TPath({pack: ["lime", "app"], name: name, params: [TPType(typeParam.toComplexType())]}).toType();

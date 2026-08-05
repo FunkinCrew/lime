@@ -2,6 +2,7 @@ package lime._internal.backend.native;
 
 import haxe.Int64;
 import haxe.Timer;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
 import lime.graphics.opengl.GL;
@@ -104,7 +105,8 @@ class NativeApplication
 			var offset = System.getTimer() - pauseTimer;
 			for (timer in Timer.sRunningTimers)
 			{
-				if (timer.mRunning) timer.mFireAt += offset;
+				if (timer.mRunning)
+					timer.mFireAt += offset;
 			}
 			pauseTimer = -1;
 		}
@@ -252,19 +254,23 @@ class NativeApplication
 		{
 			case AXIS_MOVE:
 				var joystick = Joystick.devices.get(joystickEventInfo.id);
-				if (joystick != null) joystick.onAxisMove.dispatch(joystickEventInfo.index, joystickEventInfo.x);
+				if (joystick != null)
+					joystick.onAxisMove.dispatch(joystickEventInfo.index, joystickEventInfo.x);
 
 			case HAT_MOVE:
 				var joystick = Joystick.devices.get(joystickEventInfo.id);
-				if (joystick != null) joystick.onHatMove.dispatch(joystickEventInfo.index, joystickEventInfo.eventValue);
+				if (joystick != null)
+					joystick.onHatMove.dispatch(joystickEventInfo.index, joystickEventInfo.eventValue);
 
 			case BUTTON_DOWN:
 				var joystick = Joystick.devices.get(joystickEventInfo.id);
-				if (joystick != null) joystick.onButtonDown.dispatch(joystickEventInfo.index);
+				if (joystick != null)
+					joystick.onButtonDown.dispatch(joystickEventInfo.index);
 
 			case BUTTON_UP:
 				var joystick = Joystick.devices.get(joystickEventInfo.id);
-				if (joystick != null) joystick.onButtonUp.dispatch(joystickEventInfo.index);
+				if (joystick != null)
+					joystick.onButtonUp.dispatch(joystickEventInfo.index);
 
 			case CONNECT:
 				Joystick.__connect(joystickEventInfo.id);
@@ -378,7 +384,8 @@ class NativeApplication
 
 		for (window in parent.__windows)
 		{
-			if (window == null) continue;
+			if (window == null)
+				continue;
 
 			// parent.renderer = renderer;
 
@@ -405,7 +412,8 @@ class NativeApplication
 								#if (lime_cffi && (lime_opengl || lime_opengles) && !display)
 								var gl = window.context.gl;
 								(gl : NativeOpenGLRenderContext).__contextLost();
-								if (GL.context == gl) GL.context = null;
+								if (GL.context == gl)
+									GL.context = null;
 								#end
 
 							default:

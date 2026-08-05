@@ -1,6 +1,7 @@
 package lime._internal.backend.native;
 
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
 import lime.graphics.opengl.GL;
@@ -51,27 +52,44 @@ class NativeWindow
 		var transparent = Reflect.hasField(attributes, "transparent") && attributes.transparent;
 		var flags = 0;
 
-		if (!Reflect.hasField(contextAttributes, "antialiasing")) contextAttributes.antialiasing = 0;
+		if (!Reflect.hasField(contextAttributes, "antialiasing"))
+			contextAttributes.antialiasing = 0;
 
-		if (transparent) contextAttributes.background = null;
-		else if (!Reflect.hasField(contextAttributes, "background")) contextAttributes.background = 0;
+		if (transparent)
+			contextAttributes.background = null;
+		else if (!Reflect.hasField(contextAttributes, "background"))
+			contextAttributes.background = 0;
 
-		if (!Reflect.hasField(contextAttributes, "colorDepth")) contextAttributes.colorDepth = transparent ? 32 : 24;
-		else if (transparent && contextAttributes.colorDepth < 32) contextAttributes.colorDepth = 32;
+		if (!Reflect.hasField(contextAttributes, "colorDepth"))
+			contextAttributes.colorDepth = transparent ? 32 : 24;
+		else if (transparent && contextAttributes.colorDepth < 32)
+			contextAttributes.colorDepth = 32;
 
-		if (!Reflect.hasField(contextAttributes, "depth")) contextAttributes.depth = true;
-		if (!Reflect.hasField(contextAttributes, "stencil")) contextAttributes.stencil = true;
-		if (!Reflect.hasField(contextAttributes, "vsync")) contextAttributes.vsync = false;
+		if (!Reflect.hasField(contextAttributes, "depth"))
+			contextAttributes.depth = true;
+		if (!Reflect.hasField(contextAttributes, "stencil"))
+			contextAttributes.stencil = true;
+		if (!Reflect.hasField(contextAttributes, "vsync"))
+			contextAttributes.vsync = false;
 
-		if (Reflect.hasField(attributes, "allowHighDPI") && attributes.allowHighDPI) flags |= cast WindowFlags.WINDOW_FLAG_ALLOW_HIGHDPI;
-		if (Reflect.hasField(attributes, "alwaysOnTop") && attributes.alwaysOnTop) flags |= cast WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP;
-		if (Reflect.hasField(attributes, "transparent") && attributes.transparent) flags |= cast WindowFlags.WINDOW_FLAG_TRANSPARENT;
-		if (Reflect.hasField(attributes, "borderless") && attributes.borderless) flags |= cast WindowFlags.WINDOW_FLAG_BORDERLESS;
-		if (Reflect.hasField(attributes, "fullscreen") && attributes.fullscreen) flags |= cast WindowFlags.WINDOW_FLAG_FULLSCREEN;
-		if (Reflect.hasField(attributes, "hidden") && attributes.hidden) flags |= cast WindowFlags.WINDOW_FLAG_HIDDEN;
-		if (Reflect.hasField(attributes, "maximized") && attributes.maximized) flags |= cast WindowFlags.WINDOW_FLAG_MAXIMIZED;
-		if (Reflect.hasField(attributes, "minimized") && attributes.minimized) flags |= cast WindowFlags.WINDOW_FLAG_MINIMIZED;
-		if (Reflect.hasField(attributes, "resizable") && attributes.resizable) flags |= cast WindowFlags.WINDOW_FLAG_RESIZABLE;
+		if (Reflect.hasField(attributes, "allowHighDPI") && attributes.allowHighDPI)
+			flags |= cast WindowFlags.WINDOW_FLAG_ALLOW_HIGHDPI;
+		if (Reflect.hasField(attributes, "alwaysOnTop") && attributes.alwaysOnTop)
+			flags |= cast WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP;
+		if (Reflect.hasField(attributes, "transparent") && attributes.transparent)
+			flags |= cast WindowFlags.WINDOW_FLAG_TRANSPARENT;
+		if (Reflect.hasField(attributes, "borderless") && attributes.borderless)
+			flags |= cast WindowFlags.WINDOW_FLAG_BORDERLESS;
+		if (Reflect.hasField(attributes, "fullscreen") && attributes.fullscreen)
+			flags |= cast WindowFlags.WINDOW_FLAG_FULLSCREEN;
+		if (Reflect.hasField(attributes, "hidden") && attributes.hidden)
+			flags |= cast WindowFlags.WINDOW_FLAG_HIDDEN;
+		if (Reflect.hasField(attributes, "maximized") && attributes.maximized)
+			flags |= cast WindowFlags.WINDOW_FLAG_MAXIMIZED;
+		if (Reflect.hasField(attributes, "minimized") && attributes.minimized)
+			flags |= cast WindowFlags.WINDOW_FLAG_MINIMIZED;
+		if (Reflect.hasField(attributes, "resizable") && attributes.resizable)
+			flags |= cast WindowFlags.WINDOW_FLAG_RESIZABLE;
 
 		if (contextAttributes.antialiasing >= 4)
 		{
@@ -82,10 +100,14 @@ class NativeWindow
 			flags |= cast WindowFlags.WINDOW_FLAG_HW_AA;
 		}
 
-		if (contextAttributes.colorDepth == 32) flags |= cast WindowFlags.WINDOW_FLAG_COLOR_DEPTH_32_BIT;
-		if (contextAttributes.depth) flags |= cast WindowFlags.WINDOW_FLAG_DEPTH_BUFFER;
-		if (contextAttributes.stencil) flags |= cast WindowFlags.WINDOW_FLAG_STENCIL_BUFFER;
-		if (contextAttributes.vsync) flags |= cast WindowFlags.WINDOW_FLAG_VSYNC;
+		if (contextAttributes.colorDepth == 32)
+			flags |= cast WindowFlags.WINDOW_FLAG_COLOR_DEPTH_32_BIT;
+		if (contextAttributes.depth)
+			flags |= cast WindowFlags.WINDOW_FLAG_DEPTH_BUFFER;
+		if (contextAttributes.stencil)
+			flags |= cast WindowFlags.WINDOW_FLAG_STENCIL_BUFFER;
+		if (contextAttributes.vsync)
+			flags |= cast WindowFlags.WINDOW_FLAG_VSYNC;
 
 		contextAttributes.hardware = true;
 

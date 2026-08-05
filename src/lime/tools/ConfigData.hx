@@ -1,6 +1,7 @@
 package lime.tools;
 
 import haxe.xml.Access;
+
 import hxp.Log;
 import hxp.ObjectTools;
 
@@ -318,7 +319,8 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 			if (attrName != "type" && attrName != "config:type")
 			{
 				var attrValue = elem.x.get(attrName);
-				if (substitute != null) attrValue = substitute(attrValue);
+				if (substitute != null)
+					attrValue = substitute(attrValue);
 				setNode(bucket, attrName, attrValue);
 			}
 		}
@@ -405,7 +407,8 @@ abstract ConfigData(Dynamic) to Dynamic from Dynamic
 		if (elem.innerHTML != "")
 		{
 			var value = elem.innerHTML;
-			if (substitute != null) value = substitute(value);
+			if (substitute != null)
+				value = substitute(value);
 			setNode(bucket, elem.name, value);
 		}
 	}

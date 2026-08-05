@@ -3,8 +3,10 @@ package lime.tools;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import lime.tools.HXProject;
 import lime.tools.ProjectXMLParser;
+
 import sys.FileSystem;
 import sys.io.File;
 

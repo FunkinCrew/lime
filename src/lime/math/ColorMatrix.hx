@@ -174,8 +174,10 @@ abstract ColorMatrix(Float32Array) from Float32Array to Float32Array
 		for (i in 1...256)
 		{
 			value = Math.floor(i * alphaMultiplier + alphaOffset);
-			if (value > 0xFF) value = 0xFF;
-			if (value < 0) value = 0;
+			if (value > 0xFF)
+				value = 0xFF;
+			if (value < 0)
+				value = 0;
 			__alphaTable[i] = value;
 		}
 
@@ -214,8 +216,10 @@ abstract ColorMatrix(Float32Array) from Float32Array to Float32Array
 		for (i in 0...256)
 		{
 			value = Math.floor(i * blueMultiplier + blueOffset);
-			if (value > 0xFF) value = 0xFF;
-			if (value < 0) value = 0;
+			if (value > 0xFF)
+				value = 0xFF;
+			if (value < 0)
+				value = 0;
 			__blueTable[i] = value;
 		}
 
@@ -254,8 +258,10 @@ abstract ColorMatrix(Float32Array) from Float32Array to Float32Array
 		for (i in 0...256)
 		{
 			value = Math.floor(i * greenMultiplier + greenOffset);
-			if (value > 0xFF) value = 0xFF;
-			if (value < 0) value = 0;
+			if (value > 0xFF)
+				value = 0xFF;
+			if (value < 0)
+				value = 0;
 			__greenTable[i] = value;
 		}
 
@@ -294,8 +300,10 @@ abstract ColorMatrix(Float32Array) from Float32Array to Float32Array
 		for (i in 0...256)
 		{
 			value = Math.floor(i * redMultiplier + redOffset);
-			if (value > 0xFF) value = 0xFF;
-			if (value < 0) value = 0;
+			if (value > 0xFF)
+				value = 0xFF;
+			if (value < 0)
+				value = 0;
 			__redTable[i] = value;
 		}
 

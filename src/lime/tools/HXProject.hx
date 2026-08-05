@@ -5,6 +5,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Eof;
 import haxe.xml.Access;
+
 import hxp.ArrayTools;
 import hxp.Haxelib;
 import hxp.Log;
@@ -15,11 +16,14 @@ import hxp.Path;
 import hxp.Script;
 import hxp.StringTools;
 import hxp.System;
+
 import lime.tools.Architecture;
 import lime.tools.AssetType;
 import lime.tools.Platform;
+
 import sys.FileSystem;
 import sys.io.File;
+
 #if (lime && lime_cffi && !macro)
 import lime.text.Font;
 #end
@@ -437,22 +441,21 @@ class HXProject extends Script
 		var inputFile = Path.combine(tempDirectory, "input.dat");
 		var outputFile = Path.combine(tempDirectory, "output.dat");
 
-		var inputData = Serializer.run(
-			{
-				command: HXProject._command,
-				name: name,
-				target: HXProject._target,
-				debug: HXProject._debug,
-				projectFile: projectFile,
-				targetFlags: HXProject._targetFlags,
-				templatePaths: HXProject._templatePaths,
-				userDefines: HXProject._userDefines,
-				environment: HXProject._environment,
-				logVerbose: Log.verbose,
-				logEnableColor: Log.enableColor,
-				processDryRun: cacheDryRun,
-				haxelibDebug: Haxelib.debug
-			});
+		var inputData = Serializer.run({
+			command: HXProject._command,
+			name: name,
+			target: HXProject._target,
+			debug: HXProject._debug,
+			projectFile: projectFile,
+			targetFlags: HXProject._targetFlags,
+			templatePaths: HXProject._templatePaths,
+			userDefines: HXProject._userDefines,
+			environment: HXProject._environment,
+			logVerbose: Log.verbose,
+			logEnableColor: Log.enableColor,
+			processDryRun: cacheDryRun,
+			haxelibDebug: Haxelib.debug
+		});
 
 		File.saveContent(inputFile, inputData);
 
@@ -983,8 +986,10 @@ class HXProject extends Script
 	{
 		var context:Dynamic = {};
 
-		if (app == null) app = {};
-		if (meta == null) meta = {};
+		if (app == null)
+			app = {};
+		if (meta == null)
+			meta = {};
 
 		if (window == null)
 		{
@@ -1051,7 +1056,8 @@ class HXProject extends Script
 				Reflect.setField(context, "WINDOW_ORIENTATION_" + i, "");
 			}
 
-			if (windows[i].title == "") windows[i].title = meta.title;
+			if (windows[i].title == "")
+				windows[i].title = meta.title;
 		}
 
 		for (haxeflag in haxeflags)

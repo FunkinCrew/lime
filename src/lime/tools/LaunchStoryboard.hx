@@ -33,11 +33,16 @@ class LaunchStoryboard
 	{
 		if (launchStoryboard != null)
 		{
-			if (launchStoryboard.assetsPath != null) assetsPath = launchStoryboard.assetsPath;
-			if (launchStoryboard.assets != null) assets = launchStoryboard.assets;
-			if (launchStoryboard.path != null) path = launchStoryboard.path;
-			if (launchStoryboard.template != null) template = launchStoryboard.template;
-			if (launchStoryboard.templateContext != null) templateContext = launchStoryboard.templateContext;
+			if (launchStoryboard.assetsPath != null)
+				assetsPath = launchStoryboard.assetsPath;
+			if (launchStoryboard.assets != null)
+				assets = launchStoryboard.assets;
+			if (launchStoryboard.path != null)
+				path = launchStoryboard.path;
+			if (launchStoryboard.template != null)
+				template = launchStoryboard.template;
+			if (launchStoryboard.templateContext != null)
+				templateContext = launchStoryboard.templateContext;
 		}
 	}
 }

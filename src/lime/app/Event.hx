@@ -124,7 +124,8 @@ class Event<T>
 		#if !macro
 		for (l in __listeners)
 		{
-			if (Reflect.compareMethods(l, listener)) return true;
+			if (Reflect.compareMethods(l, listener))
+				return true;
 		}
 		#end
 

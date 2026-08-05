@@ -4,6 +4,7 @@ package lime.graphics;
 #if (lime_doc_gen || (sys && lime_cffi && !doc_gen))
 import haxe.Int64;
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeOpenGLRenderContext;
 import lime.graphics.opengl.*;
 import lime.utils.DataPointer;
@@ -3868,7 +3869,8 @@ public inline function frontFace(mode:Int):Void
 
 public function genBuffers(n:Int, buffers:Array<GLBuffer> = null):Array<GLBuffer>
 {
-	if (buffers == null) buffers = [];
+	if (buffers == null)
+		buffers = [];
 
 	for (i in 0...n)
 	{
@@ -3885,7 +3887,8 @@ public inline function generateMipmap(target:Int):Void
 
 public function genFramebuffers(n:Int, framebuffers:Array<GLFramebuffer> = null):Array<GLFramebuffer>
 {
-	if (framebuffers == null) framebuffers = [];
+	if (framebuffers == null)
+		framebuffers = [];
 
 	for (i in 0...n)
 	{
@@ -3897,7 +3900,8 @@ public function genFramebuffers(n:Int, framebuffers:Array<GLFramebuffer> = null)
 
 public function genQueries(n:Int, queries:Array<GLQuery> = null):Array<GLQuery>
 {
-	if (queries == null) queries = [];
+	if (queries == null)
+		queries = [];
 
 	for (i in 0...n)
 	{
@@ -3909,7 +3913,8 @@ public function genQueries(n:Int, queries:Array<GLQuery> = null):Array<GLQuery>
 
 public function genRenderbuffers(n:Int, renderbuffers:Array<GLRenderbuffer> = null):Array<GLRenderbuffer>
 {
-	if (renderbuffers == null) renderbuffers = [];
+	if (renderbuffers == null)
+		renderbuffers = [];
 
 	for (i in 0...n)
 	{
@@ -3921,7 +3926,8 @@ public function genRenderbuffers(n:Int, renderbuffers:Array<GLRenderbuffer> = nu
 
 public function genSamplers(n:Int, samplers:Array<GLSampler> = null):Array<GLSampler>
 {
-	if (samplers == null) samplers = [];
+	if (samplers == null)
+		samplers = [];
 
 	for (i in 0...n)
 	{
@@ -3933,7 +3939,8 @@ public function genSamplers(n:Int, samplers:Array<GLSampler> = null):Array<GLSam
 
 public function genTextures(n:Int, textures:Array<GLTexture> = null):Array<GLTexture>
 {
-	if (textures == null) textures = [];
+	if (textures == null)
+		textures = [];
 
 	for (i in 0...n)
 	{
@@ -3945,7 +3952,8 @@ public function genTextures(n:Int, textures:Array<GLTexture> = null):Array<GLTex
 
 public function genTransformFeedbacks(n:Int, transformFeedbacks:Array<GLTransformFeedback> = null):Array<GLTransformFeedback>
 {
-	if (transformFeedbacks == null) transformFeedbacks = [];
+	if (transformFeedbacks == null)
+		transformFeedbacks = [];
 
 	for (i in 0...n)
 	{

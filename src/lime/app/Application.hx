@@ -1,6 +1,7 @@
 package lime.app;
 
 import haxe.Int64;
+
 import lime.graphics.RenderContext;
 import lime.system.System;
 import lime.system.Orientation;
@@ -102,12 +103,11 @@ class Application extends Module
 		var _init = ApplicationBackend;
 		#if commonjs
 		var p = untyped Application.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"preloader": {get: p.get_preloader},
-				"window": {get: p.get_window},
-				"windows": {get: p.get_windows}
-			});
+		untyped Object.defineProperties(p, {
+			"preloader": {get: p.get_preloader},
+			"window": {get: p.get_window},
+			"windows": {get: p.get_windows}
+		});
 		#end
 	}
 
@@ -600,7 +600,8 @@ class Application extends Module
 	@:noCompletion private function __createWindow(attributes:WindowAttributes):Window
 	{
 		var window = new Window(this, attributes);
-		if (window.id == -1) return null;
+		if (window.id == -1)
+			return null;
 		return window;
 	}
 

@@ -2,6 +2,7 @@ package lime.net;
 
 import haxe.io.Bytes;
 import haxe.macro.Compiler;
+
 import lime.app.Event;
 import lime.app.Future;
 import lime.app.Promise;

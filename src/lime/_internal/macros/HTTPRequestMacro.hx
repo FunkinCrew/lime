@@ -70,23 +70,21 @@ class HTTPRequestMacro
 
 		if (typeString == "String" || stringAbstract)
 		{
-			return TPath(
-				{
-					pack: ["lime", "net"],
-					name: "HTTPRequest",
-					sub: "_HTTPRequest_String",
-					params: [TPType(paramType.toComplexType())]
-				}).toType();
+			return TPath({
+				pack: ["lime", "net"],
+				name: "HTTPRequest",
+				sub: "_HTTPRequest_String",
+				params: [TPType(paramType.toComplexType())]
+			}).toType();
 		}
 		else if (typeString == "haxe.io.Bytes" || bytesAbstract)
 		{
-			return TPath(
-				{
-					pack: ["lime", "net"],
-					name: "HTTPRequest",
-					sub: "_HTTPRequest_Bytes",
-					params: [TPType(paramType.toComplexType())]
-				}).toType();
+			return TPath({
+				pack: ["lime", "net"],
+				name: "HTTPRequest",
+				sub: "_HTTPRequest_Bytes",
+				params: [TPType(paramType.toComplexType())]
+			}).toType();
 		}
 		else
 		{
@@ -98,7 +96,8 @@ class HTTPRequestMacro
 
 				for (i in 0...typeArgs.length)
 				{
-					if (i > 0) typeParamString += ",";
+					if (i > 0)
+						typeParamString += ",";
 					typeParamString += typeArgs[i].toString();
 				}
 
@@ -126,46 +125,40 @@ class HTTPRequestMacro
 					{
 						name: "new",
 						access: [APublic],
-						kind: FFun(
-							{
-								args: [
-									{name: "uri", type: macro :String, opt: true}],
-								expr: macro
-								{super(uri);},
-								params: [],
-								ret: macro :Void
-							}),
+						kind: FFun({
+							args: [{name: "uri", type: macro :String, opt: true}],
+							expr: macro
+							{super(uri);},
+							params: [],
+							ret: macro :Void
+						}),
 						pos: Context.currentPos()
 					},
 					{
 						name: "fromBytes",
 						access: [APrivate, AOverride],
-						kind: FFun(
-							{
-								args: [
-									{name: "bytes", type: macro :haxe.io.Bytes}],
-								expr: Context.parse("return " + typeString + ".fromBytes (bytes)", pos),
-								params: [],
-								ret: paramType.toComplexType()
-							}),
+						kind: FFun({
+							args: [{name: "bytes", type: macro :haxe.io.Bytes}],
+							expr: Context.parse("return " + typeString + ".fromBytes (bytes)", pos),
+							params: [],
+							ret: paramType.toComplexType()
+						}),
 						pos: pos
 					}
 				];
 
-				Context.defineType(
-					{
-						name: name,
+				Context.defineType({
+					name: name,
+					pack: ["lime", "net"],
+					kind: TDClass({
 						pack: ["lime", "net"],
-						kind: TDClass(
-							{
-								pack: ["lime", "net"],
-								name: "HTTPRequest",
-								sub: "_HTTPRequest_Bytes",
-								params: [TPType(paramType.toComplexType())]
-							}, null, false),
-						fields: fields,
-						pos: pos
-					});
+						name: "HTTPRequest",
+						sub: "_HTTPRequest_Bytes",
+						params: [TPType(paramType.toComplexType())]
+					}, null, false),
+					fields: fields,
+					pos: pos
+				});
 			}
 
 			return TPath({pack: ["lime", "net"], name: name, params: []}).toType();

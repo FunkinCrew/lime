@@ -7,11 +7,14 @@ import hxp.Log;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
+
 import lime.tools.Dependency;
 import lime.tools.HXProject;
 import lime.tools.ModuleData;
+
 import sys.FileSystem;
 import sys.io.File;
+
 class ModuleHelper
 {
 	public static function addModuleSource(source:String, moduleData:ModuleData, include:Array<String>, exclude:Array<String>, packageName:String = null)
@@ -162,7 +165,8 @@ class ModuleHelper
 			}
 			else
 			{
-				if (Path.extension(file) != "hx") continue;
+				if (Path.extension(file) != "hx")
+					continue;
 
 				className = StringTools.replace(filePath, source, "");
 				className = StringTools.replace(className, "\\", "/");
@@ -222,8 +226,10 @@ class ModuleHelper
 
 	public static function shortFirst(a, b):Int
 	{
-		if (a.length < b.length) return -1;
-		else if (a.length > b.length) return 1;
+		if (a.length < b.length)
+			return -1;
+		else if (a.length > b.length)
+			return 1;
 		return 0;
 	}
 }
@@ -236,6 +242,7 @@ import haxe.macro.Type;
 
 using Lambda;
 using StringTools;
+
 using haxe.macro.Tools;
 
 class ModuleHelper
@@ -299,9 +306,12 @@ class Generator
 			switch (t)
 			{
 				case TInst(c, _):
-					if (!c.get().isExtern && c.get().superClass != null) genExtend = true;
-					if (c.get().meta.has(":expose")) genExpose = true;
-					if (genExtend && genExpose) break;
+					if (!c.get().isExtern && c.get().superClass != null)
+						genExtend = true;
+					if (c.get().meta.has(":expose"))
+						genExpose = true;
+					if (genExtend && genExpose)
+						break;
 				case _:
 			}
 		}
@@ -339,7 +349,8 @@ class Generator
 				}
 				nstr += '$s';
 			}
-			if (i < lines.length - 1) nstr += "\n";
+			if (i < lines.length - 1)
+				nstr += "\n";
 		}
 		return nstr;
 	}
@@ -368,7 +379,8 @@ class Generator
 
 	function printif(f:String, s:String)
 	{
-		if (api.hasFeature(f)) println(s);
+		if (api.hasFeature(f))
+			println(s);
 	}
 
 	inline function newline()
@@ -378,24 +390,29 @@ class Generator
 
 	function field(p, staticField = true)
 	{
-		if (staticField) return api.isKeyword(p) ? '["$p"]' : '.$p';
+		if (staticField)
+			return api.isKeyword(p) ? '["$p"]' : '.$p';
 		else
 			return api.isKeyword(p) ? '\'$p\'' : p;
 	}
 
 	function genPackage(p:Array<String>)
 	{
-		if (p.length == 0) print("var ");
+		if (p.length == 0)
+			print("var ");
 		var full:String = null;
 		for (x in p)
 		{
 			var prev = full;
-			if (full == null) full = x;
+			if (full == null)
+				full = x;
 			else
 				full += "." + x;
-			if (packages.exists(full)) continue;
+			if (packages.exists(full))
+				continue;
 			packages.set(full, true);
-			if (prev == null) println('var $x = ' + (jsModern ? "{}" : '$x || {}'));
+			if (prev == null)
+				println('var $x = ' + (jsModern ? "{}" : '$x || {}'));
 			else
 			{
 				var p = prev + field(x);
@@ -430,7 +447,8 @@ class Generator
 
 	function checkFieldName(c:ClassType, f:ClassField)
 	{
-		if (forbidden.exists(f.name)) Context.error("The field " + f.name + " is not allowed in JS", c.pos);
+		if (forbidden.exists(f.name))
+			Context.error("The field " + f.name + " is not allowed in JS", c.pos);
 	}
 
 	function genClassField(c:ClassType, p:String, f:ClassField, first:Bool)
@@ -469,7 +487,8 @@ class Generator
 		}
 		else
 		{
-			if (!dce && (f.kind.match(FVar(AccNormal, AccNormal) | FMethod(_)) || f.meta.has(":isVar"))) println('$p$field = null');
+			if (!dce && (f.kind.match(FVar(AccNormal, AccNormal) | FMethod(_)) || f.meta.has(":isVar")))
+				println('$p$field = null');
 		}
 	}
 
@@ -482,8 +501,10 @@ class Generator
 			{
 				case FVar(g, s):
 					{
-						if (g == AccCall) properties.push('get_${f.name}:"get_${f.name}"');
-						if (s == AccCall) properties.push('set_${f.name}:"set_${f.name}"');
+						if (g == AccCall)
+							properties.push('get_${f.name}:"get_${f.name}"');
+						if (s == AccCall)
+							properties.push('set_${f.name}:"set_${f.name}"');
 					}
 				case _:
 			}
@@ -498,23 +519,28 @@ class Generator
 		var hxClasses = api.hasFeature("Type.resolveClass");
 		var p = getPath(c);
 		var pn = getDotPath(c);
-		if (jsFlatten) print("var ");
+		if (jsFlatten)
+			print("var ");
 		else
 			genPackage(c.pack);
 
-		if (hxClasses && !jsModern) print('$p = $$hxClasses["$pn"] = ');
+		if (hxClasses && !jsModern)
+			print('$p = $$hxClasses["$pn"] = ');
 		else
 			print('$p = ' + (c.meta.has(":expose") ? '$$hx_exports.$p = ' : ''));
-		if (c.constructor != null) print(api.generateValue(c.constructor.get().expr()));
+		if (c.constructor != null)
+			print(api.generateValue(c.constructor.get().expr()));
 		else
 			print("function() { }");
 		newline();
-		if (hxClasses && jsModern) println('$$hxClasses["$pn"] = $p');
+		if (hxClasses && jsModern)
+			println('$$hxClasses["$pn"] = $p');
 
 		var name = pn.split(".").map(api.quoteString).join(",");
 		if (api.hasFeature("js.Boot.isClass"))
 		{
-			if (api.hasFeature("Type.getClassName")) println('$p.__name__ = [$name]');
+			if (api.hasFeature("Type.getClassName"))
+				println('$p.__name__ = [$name]');
 			else
 				println('$p.__name__ = true');
 		}
@@ -530,7 +556,8 @@ class Generator
 		if (has_property_reflection)
 		{
 			var staticProperties = getProperties(c.statics.get());
-			if (staticProperties.length > 0) printn('$p.__properties__ = $staticProperties');
+			if (staticProperties.length > 0)
+				printn('$p.__properties__ = $staticProperties');
 		}
 		for (f in c.statics.get())
 			genStaticField(c, p, f);
@@ -557,29 +584,33 @@ class Generator
 				switch (f.kind)
 				{
 					case FVar(r, _):
-						if (r == AccResolve) continue;
+						if (r == AccResolve)
+							continue;
 					default:
 				}
 				first = genClassField(c, p, f, first);
 			}
 			if (has_class)
 			{
-				if (!first) print(",");
+				if (!first)
+					print(",");
 				printi('__class__: $p\n');
 			}
 			if (has_property_reflection)
 			{
 				var properties = getProperties(c.fields.get());
-				if (properties.length > 0) if (c.superClass != null)
-				{
-					var psup = getPath(c.superClass.t.get());
-					printn((first ? "" : ",") + '__properties__: $$extend($psup.prototype.__properties__,$properties)');
-				}
-				else
-					printn((first ? "" : ",") + '__properties__: $properties');
+				if (properties.length > 0)
+					if (c.superClass != null)
+					{
+						var psup = getPath(c.superClass.t.get());
+						printn((first ? "" : ",") + '__properties__: $$extend($psup.prototype.__properties__,$properties)');
+					}
+					else
+						printn((first ? "" : ",") + '__properties__: $properties');
 			}
 			indentLevel--;
-			if (c.superClass != null) printin("});", 0);
+			if (c.superClass != null)
+				printin("});", 0);
 			else
 				printin("};", 0);
 		}
@@ -593,17 +624,21 @@ class Generator
 		var constructs = e.names.map(api.quoteString).join(",");
 		var hxClasses = api.hasFeature("Type.resolveEnum");
 
-		if (jsFlatten) print("var ");
+		if (jsFlatten)
+			print("var ");
 		else
 			genPackage(e.pack);
 
-		if (hxClasses) print('$p = $$hxClasses["$pn"] = {');
+		if (hxClasses)
+			print('$p = $$hxClasses["$pn"] = {');
 		else
 			print('$p = {');
 
-		if (api.hasFeature("js.Boot.isEnum")) if (api.hasFeature("Type.getEnumName")) print(' __ename__ : [$names],');
-		else
-			print(' __ename__ : true,');
+		if (api.hasFeature("js.Boot.isEnum"))
+			if (api.hasFeature("Type.getEnumName"))
+				print(' __ename__ : [$names],');
+			else
+				print(' __ename__ : true,');
 		println(' __constructs__ : [$constructs] }');
 		for (c in e.constructs.keys())
 		{
@@ -617,7 +652,8 @@ class Generator
 					print('function($sargs) { var $$x = ["${c.name}",${c.index},$sargs]; $$x.__enum__ = $p; $$x.toString = $$estr; return $$x; }');
 				default:
 					println("[" + api.quoteString(c.name) + "," + c.index + "]");
-					if (api.hasFeature("may_print_enum")) println('$p$f.toString = $$estr');
+					if (api.hasFeature("may_print_enum"))
+						println('$p$f.toString = $$estr');
 					print('$p$f.__enum__ = $p');
 			}
 			newline();
@@ -626,10 +662,12 @@ class Generator
 		{
 			var ec = Lambda.fold(e.constructs, function(c:EnumField, r:Array<String>)
 			{
-				if (!c.type.match(TFun(_, _))) r.push('$p.${c.name}');
+				if (!c.type.match(TFun(_, _)))
+					r.push('$p.${c.name}');
 				return r;
 			}, []);
-			if (ec.length > 0) println('$p.__empty_constructs__ = [' + ec.join(",") + ']');
+			if (ec.length > 0)
+				println('$p.__empty_constructs__ = [' + ec.join(",") + ']');
 		}
 		var meta = api.buildMetaData(e);
 		if (meta != null)
@@ -645,28 +683,36 @@ class Generator
 		{
 			case TInst(c, _):
 				var c = c.get();
-				if (c.init != null) inits.add(c.init);
-				if (!c.isExtern) genClass(c);
+				if (c.init != null)
+					inits.add(c.init);
+				if (!c.isExtern)
+					genClass(c);
 			case TEnum(r, _):
 				var e = r.get();
-				if (!e.isExtern) genEnum(e);
+				if (!e.isExtern)
+					genEnum(e);
 			default:
 		}
 	}
 
 	public function generate()
 	{
-		if (jsModern) println('(function (' + (genExpose ? "$hx_exports" : "") + ", $global) { \"use strict\"");
+		if (jsModern)
+			println('(function (' + (genExpose ? "$hx_exports" : "") + ", $global) { \"use strict\"");
 
-		if (jsModern) println("if (!$hx_exports.$hxClasses) $hx_exports.$hxClasses = {}");
+		if (jsModern)
+			println("if (!$hx_exports.$hxClasses) $hx_exports.$hxClasses = {}");
 
 		var vars = [];
 		if (api.hasFeature("Type.resolveClass") || api.hasFeature("Type.resolveEnum")) // vars.push("$hxClasses = " + (jsModern? "{}" : "$hxClasses || {}"));
 			vars.push("$hxClasses = " + (jsModern ? "$hx_exports.$hxClasses" : "$hxClasses || {}"));
-		if (api.hasFeature("may_print_enum")) vars.push("$estr = function() { return " + packClass(["js"], "Boot") + ".__string_rec(this,''); }");
-		if (vars.length > 0) println("var " + vars.join(","));
+		if (api.hasFeature("may_print_enum"))
+			vars.push("$estr = function() { return " + packClass(["js"], "Boot") + ".__string_rec(this,''); }");
+		if (vars.length > 0)
+			println("var " + vars.join(","));
 
-		if (genExtend) print("function $extend(from, fields) {
+		if (genExtend)
+			print("function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
@@ -690,10 +736,13 @@ class Generator
 			genInit(e);
 		for (s in statics)
 			println(getPath(s.c) + field(s.f.name) + ' = ' + api.generateValue(s.f.expr()));
-		if (api.main != null) println(api.generateValue(api.main));
-		if (jsModern) print('})('
-			+ (genExpose ? 'typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, ' : '')
-			+ 'typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);\n');
+		if (api.main != null)
+			println(api.generateValue(api.main));
+		if (jsModern)
+			print('})('
+				+
+				(genExpose ? 'typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, ' : '')
+				+ 'typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);\n');
 		sys.io.File.saveContent(api.outputFile, buf.toString());
 	}
 

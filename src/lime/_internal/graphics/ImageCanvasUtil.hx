@@ -2,6 +2,7 @@ package lime._internal.graphics;
 
 import haxe.format.JsonParser;
 import haxe.io.Bytes;
+
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.graphics.ImageChannel;
@@ -12,6 +13,7 @@ import lime.math.Vector2;
 import lime.system.Endian;
 import lime.utils.BytePointer;
 import lime.utils.UInt8Array;
+
 #if (js && html5)
 import js.Browser;
 #end
@@ -88,7 +90,8 @@ class ImageCanvasUtil
 		if (buffer.__srcCanvas != null && buffer.data == null)
 		{
 			createImageData(image);
-			if (image.type == CANVAS) image.dirty = false;
+			if (image.type == CANVAS)
+				image.dirty = false;
 		}
 		else if (image.type == CANVAS && buffer.__srcCanvas != null && image.dirty)
 		{
@@ -135,7 +138,8 @@ class ImageCanvasUtil
 
 		if (alphaImage != null && alphaImage.transparent)
 		{
-			if (alphaPoint == null) alphaPoint = new Vector2();
+			if (alphaPoint == null)
+				alphaPoint = new Vector2();
 
 			// TODO: use faster method
 
@@ -331,7 +335,8 @@ class ImageCanvasUtil
 
 	public static function scroll(image:Image, x:Int, y:Int):Void
 	{
-		if ((x % image.width == 0) && (y % image.height == 0)) return;
+		if ((x % image.width == 0) && (y % image.height == 0))
+			return;
 
 		var copy = image.clone();
 
@@ -367,7 +372,8 @@ class ImageCanvasUtil
 
 	public static function sync(image:Image, clear:Bool):Void
 	{
-		if (image == null) return;
+		if (image == null)
+			return;
 
 		#if (js && html5)
 		if (image.type == CANVAS && (image.buffer.__srcCanvas != null || image.buffer.data != null))

@@ -3,8 +3,10 @@ package lime.utils;
 import haxe.io.Path;
 import haxe.Serializer;
 import haxe.Unserializer;
+
 import lime.app.Future;
 import lime.utils.Bytes;
+
 #if !macro
 import haxe.Json;
 #end
@@ -42,7 +44,8 @@ class AssetManifest
 		path = __resolvePath(path);
 		rootPath = __resolveRootPath(rootPath, path);
 
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		return fromBytes(Bytes.fromFile(path), rootPath);
 	}
@@ -57,7 +60,8 @@ class AssetManifest
 		path = __resolvePath(path);
 		rootPath = __resolveRootPath(rootPath, path);
 
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		return Bytes.loadFromFile(path).then(function(bytes)
 		{
@@ -67,7 +71,8 @@ class AssetManifest
 
 	public static function parse(data:String, rootPath:String = null):AssetManifest
 	{
-		if (data == null || data == "") return null;
+		if (data == null || data == "")
+			return null;
 
 		#if !macro
 		var manifestData = Json.parse(data);
@@ -143,7 +148,8 @@ class AssetManifest
 
 	private static function __resolvePath(path:String):String
 	{
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		var queryIndex = path.indexOf("?");
 		var basePath;
@@ -183,7 +189,8 @@ class AssetManifest
 
 	private static function __resolveRootPath(rootPath:String, path:String):String
 	{
-		if (rootPath != null) return rootPath;
+		if (rootPath != null)
+			return rootPath;
 
 		var queryIndex = path.indexOf("?");
 
@@ -200,7 +207,8 @@ class AssetManifest
 
 		while (StringTools.endsWith(rootPath, "/"))
 		{
-			if (rootPath == "/") return rootPath;
+			if (rootPath == "/")
+				return rootPath;
 			rootPath = rootPath.substr(0, rootPath.length - 1);
 		}
 

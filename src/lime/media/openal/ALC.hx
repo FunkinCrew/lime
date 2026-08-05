@@ -4,6 +4,7 @@ package lime.media.openal;
 import lime._internal.backend.native.NativeCFFI;
 import lime.system.CFFI;
 import lime.system.CFFIPointer;
+
 import haxe.io.Bytes;
 
 @:access(lime._internal.backend.native.NativeCFFI)

@@ -3,6 +3,7 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Float64Array as JSFloat64Array;
 import js.lib.Uint8Array as JSUInt8Array;
+
 @:forward
 @:transitive
 abstract Float64Array(JSFloat64Array) from JSFloat64Array to JSFloat64Array
@@ -65,8 +66,10 @@ abstract Float64Array(JSFloat64Array) from JSFloat64Array to JSFloat64Array
 	// non spec haxe conversions
 	inline public static function fromBytes(bytes:haxe.io.Bytes, ?byteOffset:Int = 0, ?len:Int):Float64Array
 	{
-		if (byteOffset == null) return new JSFloat64Array(cast bytes.getData());
-		if (len == null) return new JSFloat64Array(cast bytes.getData(), byteOffset);
+		if (byteOffset == null)
+			return new JSFloat64Array(cast bytes.getData());
+		if (len == null)
+			return new JSFloat64Array(cast bytes.getData(), byteOffset);
 		return new JSFloat64Array(cast bytes.getData(), byteOffset, len);
 	}
 

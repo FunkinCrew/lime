@@ -1,6 +1,7 @@
 package lime._internal.format;
 
 import haxe.io.Bytes;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.utils.UInt8Array;
 

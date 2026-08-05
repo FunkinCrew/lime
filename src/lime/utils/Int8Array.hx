@@ -3,6 +3,7 @@ package lime.utils;
 #if (js && !doc_gen)
 import js.lib.Int8Array as JSInt8Array;
 import js.lib.Uint8Array as JSUInt8Array;
+
 @:forward
 @:transitive
 abstract Int8Array(JSInt8Array) from JSInt8Array to JSInt8Array
@@ -125,8 +126,10 @@ abstract Int8Array(ArrayBufferView) from ArrayBufferView to ArrayBufferView
 	// non spec haxe conversions
 	inline public static function fromBytes(bytes:haxe.io.Bytes, ?byteOffset:Int = 0, ?len:Int):Int8Array
 	{
-		if (byteOffset == null) return new Int8Array(null, null, cast bytes.getData());
-		if (len == null) return new Int8Array(null, null, cast bytes.getData(), byteOffset);
+		if (byteOffset == null)
+			return new Int8Array(null, null, cast bytes.getData());
+		if (len == null)
+			return new Int8Array(null, null, cast bytes.getData(), byteOffset);
 		return new Int8Array(null, null, cast bytes.getData(), byteOffset, len);
 	}
 

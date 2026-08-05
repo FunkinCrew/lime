@@ -2,7 +2,9 @@ package lime.system;
 
 #if (!lime_doc_gen || lime_cffi)
 import haxe.io.Path;
+
 import lime._internal.macros.CFFIMacro;
+
 #if (sys && !macro)
 import sys.io.Process;
 #end
@@ -64,7 +66,8 @@ class CFFI
 
 		#if !macro
 		#if (sys && !html5)
-		if (__moduleNames == null) __moduleNames = new Map<String, String>();
+		if (__moduleNames == null)
+			__moduleNames = new Map<String, String>();
 
 		if (lazy)
 		{
@@ -93,7 +96,8 @@ class CFFI
 				#elseif neko
 				#if neko_cffi_trace
 				var result:Dynamic = neko.Lib.load(__moduleNames.get(library), method, args);
-				if (result == null) return null;
+				if (result == null)
+					return null;
 
 				return Reflect.makeVarArgs(function(args)
 				{
@@ -243,7 +247,8 @@ class CFFI
 				init(function(s) return new String(s), function(len:Int)
 				{
 					var r = [];
-					if (len > 0) r[len - 1] = null;
+					if (len > 0)
+						r[len - 1] = null;
 					return r;
 				}, null, true, false);
 

@@ -8,6 +8,7 @@ import lime.media.openal.ALContext;
 import lime.media.openal.ALDevice;
 import lime.media.openal.ALSource;
 import lime.utils.ArrayBufferView;
+
 import haxe.io.Bytes;
 
 class OpenALAudioContext
@@ -167,7 +168,8 @@ class OpenALAudioContext
 
 	public function destroyContext(context:ALContext):Void
 	{
-		if (context == null) return;
+		if (context == null)
+			return;
 		ALC.destroyContext(context);
 	}
 
@@ -258,7 +260,8 @@ class OpenALAudioContext
 
 	public function getContextsDevice(context:ALContext):ALDevice
 	{
-		if (context == null) return null;
+		if (context == null)
+			return null;
 		return ALC.getContextsDevice(context);
 	}
 

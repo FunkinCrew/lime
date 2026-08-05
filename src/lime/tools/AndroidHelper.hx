@@ -4,6 +4,7 @@ import hxp.Haxelib;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import sys.io.File;
 import sys.FileSystem;
 
@@ -93,12 +94,11 @@ class AndroidHelper
 				continue;
 			}
 
-			var newVersion =
-				{
-					major: Std.parseInt(version.matched(1)),
-					minor: Std.parseInt(version.matched(2)),
-					micro: Std.parseInt(version.matched(3))
-				};
+			var newVersion = {
+				major: Std.parseInt(version.matched(1)),
+				minor: Std.parseInt(version.matched(2)),
+				micro: Std.parseInt(version.matched(3))
+			};
 
 			if (newVersion.major != current.major)
 			{
@@ -456,7 +456,8 @@ class AndroidHelper
 
 		var pidInt = Std.parseInt(pidString);
 
-		if (pidInt != null) args.push('--pid=' + pidInt);
+		if (pidInt != null)
+			args.push('--pid=' + pidInt);
 
 		args.push("-v");
 		args.push("brief");

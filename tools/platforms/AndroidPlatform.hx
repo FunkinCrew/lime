@@ -5,6 +5,7 @@ import hxp.HXML;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import lime.tools.AndroidHelper;
 import lime.tools.Architecture;
 import lime.tools.AssetHelper;
@@ -16,6 +17,7 @@ import lime.tools.Icon;
 import lime.tools.IconHelper;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectHelper;
+
 import sys.FileSystem;
 import sys.io.File;
 
@@ -74,10 +76,14 @@ class AndroidPlatform extends PlatformTarget
 
 		var architectures:Array<Architecture> = [];
 
-		if (hasARM64) architectures.push(Architecture.ARM64);
-		if (hasARMV7) architectures.push(Architecture.ARMV7);
-		if (hasX64) architectures.push(Architecture.X64);
-		if (hasX86) architectures.push(Architecture.X86);
+		if (hasARM64)
+			architectures.push(Architecture.ARM64);
+		if (hasARMV7)
+			architectures.push(Architecture.ARMV7);
+		if (hasX64)
+			architectures.push(Architecture.X64);
+		if (hasX86)
+			architectures.push(Architecture.X86);
 
 		if (architectures.length == 0)
 		{
@@ -148,7 +154,8 @@ class AndroidPlatform extends PlatformTarget
 
 			System.runCommand("", "haxe", haxeParams);
 
-			if (noOutput) continue;
+			if (noOutput)
+				continue;
 
 			CPPHelper.compile(project, targetDirectory + "/obj", cppParams);
 
@@ -187,7 +194,8 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		if (noOutput) return;
+		if (noOutput)
+			return;
 
 		AndroidHelper.build(project, destination);
 	}
@@ -334,10 +342,14 @@ class AndroidPlatform extends PlatformTarget
 
 		var commands:Array<Array<String>> = [];
 
-		if (arm64) commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine, platformNumberDefine]);
-		if (armv7) commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine, platformNumberDefine]);
-		if (x64) commands.push(["-Dandroid", "-DHXCPP_X86_64", platformDefine, platformNumberDefine]);
-		if (x86) commands.push(["-Dandroid", "-DHXCPP_X86", platformDefine, platformNumberDefine]);
+		if (arm64)
+			commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine, platformNumberDefine]);
+		if (armv7)
+			commands.push(["-Dandroid", "-DHXCPP_ARMV7", platformDefine, platformNumberDefine]);
+		if (x64)
+			commands.push(["-Dandroid", "-DHXCPP_X86_64", platformDefine, platformNumberDefine]);
+		if (x86)
+			commands.push(["-Dandroid", "-DHXCPP_X86", platformDefine, platformNumberDefine]);
 
 		CPPHelper.rebuild(project, commands);
 	}
@@ -420,49 +432,46 @@ class AndroidPlatform extends PlatformTarget
 		context.ANDROID_GRADLE_PROPERTIES = project.config.getKeyValueArray("android.gradle-properties");
 		context.ANDROID_DISPLAY_CUTOUT = project.config.getString("android.layoutInDisplayCutoutMode", "shortEdges");
 
-		context.ANDROID_MANIFEST = project.config.getKeyValueArray("android.manifest",
-			{
-				"android:versionCode": project.meta.buildNumber,
-				"android:versionName": project.meta.version,
-				"android:installLocation": project.config.getString("android.install-location", "auto")
-			});
+		context.ANDROID_MANIFEST = project.config.getKeyValueArray("android.manifest", {
+			"android:versionCode": project.meta.buildNumber,
+			"android:versionName": project.meta.version,
+			"android:installLocation": project.config.getString("android.install-location", "auto")
+		});
 		context.ANDROID_MANIFEST_CHILDREN = project.config.get("android.manifest").xmlChildren;
-		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application",
-			{
-				"android:label": project.meta.title,
-				"android:allowBackup": "true",
-				"android:allowAudioPlaybackCapture": "true",
-				"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
-				"android:enableOnBackInvokedCallback": "false",
-				"android:hardwareAccelerated": "true",
-				"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
-				"android:largeHeap": "true"
-			});
+		context.ANDROID_APPLICATION = project.config.getKeyValueArray("android.application", {
+			"android:label": project.meta.title,
+			"android:allowBackup": "true",
+			"android:allowAudioPlaybackCapture": "true",
+			"android:theme": "@style/LimeAppMainTheme" + (project.window.fullscreen ? "Fullscreen" : ""),
+			"android:enableOnBackInvokedCallback": "false",
+			"android:hardwareAccelerated": "true",
+			"android:allowNativeHeapPointerTagging": context.ANDROID_TARGET_SDK_VERSION >= 30 ? "false" : null,
+			"android:largeHeap": "true"
+		});
 		context.ANDROID_APPLICATION_CHILDREN = project.config.get("android.application").xmlChildren;
-		context.ANDROID_ACTIVITY = project.config.getKeyValueArray("android.activity",
-			{
-				"android:name": "MainActivity",
-				"android:exported": "true",
-				"android:alwaysRetainTaskState": "true",
-				"android:launchMode": "singleTop",
-				"android:preferMinimalPostProcessing": "true",
-				"android:label": project.meta.title,
-				"android:resizeableActivity": project.window.resizable,
-				"android:configChanges": project.config.getArrayString("android.configChanges",
-					[
-						"layoutDirection",
-						"locale",
-						"orientation",
-						"uiMode",
-						"screenLayout",
-						"screenSize",
-						"smallestScreenSize",
-						"keyboard",
-						"keyboardHidden",
-						"navigation"
-					]).join("|"),
-				"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
-			});
+		context.ANDROID_ACTIVITY = project.config.getKeyValueArray("android.activity", {
+			"android:name": "MainActivity",
+			"android:exported": "true",
+			"android:alwaysRetainTaskState": "true",
+			"android:launchMode": "singleTop",
+			"android:preferMinimalPostProcessing": "true",
+			"android:label": project.meta.title,
+			"android:resizeableActivity": project.window.resizable,
+			"android:configChanges": project.config.getArrayString("android.configChanges",
+				[
+					"layoutDirection",
+					"locale",
+					"orientation",
+					"uiMode",
+					"screenLayout",
+					"screenSize",
+					"smallestScreenSize",
+					"keyboard",
+					"keyboardHidden",
+					"navigation"
+				]).join("|"),
+			"android:screenOrientation": project.window.orientation == PORTRAIT ? "sensorPortrait" : (project.window.orientation == LANDSCAPE ? "sensorLandscape" : null)
+		});
 		context.ANDROID_ACTIVITY_CHILDREN = project.config.get("android.activity").xmlChildren;
 		context.ANDROID_ACCEPT_FILE_INTENT = project.config.getArrayString("android.accept-file-intent", []);
 
@@ -470,7 +479,8 @@ class AndroidPlatform extends PlatformTarget
 		{
 			var command = "lime";
 			var toolsBase = Type.resolveClass("CommandLineTools");
-			if (toolsBase != null) command = Reflect.field(toolsBase, "commandName");
+			if (toolsBase != null)
+				command = Reflect.field(toolsBase, "commandName");
 
 			Log.error("You must define ANDROID_SDK and ANDROID_NDK_ROOT to target Android, please run '" + command + " setup android' first");
 			Sys.exit(1);
@@ -541,11 +551,14 @@ class AndroidPlatform extends PlatformTarget
 			catch (e:Dynamic) {}
 		}
 
-		if (Reflect.hasField(context, "KEY_STORE")) context.KEY_STORE = StringTools.replace(context.KEY_STORE, "\\", "\\\\");
-		if (Reflect.hasField(context, "KEY_STORE_ALIAS")) context.KEY_STORE_ALIAS = StringTools.replace(context.KEY_STORE_ALIAS, "\\", "\\\\");
-		if (Reflect.hasField(context, "KEY_STORE_PASSWORD")) context.KEY_STORE_PASSWORD = StringTools.replace(context.KEY_STORE_PASSWORD, "\\", "\\\\");
-		if (Reflect.hasField(context,
-			"KEY_STORE_ALIAS_PASSWORD")) context.KEY_STORE_ALIAS_PASSWORD = StringTools.replace(context.KEY_STORE_ALIAS_PASSWORD, "\\", "\\\\");
+		if (Reflect.hasField(context, "KEY_STORE"))
+			context.KEY_STORE = StringTools.replace(context.KEY_STORE, "\\", "\\\\");
+		if (Reflect.hasField(context, "KEY_STORE_ALIAS"))
+			context.KEY_STORE_ALIAS = StringTools.replace(context.KEY_STORE_ALIAS, "\\", "\\\\");
+		if (Reflect.hasField(context, "KEY_STORE_PASSWORD"))
+			context.KEY_STORE_PASSWORD = StringTools.replace(context.KEY_STORE_PASSWORD, "\\", "\\\\");
+		if (Reflect.hasField(context, "KEY_STORE_ALIAS_PASSWORD"))
+			context.KEY_STORE_ALIAS_PASSWORD = StringTools.replace(context.KEY_STORE_ALIAS_PASSWORD, "\\", "\\\\");
 
 		context.ANDROID_LIBRARY_PROJECTS = [];
 		context.ANDROID_LIBRARY_DEPENDENCIES = [];
@@ -558,12 +571,11 @@ class AndroidPlatform extends PlatformTarget
 				&& (FileSystem.exists(Path.combine(dependency.path, "project.properties"))
 					|| FileSystem.exists(Path.combine(dependency.path, "build.gradle"))))
 			{
-				context.ANDROID_LIBRARY_PROJECTS.push(
-					{
-						name: dependency.name,
-						path: "deps/" + dependency.name,
-						source: dependency.path
-					});
+				context.ANDROID_LIBRARY_PROJECTS.push({
+					name: dependency.name,
+					path: "deps/" + dependency.name,
+					source: dependency.path
+				});
 			}
 			else if (dependency.name != "")
 			{

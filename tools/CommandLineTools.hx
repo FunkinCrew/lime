@@ -1,12 +1,14 @@
 package;
 
 import haxe.Serializer;
+
 import hxp.Haxelib;
 import hxp.Log;
 import hxp.MapTools;
 import hxp.Path;
 import hxp.StringTools;
 import hxp.System;
+
 import lime.system.CFFI;
 import lime.tools.ApplicationData;
 import lime.tools.Architecture;
@@ -20,6 +22,7 @@ import lime.tools.Platform;
 import lime.tools.PlatformTarget;
 import lime.tools.ProjectXMLParser;
 import lime.tools.WindowData;
+
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
@@ -505,9 +508,12 @@ class CommandLineTools
 
 			var args = [command, temporaryFile];
 
-			if (Log.verbose) args.push("-verbose");
-			if (!Log.enableColor) args.push("-nocolor");
-			if (!traceEnabled) args.push("-notrace");
+			if (Log.verbose)
+				args.push("-verbose");
+			if (!Log.enableColor)
+				args.push("-nocolor");
+			if (!traceEnabled)
+				args.push("-notrace");
 
 			if (additionalArguments.length > 0)
 			{
@@ -1249,7 +1255,8 @@ class CommandLineTools
 
 	private function getToolsVersion(version:String = null):String
 	{
-		if (version == null) version = this.version;
+		if (version == null)
+			version = this.version;
 
 		if (targetFlags.exists("openfl"))
 		{
@@ -1762,7 +1769,8 @@ class CommandLineTools
 			for (i in 0...arguments.length)
 			{
 				lastArgument = arguments.pop();
-				if (lastArgument.length > 0) break;
+				if (lastArgument.length > 0)
+					break;
 			}
 
 			lastArgument = new Path(lastArgument).toString();
@@ -1916,7 +1924,8 @@ class CommandLineTools
 
 						field = StringTools.replace(field, "certificate-", "");
 
-						if (field == "alias-password") field = "aliasPassword";
+						if (field == "alias-password")
+							field = "aliasPassword";
 
 						if (Reflect.hasField(overrides.keystore, field))
 						{
@@ -1946,9 +1955,12 @@ class CommandLineTools
 							property += split[i].substr(0, 1).toUpperCase() + split[i].substr(1, split[i].length - 1);
 						}
 
-						if (field == "window-allow-high-dpi") property = "allowHighDPI";
-						if (field == "window-color-depth") property = "colorDepth";
-						if (field == "meta-build-number") property = "buildNumber";
+						if (field == "window-allow-high-dpi")
+							property = "allowHighDPI";
+						if (field == "window-color-depth")
+							property = "colorDepth";
+						if (field == "meta-build-number")
+							property = "buildNumber";
 
 						var fieldReference = Reflect.field(overrides, fieldName);
 						var typeValue:Dynamic = switch (fieldName)

@@ -2,6 +2,7 @@ package lime.utils;
 
 import haxe.macro.Compiler;
 import haxe.Constraints.IMap;
+
 import lime.media.AudioBuffer;
 import lime.graphics.Image;
 #if !(macro || commonjs)
@@ -35,17 +36,20 @@ class AssetCache
 	{
 		if (type == AssetType.IMAGE || type == null)
 		{
-			if (image.exists(id)) return true;
+			if (image.exists(id))
+				return true;
 		}
 
 		if (type == AssetType.FONT || type == null)
 		{
-			if (font.exists(id)) return true;
+			if (font.exists(id))
+				return true;
 		}
 
 		if (type == AssetType.SOUND || type == AssetType.MUSIC || type == null)
 		{
-			if (audio.exists(id)) return true;
+			if (audio.exists(id))
+				return true;
 		}
 
 		return false;
@@ -59,12 +63,14 @@ class AssetCache
 				font.set(id, asset);
 
 			case IMAGE:
-				if (!(asset is Image)) throw "Cannot cache non-Image asset: " + asset + " as Image";
+				if (!(asset is Image))
+					throw "Cannot cache non-Image asset: " + asset + " as Image";
 
 				image.set(id, asset);
 
 			case SOUND, MUSIC:
-				if (!(asset is AudioBuffer)) throw "Cannot cache non-AudioBuffer asset: " + asset + " as AudioBuffer";
+				if (!(asset is AudioBuffer))
+					throw "Cannot cache non-AudioBuffer asset: " + asset + " as AudioBuffer";
 
 				audio.set(id, asset);
 

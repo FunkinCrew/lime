@@ -1,6 +1,7 @@
 package lime._internal.backend.native;
 
 import haxe.Int64;
+
 import lime.app.Application;
 import lime.math.Vector4;
 import lime.media.openal.AL;
@@ -207,7 +208,8 @@ class NativeAudioSource
 
 			AL.sourcef(handle, AL.SEC_OFFSET, (value + parent.offset) / 1000.0);
 
-			if (playing) AL.sourcePlay(handle);
+			if (playing)
+				AL.sourcePlay(handle);
 		}
 
 		if (playing)

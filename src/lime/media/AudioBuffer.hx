@@ -3,6 +3,7 @@ package lime.media;
 import haxe.Int64;
 import haxe.io.Bytes;
 import haxe.io.Path;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime._internal.format.Base64;
 import lime.app.Future;
@@ -15,6 +16,7 @@ import lime.utils.UInt8Array;
 #if lime_howlerjs
 import lime.media.howlerjs.Howl;
 #end
+
 #if (js && html5)
 import js.html.Audio;
 #end
@@ -71,10 +73,9 @@ class AudioBuffer
 	private static function __init__()
 	{
 		var p = untyped AudioBuffer.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"src": {get: p.get_src, set: p.set_src}
-			});
+		untyped Object.defineProperties(p, {
+			"src": {get: p.get_src, set: p.set_src}
+		});
 	}
 	#end
 
@@ -101,7 +102,8 @@ class AudioBuffer
 	**/
 	public static function fromBase64(base64String:String):AudioBuffer
 	{
-		if (base64String == null) return null;
+		if (base64String == null)
+			return null;
 
 		#if (js && html5 && lime_howlerjs)
 		// if base64String doesn't contain codec data, add it.
@@ -141,7 +143,8 @@ class AudioBuffer
 	**/
 	public static function fromBytes(bytes:Bytes):AudioBuffer
 	{
-		if (bytes == null) return null;
+		if (bytes == null)
+			return null;
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
@@ -172,7 +175,8 @@ class AudioBuffer
 	**/
 	public static function fromFile(path:String):AudioBuffer
 	{
-		if (path == null) return null;
+		if (path == null)
+			return null;
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
@@ -213,7 +217,8 @@ class AudioBuffer
 		for (path in paths)
 		{
 			buffer = AudioBuffer.fromFile(path);
-			if (buffer != null) break;
+			if (buffer != null)
+				break;
 		}
 
 		return buffer;

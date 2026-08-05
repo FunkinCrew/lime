@@ -2,13 +2,17 @@ package lime.tools;
 
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
+
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
+
 import lime.tools.Icon;
 import lime.tools.ImageHelper;
+
 import sys.FileSystem;
 import sys.io.File;
+
 #if (lime && lime_cffi && !macro)
 import lime.graphics.Image;
 import lime.math.Rectangle;

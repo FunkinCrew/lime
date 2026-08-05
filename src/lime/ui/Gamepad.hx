@@ -72,9 +72,11 @@ class Gamepad
 	@:noCompletion private static function __disconnect(id:Int):Void
 	{
 		var gamepad = devices.get(id);
-		if (gamepad != null) gamepad.connected = false;
+		if (gamepad != null)
+			gamepad.connected = false;
 		devices.remove(id);
-		if (gamepad != null) gamepad.onDisconnect.dispatch();
+		if (gamepad != null)
+			gamepad.onDisconnect.dispatch();
 	}
 
 	// Get & Set Methods

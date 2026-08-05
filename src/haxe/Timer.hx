@@ -99,7 +99,8 @@ class Timer
 	public function stop()
 	{
 		#if js
-		if (id == null) return;
+		if (id == null)
+			return;
 		untyped clearInterval(id);
 		id = null;
 		#elseif (target.threaded && !cppia)
