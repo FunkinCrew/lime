@@ -44,6 +44,10 @@ namespace lime
 		SDL_SetHint(SDL_HINT_IOS_HIDE_HOME_INDICATOR, "3");
 #endif
 
+#ifdef HX_LINUX
+		SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY, "1");
+#endif
+
 #ifdef HX_MACOS
 		SDL_SetHint(SDL_HINT_MAC_SCROLL_MOMENTUM, "1");
 #endif
