@@ -1,16 +1,15 @@
 #pragma once
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum PixelFormat {
+	enum PixelFormat
+	{
 
 		RGBA32,
 		ARGB32,
 		BGRA32
 
 	};
-
 
 }

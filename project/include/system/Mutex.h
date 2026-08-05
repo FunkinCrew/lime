@@ -1,26 +1,20 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
+	class Mutex
+	{
+	  public:
+		Mutex();
+		~Mutex();
 
-	class Mutex {
+		void Lock() const;
+		bool TryLock() const;
+		void Unlock() const;
 
-
-		public:
-
-			Mutex ();
-			~Mutex ();
-
-			void Lock () const;
-			bool TryLock () const;
-			void Unlock () const;
-
-		private:
-
-			void* mutex;
-
-
+	  private:
+		void *mutex;
 	};
 
-
-}
+} // namespace lime

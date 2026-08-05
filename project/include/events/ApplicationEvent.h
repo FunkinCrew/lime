@@ -1,14 +1,13 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum ApplicationEventType {
+	enum ApplicationEventType
+	{
 
 		THEME_CHANGE,
 		UPDATE,
@@ -16,20 +15,17 @@ namespace lime {
 
 	};
 
-
-	struct ApplicationEvent {
-
+	struct ApplicationEvent
+	{
 		double deltaTime;
 		ApplicationEventType type;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		ApplicationEvent ();
+		ApplicationEvent();
 
-		static void Dispatch (ApplicationEvent* event);
-
+		static void Dispatch(ApplicationEvent *event);
 	};
 
-
-}
+} // namespace lime

@@ -1,32 +1,28 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <utils/QuickVec.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	struct Bytes {
-
+	struct Bytes
+	{
 		int length;
-		unsigned char* b;
+		unsigned char *b;
 		bool ownsMemory;
 
-		Bytes ();
-		Bytes (value bytes);
-		~Bytes ();
+		Bytes();
+		Bytes(value bytes);
+		~Bytes();
 
-		void ReadFile (const char* path);
-		void WriteFile (const char* path);
-		void Resize (int size);
-		void Set (value bytes);
-		void Set (const QuickVec<unsigned char> data);
-		value Value (value bytes);
-		value Value ();
-
+		void ReadFile(const char *path);
+		void WriteFile(const char *path);
+		void Resize(int size);
+		void Set(value bytes);
+		void Set(const QuickVec<unsigned char> data);
+		value Value(value bytes);
+		value Value();
 	};
 
-
-}
+} // namespace lime

@@ -1,34 +1,25 @@
 #pragma once
 
-
 #include <media/AudioDecoder.h>
 
+namespace lime
+{
 
-namespace lime {
+	class FlacDecoder : public AudioDecoder
+	{
+	  public:
+		~FlacDecoder();
 
+		bool Open(Resource *resource);
+		size_t Decode(void *ptr, size_t frames, AudioFormat format);
+		bool Rewind();
+		bool Seek(int64_t frame);
+		bool CanSeek();
+		int64_t Tell();
+		int64_t Total();
 
-	class FlacDecoder : public AudioDecoder {
-
-
-		public:
-
-			~FlacDecoder ();
-
-			bool Open (Resource* resource);
-			size_t Decode (void* ptr, size_t frames, AudioFormat format);
-			bool Rewind ();
-			bool Seek (int64_t frame);
-			bool CanSeek ();
-			int64_t Tell ();
-			int64_t Total ();
-
-
-		private:
-
-			void* handle;
-
-
+	  private:
+		void *handle;
 	};
 
-
-}
+} // namespace lime

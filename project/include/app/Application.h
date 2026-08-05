@@ -1,30 +1,22 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 
+namespace lime
+{
 
-namespace lime {
+	class Application
+	{
+	  public:
+		virtual ~Application() {};
 
-
-	class Application {
-
-
-		public:
-
-			virtual ~Application () {};
-
-			virtual int Exec () = 0;
-			virtual void Init () = 0;
-			virtual int Quit () = 0;
-			virtual void SetFrameRate (double frameRate) = 0;
-			virtual bool Update () = 0;
-
-
+		virtual int Exec() = 0;
+		virtual void Init() = 0;
+		virtual int Quit() = 0;
+		virtual void SetFrameRate(double frameRate) = 0;
+		virtual bool Update() = 0;
 	};
 
+	Application *CreateApplication();
 
-	Application* CreateApplication ();
-
-
-}
+} // namespace lime

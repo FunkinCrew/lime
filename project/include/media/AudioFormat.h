@@ -1,14 +1,14 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	enum AudioFormat {
+	enum AudioFormat
+	{
 
 		S16,
 		F32
 
 	};
-
 
 }

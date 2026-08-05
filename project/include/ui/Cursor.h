@@ -1,9 +1,10 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	enum SystemCursor {
+	enum SystemCursor
+	{
 
 		HIDDEN,
 		ARROW,
@@ -22,13 +23,10 @@ namespace lime {
 
 	};
 
-	class Cursor {
-
-		public:
-
-			static void* GetSystemCursor (SystemCursor type);
-
+	class Cursor
+	{
+	  public:
+		static void *GetSystemCursor(SystemCursor type);
 	};
 
-
-}
+} // namespace lime

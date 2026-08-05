@@ -1,19 +1,13 @@
 #pragma once
 #include <string>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	class Locale {
-
-
-		public:
-
-			static std::string* GetSystemLocale ();
-
-
+	class Locale
+	{
+	  public:
+		static std::string *GetSystemLocale();
 	};
 
-
-}
+} // namespace lime

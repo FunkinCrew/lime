@@ -1,15 +1,14 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
-#include <system/ValuePointer.h>
 #include <stdint.h>
+#include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum WindowEventType {
+	enum WindowEventType
+	{
 
 		WINDOW_ACTIVATE,
 		WINDOW_CLOSE,
@@ -29,9 +28,8 @@ namespace lime {
 
 	};
 
-
-	struct WindowEvent {
-
+	struct WindowEvent
+	{
 		int height;
 		WindowEventType type;
 		int width;
@@ -39,14 +37,12 @@ namespace lime {
 		int x;
 		int y;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		WindowEvent ();
+		WindowEvent();
 
-		static void Dispatch (WindowEvent* event);
-
+		static void Dispatch(WindowEvent *event);
 	};
 
-
-}
+} // namespace lime

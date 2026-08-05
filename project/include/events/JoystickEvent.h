@@ -1,14 +1,13 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum JoystickEventType {
+	enum JoystickEventType
+	{
 
 		JOYSTICK_AXIS_MOVE = 0,
 		JOYSTICK_HAT_MOVE = 1,
@@ -19,9 +18,8 @@ namespace lime {
 
 	};
 
-
-	struct JoystickEvent {
-
+	struct JoystickEvent
+	{
 		int id;
 		int index;
 		JoystickEventType type;
@@ -29,14 +27,12 @@ namespace lime {
 		double x;
 		double y;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		JoystickEvent ();
+		JoystickEvent();
 
-		static void Dispatch (JoystickEvent* event);
-
+		static void Dispatch(JoystickEvent *event);
 	};
 
-
-}
+} // namespace lime

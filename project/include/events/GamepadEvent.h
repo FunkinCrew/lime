@@ -1,14 +1,13 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum GamepadEventType {
+	enum GamepadEventType
+	{
 
 		GAMEPAD_AXIS_MOVE,
 		GAMEPAD_BUTTON_DOWN,
@@ -18,9 +17,8 @@ namespace lime {
 
 	};
 
-
-	struct GamepadEvent {
-
+	struct GamepadEvent
+	{
 		int axis;
 		int button;
 		int id;
@@ -28,14 +26,12 @@ namespace lime {
 		double axisValue;
 		double timestamp;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		GamepadEvent ();
+		GamepadEvent();
 
-		static void Dispatch (GamepadEvent* event);
-
+		static void Dispatch(GamepadEvent *event);
 	};
 
-
-}
+} // namespace lime

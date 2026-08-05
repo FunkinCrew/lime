@@ -6,41 +6,41 @@
 
 #include <system/Locale.h>
 
+namespace lime
+{
 
-namespace lime {
+std::string *Locale::GetSystemLocale()
+{
+	NSString *localeLanguage = [[NSLocale preferredLanguages] firstObject];
+	if (localeLanguage == nil)
+		localeLanguage = @"en";
 
-
-	std::string* Locale::GetSystemLocale () {
-
-		NSString* localeLanguage = [[NSLocale preferredLanguages] firstObject];
-		if (localeLanguage == nil) localeLanguage = @"en";
-
-		NSString* localeRegion = nil;
-		NSLocale* currentLocale = [NSLocale autoupdatingCurrentLocale];
-		if (currentLocale == nil || ![currentLocale respondsToSelector:@selector(countryCode)]) {
-			localeRegion = @"";
-		} else {
-			localeRegion = [currentLocale countryCode];
-		}
-
-		NSString* locale = localeLanguage;
-		if (localeRegion != nil)
-		{
-			locale = [[localeLanguage stringByAppendingString:@"_"] stringByAppendingString:localeRegion];
-		}
-
-		std::string* result = 0;
-
-		if (locale) {
-
-			const char* ptr = [locale UTF8String];
-			result = new std::string (ptr);
-
-		}
-
-		return result;
-
+	NSString *localeRegion = nil;
+	NSLocale *currentLocale = [NSLocale autoupdatingCurrentLocale];
+	if (currentLocale == nil || ![currentLocale respondsToSelector:@selector(countryCode)])
+	{
+		localeRegion = @"";
+	}
+	else
+	{
+		localeRegion = [currentLocale countryCode];
 	}
 
+	NSString *locale = localeLanguage;
+	if (localeRegion != nil)
+	{
+		locale = [[localeLanguage stringByAppendingString:@"_"] stringByAppendingString:localeRegion];
+	}
 
+	std::string *result = 0;
+
+	if (locale)
+	{
+		const char *ptr = [locale UTF8String];
+		result = new std::string(ptr);
+	}
+
+	return result;
 }
+
+} // namespace lime

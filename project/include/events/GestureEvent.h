@@ -1,14 +1,13 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum GestureState {
+	enum GestureState
+	{
 
 		GESTURE_START = 0,
 		GESTURE_MOVE = 1,
@@ -17,9 +16,8 @@ namespace lime {
 
 	};
 
-
-	struct GestureEvent {
-
+	struct GestureEvent
+	{
 		double x;
 		double y;
 		GestureState state;
@@ -34,14 +32,12 @@ namespace lime {
 		double momentumScrollX;
 		double momentumScrollY;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		GestureEvent ();
+		GestureEvent();
 
-		static void Dispatch (GestureEvent* event);
-
+		static void Dispatch(GestureEvent *event);
 	};
 
-
-}
+} // namespace lime

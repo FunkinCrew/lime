@@ -1,24 +1,21 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	class Joystick {
-
-		public:
-
-			static bool Connect (int deviceID);
-			static bool Disconnect (int id);
-			static int GetInstanceID (int deviceID);
-			static char* GetDeviceGUID (int id);
-			static const char* GetDeviceName (int id);
-			static int GetNumAxes (int id);
-			static int GetNumButtons (int id);
-			static int GetNumHats (int id);
-			static void Rumble (int id, double lowFrequencyRumble, double highFrequencyRumble, int duration);
-			static void SetLED (int id, int red, int green, int blue);
-
+	class Joystick
+	{
+	  public:
+		static bool Connect(int deviceID);
+		static bool Disconnect(int id);
+		static int GetInstanceID(int deviceID);
+		static char *GetDeviceGUID(int id);
+		static const char *GetDeviceName(int id);
+		static int GetNumAxes(int id);
+		static int GetNumButtons(int id);
+		static int GetNumHats(int id);
+		static void Rumble(int id, double lowFrequencyRumble, double highFrequencyRumble, int duration);
+		static void SetLED(int id, int red, int green, int blue);
 	};
 
-
-}
+} // namespace lime

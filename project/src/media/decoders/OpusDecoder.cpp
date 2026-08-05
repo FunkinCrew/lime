@@ -1,169 +1,134 @@
 #include <media/decoders/OpusDecoder.h>
-
-#include <utils/File.h>
 #include <opusfile.h>
+#include <utils/File.h>
 
-namespace lime {
+namespace lime
+{
 
-
-	static int OpusFile_Read (File* file, void* dest, int bytesToRead) {
-
-		return (int)file->Read (dest, bytesToRead);
-
+	static int OpusFile_Read(File *file, void *dest, int bytesToRead)
+	{
+		return (int)file->Read(dest, bytesToRead);
 	}
 
-
-	static int OpusFile_Seek (File* file, opus_int64 offset, int whence) {
-
-		return file->Seek (offset, whence) < 0 ? -1 : 0;
-
+	static int OpusFile_Seek(File *file, opus_int64 offset, int whence)
+	{
+		return file->Seek(offset, whence) < 0 ? -1 : 0;
 	}
 
-
-	static int OpusFile_Close (File* file) {
-
-		int result = (int)file->Close ();
+	static int OpusFile_Close(File *file)
+	{
+		int result = (int)file->Close();
 
 		delete file;
 
 		return result;
-
 	}
 
-
-	static opus_int64 OpusFile_Tell (File* file) {
-
-		return (opus_int64)file->Tell ();
-
+	static opus_int64 OpusFile_Tell(File *file)
+	{
+		return (opus_int64)file->Tell();
 	}
-
 
 	static OpusFileCallbacks OPUSFILE_CALLBACKS = {
 
-		(int (*)(void *, unsigned char *, int)) OpusFile_Read,
-		(int (*)(void *, opus_int64, int)) OpusFile_Seek,
-		(opus_int64 (*)(void *)) OpusFile_Tell,
-		(int (*)(void *)) OpusFile_Close
+		(int (*)(void *, unsigned char *, int))OpusFile_Read, (int (*)(void *, opus_int64, int))OpusFile_Seek, (opus_int64 (*)(void *))OpusFile_Tell, (int (*)(void *))OpusFile_Close
 
 	};
 
+	OpusDecoder::~OpusDecoder()
+	{
+		if (handle)
+		{
+			OggOpusFile *opusFile = (OggOpusFile *)handle;
 
-	OpusDecoder::~OpusDecoder () {
-
-		if (handle) {
-
-			OggOpusFile* opusFile = (OggOpusFile*)handle;
-
-			op_free (opusFile);
+			op_free(opusFile);
 
 			handle = NULL;
-
 		}
-
 	}
 
+	bool OpusDecoder::Open(Resource *resource)
+	{
+		File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data);
 
-	bool OpusDecoder::Open (Resource* resource) {
+		if (!file->handle)
+		{
+			delete file;
 
-		File* file = resource->path ? new File(resource->path, "rb") : new File(resource->data);
+			return false;
+		}
 
-		if (!file->handle) {
+		OggOpusFile *opusFile = op_open_callbacks(file, &OPUSFILE_CALLBACKS, NULL, 0, NULL);
+
+		if (!opusFile)
+		{
+			file->Close();
 
 			delete file;
 
 			return false;
-
 		}
 
-		OggOpusFile* opusFile = op_open_callbacks (file, &OPUSFILE_CALLBACKS, NULL, 0, NULL);
-
-		if (!opusFile) {
-
-			file->Close ();
-
-			delete file;
-
-			return false;
-
-		}
-
-		channels = op_channel_count (opusFile, -1);
+		channels = op_channel_count(opusFile, -1);
 		sampleRate = 48000;
-		handle = (void*)opusFile;
+		handle = (void *)opusFile;
 
 		return true;
-
 	}
 
-
-	size_t OpusDecoder::Decode (void* ptr, size_t frames, AudioFormat format) {
-
+	size_t OpusDecoder::Decode(void *ptr, size_t frames, AudioFormat format)
+	{
 		int totalSamples = frames * channels;
 
 		int samplesRead = 0;
 
-		while (samplesRead < totalSamples) {
-
+		while (samplesRead < totalSamples)
+		{
 			int result = 0;
 
-			if (format == AudioFormat::S16) {
-
-				result = op_read ((OggOpusFile*)handle, ((int16_t*) ptr) + samplesRead, totalSamples - samplesRead, NULL);
-
-			} else if (format == AudioFormat::F32) {
-
-				result = op_read_float ((OggOpusFile*)handle, ((float*) ptr) + samplesRead, totalSamples - samplesRead, NULL);
-
+			if (format == AudioFormat::S16)
+			{
+				result = op_read((OggOpusFile *)handle, ((int16_t *)ptr) + samplesRead, totalSamples - samplesRead, NULL);
+			}
+			else if (format == AudioFormat::F32)
+			{
+				result = op_read_float((OggOpusFile *)handle, ((float *)ptr) + samplesRead, totalSamples - samplesRead, NULL);
 			}
 
-			if (result <= 0) {
-
+			if (result <= 0)
+			{
 				break;
-
 			}
 
 			samplesRead += result * channels;
-
 		}
 
 		return samplesRead / channels;
-
 	}
 
-
-	bool OpusDecoder::Rewind () {
-
-		return op_pcm_seek ((OggOpusFile*)handle, 0) == 0;
-
+	bool OpusDecoder::Rewind()
+	{
+		return op_pcm_seek((OggOpusFile *)handle, 0) == 0;
 	}
 
-
-	bool OpusDecoder::Seek (int64_t frame) {
-
-		return op_pcm_seek ((OggOpusFile*)handle, frame) == 0;
-
+	bool OpusDecoder::Seek(int64_t frame)
+	{
+		return op_pcm_seek((OggOpusFile *)handle, frame) == 0;
 	}
 
-
-	bool OpusDecoder::CanSeek () {
-
-		return op_seekable ((OggOpusFile*)handle) != 0;
-
+	bool OpusDecoder::CanSeek()
+	{
+		return op_seekable((OggOpusFile *)handle) != 0;
 	}
 
-
-	int64_t OpusDecoder::Tell () {
-
-		return op_pcm_tell ((OggOpusFile*)handle);
-
+	int64_t OpusDecoder::Tell()
+	{
+		return op_pcm_tell((OggOpusFile *)handle);
 	}
 
-
-	int64_t OpusDecoder::Total () {
-
-		return op_pcm_total ((OggOpusFile*)handle, -1);
-
+	int64_t OpusDecoder::Total()
+	{
+		return op_pcm_total((OggOpusFile *)handle, -1);
 	}
 
-
-}
+} // namespace lime

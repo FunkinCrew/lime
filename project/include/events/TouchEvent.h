@@ -1,15 +1,14 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
-#include <system/ValuePointer.h>
 #include <stdint.h>
+#include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum TouchEventType {
+	enum TouchEventType
+	{
 
 		TOUCH_START,
 		TOUCH_END,
@@ -17,9 +16,8 @@ namespace lime {
 
 	};
 
-
-	struct TouchEvent {
-
+	struct TouchEvent
+	{
 		int device;
 		double dx;
 		double dy;
@@ -29,14 +27,12 @@ namespace lime {
 		double x;
 		double y;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		TouchEvent ();
+		TouchEvent();
 
-		static void Dispatch (TouchEvent* event);
-
+		static void Dispatch(TouchEvent *event);
 	};
 
-
-}
+} // namespace lime

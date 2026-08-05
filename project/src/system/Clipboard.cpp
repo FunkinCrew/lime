@@ -2,35 +2,28 @@
 #include <system/Clipboard.h>
 #include <system/System.h>
 
+namespace lime
+{
 
-namespace lime {
+	char *Clipboard::GetText()
+	{
+		System::GCEnterBlocking();
 
+		char *text = SDL_GetClipboardText();
 
-	char* Clipboard::GetText () {
-
-		System::GCEnterBlocking ();
-
-		char* text = SDL_GetClipboardText ();
-
-		System::GCExitBlocking ();
+		System::GCExitBlocking();
 
 		return text;
-
 	}
 
-
-	bool Clipboard::HasText () {
-
-		return SDL_HasClipboardText ();
-
+	bool Clipboard::HasText()
+	{
+		return SDL_HasClipboardText();
 	}
 
-
-	bool Clipboard::SetText (const char* text) {
-
-		return SDL_SetClipboardText (text);
-
+	bool Clipboard::SetText(const char *text)
+	{
+		return SDL_SetClipboardText(text);
 	}
 
-
-}
+} // namespace lime

@@ -1,37 +1,33 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum SensorEventType {
+	enum SensorEventType
+	{
 
 		SENSOR_ACCELEROMETER,
 		SENSOR_GYROSCOPE
 
 	};
 
-
-	struct SensorEvent {
-
+	struct SensorEvent
+	{
 		int id;
 		double x;
 		double y;
 		double z;
 		SensorEventType type;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		SensorEvent ();
+		SensorEvent();
 
-		static void Dispatch (SensorEvent* event);
-
+		static void Dispatch(SensorEvent *event);
 	};
 
-
-}
+} // namespace lime

@@ -1,35 +1,31 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <system/ValuePointer.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum OrientationEventType {
+	enum OrientationEventType
+	{
 
 		DISPLAY_ORIENTATION_CHANGE,
 		DEVICE_ORIENTATION_CHANGE
 
 	};
 
-
-	struct OrientationEvent {
-
+	struct OrientationEvent
+	{
 		int orientation;
 		int display;
 		OrientationEventType type;
 
-		static ValuePointer* callback;
-		static ValuePointer* eventObject;
+		static ValuePointer *callback;
+		static ValuePointer *eventObject;
 
-		OrientationEvent ();
+		OrientationEvent();
 
-		static void Dispatch (OrientationEvent* event);
-
+		static void Dispatch(OrientationEvent *event);
 	};
 
-
-}
+} // namespace lime

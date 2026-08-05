@@ -1,17 +1,12 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	class JNI {
-
-
-		public:
-
-			static void *GetEnv ();
-
-
+	class JNI
+	{
+	  public:
+		static void *GetEnv();
 	};
 
-
-}
+} // namespace lime

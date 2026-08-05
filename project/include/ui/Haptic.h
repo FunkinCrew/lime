@@ -1,15 +1,12 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	class Haptic {
-
-		public:
-
-			static void Vibrate (int period, int duration);
-
+	class Haptic
+	{
+	  public:
+		static void Vibrate(int period, int duration);
 	};
 
-
-}
+} // namespace lime

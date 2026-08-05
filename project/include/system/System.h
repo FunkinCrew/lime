@@ -1,15 +1,14 @@
 #pragma once
 
-
 #include <hx/CFFIPrime.h>
 #include <stdio.h>
 #include <string>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	enum SystemDirectory {
+	enum SystemDirectory
+	{
 
 		APPLICATION,
 		APPLICATION_STORAGE,
@@ -19,7 +18,8 @@ namespace lime {
 
 	};
 
-	enum SystemTheme {
+	enum SystemTheme
+	{
 
 		UNKNOWN,
 		LIGHT,
@@ -27,52 +27,46 @@ namespace lime {
 
 	};
 
+	class System
+	{
+	  public:
+		static void GCEnterBlocking();
+		static void GCExitBlocking();
 
-	class System {
+		static void GCTryEnterBlocking();
+		static void GCTryExitBlocking();
 
+		static char *GetDeviceModel();
+		static char *GetDeviceVendor();
+		static char *GetPlatformLabel();
+		static char *GetPlatformName();
+		static char *GetPlatformVersion();
 
-		public:
+		static char *GetDirectory(SystemDirectory type, const char *company, const char *title);
 
-			static void GCEnterBlocking ();
-			static void GCExitBlocking ();
+		static int GetNumDisplays();
+		static void *GetDisplay(int id);
 
-			static void GCTryEnterBlocking ();
-			static void GCTryExitBlocking ();
+		static int GetFirstGyroscopeSensorId();
+		static int GetFirstAccelerometerSensorId();
 
-			static char* GetDeviceModel ();
-			static char* GetDeviceVendor ();
-			static char* GetPlatformLabel ();
-			static char* GetPlatformName ();
-			static char* GetPlatformVersion ();
+		static double GetTimer();
 
-			static char* GetDirectory (SystemDirectory type, const char* company, const char* title);
+		static SystemTheme GetTheme();
 
-			static int GetNumDisplays ();
-			static void* GetDisplay (int id);
+		static void OpenFile(const char *path);
+		static void OpenURL(const char *url, const char *target);
 
-			static int GetFirstGyroscopeSensorId ();
-			static int GetFirstAccelerometerSensorId ();
+		static const char *GetHint(const char *key);
+		static void SetHint(const char *key, const char *value);
 
-			static double GetTimer ();
+		static bool GetAllowScreenTimeout();
+		static bool SetAllowScreenTimeout(bool allow);
 
-			static SystemTheme GetTheme ();
-
-			static void OpenFile (const char* path);
-			static void OpenURL (const char* url, const char* target);
-
-			static const char* GetHint (const char* key);
-			static void SetHint (const char* key, const char* value);
-
-			static bool GetAllowScreenTimeout ();
-			static bool SetAllowScreenTimeout (bool allow);
-
-			#ifdef HX_WINDOWS
-			static int GetWindowsConsoleMode (int handleType);
-			static bool SetWindowsConsoleMode (int handleType, int mode);
-			#endif
-
-
+#ifdef HX_WINDOWS
+		static int GetWindowsConsoleMode(int handleType);
+		static bool SetWindowsConsoleMode(int handleType, int mode);
+#endif
 	};
 
-
-}
+} // namespace lime

@@ -1,56 +1,44 @@
 #include <math/Vector2.h>
 
+namespace lime
+{
 
-namespace lime {
-
-
-	Vector2::Vector2 (double x, double y) {
-
-		SetTo (x, y);
-
+	Vector2::Vector2(double x, double y)
+	{
+		SetTo(x, y);
 	}
 
-
-	Vector2::Vector2 (value vec) {
-
-		if (!val_is_null (vec)) {
-
-			x = val_number (val_field (vec, val_id ("x")));
-			y = val_number (val_field (vec, val_id ("y")));
-
-		} else {
-
+	Vector2::Vector2(value vec)
+	{
+		if (!val_is_null(vec))
+		{
+			x = val_number(val_field(vec, val_id("x")));
+			y = val_number(val_field(vec, val_id("y")));
+		}
+		else
+		{
 			x = 0;
 			y = 0;
-
 		}
-
 	}
 
-
-	void Vector2::SetTo (double x, double y) {
-
+	void Vector2::SetTo(double x, double y)
+	{
 		this->x = x;
 		this->y = y;
-
 	}
 
-
-	value Vector2::Value () {
-
-		return Value (alloc_empty_object ());
-
+	value Vector2::Value()
+	{
+		return Value(alloc_empty_object());
 	}
 
-
-	value Vector2::Value (value vec) {
-
-		alloc_field (vec, val_id ("x"), alloc_float (x));
-		alloc_field (vec, val_id ("y"), alloc_float (y));
+	value Vector2::Value(value vec)
+	{
+		alloc_field(vec, val_id("x"), alloc_float(x));
+		alloc_field(vec, val_id("y"), alloc_float(y));
 
 		return vec;
-
 	}
 
-
-}
+} // namespace lime

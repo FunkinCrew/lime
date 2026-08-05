@@ -1,34 +1,27 @@
-#include <hx/CFFIPrime.h>
 #include <events/ClipboardEvent.h>
+#include <hx/CFFIPrime.h>
 
+namespace lime
+{
 
-namespace lime {
+	ValuePointer *ClipboardEvent::callback = 0;
+	ValuePointer *ClipboardEvent::eventObject = 0;
 
-
-	ValuePointer* ClipboardEvent::callback = 0;
-	ValuePointer* ClipboardEvent::eventObject = 0;
-
-
-	ClipboardEvent::ClipboardEvent () {
-
+	ClipboardEvent::ClipboardEvent()
+	{
 		type = CLIPBOARD_UPDATE;
-
 	}
 
+	void ClipboardEvent::Dispatch(ClipboardEvent *event)
+	{
+		if (ClipboardEvent::callback)
+		{
+			value object = (value)ClipboardEvent::eventObject->Get();
 
-	void ClipboardEvent::Dispatch (ClipboardEvent* event) {
+			alloc_field(object, val_id("type"), alloc_int(event->type));
 
-		if (ClipboardEvent::callback) {
-
-			value object = (value)ClipboardEvent::eventObject->Get ();
-
-			alloc_field (object, val_id ("type"), alloc_int (event->type));
-
-			ClipboardEvent::callback->Call ();
-
+			ClipboardEvent::callback->Call();
 		}
-
 	}
 
-
-}
+} // namespace lime

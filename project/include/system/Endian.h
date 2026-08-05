@@ -1,14 +1,14 @@
 #pragma once
 
-namespace lime {
+namespace lime
+{
 
-
-	enum Endian {
+	enum Endian
+	{
 
 		LIME_LITTLE_ENDIAN,
 		LIME_BIG_ENDIAN
 
 	};
-
 
 }

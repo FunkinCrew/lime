@@ -1,28 +1,25 @@
+#include <map>
 #include <SDL3/SDL.h>
 #include <ui/Cursor.h>
-#include <map>
 
+namespace lime
+{
 
-namespace lime {
+	std::map<SystemCursor, SDL_Cursor *> cursors;
 
+	void *Cursor::GetSystemCursor(SystemCursor type)
+	{
+		auto it = cursors.find(type);
 
-	std::map<SystemCursor, SDL_Cursor*> cursors;
-
-
-	void* Cursor::GetSystemCursor (SystemCursor type) {
-
-		auto it = cursors.find (type);
-
-		if (it != cursors.end ()) {
-
+		if (it != cursors.end())
+		{
 			return it->second;
-
 		}
 
 		SDL_SystemCursor systemCursor;
 
-		switch (type) {
-
+		switch (type)
+		{
 			case CROSSHAIR:
 				systemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR;
 				break;
@@ -66,22 +63,18 @@ namespace lime {
 			default:
 				systemCursor = SDL_SYSTEM_CURSOR_DEFAULT;
 				break;
-
 		}
 
-		SDL_Cursor* cursor = SDL_CreateSystemCursor(systemCursor);
+		SDL_Cursor *cursor = SDL_CreateSystemCursor(systemCursor);
 
-		if (!cursor) {
-
+		if (!cursor)
+		{
 			return nullptr;
-
 		}
 
 		cursors[type] = cursor;
 
 		return cursor;
-
 	}
 
-
-}
+} // namespace lime
