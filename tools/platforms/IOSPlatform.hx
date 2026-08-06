@@ -216,6 +216,8 @@ class IOSPlatform extends PlatformTarget
 		}
 
 		context.REQUIRED_CAPABILITY = requiredCapabilities;
+		context.ARM64 = arm64;
+		context.X64 = x64;
 
 		context.TARGET_DEVICES = switch (project.config.getString("ios.device", "universal"))
 		{
