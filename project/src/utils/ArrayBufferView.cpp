@@ -41,13 +41,6 @@ namespace lime
 		length = byteLength;
 	}
 
-	void ArrayBufferView::Set(const QuickVec<unsigned char> data)
-	{
-		buffer->Set(data);
-		byteLength = buffer->length;
-		length = byteLength;
-	}
-
 	value ArrayBufferView::Value()
 	{
 		return Value(alloc_empty_object());

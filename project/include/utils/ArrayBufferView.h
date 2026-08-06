@@ -8,7 +8,7 @@ namespace lime
 
 	struct ArrayBufferView
 	{
-		/*TypedArrayType*/ int type;
+		int type;
 		Bytes *buffer;
 		int byteOffset;
 		int byteLength;
@@ -20,7 +20,6 @@ namespace lime
 
 		void Resize(int size);
 		void Set(value bytes);
-		void Set(const QuickVec<unsigned char> data);
 		value Value();
 		value Value(value arrayBufferView);
 	};

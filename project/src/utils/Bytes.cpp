@@ -194,29 +194,6 @@ namespace lime
 		}
 	}
 
-	void Bytes::Set(const QuickVec<unsigned char> data)
-	{
-		int size = data.size();
-
-		if (size > 0)
-		{
-			Resize(size);
-
-			memcpy(b, &data[0], length);
-		}
-		else
-		{
-			if (ownsMemory && b)
-			{
-				free(b);
-			}
-
-			b = 0;
-			length = 0;
-			ownsMemory = true;
-		}
-	}
-
 	value Bytes::Value()
 	{
 		return alloc_null();

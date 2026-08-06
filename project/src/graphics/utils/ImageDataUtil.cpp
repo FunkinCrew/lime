@@ -1,7 +1,7 @@
 #include <graphics/utils/ImageDataUtil.h>
 #include <math.h>
 #include <math/color/RGBA.h>
-#include <utils/QuickVec.h>
+#include <vector>
 
 namespace lime
 {
@@ -340,17 +340,18 @@ namespace lime
 		int maxX = minX + image->width;
 		int maxY = minY + image->height;
 
-		QuickVec<int> queue = QuickVec<int>();
+		std::vector<int> queue;
 		queue.push_back(x);
 		queue.push_back(y);
 
+		size_t queueIndex = 0;
 		int curPointX, curPointY, i, nextPointX, nextPointY, nextPointOffset;
 		RGBA readColor;
 
-		while (queue.size() > 0)
+		while (queueIndex < queue.size())
 		{
-			curPointY = queue.qpop();
-			curPointX = queue.qpop();
+			curPointX = queue[queueIndex++];
+			curPointY = queue[queueIndex++];
 
 			for (i = 0; i < 4; i++)
 			{
