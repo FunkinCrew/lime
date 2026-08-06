@@ -5,7 +5,6 @@
 #include <string>
 #include <system/JNI.h>
 #include <system/Mutex.h>
-#include <utils/Object.h>
 
 #ifdef __GNUC__
 #define JAVA_EXPORT __attribute__((visibility("default"))) JNIEXPORT
@@ -15,6 +14,50 @@
 
 namespace lime
 {
+
+	class Object
+	{
+	  protected:
+		virtual ~Object() {}
+
+	  public:
+		Object(bool has_initial_ref = false) : ref_count(has_initial_ref ? 1 : 0) {}
+
+		Object *grab()
+		{
+			ref_count++;
+
+			return this;
+		}
+
+		Object *IncRef()
+		{
+			ref_count++;
+			return this;
+		}
+
+		void DecRef()
+		{
+			ref_count--;
+
+			if (ref_count <= 0)
+			{
+				delete this;
+			}
+		}
+
+		void drop()
+		{
+			ref_count--;
+
+			if (ref_count <= 0)
+			{
+				delete this;
+			}
+		}
+
+		int ref_count;
+	};
 
 	void *JNI::GetEnv()
 	{
@@ -401,8 +444,6 @@ namespace lime
 		return alloc_null();
 	}
 
-	DEFINE_PRIME1(lime_jni_init_callback);
-
 	struct JavaHaxeReference
 	{
 		JavaHaxeReference(value inValue) : root(inValue), refCount(1) {}
@@ -460,7 +501,7 @@ namespace lime
 		gJavaObjectsMutex.Unlock();
 	}
 
-	struct JNIObject : public lime::Object
+	struct JNIObject : public Object
 	{
 		JNIObject(jobject inObject) : mObject(inObject)
 		{
@@ -953,7 +994,7 @@ namespace lime
 		return false;
 	}
 
-	struct JNIField : public lime::Object
+	struct JNIField : public Object
 	{
 		JNIField(HxString inClass, HxString inField, HxString inSignature, bool inStatic)
 		{
@@ -1206,8 +1247,6 @@ namespace lime
 		return alloc_null();
 	}
 
-	DEFINE_PRIME4(lime_jni_create_field);
-
 	value lime_jni_get_static(value inField)
 	{
 		JNIField *field;
@@ -1220,8 +1259,6 @@ namespace lime
 		return field->GetStatic();
 	}
 
-	DEFINE_PRIME1(lime_jni_get_static);
-
 	void lime_jni_set_static(value inField, value inValue)
 	{
 		JNIField *field;
@@ -1233,8 +1270,6 @@ namespace lime
 
 		field->SetStatic(inValue);
 	}
-
-	DEFINE_PRIME2v(lime_jni_set_static);
 
 	value lime_jni_get_member(value inField, value inObject)
 	{
@@ -1254,8 +1289,6 @@ namespace lime
 		return field->GetMember(object);
 	}
 
-	DEFINE_PRIME2(lime_jni_get_member);
-
 	void lime_jni_set_member(value inField, value inObject, value inValue)
 	{
 		JNIField *field;
@@ -1274,9 +1307,7 @@ namespace lime
 		field->SetMember(object, inValue);
 	}
 
-	DEFINE_PRIME3v(lime_jni_set_member);
-
-	struct JNIMethod : public lime::Object
+	struct JNIMethod : public Object
 	{
 		enum
 		{
@@ -1525,8 +1556,6 @@ namespace lime
 		return alloc_null();
 	}
 
-	DEFINE_PRIME5(lime_jni_create_method);
-
 	value lime_jni_call_static(value inMethod, value inArgs)
 	{
 		JNIMethod *method;
@@ -1538,8 +1567,6 @@ namespace lime
 
 		return method->CallStatic(inArgs);
 	}
-
-	DEFINE_PRIME2(lime_jni_call_static);
 
 	value lime_jni_call_member(value inMethod, value inObject, value inArgs)
 	{
@@ -1559,15 +1586,11 @@ namespace lime
 		return method->CallMember(object, inArgs);
 	}
 
-	DEFINE_PRIME3(lime_jni_call_member);
-
 	double lime_jni_get_env()
 	{
 		JNIEnv *env = (JNIEnv *)JNI::GetEnv();
 		return (uintptr_t)env;
 	}
-
-	DEFINE_PRIME0(lime_jni_get_env);
 
 	value lime_jni_get_jobject(value inValue)
 	{
@@ -1580,8 +1603,6 @@ namespace lime
 
 		return alloc_null();
 	}
-
-	DEFINE_PRIME1(lime_jni_get_jobject);
 
 	void lime_jni_post_ui_callback(value inCallback)
 	{
@@ -1601,6 +1622,17 @@ namespace lime
 		}
 	}
 
+	DEFINE_PRIME1(lime_jni_init_callback);
+	DEFINE_PRIME4(lime_jni_create_field);
+	DEFINE_PRIME1(lime_jni_get_static);
+	DEFINE_PRIME2v(lime_jni_set_static);
+	DEFINE_PRIME2(lime_jni_get_member);
+	DEFINE_PRIME3v(lime_jni_set_member);
+	DEFINE_PRIME5(lime_jni_create_method);
+	DEFINE_PRIME2(lime_jni_call_static);
+	DEFINE_PRIME3(lime_jni_call_member);
+	DEFINE_PRIME0(lime_jni_get_env);
+	DEFINE_PRIME1(lime_jni_get_jobject);
 	DEFINE_PRIME1v(lime_jni_post_ui_callback);
 
 } // namespace lime
