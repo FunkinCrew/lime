@@ -3,7 +3,7 @@
 namespace lime
 {
 
-	value CFFIPointer(void *ptr, hx::finalizer finalizer)
+	value CFFIPointer(void *ptr, hxFinalizer finalizer)
 	{
 		if (ptr)
 		{
@@ -22,7 +22,7 @@ namespace lime
 		}
 	}
 
-	value CFFIPointer(value handle, hx::finalizer finalizer)
+	value CFFIPointer(value handle, hxFinalizer finalizer)
 	{
 		if (!val_is_null(handle) && finalizer)
 		{

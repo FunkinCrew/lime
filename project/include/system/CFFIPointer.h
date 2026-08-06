@@ -2,18 +2,10 @@
 
 #include <hx/CFFIPrime.h>
 
-namespace hx
-{
-
-	class Object;
-	typedef void (*finalizer)(value v);
-
-} // namespace hx
-
 namespace lime
 {
 
-	value CFFIPointer(void *ptr, hx::finalizer finalizer = 0);
-	value CFFIPointer(value handle, hx::finalizer finalizer = 0);
+	value CFFIPointer(void *ptr, hxFinalizer finalizer = 0);
+	value CFFIPointer(value handle, hxFinalizer finalizer = 0);
 
 } // namespace lime
