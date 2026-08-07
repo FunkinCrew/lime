@@ -652,13 +652,6 @@ namespace lime
 		return result.Value(bytes);
 	}
 
-	void lime_haptic_vibrate(int period, int duration)
-	{
-#ifdef IPHONE
-		Haptic::Vibrate(period, duration);
-#endif
-	}
-
 	value lime_image_encode(value buffer, int type, int quality, value bytes)
 	{
 		ImageBuffer imageBuffer = ImageBuffer(buffer);
@@ -1894,7 +1887,6 @@ namespace lime
 	DEFINE_PRIME4v(lime_gamepad_set_led);
 	DEFINE_PRIME2(lime_gzip_compress);
 	DEFINE_PRIME2(lime_gzip_decompress);
-	DEFINE_PRIME2v(lime_haptic_vibrate);
 	DEFINE_PRIME3v(lime_image_data_util_color_transform);
 	DEFINE_PRIME6v(lime_image_data_util_copy_channel);
 	DEFINE_PRIME7v(lime_image_data_util_copy_pixels);
