@@ -442,6 +442,12 @@ namespace lime
 		return (value)font->GetGlyphMetrics(index);
 	}
 
+	value lime_font_get_glyph_kerning(value fontHandle, int leftIndex, int rightIndex)
+	{
+		Font *font = (Font *)val_data(fontHandle);
+		return (value)font->GetKerning(leftIndex, rightIndex);
+	}
+
 	int lime_font_get_height(value fontHandle)
 	{
 		Font *font = (Font *)val_data(fontHandle);
@@ -530,12 +536,6 @@ namespace lime
 		return alloc_null();
 	}
 
-	value lime_font_outline_decompose(value fontHandle, int size, bool forceAutoHint)
-	{
-		Font *font = (Font *)val_data(fontHandle);
-		return (value)font->Decompose(size, forceAutoHint);
-	}
-
 	value lime_font_render_glyph(value fontHandle, int index, value data, int flags)
 	{
 		Font *font = (Font *)val_data(fontHandle);
@@ -568,10 +568,10 @@ namespace lime
 		return alloc_null();
 	}
 
-	void lime_font_set_size(value fontHandle, int fontSize, int dpi)
+	void lime_font_set_size(value fontHandle, int size)
 	{
 		Font *font = (Font *)val_data(fontHandle);
-		font->SetSize(fontSize, dpi);
+		font->SetSize(size);
 	}
 
 	void lime_font_initialize_library()
@@ -1864,6 +1864,7 @@ namespace lime
 	DEFINE_PRIME2(lime_font_get_glyph_index);
 	DEFINE_PRIME2(lime_font_get_glyph_indices);
 	DEFINE_PRIME2(lime_font_get_glyph_metrics);
+	DEFINE_PRIME3(lime_font_get_glyph_kerning);
 	DEFINE_PRIME1(lime_font_get_height);
 	DEFINE_PRIME1(lime_font_get_num_glyphs);
 	DEFINE_PRIME1(lime_font_get_underline_position);
@@ -1873,10 +1874,9 @@ namespace lime
 	DEFINE_PRIME1(lime_font_get_units_per_em);
 	DEFINE_PRIME1(lime_font_load_bytes);
 	DEFINE_PRIME1(lime_font_load_file);
-	DEFINE_PRIME3(lime_font_outline_decompose);
 	DEFINE_PRIME4(lime_font_render_glyph);
 	DEFINE_PRIME4(lime_font_render_glyphs);
-	DEFINE_PRIME3v(lime_font_set_size);
+	DEFINE_PRIME2v(lime_font_set_size);
 	DEFINE_PRIME0v(lime_font_initialize_library);
 	DEFINE_PRIME0v(lime_font_shutdown_library);
 	DEFINE_PRIME1v(lime_gamepad_add_mappings);

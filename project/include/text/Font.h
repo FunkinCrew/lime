@@ -41,13 +41,13 @@ namespace lime
 		Font(Resource *resource, int faceIndex = 0);
 		~Font();
 
-		void *Decompose(int size, bool forceAutoHint = true);
 		int GetAscender();
 		int GetDescender();
 		wchar_t *GetFamilyName();
 		int GetGlyphIndex(const char *character);
 		void *GetGlyphIndices(const char *characters);
 		void *GetGlyphMetrics(int index);
+		void *GetKerning(int leftIndex, int rightIndex);
 		int GetHeight();
 		int GetNumGlyphs();
 		int GetUnderlinePosition();
@@ -57,7 +57,7 @@ namespace lime
 		int GetUnitsPerEM();
 		int RenderGlyph(int index, Bytes *bytes, int offset, int flags);
 		int RenderGlyphs(int *indices, int numIndices, Bytes *bytes, int flags);
-		void SetSize(size_t size, size_t dpi);
+		void SetSize(size_t size);
 
 		void *face;
 		void *faceMemory;

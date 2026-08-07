@@ -62,6 +62,7 @@ class NativeCFFI
 	private static var lime_font_get_glyph_index = new cpp.Callable<cpp.Object->String->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_glyph_index", "osi", false));
 	private static var lime_font_get_glyph_indices = new cpp.Callable<cpp.Object->String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_get_glyph_indices", "oso", false));
 	private static var lime_font_get_glyph_metrics = new cpp.Callable<cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_get_glyph_metrics", "oio", false));
+	private static var lime_font_get_glyph_kerning = new cpp.Callable<cpp.Object->Int->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_get_glyph_kerning", "oiio", false));
 	private static var lime_font_get_height = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_height", "oi", false));
 	private static var lime_font_get_num_glyphs = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_num_glyphs", "oi", false));
 	private static var lime_font_get_underline_position = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_underline_position", "oi", false));
@@ -71,10 +72,9 @@ class NativeCFFI
 	private static var lime_font_get_units_per_em = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_font_get_units_per_em", "oi", false));
 	private static var lime_font_load_bytes = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_bytes", "oo", false));
 	private static var lime_font_load_file = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_load_file", "oo", false));
-	private static var lime_font_outline_decompose = new cpp.Callable<cpp.Object->Int->Bool->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_outline_decompose", "oibo", false));
 	private static var lime_font_render_glyph = new cpp.Callable<cpp.Object->Int->cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_render_glyph", "oioio", false));
 	private static var lime_font_render_glyphs = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->Int->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_font_render_glyphs", "oooio", false));
-	private static var lime_font_set_size = new cpp.Callable<cpp.Object->Int->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_set_size", "oiiv", false));
+	private static var lime_font_set_size = new cpp.Callable<cpp.Object->Int->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_set_size", "oiv", false));
 	private static var lime_font_initialize_library = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_initialize_library", "v", false));
 	private static var lime_font_shutdown_library = new cpp.Callable<Void->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_font_shutdown_library", "v", false));
 	private static var lime_gamepad_add_mappings = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_gamepad_add_mappings", "ov", false));
@@ -239,6 +239,7 @@ class NativeCFFI
 	private static var lime_font_get_glyph_index = CFFI.load("lime", "lime_font_get_glyph_index", 2);
 	private static var lime_font_get_glyph_indices = CFFI.load("lime", "lime_font_get_glyph_indices", 2);
 	private static var lime_font_get_glyph_metrics = CFFI.load("lime", "lime_font_get_glyph_metrics", 2);
+	private static var lime_font_get_glyph_kerning = CFFI.load("lime", "lime_font_get_glyph_kerning", 3);
 	private static var lime_font_get_height = CFFI.load("lime", "lime_font_get_height", 1);
 	private static var lime_font_get_num_glyphs = CFFI.load("lime", "lime_font_get_num_glyphs", 1);
 	private static var lime_font_get_underline_position = CFFI.load("lime", "lime_font_get_underline_position", 1);
@@ -248,10 +249,9 @@ class NativeCFFI
 	private static var lime_font_get_units_per_em = CFFI.load("lime", "lime_font_get_units_per_em", 1);
 	private static var lime_font_load_bytes = CFFI.load("lime", "lime_font_load_bytes", 1);
 	private static var lime_font_load_file = CFFI.load("lime", "lime_font_load_file", 1);
-	private static var lime_font_outline_decompose = CFFI.load("lime", "lime_font_outline_decompose", 3);
 	private static var lime_font_render_glyph = CFFI.load("lime", "lime_font_render_glyph", 4);
 	private static var lime_font_render_glyphs = CFFI.load("lime", "lime_font_render_glyphs", 4);
-	private static var lime_font_set_size = CFFI.load("lime", "lime_font_set_size", 3);
+	private static var lime_font_set_size = CFFI.load("lime", "lime_font_set_size", 2);
 	private static var lime_font_initialize_library = CFFI.load("lime", "lime_font_initialize_library", 0);
 	private static var lime_font_shutdown_library = CFFI.load("lime", "lime_font_shutdown_library", 0);
 	private static var lime_gamepad_add_mappings = CFFI.load("lime", "lime_gamepad_add_mappings", 1);

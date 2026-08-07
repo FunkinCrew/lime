@@ -725,8 +725,7 @@ namespace lime
 
 				if (fontReference)
 				{
-					Font *font = (Font *)val_data((value)fontReference->Get());
-					font->SetSize(size, 72);
+					((Font *)val_data((value)fontReference->Get()))->SetSize(size);
 				}
 			}
 		}

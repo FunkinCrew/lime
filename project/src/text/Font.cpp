@@ -327,171 +327,6 @@ namespace lime
 		}
 	}
 
-	void *Font::Decompose(int size, bool forceAutoHint)
-	{
-		int result, i, j;
-
-		FT_Set_Char_Size((FT_Face)face, size, size, 72, 72);
-		FT_Set_Transform((FT_Face)face, 0, NULL);
-
-		std::vector<glyph *> glyphs;
-
-		FT_Outline_Funcs ofn = {
-			outline_move_to,
-			outline_line_to,
-			outline_conic_to,
-			outline_cubic_to,
-			0, // shift
-			0  // delta
-		};
-
-		// Import every character in face
-		FT_ULong char_code;
-		FT_UInt glyph_index;
-
-		char_code = FT_Get_First_Char((FT_Face)face, &glyph_index);
-
-		int loadFlags = FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT;
-
-		if (forceAutoHint)
-		{
-			loadFlags |= FT_LOAD_FORCE_AUTOHINT;
-		}
-		else
-		{
-			loadFlags |= FT_LOAD_NO_HINTING;
-		}
-
-		while (glyph_index != 0)
-		{
-			if (FT_Load_Glyph((FT_Face)face, glyph_index, loadFlags) == 0)
-			{
-				glyph *g = new glyph;
-				result = FT_Outline_Decompose(&((FT_Face)face)->glyph->outline, &ofn, g);
-
-				if (result == 0)
-				{
-					g->index = glyph_index;
-					g->char_code = char_code;
-					g->metrics = ((FT_Face)face)->glyph->metrics;
-					glyphs.push_back(g);
-				}
-				else
-				{
-					delete g;
-				}
-			}
-
-			char_code = FT_Get_Next_Char((FT_Face)face, char_code, &glyph_index);
-		}
-
-		// Ascending sort by character codes
-		std::sort(glyphs.begin(), glyphs.end(), glyph_sort_predicate());
-
-		std::vector<kerning> kern;
-		if (FT_HAS_KERNING(((FT_Face)face)))
-		{
-			int n = glyphs.size();
-			FT_Vector v;
-
-			for (i = 0; i < n; i++)
-			{
-				int l_glyph = glyphs[i]->index;
-
-				for (j = 0; j < n; j++)
-				{
-					int r_glyph = glyphs[j]->index;
-
-					FT_Get_Kerning((FT_Face)face, l_glyph, r_glyph, FT_KERNING_DEFAULT, &v);
-
-					if (v.x != 0 || v.y != 0)
-					{
-						kern.push_back(kerning(i, j, v.x, v.y));
-					}
-				}
-			}
-		}
-
-		int num_glyphs = glyphs.size();
-
-		wchar_t *family_name = GetFamilyName();
-
-		int calculatedAscender = ((FT_Face)face)->ascender;
-		int calculatedDescender = ((FT_Face)face)->descender;
-		int calculatedHeight = ((FT_Face)face)->height;
-
-		value ret = alloc_empty_object();
-		alloc_field(ret, val_id("has_kerning"), alloc_bool(FT_HAS_KERNING(((FT_Face)face))));
-		alloc_field(ret, val_id("is_fixed_width"), alloc_bool(FT_IS_FIXED_WIDTH(((FT_Face)face))));
-		alloc_field(ret, val_id("has_glyph_names"), alloc_bool(FT_HAS_GLYPH_NAMES(((FT_Face)face))));
-		alloc_field(ret, val_id("is_italic"), alloc_bool(((FT_Face)face)->style_flags & FT_STYLE_FLAG_ITALIC));
-		alloc_field(ret, val_id("is_bold"), alloc_bool(((FT_Face)face)->style_flags & FT_STYLE_FLAG_BOLD));
-		alloc_field(ret, val_id("num_glyphs"), alloc_int(num_glyphs));
-		alloc_field(ret, val_id("family_name"), family_name == NULL ? alloc_string(((FT_Face)face)->family_name) : alloc_wstring(family_name));
-		alloc_field(ret, val_id("style_name"), alloc_string(((FT_Face)face)->style_name));
-		alloc_field(ret, val_id("em_size"), alloc_int(((FT_Face)face)->units_per_EM));
-		alloc_field(ret, val_id("ascend"), alloc_int(calculatedAscender));
-		alloc_field(ret, val_id("descend"), alloc_int(calculatedDescender));
-		alloc_field(ret, val_id("height"), alloc_int(calculatedHeight));
-
-		delete family_name;
-
-		// 'glyphs' field
-		value neko_glyphs = alloc_array(num_glyphs);
-		for (i = 0; i < glyphs.size(); i++)
-		{
-			glyph *g = glyphs[i];
-			int num_points = g->pts.size();
-
-			value points = alloc_array(num_points);
-
-			for (j = 0; j < num_points; j++)
-			{
-				val_array_set_i(points, j, alloc_int(g->pts[j]));
-			}
-
-			value item = alloc_empty_object();
-			val_array_set_i(neko_glyphs, i, item);
-			alloc_field(item, val_id("char_code"), alloc_int(g->char_code));
-			alloc_field(item, val_id("advance"), alloc_int(g->metrics.horiAdvance));
-			alloc_field(item, val_id("min_x"), alloc_int(g->metrics.horiBearingX));
-			alloc_field(item, val_id("max_x"), alloc_int(g->metrics.horiBearingX + g->metrics.width));
-			alloc_field(item, val_id("min_y"), alloc_int(g->metrics.horiBearingY - g->metrics.height));
-			alloc_field(item, val_id("max_y"), alloc_int(g->metrics.horiBearingY));
-			alloc_field(item, val_id("points"), points);
-
-			delete g;
-		}
-
-		alloc_field(ret, val_id("glyphs"), neko_glyphs);
-
-		// 'kerning' field
-		if (FT_HAS_KERNING(((FT_Face)face)))
-		{
-			value neko_kerning = alloc_array(kern.size());
-
-			for (i = 0; i < kern.size(); i++)
-			{
-				kerning *k = &kern[i];
-
-				value item = alloc_empty_object();
-				val_array_set_i(neko_kerning, i, item);
-				alloc_field(item, val_id("left_glyph"), alloc_int(k->l_glyph));
-				alloc_field(item, val_id("right_glyph"), alloc_int(k->r_glyph));
-				alloc_field(item, val_id("x"), alloc_int(k->x));
-				alloc_field(item, val_id("y"), alloc_int(k->y));
-			}
-
-			alloc_field(ret, val_id("kerning"), neko_kerning);
-		}
-		else
-		{
-			alloc_field(ret, val_id("kerning"), alloc_null());
-		}
-
-		return ret;
-	}
-
 	int Font::GetAscender()
 	{
 		return ((FT_Face)face)->ascender;
@@ -586,6 +421,23 @@ namespace lime
 			alloc_field(metrics, val_id("verticalBearingX"), alloc_int(((FT_Face)face)->glyph->metrics.vertBearingX));
 			alloc_field(metrics, val_id("verticalBearingY"), alloc_int(((FT_Face)face)->glyph->metrics.vertBearingY));
 			alloc_field(metrics, val_id("verticalAdvance"), alloc_int(((FT_Face)face)->glyph->metrics.vertAdvance));
+
+			return metrics;
+		}
+
+		return alloc_null();
+	}
+
+	void *Font::GetKerning(int leftIndex, int rightIndex)
+	{
+		FT_Vector kerning;
+
+		if (FT_Get_Kerning((FT_Face)face, leftIndex, rightIndex, FT_KERNING_DEFAULT, &kerning) == 0)
+		{
+			value metrics = alloc_empty_object();
+
+			alloc_field(metrics, val_id("x"), alloc_int(kerning.x));
+			alloc_field(metrics, val_id("y"), alloc_int(kerning.y));
 
 			return metrics;
 		}
@@ -740,20 +592,9 @@ namespace lime
 		return totalOffset;
 	}
 
-	void Font::SetSize(size_t size, size_t dpi)
+	void Font::SetSize(size_t size)
 	{
-		// We changed the function signature to include a dpi argument which changes this from
-		// the default value of 72 for dpi. Any public api that uses this should probably be changed
-		// to allow setting the dpi in an appropriate future release.
-		size_t hdpi = dpi;
-		size_t vdpi = dpi;
-
-		FT_Set_Char_Size((FT_Face)face,				  // Handle to the target face object
-						 0,							  // Char width in 1/64th of points (0 means same as height)
-						 static_cast<int>(size * 64), // Char height in 1/64th of points
-						 hdpi,						  // Horizontal DPI
-						 vdpi						  // Vertical DPI
-		);
+		FT_Set_Char_Size((FT_Face)face, 0, static_cast<int>(size * 64), 0, 0);
 	}
 
 } // namespace lime
