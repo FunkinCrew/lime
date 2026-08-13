@@ -26,9 +26,9 @@ namespace lime
 		}
 	}
 
-	File::File(Bytes *data)
+	File::File(Bytes *bytes)
 	{
-		handle = (void *)SDL_IOFromConstMem(data->b, data->length);
+		handle = (void *)SDL_IOFromConstMem(bytes->b, bytes->length);
 	}
 
 	bool File::Close()

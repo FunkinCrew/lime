@@ -492,11 +492,9 @@ namespace lime
 
 	value lime_font_load_bytes(value data)
 	{
-		Resource resource;
-		Bytes bytes;
+		Bytes bytes(data);
 
-		bytes.Set(data);
-		resource = Resource(&bytes);
+		Resource resource = Resource(&bytes);
 
 		Font *font = new Font(&resource, 0);
 
@@ -539,6 +537,7 @@ namespace lime
 	value lime_font_render_glyph(value fontHandle, int index, value data, int flags)
 	{
 		Font *font = (Font *)val_data(fontHandle);
+
 		Bytes bytes(data);
 
 		if (font->RenderGlyph(index, &bytes, 0, flags))
@@ -552,7 +551,9 @@ namespace lime
 	value lime_font_render_glyphs(value fontHandle, value indices, value data, int flags)
 	{
 		Font *font = (Font *)val_data(fontHandle);
+
 		Bytes bytes(data);
+
 		std::vector<int> _indices;
 
 		for (int i = 0; i < val_array_size(indices); i++)
@@ -995,7 +996,9 @@ namespace lime
 	value lime_png_decode_bytes(value data, value buffer)
 	{
 		ImageBuffer imageBuffer(buffer);
+
 		Bytes bytes(data);
+
 		Resource resource = Resource(&bytes);
 
 		if (PNG::Decode(&resource, &imageBuffer))
@@ -1022,7 +1025,9 @@ namespace lime
 	value lime_jpeg_decode_bytes(value data, value buffer)
 	{
 		ImageBuffer imageBuffer(buffer);
+
 		Bytes bytes(data);
+
 		Resource resource = Resource(&bytes);
 
 		if (JPEG::Decode(&resource, &imageBuffer))
@@ -1049,7 +1054,9 @@ namespace lime
 	value lime_bmp_decode_bytes(value data, value buffer)
 	{
 		ImageBuffer imageBuffer(buffer);
+
 		Bytes bytes(data);
+
 		Resource resource = Resource(&bytes);
 
 		if (BMP::Decode(&resource, &imageBuffer))
@@ -1076,7 +1083,9 @@ namespace lime
 	value lime_svg_decode_bytes(value data, value buffer)
 	{
 		ImageBuffer imageBuffer(buffer);
+
 		Bytes bytes(data);
+
 		Resource resource = Resource(&bytes);
 
 		if (SVG::Decode(&resource, &imageBuffer))
@@ -1103,7 +1112,9 @@ namespace lime
 	value lime_svg_decode_sized_bytes(value data, int width, int height, value buffer)
 	{
 		ImageBuffer imageBuffer(buffer);
+
 		Bytes bytes(data);
+
 		Resource resource = Resource(&bytes);
 
 		if (SVG::DecodeSized(&resource, width, height, &imageBuffer))
