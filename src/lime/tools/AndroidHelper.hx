@@ -41,8 +41,10 @@ class AndroidHelper
 		}
 
 		var args = task.split(" ");
-		// args.push ("--stacktrace");
-		// args.push ("--debug");
+
+		args.push("--warning-mode=none");
+
+		args.push("--no-problems-report");
 
 		if (Log.verbose)
 		{
