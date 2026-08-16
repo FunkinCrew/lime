@@ -356,11 +356,6 @@ namespace lime
 	jmethodID JNIType::elementGetValue[jniELEMENTS];
 	jclass JNIType::elementArrayClass[jniELEMENTS];
 
-#define INIT_ELEMENT(TYPE, CLASS_NAME, METHOD_NAME)                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
-	elementClass[jni##TYPE] = FindClass(CLASS_NAME);                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
-	elementGetValue[jni##TYPE] = inEnv->GetMethodID(elementClass[jni##TYPE], METHOD_NAME, "()D");                                                                                                                                                                                                                                                                                                                                                                                                                  \
-	CheckException(inEnv, false);
-
 	void JNIType::init(JNIEnv *inEnv)
 	{
 		for (int i = 0; i < jniELEMENTS; i++)
@@ -368,14 +363,37 @@ namespace lime
 			elementGetValue[i] = 0;
 		}
 
-		INIT_ELEMENT(Boolean, "java/lang/Boolean", "booleanValue")
-		INIT_ELEMENT(Byte, "java/lang/Byte", "doubleValue")
-		INIT_ELEMENT(Char, "java/lang/Character", "charValue")
-		INIT_ELEMENT(Short, "java/lang/Short", "doubleValue")
-		INIT_ELEMENT(Int, "java/lang/Integer", "doubleValue")
-		INIT_ELEMENT(Long, "java/lang/Long", "doubleValue")
-		INIT_ELEMENT(Float, "java/lang/Float", "doubleValue")
-		INIT_ELEMENT(Double, "java/lang/Double", "doubleValue")
+		elementClass[jniBoolean] = FindClass("java/lang/Boolean");
+		elementGetValue[jniBoolean] = inEnv->GetMethodID(elementClass[jniBoolean], "booleanValue", "()Z");
+		CheckException(inEnv, false);
+
+		elementClass[jniByte] = FindClass("java/lang/Byte");
+		elementGetValue[jniByte] = inEnv->GetMethodID(elementClass[jniByte], "doubleValue", "()D");
+		CheckException(inEnv, false);
+
+		elementClass[jniChar] = FindClass("java/lang/Character");
+		elementGetValue[jniChar] = inEnv->GetMethodID(elementClass[jniChar], "charValue", "()C");
+		CheckException(inEnv, false);
+
+		elementClass[jniShort] = FindClass("java/lang/Short");
+		elementGetValue[jniShort] = inEnv->GetMethodID(elementClass[jniShort], "doubleValue", "()D");
+		CheckException(inEnv, false);
+
+		elementClass[jniInt] = FindClass("java/lang/Integer");
+		elementGetValue[jniInt] = inEnv->GetMethodID(elementClass[jniInt], "doubleValue", "()D");
+		CheckException(inEnv, false);
+
+		elementClass[jniLong] = FindClass("java/lang/Long");
+		elementGetValue[jniLong] = inEnv->GetMethodID(elementClass[jniLong], "doubleValue", "()D");
+		CheckException(inEnv, false);
+
+		elementClass[jniFloat] = FindClass("java/lang/Float");
+		elementGetValue[jniFloat] = inEnv->GetMethodID(elementClass[jniFloat], "doubleValue", "()D");
+		CheckException(inEnv, false);
+
+		elementClass[jniDouble] = FindClass("java/lang/Double");
+		elementGetValue[jniDouble] = inEnv->GetMethodID(elementClass[jniDouble], "doubleValue", "()D");
+		CheckException(inEnv, false);
 
 		elementClass[jniVoid] = 0;
 
