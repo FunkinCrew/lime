@@ -55,7 +55,7 @@ namespace lime
 
 	bool FlacDecoder::Open(Resource *resource)
 	{
-		File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data);
+		File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data, true);
 
 		if (!file->handle)
 		{

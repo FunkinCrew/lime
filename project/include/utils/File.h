@@ -9,7 +9,7 @@ namespace lime
 	{
 	  public:
 		File(const char *path, const char *mode);
-		File(Bytes *bytes);
+		File(Bytes *bytes, bool copy);
 
 		bool Close();
 		bool Flush();
@@ -18,6 +18,7 @@ namespace lime
 		int64_t Tell();
 		size_t Write(const void *ptr, size_t size);
 
+		void *ownedMemory;
 		void *handle;
 	};
 

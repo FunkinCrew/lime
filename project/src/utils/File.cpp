@@ -6,6 +6,8 @@ namespace lime
 
 	File::File(const char *path, const char *mode)
 	{
+		ownedMemory = NULL;
+
 		handle = (void *)SDL_IOFromFile(path, mode);
 
 		if (!handle)
@@ -26,21 +28,54 @@ namespace lime
 		}
 	}
 
-	File::File(Bytes *bytes)
+	File::File(Bytes *bytes, bool copy)
 	{
-		handle = (void *)SDL_IOFromConstMem(bytes->b, bytes->length);
+		ownedMemory = NULL;
+
+		if (!bytes || !bytes->b || bytes->length == 0)
+		{
+			handle = NULL;
+			return;
+		}
+
+		if (copy)
+		{
+			ownedMemory = SDL_malloc(bytes->length);
+
+			if (ownedMemory)
+			{
+				SDL_memcpy(ownedMemory, bytes->b, bytes->length);
+
+				handle = (void *)SDL_IOFromMem(ownedMemory, bytes->length);
+			}
+			else
+			{
+				handle = NULL;
+			}
+		}
+		else
+		{
+			handle = (void *)SDL_IOFromConstMem(bytes->b, bytes->length);
+		}
 	}
 
 	bool File::Close()
 	{
+		bool result = false;
+
 		if (handle)
 		{
-			SDL_CloseIO((SDL_IOStream *)handle);
+			result = SDL_CloseIO((SDL_IOStream *)handle);
 			handle = NULL;
-			return true;
 		}
 
-		return false;
+		if (ownedMemory)
+		{
+			SDL_free(ownedMemory);
+			ownedMemory = NULL;
+		}
+
+		return result;
 	}
 
 	bool File::Flush()

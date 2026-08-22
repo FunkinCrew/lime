@@ -259,7 +259,7 @@ namespace lime
 
 		if (resource)
 		{
-			File file = resource->path ? File(resource->path, "rb") : File(resource->data);
+			File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
 
 			if (!file.handle)
 			{

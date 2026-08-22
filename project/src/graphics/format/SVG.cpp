@@ -11,7 +11,7 @@ namespace lime
 
 	bool SVG::Decode(Resource *resource, ImageBuffer *imageBuffer)
 	{
-		File file = resource->path ? File(resource->path, "rb") : File(resource->data);
+		File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
 
 		if (!file.handle)
 		{
@@ -61,7 +61,7 @@ namespace lime
 
 	bool SVG::DecodeSized(Resource *resource, int width, int height, ImageBuffer *imageBuffer)
 	{
-		File file = resource->path ? File(resource->path, "rb") : File(resource->data);
+		File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
 
 		if (!file.handle)
 		{
