@@ -40,48 +40,64 @@ namespace lime
 		}
 	}
 
+	static unsigned long FT_Stream_Read(FT_Stream stream, unsigned long offset, unsigned char *buffer, unsigned long count)
+	{
+		File *file = static_cast<File *>(stream->descriptor.pointer);
+		file->Seek(offset, SEEK_SET);
+		return file->Read(buffer, count);
+	}
+
+	static void FT_Stream_Close(FT_Stream stream)
+	{
+		File *file = static_cast<File *>(stream->descriptor.pointer);
+
+		if (file)
+		{
+			delete file;
+		}
+
+		free(stream);
+	}
+
 	Font::Font(Resource *resource, int faceIndex)
 	{
 		this->face = 0;
-		this->faceMemory = 0;
 
 		if (resource)
 		{
-			File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
+			File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data, true);
 
-			if (!file.handle)
+			if (!file->handle)
 			{
+				delete file;
 				return;
 			}
 
-			file.Seek(0, SEEK_END);
+			file->Seek(0, SEEK_END);
 
-			size_t size = (size_t)file.Tell();
+			size_t size = (size_t)file->Tell();
 
-			file.Seek(0, SEEK_SET);
+			file->Seek(0, SEEK_SET);
 
-			unsigned char *faceMemory = (unsigned char *)malloc(size);
-			file.Read(faceMemory, size);
-			file.Close();
+			FT_Stream stream = (FT_Stream)malloc(sizeof(*stream));
+			memset(stream, 0, sizeof(*stream));
+			stream->read = FT_Stream_Read;
+			stream->close = FT_Stream_Close;
+			stream->descriptor.pointer = file;
+			stream->pos = 0;
+			stream->size = (unsigned long)size;
+
+			FT_Open_Args args;
+			memset(&args, 0, sizeof(args));
+			args.flags = FT_OPEN_STREAM;
+			args.stream = stream;
 
 			FT_Face face;
 
-			int error = FT_New_Memory_Face((FT_Library)library, faceMemory, size, faceIndex, &face);
-
-			if (!error)
+			if (!FT_Open_Face((FT_Library)library, &args, faceIndex, &face))
 			{
 				this->face = face;
-				this->faceMemory = faceMemory;
 
-				/* Set charmap
-				 *
-				 * See http://www.microsoft.com/typography/otspec/name.htm for a list of
-				 * some possible platform-encoding pairs.  We're interested in 0-3 aka 3-1
-				 * - UCS-2.  Otherwise, fail. If a font has some unicode map, but lacks
-				 * UCS-2 - it is a broken or irrelevant font. What exactly Freetype will
-				 * select on face load (it promises most wide unicode, and if that will be
-				 * slower that UCS-2 - left as an excercise to check.
-				 */
 				for (int i = 0; i < ((FT_Face)face)->num_charmaps; i++)
 				{
 					FT_UShort pid = ((FT_Face)face)->charmaps[i]->platform_id;
@@ -95,7 +111,7 @@ namespace lime
 			}
 			else
 			{
-				free(faceMemory);
+				FT_Stream_Close(stream);
 			}
 		}
 	}
@@ -106,12 +122,6 @@ namespace lime
 		{
 			FT_Done_Face((FT_Face)face);
 			face = 0;
-		}
-
-		if (faceMemory)
-		{
-			free(faceMemory);
-			faceMemory = 0;
 		}
 	}
 

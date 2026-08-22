@@ -60,7 +60,6 @@ namespace lime
 		void SetSize(size_t size);
 
 		void *face;
-		void *faceMemory;
 
 	  private:
 		static void *library;
