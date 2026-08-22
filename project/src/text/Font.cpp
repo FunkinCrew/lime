@@ -2,6 +2,7 @@
 #include <ft2build.h>
 #include <graphics/ImageBuffer.h>
 #include <list>
+#include <SDL3/SDL.h>
 #include <system/System.h>
 #include <text/Font.h>
 #include <utils/File.h>
@@ -18,219 +19,6 @@
 #ifdef GetGlyphIndices
 #undef GetGlyphIndices
 #endif
-
-// from http://stackoverflow.com/questions/2948308/how-do-i-read-utf-8-characters-via-a-pointer
-#define IS_IN_RANGE(c, f, l) (((c) >= (f)) && ((c) <= (l)))
-
-unsigned long readNextChar(const char *&p)
-{
-	// TODO: since UTF-8 is a variable-length
-	// encoding, you should pass in the input
-	// buffer's actual byte length so that you
-	// can determine if a malformed UTF-8
-	// sequence would exceed the end of the buffer...
-
-	const unsigned char *ptr = (const unsigned char *)p;
-	unsigned char c1, c2;
-	unsigned long uc = 0;
-	int seqlen;
-
-	c1 = ptr[0];
-
-	if ((c1 & 0x80) == 0)
-	{
-		uc = (unsigned long)(c1 & 0x7F);
-		seqlen = 1;
-	}
-	else if ((c1 & 0xE0) == 0xC0)
-	{
-		uc = (unsigned long)(c1 & 0x1F);
-		seqlen = 2;
-	}
-	else if ((c1 & 0xF0) == 0xE0)
-	{
-		uc = (unsigned long)(c1 & 0x0F);
-		seqlen = 3;
-	}
-	else if ((c1 & 0xF8) == 0xF0)
-	{
-		uc = (unsigned long)(c1 & 0x07);
-		seqlen = 4;
-	}
-	else
-	{
-		// malformed data, do something !!!
-		return (unsigned long)-1;
-	}
-
-	for (int i = 1; i < seqlen; ++i)
-	{
-		c1 = ptr[i];
-
-		if ((c1 & 0xC0) != 0x80)
-		{
-			// malformed data, do something !!!
-			return (unsigned long)-1;
-		}
-	}
-
-	switch (seqlen)
-	{
-		case 2:
-			c1 = ptr[0];
-
-			if (!IS_IN_RANGE(c1, 0xC2, 0xDF))
-			{
-				// malformed data, do something !!!
-				return (unsigned long)-1;
-			}
-
-			break;
-		case 3:
-			c1 = ptr[0];
-			c2 = ptr[1];
-
-			if (((c1 == 0xE0) && !IS_IN_RANGE(c2, 0xA0, 0xBF)) || ((c1 == 0xED) && !IS_IN_RANGE(c2, 0x80, 0x9F)) || (!IS_IN_RANGE(c1, 0xE1, 0xEC) && !IS_IN_RANGE(c1, 0xEE, 0xEF)))
-			{
-				// malformed data, do something !!!
-				return (unsigned long)-1;
-			}
-
-			break;
-		case 4:
-			c1 = ptr[0];
-			c2 = ptr[1];
-
-			if (((c1 == 0xF0) && !IS_IN_RANGE(c2, 0x90, 0xBF)) || ((c1 == 0xF4) && !IS_IN_RANGE(c2, 0x80, 0x8F)) || !IS_IN_RANGE(c1, 0xF1, 0xF3))
-			{
-				// malformed data, do something !!!
-				return (unsigned long)-1;
-			}
-
-			break;
-	}
-
-	for (int i = 1; i < seqlen; ++i)
-	{
-		uc = ((uc << 6) | (unsigned long)(ptr[i] & 0x3F));
-	}
-
-	p += seqlen;
-	return uc;
-}
-
-namespace
-{
-
-	enum
-	{
-
-		PT_MOVE = 1,
-		PT_LINE = 2,
-		PT_CURVE = 3,
-		PT_CUBIC = 4
-
-	};
-
-	struct point
-	{
-		int x, y;
-		unsigned char type;
-
-		point() {}
-		point(int x, int y, unsigned char type) : x(x), y(y), type(type) {}
-	};
-
-	struct glyph
-	{
-		FT_ULong char_code;
-		FT_Vector advance;
-		FT_Glyph_Metrics metrics;
-		int index, x, y;
-		std::vector<int> pts;
-
-		glyph() : x(0), y(0) {}
-	};
-
-	struct kerning
-	{
-		int l_glyph, r_glyph;
-		int x, y;
-
-		kerning() {}
-		kerning(int l, int r, int x, int y) : l_glyph(l), r_glyph(r), x(x), y(y) {}
-	};
-
-	struct glyph_sort_predicate
-	{
-		bool operator()(const glyph *g1, const glyph *g2) const { return g1->char_code < g2->char_code; }
-	};
-
-	typedef const FT_Vector *FVecPtr;
-
-	int outline_move_to(FVecPtr to, void *user)
-	{
-		glyph *g = static_cast<glyph *>(user);
-
-		g->pts.push_back(PT_MOVE);
-		g->pts.push_back(to->x);
-		g->pts.push_back(to->y);
-
-		g->x = to->x;
-		g->y = to->y;
-
-		return 0;
-	}
-
-	int outline_line_to(FVecPtr to, void *user)
-	{
-		glyph *g = static_cast<glyph *>(user);
-
-		g->pts.push_back(PT_LINE);
-		g->pts.push_back(to->x - g->x);
-		g->pts.push_back(to->y - g->y);
-
-		g->x = to->x;
-		g->y = to->y;
-
-		return 0;
-	}
-
-	int outline_conic_to(FVecPtr ctl, FVecPtr to, void *user)
-	{
-		glyph *g = static_cast<glyph *>(user);
-
-		g->pts.push_back(PT_CURVE);
-		g->pts.push_back(ctl->x - g->x);
-		g->pts.push_back(ctl->y - g->y);
-		g->pts.push_back(to->x - ctl->x);
-		g->pts.push_back(to->y - ctl->y);
-
-		g->x = to->x;
-		g->y = to->y;
-
-		return 0;
-	}
-
-	int outline_cubic_to(FVecPtr control1, FVecPtr control2, FVecPtr to, void *user)
-	{
-		glyph *g = static_cast<glyph *>(user);
-
-		g->pts.push_back(PT_CUBIC);
-		g->pts.push_back(control1->x - g->x);
-		g->pts.push_back(control1->y - g->y);
-		g->pts.push_back(control2->x - control1->x);
-		g->pts.push_back(control2->y - control1->y);
-		g->pts.push_back(to->x - control2->x);
-		g->pts.push_back(to->y - control2->y);
-
-		g->x = to->x;
-		g->y = to->y;
-
-		return 0;
-	}
-
-} // namespace
 
 namespace lime
 {
@@ -383,7 +171,12 @@ namespace lime
 
 	int Font::GetGlyphIndex(const char *character)
 	{
-		long charCode = readNextChar(character);
+		Uint32 charCode = SDL_StepUTF8(&character, NULL);
+
+		if (charCode == 0)
+		{
+			charCode = (Uint32)-1;
+		}
 
 		return FT_Get_Char_Index((FT_Face)face, charCode);
 	}
@@ -391,18 +184,15 @@ namespace lime
 	void *Font::GetGlyphIndices(const char *characters)
 	{
 		value indices = alloc_array(0);
-		unsigned long character;
-		int index;
 
-		while (*characters != 0)
+		while (*characters != '\0')
 		{
-			character = readNextChar(characters);
+			Uint32 character = SDL_StepUTF8(&characters, NULL);
 
-			if (character == -1)
+			if (character == 0)
 				break;
 
-			index = FT_Get_Char_Index((FT_Face)face, character);
-			val_array_push(indices, alloc_int(index));
+			val_array_push(indices, alloc_int(FT_Get_Char_Index((FT_Face)face, character)));
 		}
 
 		return indices;
