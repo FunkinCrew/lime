@@ -17,6 +17,7 @@ import js.Browser;
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.SpanElement;
+import lime.utils.Log;
 #end
 
 #if (lime_cffi && !macro)
