@@ -200,6 +200,11 @@ class NativeCFFI
 	private static var lime_audio_decoder_can_seek = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_can_seek", "ob", false));
 	private static var lime_audio_decoder_tell = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_tell", "oo", false));
 	private static var lime_audio_decoder_total = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_audio_decoder_total", "oo", false));
+	private static var lime_animation_decoder_open_file = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_animation_decoder_open_file", "ooo", false));
+	private static var lime_animation_decoder_open_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_animation_decoder_open_bytes", "ooo", false));
+	private static var lime_animation_decoder_get_frame = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_animation_decoder_get_frame", "ooo", false));
+	private static var lime_animation_decoder_get_status = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_animation_decoder_get_status", "oi", false));
+	private static var lime_animation_decoder_reset = new cpp.Callable<cpp.Object->Bool>(cpp.Prime._loadPrime("lime", "lime_animation_decoder_reset", "ob", false));
 	private static var lime_zlib_compress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_compress", "ooo", false));
 	private static var lime_zlib_decompress = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_zlib_decompress", "ooo", false));
 	private static var lime_touch_get_devices = new cpp.Callable<Void->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_touch_get_devices", "o", false));
@@ -377,6 +382,11 @@ class NativeCFFI
 	private static var lime_audio_decoder_can_seek = CFFI.load("lime", "lime_audio_decoder_can_seek", 1);
 	private static var lime_audio_decoder_tell = CFFI.load("lime", "lime_audio_decoder_tell", 1);
 	private static var lime_audio_decoder_total = CFFI.load("lime", "lime_audio_decoder_total", 1);
+	private static var lime_animation_decoder_open_file = CFFI.load("lime", "lime_animation_decoder_open_file", 2);
+	private static var lime_animation_decoder_open_bytes = CFFI.load("lime", "lime_animation_decoder_open_bytes", 2);
+	private static var lime_animation_decoder_get_frame = CFFI.load("lime", "lime_animation_decoder_get_frame", 2);
+	private static var lime_animation_decoder_get_status = CFFI.load("lime", "lime_animation_decoder_get_status", 1);
+	private static var lime_animation_decoder_reset = CFFI.load("lime", "lime_animation_decoder_reset", 1);
 	private static var lime_zlib_compress = CFFI.load("lime", "lime_zlib_compress", 2);
 	private static var lime_zlib_decompress = CFFI.load("lime", "lime_zlib_decompress", 2);
 	private static var lime_touch_get_devices = CFFI.load("lime", "lime_touch_get_devices", 0);

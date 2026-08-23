@@ -191,6 +191,12 @@
 			<file name="src/graphics/format/PNG.cpp" />
 			<file name="src/graphics/format/SVG.cpp" />
 
+			<section>
+
+				<file name="src/graphics/AnimationDecoder.cpp" />
+
+			</section>
+
 		</section>
 
 		<section if="LIME_ZLIB">

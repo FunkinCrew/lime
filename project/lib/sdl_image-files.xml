@@ -21,6 +21,7 @@
 				<compilerflag value="-DLOAD_JPG" />
 				<compilerflag value="-DLOAD_PNG" />
 				<compilerflag value="-DLOAD_SVG" />
+				<compilerflag value="-DLOAD_GIF" />
 
 			</section>
 

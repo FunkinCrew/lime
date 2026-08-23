@@ -21,6 +21,7 @@
 #include <events/TextEvent.h>
 #include <events/TouchEvent.h>
 #include <events/WindowEvent.h>
+#include <graphics/AnimationDecoder.h>
 #include <graphics/format/BMP.h>
 #include <graphics/format/JPEG.h>
 #include <graphics/format/PNG.h>
@@ -94,6 +95,12 @@ namespace lime
 	{
 		AudioDecoder *audioDecoder = (AudioDecoder *)val_data(handle);
 		delete audioDecoder;
+	}
+
+	void gc_animation_decoder(value handle)
+	{
+		AnimationDecoder *animationDecoder = (AnimationDecoder *)val_data(handle);
+		delete animationDecoder;
 	}
 
 	value allocInt64(int64_t val)
@@ -1805,6 +1812,71 @@ namespace lime
 		return allocInt64(targetAudioDecoder->Total());
 	}
 
+	value lime_animation_decoder_open_file(value data, value type)
+	{
+		AnimationDecoder *decoder = new AnimationDecoder();
+
+		Resource resource = Resource(val_string(data));
+
+		if (decoder->Open(&resource, val_string(type)))
+		{
+			return CFFIPointer(decoder, gc_animation_decoder);
+		}
+
+		delete decoder;
+
+		return alloc_null();
+	}
+
+	value lime_animation_decoder_open_bytes(value data, value type)
+	{
+		AnimationDecoder *decoder = new AnimationDecoder();
+
+		Bytes bytes(data);
+
+		Resource resource = Resource(&bytes);
+
+		if (decoder->Open(&resource, val_string(type)))
+		{
+			return CFFIPointer(decoder, gc_animation_decoder);
+		}
+
+		delete decoder;
+
+		return alloc_null();
+	}
+
+	value lime_animation_decoder_get_frame(value animation_decoder, value buffer)
+	{
+		AnimationDecoder *targetAnimationDecoder = (AnimationDecoder *)val_data(animation_decoder);
+
+		ImageBuffer imageBuffer(buffer);
+
+		int64_t imageDuration = 0;
+
+		if (targetAnimationDecoder->GetFrame(&imageBuffer, &imageDuration))
+		{
+			value decodedFrame = alloc_empty_object();
+			alloc_field(decodedFrame, val_id("buffer"), imageBuffer.Value(buffer));
+			alloc_field(decodedFrame, val_id("duration"), allocInt64(imageDuration));
+			return decodedFrame;
+		}
+
+		return alloc_null();
+	}
+
+	int lime_animation_decoder_get_status(value animation_decoder)
+	{
+		AnimationDecoder *targetAnimationDecoder = (AnimationDecoder *)val_data(animation_decoder);
+		return targetAnimationDecoder->GetStatus();
+	}
+
+	bool lime_animation_decoder_reset(value animation_decoder)
+	{
+		AnimationDecoder *targetAnimationDecoder = (AnimationDecoder *)val_data(animation_decoder);
+		return targetAnimationDecoder->Reset();
+	}
+
 	value lime_zlib_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
@@ -2017,6 +2089,11 @@ namespace lime
 	DEFINE_PRIME1(lime_audio_decoder_can_seek);
 	DEFINE_PRIME1(lime_audio_decoder_tell);
 	DEFINE_PRIME1(lime_audio_decoder_total);
+	DEFINE_PRIME2(lime_animation_decoder_open_file);
+	DEFINE_PRIME2(lime_animation_decoder_open_bytes);
+	DEFINE_PRIME2(lime_animation_decoder_get_frame);
+	DEFINE_PRIME1(lime_animation_decoder_get_status);
+	DEFINE_PRIME1(lime_animation_decoder_reset);
 	DEFINE_PRIME2(lime_zlib_compress);
 	DEFINE_PRIME2(lime_zlib_decompress);
 	DEFINE_PRIME0(lime_touch_get_devices);
