@@ -6,9 +6,19 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.utils.Bytes;
 import lime.utils.UInt8Array;
 
+/**
+	The `AnimationDecoder` class provides low-level access to decode animated graphic streams.
+**/
 @:access(lime._internal.backend.native.NativeCFFI)
 class AnimationDecoder
 {
+	/**
+		Creates an `AnimationDecoder` from a file path.
+
+		@param path The path to the animation file.
+		@param codec The expected animation codec format (defaults to `GIF`).
+		@return An `AnimationDecoder` instance, or `null` if the file cannot be opened.
+	**/
 	public static function fromFile(path:String, ?codec:AnimationDecoderType = GIF):AnimationDecoder
 	{
 		#if (lime_cffi && !macro)
@@ -26,6 +36,13 @@ class AnimationDecoder
 		return null;
 	}
 
+	/**
+		Creates an `AnimationDecoder` from a `Bytes` object.
+
+		@param bytes The encoded animation data.
+		@param codec The expected animation codec format (defaults to `GIF`).
+		@return An `AnimationDecoder` instance, or `null` if decoding cannot be initialized.
+	**/
 	public static function fromBytes(bytes:Bytes, ?codec:AnimationDecoderType = GIF):AnimationDecoder
 	{
 		#if (lime_cffi && !macro)
@@ -52,6 +69,11 @@ class AnimationDecoder
 		this.handle = handle;
 	}
 
+	/**
+		Decodes and retrieves the next frame in the animation stream.
+
+		@return An `AnimationDecoderFrame` containing the frame buffer and duration, or `null` if no frame is available.
+	**/
 	public function getFrame():AnimationDecoderFrame
 	{
 		#if (lime_cffi && !macro)
@@ -74,6 +96,11 @@ class AnimationDecoder
 		return null;
 	}
 
+	/**
+		Returns the current status of the animation decoder.
+
+		@return The status
+	**/
 	public function getStatus():AnimationDecoderStatus
 	{
 		#if (lime_cffi && !macro)
@@ -83,6 +110,11 @@ class AnimationDecoder
 		#end
 	}
 
+	/**
+		Resets the decoder position back to the beginning of the animation sequence.
+
+		@return `true` if the reset operation succeeded, otherwise `false`.
+	**/
 	public function reset():Bool
 	{
 		#if (lime_cffi && !macro)
