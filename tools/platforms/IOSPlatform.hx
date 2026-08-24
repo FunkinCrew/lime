@@ -514,49 +514,94 @@ class IOSPlatform extends PlatformTarget
 		System.mkdir(projectDirectory + "/haxe/lime/installer");
 
 		var iconSizes:Array<IconSize> = [
-			{name: "Icon-20.png", size: 20},
-			{name: "Icon-Small.png", size: 29},
-			{name: "Icon-Small-40.png", size: 40},
-			{name: "Icon-20@2x.png", size: 40},
-			{name: "Icon-Small-50.png", size: 50},
-			{name: "Icon.png", size: 57},
-			{name: "Icon-Small@2x.png", size: 58},
-			{name: "Icon-20@3x.png", size: 60},
-			{name: "Icon-72.png", size: 72},
-			{name: "Icon-76.png", size: 76},
-			{name: "Icon-Small-40@2x.png", size: 80},
-			{name: "Icon-Small@3x.png", size: 87},
-			{name: "Icon-Small-50@2x.png", size: 100},
-			{name: "Icon@2x.png", size: 114},
-			{name: "Icon-60@2x.png", size: 120},
-			{name: "Icon-Small-40@3x.png", size: 120},
-			{name: "Icon-72@2x.png", size: 144},
-			{name: "Icon-76@2x.png", size: 152},
-			{name: "Icon-83.5@2x.png", size: 167},
-			{name: "Icon-60@3x.png", size: 180},
-			{name: "Icon-Marketing.png", size: 1024}
+			{name: "Icon-20.png", size: 20, scale: 1},
+			{name: "Icon-Small.png", size: 29, scale: 1},
+			{name: "Icon-Small-40.png", size: 40, scale: 1},
+			{name: "Icon-20@2x.png", size: 20, scale: 2},
+			{name: "Icon-Small-50.png", size: 50, scale: 1},
+			{name: "Icon.png", size: 57, scale: 1},
+			{name: "Icon-Small@2x.png", size: 29, scale: 2},
+			{name: "Icon-20@3x.png", size: 20, scale: 3},
+			{name: "Icon-72.png", size: 72, scale: 1},
+			{name: "Icon-76.png", size: 76, scale: 1},
+			{name: "Icon-Small-40@2x.png", size: 40, scale: 2},
+			{name: "Icon-Small@3x.png", size: 29, scale: 3},
+			{name: "Icon-Small-50@2x.png", size: 50, scale: 2},
+			{name: "Icon@2x.png", size: 57, scale: 2},
+			{name: "Icon-60@2x.png", size: 60, scale: 2},
+			{name: "Icon-Small-40@3x.png", size: 40, scale: 3},
+			{name: "Icon-72@2x.png", size: 72, scale: 2},
+			{name: "Icon-76@2x.png", size: 76, scale: 2},
+			{name: "Icon-83.5@2x.png", size: 83.5, scale: 2},
+			{name: "Icon-60@3x.png", size: 60, scale: 3},
+			{name: "Icon-Marketing.png", size: 1024, scale: 1}
 		];
 
-		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile)
-		{
-			context.IOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
-			ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, Path.combine(projectDirectory, "AppIcon.icon"), context);
-		}
-
 		var iconPath = Path.combine(projectDirectory, "Images.xcassets/AppIcon.appiconset");
-
 		System.mkdir(iconPath);
 
-		var icons = project.icons;
-
-		if (icons.length == 0)
+		// We use some technique to generate the .png files for legacy iOS versions (before iOS 26) from the Icon Composer file
+		if ((project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile) && System.hostPlatform == MAC)
 		{
-			icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
-		}
+			// Let XCode know we are using an icon composer file
+			context.IOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
+			ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, Path.combine(projectDirectory, "AppIcon.icon"), context);
 
-		for (iconSize in iconSizes)
-		{
-			IconHelper.createIcon(icons, iconSize.size, iconSize.size, Path.combine(iconPath, iconSize.name));
+			var ICTOOL_SEARCH_PATHS = [
+				project.environment.get("ICTOOL_PATH"),
+				'/Applications/Icon Composer.app/Contents/Executables/ictool',
+				'/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool',
+				'/Applications/Xcode-beta.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool',
+			];
+			var ictoolPath:Null<String> = null;
+			for (p in ICTOOL_SEARCH_PATHS)
+			{
+				if (p == null) continue;
+				if (FileSystem.exists(p))
+				{
+					ictoolPath = p;
+					break;
+				}
+			}
+
+			if (ictoolPath != null)
+			{
+				for (icn in iconSizes)
+				{
+					try
+					{
+						System.runProcess("", ictoolPath, [
+							project.adaptiveIcon.path,
+							"--export-image",
+							"--output-file", Path.combine(iconPath, icn.name),
+							"--platform", "iOS",
+							"--rendition", "Default",
+							"--width", Std.string(icn.size),
+							"--height", Std.string(icn.size),
+							"--scale", Std.string(icn.scale),
+						], false, false);
+					}
+					catch (e:Dynamic)
+					{
+						Log.warn('Failed to generate "${icn.name}" (${icn.size}@${icn.scale}) via ictool');
+					}
+				}
+			} else {
+				Log.warn('Could not generate via ictool as it cannot be found');
+			}
+		} else {
+			var icons = project.icons;
+
+			if (icons.length == 0)
+			{
+				icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
+			}
+
+			for (iconSize in iconSizes)
+			{
+				var iSize = Math.floor(iconSize.size * iconSize.scale);
+				IconHelper.createIcon(icons, iSize, iSize, Path.combine(iconPath, iconSize.name));
+			}
 		}
 
 		if (project.launchStoryboard != null)
@@ -808,7 +853,8 @@ class IOSPlatform extends PlatformTarget
 private typedef IconSize =
 {
 	name:String,
-	size:Int,
+	size:Float,
+	scale:Int,
 }
 
 private typedef SplashSize =
