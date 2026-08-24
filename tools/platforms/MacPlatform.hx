@@ -254,22 +254,40 @@ class MacPlatform extends PlatformTarget
 			+ project.app.file
 			+ ".app/Contents/Entitlements.plist", context);
 
-		var icons = project.icons;
-
-		if (icons.length == 0)
+		// We use some technique to generate the .icns file for legacy macOS versions (before macOS 26) from the Icon Composer file
+		if ((project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile) && System.hostPlatform == MAC)
 		{
-			icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
-		}
+			try
+			{
+				System.runProcess("", "xcrun", [
+					"actool", project.adaptiveIcon.path,
+					"--compile", contentDirectory,
+					"--app-icon", "icon",
+					"--include-all-app-icons",
+					"--output-partial-info-plist", "/dev/null",
+					"--minimum-deployment-target", "11.0",
+					"--platform", "macosx",
+					"--target-device", "mac",
+				], false, false);
+			}
+			catch (e:Dynamic)
+			{
+				Log.warn("Failed to compile adaptive icon via actool");
+			}
+		} else {
+			var icons = project.icons;
 
-		IconHelper.createMacIcon(icons, Path.combine(contentDirectory, "icon.icns"));
+			if (icons.length == 0)
+			{
+				icons = [new Icon(System.findTemplate(project.templatePaths, "default/icon.svg"))];
+			}
+
+			IconHelper.createMacIcon(icons, Path.combine(contentDirectory, "icon.icns"));
+		}
 
 		copyProjectAssets(targetDirectory, contentDirectory);
 
-		if (project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile)
-		{
-			context.MACOS_ADAPTIVE_ICON = project.adaptiveIcon.path;
-			ProjectHelper.recursiveSmartCopyDirectory(project, project.adaptiveIcon.path, Path.combine(contentDirectory, "icon.icon"), context);
-		}
+
 	}
 
 	public override function install():Void {}
