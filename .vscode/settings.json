@@ -3,6 +3,9 @@
         [ "--cwd", "tools", "tools.hxml" ]
     ],
     "editor.formatOnSave": true,
+    "[xml]": {
+        "editor.formatOnSave": false
+    },
     "editor.insertSpaces": false,
     "editor.trimAutoWhitespace": true,
     "codedox": {
