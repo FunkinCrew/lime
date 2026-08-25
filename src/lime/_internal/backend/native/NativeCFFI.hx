@@ -126,6 +126,10 @@ class NativeCFFI
 	private static var lime_svg_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_svg_decode_file", "soo", false));
 	private static var lime_svg_decode_sized_bytes = new cpp.Callable<cpp.Object->Int->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_svg_decode_sized_bytes", "oiioo", false));
 	private static var lime_svg_decode_sized_file = new cpp.Callable<String->Int->Int->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_svg_decode_sized_file", "siioo", false));
+	private static var lime_gif_decode_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_gif_decode_bytes", "ooo", false));
+	private static var lime_gif_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_gif_decode_file", "soo", false));
+	private static var lime_webp_decode_bytes = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_webp_decode_bytes", "ooo", false));
+	private static var lime_webp_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_webp_decode_file", "soo", false));
 	private static var lime_render_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_render_event_manager_register", "oov", false));
 	private static var lime_sensor_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_sensor_event_manager_register", "oov", false));
 	private static var lime_system_get_allow_screen_timeout = new cpp.Callable<Void->Bool>(cpp.Prime._loadPrime("lime", "lime_system_get_allow_screen_timeout", "b", false));
@@ -308,6 +312,10 @@ class NativeCFFI
 	private static var lime_svg_decode_file = CFFI.load("lime", "lime_svg_decode_file", 2);
 	private static var lime_svg_decode_sized_bytes = CFFI.load("lime", "lime_svg_decode_sized_bytes", 4);
 	private static var lime_svg_decode_sized_file = CFFI.load("lime", "lime_svg_decode_sized_file", 4);
+	private static var lime_gif_decode_bytes = CFFI.load("lime", "lime_gif_decode_bytes", 2);
+	private static var lime_gif_decode_file = CFFI.load("lime", "lime_gif_decode_file", 2);
+	private static var lime_webp_decode_bytes = CFFI.load("lime", "lime_webp_decode_bytes", 2);
+	private static var lime_webp_decode_file = CFFI.load("lime", "lime_webp_decode_file", 2);
 	private static var lime_render_event_manager_register = CFFI.load("lime", "lime_render_event_manager_register", 2);
 	private static var lime_sensor_event_manager_register = CFFI.load("lime", "lime_sensor_event_manager_register", 2);
 	private static var lime_system_get_allow_screen_timeout = CFFI.load("lime", "lime_system_get_allow_screen_timeout", 0);

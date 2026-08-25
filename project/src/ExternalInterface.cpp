@@ -23,9 +23,11 @@
 #include <events/WindowEvent.h>
 #include <graphics/AnimationDecoder.h>
 #include <graphics/format/BMP.h>
+#include <graphics/format/GIF.h>
 #include <graphics/format/JPEG.h>
 #include <graphics/format/PNG.h>
 #include <graphics/format/SVG.h>
+#include <graphics/format/WEBP.h>
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <graphics/utils/ImageDataUtil.h>
@@ -691,6 +693,22 @@ namespace lime
 				}
 				break;
 
+			case 3:
+
+				if (GIF::Encode(&imageBuffer, &data))
+				{
+					return data.Value(bytes);
+				}
+				break;
+
+			case 4:
+
+				if (WEBP::Encode(&imageBuffer, &data, quality))
+				{
+					return data.Value(bytes);
+				}
+				break;
+
 			default:
 				break;
 		}
@@ -724,6 +742,16 @@ namespace lime
 			return imageBuffer.Value(buffer);
 		}
 
+		if (GIF::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		if (WEBP::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
 		return alloc_null();
 	}
 
@@ -749,6 +777,16 @@ namespace lime
 		}
 
 		if (SVG::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		if (GIF::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		if (WEBP::Decode(&resource, &imageBuffer))
 		{
 			return imageBuffer.Value(buffer);
 		}
@@ -1138,6 +1176,64 @@ namespace lime
 		Resource resource = Resource(hxs_utf8(path, nullptr));
 
 		if (SVG::DecodeSized(&resource, width, height, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		return alloc_null();
+	}
+
+	value lime_gif_decode_bytes(value data, value buffer)
+	{
+		ImageBuffer imageBuffer(buffer);
+
+		Bytes bytes(data);
+
+		Resource resource = Resource(&bytes);
+
+		if (GIF::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		return alloc_null();
+	}
+
+	value lime_gif_decode_file(HxString path, value buffer)
+	{
+		ImageBuffer imageBuffer(buffer);
+		Resource resource = Resource(hxs_utf8(path, nullptr));
+
+		if (GIF::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		return alloc_null();
+	}
+
+	value lime_webp_decode_bytes(value data, value buffer)
+	{
+		ImageBuffer imageBuffer(buffer);
+
+		Bytes bytes(data);
+
+		Resource resource = Resource(&bytes);
+
+		if (WEBP::Decode(&resource, &imageBuffer))
+		{
+			return imageBuffer.Value(buffer);
+		}
+
+		return alloc_null();
+	}
+
+	value lime_webp_decode_file(HxString path, value buffer)
+	{
+		ImageBuffer imageBuffer(buffer);
+		Resource resource = Resource(hxs_utf8(path, nullptr));
+
+		if (WEBP::Decode(&resource, &imageBuffer))
 		{
 			return imageBuffer.Value(buffer);
 		}
@@ -2013,6 +2109,10 @@ namespace lime
 	DEFINE_PRIME2(lime_svg_decode_file);
 	DEFINE_PRIME4(lime_svg_decode_sized_bytes);
 	DEFINE_PRIME4(lime_svg_decode_sized_file);
+	DEFINE_PRIME2(lime_gif_decode_bytes);
+	DEFINE_PRIME2(lime_gif_decode_file);
+	DEFINE_PRIME2(lime_webp_decode_bytes);
+	DEFINE_PRIME2(lime_webp_decode_file);
 	DEFINE_PRIME2v(lime_render_event_manager_register);
 	DEFINE_PRIME2v(lime_sensor_event_manager_register);
 	DEFINE_PRIME0(lime_system_get_allow_screen_timeout);

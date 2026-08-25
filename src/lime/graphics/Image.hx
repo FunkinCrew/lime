@@ -8,8 +8,10 @@ import haxe.io.BytesOutput;
 import lime._internal.backend.native.NativeCFFI;
 import lime._internal.format.Base64;
 import lime._internal.format.BMP;
+import lime._internal.format.GIF;
 import lime._internal.format.JPEG;
 import lime._internal.format.PNG;
+import lime._internal.format.WEBP;
 import lime._internal.graphics.ImageCanvasUtil;
 import lime._internal.graphics.ImageDataUtil;
 import lime.app.Application;
@@ -469,6 +471,12 @@ class Image
 
 			case ImageFileFormat.BMP:
 				return BMP.encode(this);
+
+			case ImageFileFormat.GIF:
+				return GIF.encode(this);
+
+			case ImageFileFormat.WEBP:
+				return WEBP.encode(this, quality);
 
 			default:
 		}

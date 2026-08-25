@@ -19,4 +19,14 @@ enum ImageFileFormat
 		An image file encoded in the PNG file format
 	**/
 	PNG;
+
+	/**
+		An image file encoded in the GIF file format
+	**/
+	GIF;
+
+	/**
+		An image file encoded in the WEBP file format
+	**/
+	WEBP;
 }
