@@ -9,8 +9,8 @@ enum abstract AnimationDecoderStatus(Int)
 	var OK = 0;
 
 	/** The decoder failed to decode a frame */
-	var FAILED = 2;
+	var FAILED = 1;
 
 	/** No more frames available */
-	var COMPLETE = 3;
+	var COMPLETE = 2;
 }
