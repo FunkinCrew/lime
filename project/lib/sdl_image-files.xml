@@ -4,6 +4,12 @@
 
 		<section>
 
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src" />
+
+			</section>
+
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl/include" />
 
 		</section>
@@ -22,6 +28,7 @@
 				<compilerflag value="-DLOAD_PNG" />
 				<compilerflag value="-DLOAD_SVG" />
 				<compilerflag value="-DLOAD_GIF" />
+				<compilerflag value="-DLOAD_WEBP" />
 
 			</section>
 
@@ -57,6 +64,181 @@
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/src/IMG_xv.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/src/IMG_xxx.c" />
 			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/src/xmlman.c" />
+
+		</section>
+
+	</files>
+
+	<files id="native-toolkit-sdl_image-deps-libwebp-sharpyuv">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp" />
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src" />
+
+		<section>
+
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_gamma.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_sse2.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_neon.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_csp.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_cpu.c" />
+			<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/sharpyuv/sharpyuv_dsp.c" />
+
+		</section>
+
+	</files>
+
+	<files id="native-toolkit-sdl_image-deps-libwebp">
+
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp" />
+		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src" />
+
+		<section>
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/alpha_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/buffer_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/frame_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/idec_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/io_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/quant_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/tree_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/vp8_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/vp8l_dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dec/webp_dec.c" />
+
+			</section>
+
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/demux/anim_decode.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/demux/demux.c" />
+
+			</section>
+
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/alpha_processing_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/alpha_processing_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/alpha_processing_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/alpha_processing_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/alpha_processing.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cost_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cost_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cost_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cost_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cost.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/cpu.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_clip_tables.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/dec.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/filters_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/filters_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/filters_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/filters_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/filters.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/lossless.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/rescaler.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/ssim_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/ssim.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling_msa.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/upsampling.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv_mips_dsp_r2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv_mips32.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv_neon.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv_sse2.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv_sse41.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/dsp/yuv.c" />
+
+			</section>
+
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/alpha_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/analysis_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/backward_references_cost_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/backward_references_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/config_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/cost_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/filter_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/frame_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/histogram_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/iterator_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/near_lossless_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/picture_csp_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/picture_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/picture_psnr_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/picture_rescale_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/picture_tools_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/predictor_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/quant_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/syntax_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/token_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/tree_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/vp8l_enc.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/enc/webp_enc.c" />
+
+			</section>
+
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/mux/anim_encode.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/mux/muxedit.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/mux/muxinternal.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/mux/muxread.c" />
+
+			</section>
+
+			<section>
+
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/bit_reader_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/bit_writer_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/color_cache_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/filters_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/huffman_encode_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/huffman_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/quant_levels_dec_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/quant_levels_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/random_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/rescaler_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/thread_utils.c" />
+				<file name="${NATIVE_TOOLKIT_PATH}/sdl_image/external/libwebp/src/utils/utils.c" />
+
+			</section>
 
 		</section>
 

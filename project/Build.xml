@@ -310,7 +310,15 @@
 		<files id="native-toolkit-openal" if="LIME_OPENAL" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-sdl" if="LIME_SDL" />
-		<files id="native-toolkit-sdl_image" if="LIME_SDL_IMAGE" />
+
+		<section if="LIME_SDL_IMAGE">
+
+			<files id="native-toolkit-sdl_image-deps-libwebp-sharpyuv" />
+			<files id="native-toolkit-sdl_image-deps-libwebp" />
+			<files id="native-toolkit-sdl_image" />
+
+		</section>
+
 		<files id="native-toolkit-glad" if="LIME_GLAD" />
 		<files id="native-toolkit-webm" if="LIME_WEBM" />
 		<files id="native-toolkit-zlib" if="LIME_ZLIB" />
