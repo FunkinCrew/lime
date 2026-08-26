@@ -250,6 +250,13 @@ abstract WebGL2RenderContext(HTML5WebGL2RenderContext) from HTML5WebGL2RenderCon
 		}
 	}
 
+	public inline function blendBarrier():Void
+	{
+		#if !lime_webgl
+		this.blendBarrier(); // Not supported on Web
+		#end
+	}
+
 	@:from private static function fromGL(gl:Class<GL>):WebGL2RenderContext
 	{
 		return null;
@@ -3755,7 +3762,9 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic {
 
 	public inline function blendBarrier():Void
 	{
-		this.blendBarrier();
+		#if !lime_webgl
+		this.blendBarrier(); // Not supported on Web
+		#end
 	}
 
 	public inline function blitFramebuffer(srcX0:Int, srcY0:Int, srcX1:Int, srcY1:Int, dstX0:Int, dstY0:Int, dstX1:Int, dstY1:Int, mask:Int, filter:Int):Void

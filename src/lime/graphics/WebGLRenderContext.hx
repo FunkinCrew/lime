@@ -159,9 +159,8 @@ abstract WebGLRenderContext(WebGL2RenderContext)
 
 	public inline function blendBarrier():Void
 	{
-		// Not supported on Web
 		#if !lime_webgl
-		this.blendBarrier();
+		this.blendBarrier(); // Not supported on Web
 		#end
 	}
 
