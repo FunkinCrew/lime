@@ -63,6 +63,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <memory>
+#include <thread>
 
 namespace lime
 {
@@ -1253,6 +1254,11 @@ namespace lime
 		SensorEvent::eventObject = new ValuePointer(eventObject);
 	}
 
+	int lime_system_get_max_threads()
+	{
+		return std::thread::hardware_concurrency();
+	}
+
 	bool lime_system_get_allow_screen_timeout()
 	{
 		return System::GetAllowScreenTimeout();
@@ -2115,6 +2121,7 @@ namespace lime
 	DEFINE_PRIME2(lime_webp_decode_file);
 	DEFINE_PRIME2v(lime_render_event_manager_register);
 	DEFINE_PRIME2v(lime_sensor_event_manager_register);
+	DEFINE_PRIME0(lime_system_get_max_threads);
 	DEFINE_PRIME0(lime_system_get_allow_screen_timeout);
 	DEFINE_PRIME0(lime_system_get_device_model);
 	DEFINE_PRIME0(lime_system_get_device_vendor);

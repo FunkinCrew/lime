@@ -527,6 +527,11 @@ import lime.utils.Log;
 
 	@:noCompletion private static inline function set_maxThreads(value:Int):Int
 	{
+		#if (lime_cffi && !macro)
+		@:privateAccess
+		value = Math.min(value, lime._internal.backend.native.NativeCFFI.lime_system_get_max_threads() - 1);
+		#end
+
 		if (threadPool != null)
 		{
 			threadPool.maxThreads = value;
