@@ -1599,9 +1599,9 @@ namespace lime
 
 	double lime_gl_get_vertex_attrib_pointerv(int index, int pname)
 	{
-		uintptr_t result = 0;
-		glGetVertexAttribPointerv(index, pname, (void **)result);
-		return (double)result;
+		void *ptr = nullptr;
+		glGetVertexAttribPointerv(index, pname, &ptr);
+		return (double)(uintptr_t)ptr;
 	}
 
 	void lime_gl_hint(int target, int mode)
