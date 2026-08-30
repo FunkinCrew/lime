@@ -62,10 +62,10 @@ namespace lime
 
 	void gc_gl_run()
 	{
-		if (gc_gl_id.size() > 0)
-		{
-			gc_gl_mutex.Lock();
+		gc_gl_mutex.Lock();
 
+		if (gc_gl_id.size() > 0 || gc_gl_ptr.size() > 0)
+		{
 			int size = gc_gl_id.size();
 
 			GLuint id;
@@ -205,9 +205,9 @@ namespace lime
 			gc_gl_id.clear();
 			gc_gl_ptr.clear();
 			gc_gl_type.clear();
-
-			gc_gl_mutex.Unlock();
 		}
+
+		gc_gl_mutex.Unlock();
 	}
 
 	void lime_gl_active_texture(int texture)
