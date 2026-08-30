@@ -27,6 +27,7 @@ int GLAD_GL_ES_VERSION_2_0 = 0;
 int GLAD_GL_ES_VERSION_3_0 = 0;
 int GLAD_GL_ES_VERSION_3_1 = 0;
 int GLAD_GL_ES_VERSION_3_2 = 0;
+int GLAD_GL_EXT_draw_instanced = 0;
 int GLAD_GL_KHR_blend_equation_advanced = 0;
 int GLAD_GL_KHR_blend_equation_advanced_coherent = 0;
 
@@ -117,12 +118,14 @@ PFNGLDISPATCHCOMPUTEINDIRECTPROC glad_glDispatchComputeIndirect = NULL;
 PFNGLDRAWARRAYSPROC glad_glDrawArrays = NULL;
 PFNGLDRAWARRAYSINDIRECTPROC glad_glDrawArraysIndirect = NULL;
 PFNGLDRAWARRAYSINSTANCEDPROC glad_glDrawArraysInstanced = NULL;
+PFNGLDRAWARRAYSINSTANCEDEXTPROC glad_glDrawArraysInstancedEXT = NULL;
 PFNGLDRAWBUFFERSPROC glad_glDrawBuffers = NULL;
 PFNGLDRAWELEMENTSPROC glad_glDrawElements = NULL;
 PFNGLDRAWELEMENTSBASEVERTEXPROC glad_glDrawElementsBaseVertex = NULL;
 PFNGLDRAWELEMENTSINDIRECTPROC glad_glDrawElementsIndirect = NULL;
 PFNGLDRAWELEMENTSINSTANCEDPROC glad_glDrawElementsInstanced = NULL;
 PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC glad_glDrawElementsInstancedBaseVertex = NULL;
+PFNGLDRAWELEMENTSINSTANCEDEXTPROC glad_glDrawElementsInstancedEXT = NULL;
 PFNGLDRAWRANGEELEMENTSPROC glad_glDrawRangeElements = NULL;
 PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC glad_glDrawRangeElementsBaseVertex = NULL;
 PFNGLENABLEPROC glad_glEnable = NULL;
@@ -763,6 +766,11 @@ static void glad_gl_load_GL_ES_VERSION_3_2( GLADuserptrloadfunc load, void* user
     glad_glTexParameterIuiv = (PFNGLTEXPARAMETERIUIVPROC) load(userptr, "glTexParameterIuiv");
     glad_glTexStorage3DMultisample = (PFNGLTEXSTORAGE3DMULTISAMPLEPROC) load(userptr, "glTexStorage3DMultisample");
 }
+static void glad_gl_load_GL_EXT_draw_instanced( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_draw_instanced) return;
+    glad_glDrawArraysInstancedEXT = (PFNGLDRAWARRAYSINSTANCEDEXTPROC) load(userptr, "glDrawArraysInstancedEXT");
+    glad_glDrawElementsInstancedEXT = (PFNGLDRAWELEMENTSINSTANCEDEXTPROC) load(userptr, "glDrawElementsInstancedEXT");
+}
 static void glad_gl_load_GL_KHR_blend_equation_advanced( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_KHR_blend_equation_advanced) return;
     glad_glBlendBarrierKHR = (PFNGLBLENDBARRIERKHRPROC) load(userptr, "glBlendBarrierKHR");
@@ -862,6 +870,7 @@ static int glad_gl_find_extensions_gles2(void) {
     char **exts_i = NULL;
     if (!glad_gl_get_extensions(&exts, &exts_i)) return 0;
 
+    GLAD_GL_EXT_draw_instanced = glad_gl_has_extension(exts, exts_i, "GL_EXT_draw_instanced");
     GLAD_GL_KHR_blend_equation_advanced = glad_gl_has_extension(exts, exts_i, "GL_KHR_blend_equation_advanced");
     GLAD_GL_KHR_blend_equation_advanced_coherent = glad_gl_has_extension(exts, exts_i, "GL_KHR_blend_equation_advanced_coherent");
 
@@ -915,6 +924,7 @@ int gladLoadGLES2UserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_ES_VERSION_3_2(load, userptr);
 
     if (!glad_gl_find_extensions_gles2()) return 0;
+    glad_gl_load_GL_EXT_draw_instanced(load, userptr);
     glad_gl_load_GL_KHR_blend_equation_advanced(load, userptr);
 
 

@@ -42,6 +42,13 @@ int GLAD_GL_VERSION_4_3 = 0;
 int GLAD_GL_VERSION_4_4 = 0;
 int GLAD_GL_VERSION_4_5 = 0;
 int GLAD_GL_VERSION_4_6 = 0;
+int GLAD_GL_APPLE_vertex_array_object = 0;
+int GLAD_GL_ARB_draw_instanced = 0;
+int GLAD_GL_ARB_instanced_arrays = 0;
+int GLAD_GL_ARB_vertex_array_object = 0;
+int GLAD_GL_EXT_draw_instanced = 0;
+int GLAD_GL_EXT_framebuffer_blit = 0;
+int GLAD_GL_EXT_framebuffer_multisample = 0;
 int GLAD_GL_EXT_framebuffer_object = 0;
 int GLAD_GL_KHR_blend_equation_advanced = 0;
 int GLAD_GL_KHR_blend_equation_advanced_coherent = 0;
@@ -82,6 +89,7 @@ PFNGLBINDTEXTUREUNITPROC glad_glBindTextureUnit = NULL;
 PFNGLBINDTEXTURESPROC glad_glBindTextures = NULL;
 PFNGLBINDTRANSFORMFEEDBACKPROC glad_glBindTransformFeedback = NULL;
 PFNGLBINDVERTEXARRAYPROC glad_glBindVertexArray = NULL;
+PFNGLBINDVERTEXARRAYAPPLEPROC glad_glBindVertexArrayAPPLE = NULL;
 PFNGLBINDVERTEXBUFFERPROC glad_glBindVertexBuffer = NULL;
 PFNGLBINDVERTEXBUFFERSPROC glad_glBindVertexBuffers = NULL;
 PFNGLBITMAPPROC glad_glBitmap = NULL;
@@ -96,6 +104,7 @@ PFNGLBLENDFUNCSEPARATEPROC glad_glBlendFuncSeparate = NULL;
 PFNGLBLENDFUNCSEPARATEIPROC glad_glBlendFuncSeparatei = NULL;
 PFNGLBLENDFUNCIPROC glad_glBlendFunci = NULL;
 PFNGLBLITFRAMEBUFFERPROC glad_glBlitFramebuffer = NULL;
+PFNGLBLITFRAMEBUFFEREXTPROC glad_glBlitFramebufferEXT = NULL;
 PFNGLBLITNAMEDFRAMEBUFFERPROC glad_glBlitNamedFramebuffer = NULL;
 PFNGLBUFFERDATAPROC glad_glBufferData = NULL;
 PFNGLBUFFERSTORAGEPROC glad_glBufferStorage = NULL;
@@ -224,6 +233,7 @@ PFNGLDELETESYNCPROC glad_glDeleteSync = NULL;
 PFNGLDELETETEXTURESPROC glad_glDeleteTextures = NULL;
 PFNGLDELETETRANSFORMFEEDBACKSPROC glad_glDeleteTransformFeedbacks = NULL;
 PFNGLDELETEVERTEXARRAYSPROC glad_glDeleteVertexArrays = NULL;
+PFNGLDELETEVERTEXARRAYSAPPLEPROC glad_glDeleteVertexArraysAPPLE = NULL;
 PFNGLDEPTHFUNCPROC glad_glDepthFunc = NULL;
 PFNGLDEPTHMASKPROC glad_glDepthMask = NULL;
 PFNGLDEPTHRANGEPROC glad_glDepthRange = NULL;
@@ -241,16 +251,20 @@ PFNGLDISPATCHCOMPUTEINDIRECTPROC glad_glDispatchComputeIndirect = NULL;
 PFNGLDRAWARRAYSPROC glad_glDrawArrays = NULL;
 PFNGLDRAWARRAYSINDIRECTPROC glad_glDrawArraysIndirect = NULL;
 PFNGLDRAWARRAYSINSTANCEDPROC glad_glDrawArraysInstanced = NULL;
+PFNGLDRAWARRAYSINSTANCEDARBPROC glad_glDrawArraysInstancedARB = NULL;
 PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC glad_glDrawArraysInstancedBaseInstance = NULL;
+PFNGLDRAWARRAYSINSTANCEDEXTPROC glad_glDrawArraysInstancedEXT = NULL;
 PFNGLDRAWBUFFERPROC glad_glDrawBuffer = NULL;
 PFNGLDRAWBUFFERSPROC glad_glDrawBuffers = NULL;
 PFNGLDRAWELEMENTSPROC glad_glDrawElements = NULL;
 PFNGLDRAWELEMENTSBASEVERTEXPROC glad_glDrawElementsBaseVertex = NULL;
 PFNGLDRAWELEMENTSINDIRECTPROC glad_glDrawElementsIndirect = NULL;
 PFNGLDRAWELEMENTSINSTANCEDPROC glad_glDrawElementsInstanced = NULL;
+PFNGLDRAWELEMENTSINSTANCEDARBPROC glad_glDrawElementsInstancedARB = NULL;
 PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC glad_glDrawElementsInstancedBaseInstance = NULL;
 PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC glad_glDrawElementsInstancedBaseVertex = NULL;
 PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC glad_glDrawElementsInstancedBaseVertexBaseInstance = NULL;
+PFNGLDRAWELEMENTSINSTANCEDEXTPROC glad_glDrawElementsInstancedEXT = NULL;
 PFNGLDRAWPIXELSPROC glad_glDrawPixels = NULL;
 PFNGLDRAWRANGEELEMENTSPROC glad_glDrawRangeElements = NULL;
 PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC glad_glDrawRangeElementsBaseVertex = NULL;
@@ -324,6 +338,7 @@ PFNGLGENSAMPLERSPROC glad_glGenSamplers = NULL;
 PFNGLGENTEXTURESPROC glad_glGenTextures = NULL;
 PFNGLGENTRANSFORMFEEDBACKSPROC glad_glGenTransformFeedbacks = NULL;
 PFNGLGENVERTEXARRAYSPROC glad_glGenVertexArrays = NULL;
+PFNGLGENVERTEXARRAYSAPPLEPROC glad_glGenVertexArraysAPPLE = NULL;
 PFNGLGENERATEMIPMAPPROC glad_glGenerateMipmap = NULL;
 PFNGLGENERATEMIPMAPEXTPROC glad_glGenerateMipmapEXT = NULL;
 PFNGLGENERATETEXTUREMIPMAPPROC glad_glGenerateTextureMipmap = NULL;
@@ -526,6 +541,7 @@ PFNGLISSYNCPROC glad_glIsSync = NULL;
 PFNGLISTEXTUREPROC glad_glIsTexture = NULL;
 PFNGLISTRANSFORMFEEDBACKPROC glad_glIsTransformFeedback = NULL;
 PFNGLISVERTEXARRAYPROC glad_glIsVertexArray = NULL;
+PFNGLISVERTEXARRAYAPPLEPROC glad_glIsVertexArrayAPPLE = NULL;
 PFNGLLIGHTMODELFPROC glad_glLightModelf = NULL;
 PFNGLLIGHTMODELFVPROC glad_glLightModelfv = NULL;
 PFNGLLIGHTMODELIPROC glad_glLightModeli = NULL;
@@ -772,6 +788,7 @@ PFNGLRENDERMODEPROC glad_glRenderMode = NULL;
 PFNGLRENDERBUFFERSTORAGEPROC glad_glRenderbufferStorage = NULL;
 PFNGLRENDERBUFFERSTORAGEEXTPROC glad_glRenderbufferStorageEXT = NULL;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glad_glRenderbufferStorageMultisample = NULL;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glad_glRenderbufferStorageMultisampleEXT = NULL;
 PFNGLRESUMETRANSFORMFEEDBACKPROC glad_glResumeTransformFeedback = NULL;
 PFNGLROTATEDPROC glad_glRotated = NULL;
 PFNGLROTATEFPROC glad_glRotatef = NULL;
@@ -1043,6 +1060,7 @@ PFNGLVERTEXATTRIB4UIVPROC glad_glVertexAttrib4uiv = NULL;
 PFNGLVERTEXATTRIB4USVPROC glad_glVertexAttrib4usv = NULL;
 PFNGLVERTEXATTRIBBINDINGPROC glad_glVertexAttribBinding = NULL;
 PFNGLVERTEXATTRIBDIVISORPROC glad_glVertexAttribDivisor = NULL;
+PFNGLVERTEXATTRIBDIVISORARBPROC glad_glVertexAttribDivisorARB = NULL;
 PFNGLVERTEXATTRIBFORMATPROC glad_glVertexAttribFormat = NULL;
 PFNGLVERTEXATTRIBI1IPROC glad_glVertexAttribI1i = NULL;
 PFNGLVERTEXATTRIBI1IVPROC glad_glVertexAttribI1iv = NULL;
@@ -2225,6 +2243,42 @@ static void glad_gl_load_GL_VERSION_4_6( GLADuserptrloadfunc load, void* userptr
     glad_glPolygonOffsetClamp = (PFNGLPOLYGONOFFSETCLAMPPROC) load(userptr, "glPolygonOffsetClamp");
     glad_glSpecializeShader = (PFNGLSPECIALIZESHADERPROC) load(userptr, "glSpecializeShader");
 }
+static void glad_gl_load_GL_APPLE_vertex_array_object( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_APPLE_vertex_array_object) return;
+    glad_glBindVertexArrayAPPLE = (PFNGLBINDVERTEXARRAYAPPLEPROC) load(userptr, "glBindVertexArrayAPPLE");
+    glad_glDeleteVertexArraysAPPLE = (PFNGLDELETEVERTEXARRAYSAPPLEPROC) load(userptr, "glDeleteVertexArraysAPPLE");
+    glad_glGenVertexArraysAPPLE = (PFNGLGENVERTEXARRAYSAPPLEPROC) load(userptr, "glGenVertexArraysAPPLE");
+    glad_glIsVertexArrayAPPLE = (PFNGLISVERTEXARRAYAPPLEPROC) load(userptr, "glIsVertexArrayAPPLE");
+}
+static void glad_gl_load_GL_ARB_draw_instanced( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_ARB_draw_instanced) return;
+    glad_glDrawArraysInstancedARB = (PFNGLDRAWARRAYSINSTANCEDARBPROC) load(userptr, "glDrawArraysInstancedARB");
+    glad_glDrawElementsInstancedARB = (PFNGLDRAWELEMENTSINSTANCEDARBPROC) load(userptr, "glDrawElementsInstancedARB");
+}
+static void glad_gl_load_GL_ARB_instanced_arrays( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_ARB_instanced_arrays) return;
+    glad_glVertexAttribDivisorARB = (PFNGLVERTEXATTRIBDIVISORARBPROC) load(userptr, "glVertexAttribDivisorARB");
+}
+static void glad_gl_load_GL_ARB_vertex_array_object( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_ARB_vertex_array_object) return;
+    glad_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC) load(userptr, "glBindVertexArray");
+    glad_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) load(userptr, "glDeleteVertexArrays");
+    glad_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC) load(userptr, "glGenVertexArrays");
+    glad_glIsVertexArray = (PFNGLISVERTEXARRAYPROC) load(userptr, "glIsVertexArray");
+}
+static void glad_gl_load_GL_EXT_draw_instanced( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_draw_instanced) return;
+    glad_glDrawArraysInstancedEXT = (PFNGLDRAWARRAYSINSTANCEDEXTPROC) load(userptr, "glDrawArraysInstancedEXT");
+    glad_glDrawElementsInstancedEXT = (PFNGLDRAWELEMENTSINSTANCEDEXTPROC) load(userptr, "glDrawElementsInstancedEXT");
+}
+static void glad_gl_load_GL_EXT_framebuffer_blit( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_framebuffer_blit) return;
+    glad_glBlitFramebufferEXT = (PFNGLBLITFRAMEBUFFEREXTPROC) load(userptr, "glBlitFramebufferEXT");
+}
+static void glad_gl_load_GL_EXT_framebuffer_multisample( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_framebuffer_multisample) return;
+    glad_glRenderbufferStorageMultisampleEXT = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) load(userptr, "glRenderbufferStorageMultisampleEXT");
+}
 static void glad_gl_load_GL_EXT_framebuffer_object( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_EXT_framebuffer_object) return;
     glad_glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC) load(userptr, "glBindFramebufferEXT");
@@ -2344,6 +2398,13 @@ static int glad_gl_find_extensions_gl(void) {
     char **exts_i = NULL;
     if (!glad_gl_get_extensions(&exts, &exts_i)) return 0;
 
+    GLAD_GL_APPLE_vertex_array_object = glad_gl_has_extension(exts, exts_i, "GL_APPLE_vertex_array_object");
+    GLAD_GL_ARB_draw_instanced = glad_gl_has_extension(exts, exts_i, "GL_ARB_draw_instanced");
+    GLAD_GL_ARB_instanced_arrays = glad_gl_has_extension(exts, exts_i, "GL_ARB_instanced_arrays");
+    GLAD_GL_ARB_vertex_array_object = glad_gl_has_extension(exts, exts_i, "GL_ARB_vertex_array_object");
+    GLAD_GL_EXT_draw_instanced = glad_gl_has_extension(exts, exts_i, "GL_EXT_draw_instanced");
+    GLAD_GL_EXT_framebuffer_blit = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_blit");
+    GLAD_GL_EXT_framebuffer_multisample = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_multisample");
     GLAD_GL_EXT_framebuffer_object = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_object");
     GLAD_GL_KHR_blend_equation_advanced = glad_gl_has_extension(exts, exts_i, "GL_KHR_blend_equation_advanced");
     GLAD_GL_KHR_blend_equation_advanced_coherent = glad_gl_has_extension(exts, exts_i, "GL_KHR_blend_equation_advanced_coherent");
@@ -2428,6 +2489,13 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_VERSION_4_6(load, userptr);
 
     if (!glad_gl_find_extensions_gl()) return 0;
+    glad_gl_load_GL_APPLE_vertex_array_object(load, userptr);
+    glad_gl_load_GL_ARB_draw_instanced(load, userptr);
+    glad_gl_load_GL_ARB_instanced_arrays(load, userptr);
+    glad_gl_load_GL_ARB_vertex_array_object(load, userptr);
+    glad_gl_load_GL_EXT_draw_instanced(load, userptr);
+    glad_gl_load_GL_EXT_framebuffer_blit(load, userptr);
+    glad_gl_load_GL_EXT_framebuffer_multisample(load, userptr);
     glad_gl_load_GL_EXT_framebuffer_object(load, userptr);
     glad_gl_load_GL_KHR_blend_equation_advanced(load, userptr);
 
