@@ -1985,7 +1985,7 @@ namespace lime
 	void lime_gl_transform_feedback_varyings(int program, value varyings, int bufferMode)
 	{
 		GLsizei size = val_array_size(varyings);
-		const char **_varyings = (const char **)alloca(size * sizeof(GLenum));
+		const char **_varyings = (const char **)alloca(size * sizeof(const char *));
 
 		for (int i = 0; i < size; i++)
 		{
