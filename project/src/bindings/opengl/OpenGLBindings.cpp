@@ -1959,7 +1959,7 @@ namespace lime
 
 	void lime_gl_tex_parameteri(int target, int pname, int param)
 	{
-		glTexParameterf(target, pname, param);
+		glTexParameteri(target, pname, param);
 	}
 
 	void lime_gl_tex_storage_2d(int target, int level, int internalformat, int width, int height)
