@@ -748,7 +748,11 @@ namespace lime
 
 	void lime_gl_depth_rangef(float zNear, float zFar)
 	{
+#ifdef LIME_OPENGL_GL
+		glDepthRange(zNear, zFar);
+#else
 		glDepthRangef(zNear, zFar);
+#endif
 	}
 
 	void lime_gl_detach_shader(int program, int shader)
