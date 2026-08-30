@@ -529,7 +529,7 @@ import lime.utils.Log;
 	{
 		#if (lime_cffi && !macro)
 		@:privateAccess
-		value = Math.min(value, lime._internal.backend.native.NativeCFFI.lime_system_get_max_threads() - 1);
+		value = Std.int(Math.min(value, lime._internal.backend.native.NativeCFFI.lime_system_get_max_threads() - 1));
 		#end
 
 		if (threadPool != null)
