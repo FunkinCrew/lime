@@ -1087,9 +1087,9 @@ namespace lime
 
 	double lime_gl_get_buffer_pointerv(int target, int pname)
 	{
-		uintptr_t result = 0;
-		glGetBufferPointerv(target, pname, (void **)result);
-		return (double)result;
+		void *ptr = nullptr;
+		glGetBufferPointerv(target, pname, &ptr);
+		return (double)(uintptr_t)ptr;
 	}
 
 	void lime_gl_get_buffer_sub_data(int target, double offset, int size, double data)
