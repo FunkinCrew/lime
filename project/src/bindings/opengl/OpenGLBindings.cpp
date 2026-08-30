@@ -442,7 +442,11 @@ namespace lime
 
 	void lime_gl_clear_depthf(float depth)
 	{
+#ifdef LIME_OPENGL_GL
+		glClearDepth(depth);
+#else
 		glClearDepthf(depth);
+#endif
 	}
 
 	void lime_gl_clear_stencil(int stencil)
