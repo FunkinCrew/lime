@@ -1,4 +1,3 @@
-#include <SDL3/SDL.h>
 #include <utils/File.h>
 
 namespace lime
@@ -8,7 +7,7 @@ namespace lime
 	{
 		ownedMemory = NULL;
 
-		handle = (void *)SDL_IOFromFile(path, mode);
+		handle = SDL_IOFromFile(path, mode);
 
 		if (!handle)
 		{
@@ -20,7 +19,7 @@ namespace lime
 
 				if (SDL_asprintf(&fullpath, "%s%s", base, path) >= 0)
 				{
-					handle = (void *)SDL_IOFromFile(fullpath, mode);
+					handle = SDL_IOFromFile(fullpath, mode);
 
 					SDL_free(fullpath);
 				}
@@ -46,7 +45,7 @@ namespace lime
 			{
 				SDL_memcpy(ownedMemory, bytes->b, bytes->length);
 
-				handle = (void *)SDL_IOFromMem(ownedMemory, bytes->length);
+				handle = SDL_IOFromMem(ownedMemory, bytes->length);
 			}
 			else
 			{
@@ -55,7 +54,7 @@ namespace lime
 		}
 		else
 		{
-			handle = (void *)SDL_IOFromConstMem(bytes->b, bytes->length);
+			handle = SDL_IOFromConstMem(bytes->b, bytes->length);
 		}
 	}
 
@@ -65,7 +64,7 @@ namespace lime
 
 		if (handle)
 		{
-			result = SDL_CloseIO((SDL_IOStream *)handle);
+			result = SDL_CloseIO(handle);
 			handle = NULL;
 		}
 
@@ -80,12 +79,12 @@ namespace lime
 
 	bool File::Flush()
 	{
-		return handle ? SDL_FlushIO((SDL_IOStream *)handle) : false;
+		return handle ? SDL_FlushIO(handle) : false;
 	}
 
 	size_t File::Read(void *ptr, size_t size)
 	{
-		return handle ? SDL_ReadIO((SDL_IOStream *)handle, ptr, size) : -1;
+		return handle ? SDL_ReadIO(handle, ptr, size) : -1;
 	}
 
 	int64_t File::Seek(int64_t offset, int whence)
@@ -110,17 +109,17 @@ namespace lime
 				break;
 		}
 
-		return SDL_SeekIO((SDL_IOStream *)handle, offset, sdlWhence);
+		return SDL_SeekIO(handle, offset, sdlWhence);
 	}
 
 	int64_t File::Tell()
 	{
-		return handle ? SDL_TellIO((SDL_IOStream *)handle) : -1;
+		return handle ? SDL_TellIO(handle) : -1;
 	}
 
 	size_t File::Write(const void *ptr, size_t size)
 	{
-		return handle ? SDL_WriteIO((SDL_IOStream *)handle, ptr, size) : -1;
+		return handle ? SDL_WriteIO(handle, ptr, size) : -1;
 	}
 
 } // namespace lime
