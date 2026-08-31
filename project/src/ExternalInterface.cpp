@@ -48,7 +48,6 @@
 #include <ui/Cursor.h>
 #include <ui/FileDialog.h>
 #include <ui/Gamepad.h>
-#include <ui/Haptic.h>
 #include <ui/Joystick.h>
 #include <ui/KeyCode.h>
 #include <ui/Touch.h>
