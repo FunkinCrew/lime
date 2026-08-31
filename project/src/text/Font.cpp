@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <ft2build.h>
 #include <graphics/ImageBuffer.h>
 #include <list>
 #include <SDL3/SDL.h>
@@ -8,33 +7,21 @@
 #include <utils/File.h>
 #include <vector>
 
-#include FT_FREETYPE_H
-#include FT_BITMAP_H
-#include FT_SFNT_NAMES_H
-#include FT_TRUETYPE_IDS_H
-#include FT_TRUETYPE_TABLES_H
-#include FT_GLYPH_H
-#include FT_OUTLINE_H
-
-#ifdef GetGlyphIndices
-#undef GetGlyphIndices
-#endif
-
 namespace lime
 {
 
-	void *Font::library;
+	FT_Library Font::library;
 
 	void Font::InitializeLibrary()
 	{
-		FT_Init_FreeType((FT_Library *)&library);
+		FT_Init_FreeType(&library);
 	}
 
 	void Font::ShutdownLibrary()
 	{
 		if (library)
 		{
-			FT_Done_FreeType((FT_Library)library);
+			FT_Done_FreeType(library);
 
 			library = 0;
 		}
@@ -94,18 +81,18 @@ namespace lime
 
 			FT_Face face;
 
-			if (!FT_Open_Face((FT_Library)library, &args, faceIndex, &face))
+			if (!FT_Open_Face(library, &args, faceIndex, &face))
 			{
 				this->face = face;
 
-				for (int i = 0; i < ((FT_Face)face)->num_charmaps; i++)
+				for (int i = 0; i < face->num_charmaps; i++)
 				{
-					FT_UShort pid = ((FT_Face)face)->charmaps[i]->platform_id;
-					FT_UShort eid = ((FT_Face)face)->charmaps[i]->encoding_id;
+					FT_UShort pid = face->charmaps[i]->platform_id;
+					FT_UShort eid = face->charmaps[i]->encoding_id;
 
 					if (((pid == 0) && (eid == 3)) || ((pid == 3) && (eid == 1)))
 					{
-						FT_Set_Charmap((FT_Face)face, ((FT_Face)face)->charmaps[i]);
+						FT_Set_Charmap(face, face->charmaps[i]);
 					}
 				}
 			}
@@ -120,19 +107,19 @@ namespace lime
 	{
 		if (face)
 		{
-			FT_Done_Face((FT_Face)face);
+			FT_Done_Face(face);
 			face = 0;
 		}
 	}
 
 	int Font::GetAscender()
 	{
-		return ((FT_Face)face)->ascender;
+		return face->ascender;
 	}
 
 	int Font::GetDescender()
 	{
-		return ((FT_Face)face)->descender;
+		return face->descender;
 	}
 
 	wchar_t *Font::GetFamilyName()
@@ -142,14 +129,14 @@ namespace lime
 		FT_UInt num_sfnt_names, sfnt_name_index;
 		int len, i;
 
-		if (FT_IS_SFNT(((FT_Face)face)))
+		if (FT_IS_SFNT(face))
 		{
-			num_sfnt_names = FT_Get_Sfnt_Name_Count((FT_Face)face);
+			num_sfnt_names = FT_Get_Sfnt_Name_Count(face);
 			sfnt_name_index = 0;
 
 			while (sfnt_name_index < num_sfnt_names)
 			{
-				if (!FT_Get_Sfnt_Name((FT_Face)face, sfnt_name_index++, (FT_SfntName *)&sfnt_name) && sfnt_name.name_id == TT_NAME_ID_FULL_NAME)
+				if (!FT_Get_Sfnt_Name(face, sfnt_name_index++, (FT_SfntName *)&sfnt_name) && sfnt_name.name_id == TT_NAME_ID_FULL_NAME)
 				{
 					if (sfnt_name.platform_id == TT_PLATFORM_MACINTOSH)
 					{
@@ -188,7 +175,7 @@ namespace lime
 			charCode = (Uint32)-1;
 		}
 
-		return FT_Get_Char_Index((FT_Face)face, charCode);
+		return FT_Get_Char_Index(face, charCode);
 	}
 
 	void *Font::GetGlyphIndices(const char *characters)
@@ -202,7 +189,7 @@ namespace lime
 			if (character == 0)
 				break;
 
-			val_array_push(indices, alloc_int(FT_Get_Char_Index((FT_Face)face, character)));
+			val_array_push(indices, alloc_int(FT_Get_Char_Index(face, character)));
 		}
 
 		return indices;
@@ -210,17 +197,17 @@ namespace lime
 
 	void *Font::GetGlyphMetrics(int index)
 	{
-		if (FT_Load_Glyph((FT_Face)face, index, FT_LOAD_NO_BITMAP | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0)
+		if (FT_Load_Glyph(face, index, FT_LOAD_NO_BITMAP | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_DEFAULT) == 0)
 		{
 			value metrics = alloc_empty_object();
 
-			alloc_field(metrics, val_id("height"), alloc_int(((FT_Face)face)->glyph->metrics.height));
-			alloc_field(metrics, val_id("horizontalBearingX"), alloc_int(((FT_Face)face)->glyph->metrics.horiBearingX));
-			alloc_field(metrics, val_id("horizontalBearingY"), alloc_int(((FT_Face)face)->glyph->metrics.horiBearingY));
-			alloc_field(metrics, val_id("horizontalAdvance"), alloc_int(((FT_Face)face)->glyph->metrics.horiAdvance));
-			alloc_field(metrics, val_id("verticalBearingX"), alloc_int(((FT_Face)face)->glyph->metrics.vertBearingX));
-			alloc_field(metrics, val_id("verticalBearingY"), alloc_int(((FT_Face)face)->glyph->metrics.vertBearingY));
-			alloc_field(metrics, val_id("verticalAdvance"), alloc_int(((FT_Face)face)->glyph->metrics.vertAdvance));
+			alloc_field(metrics, val_id("height"), alloc_int(face->glyph->metrics.height));
+			alloc_field(metrics, val_id("horizontalBearingX"), alloc_int(face->glyph->metrics.horiBearingX));
+			alloc_field(metrics, val_id("horizontalBearingY"), alloc_int(face->glyph->metrics.horiBearingY));
+			alloc_field(metrics, val_id("horizontalAdvance"), alloc_int(face->glyph->metrics.horiAdvance));
+			alloc_field(metrics, val_id("verticalBearingX"), alloc_int(face->glyph->metrics.vertBearingX));
+			alloc_field(metrics, val_id("verticalBearingY"), alloc_int(face->glyph->metrics.vertBearingY));
+			alloc_field(metrics, val_id("verticalAdvance"), alloc_int(face->glyph->metrics.vertAdvance));
 
 			return metrics;
 		}
@@ -232,7 +219,7 @@ namespace lime
 	{
 		FT_Vector kerning;
 
-		if (FT_Get_Kerning((FT_Face)face, leftIndex, rightIndex, FT_KERNING_DEFAULT, &kerning) == 0)
+		if (FT_Get_Kerning(face, leftIndex, rightIndex, FT_KERNING_DEFAULT, &kerning) == 0)
 		{
 			value metrics = alloc_empty_object();
 
@@ -247,27 +234,27 @@ namespace lime
 
 	int Font::GetHeight()
 	{
-		return ((FT_Face)face)->height;
+		return face->height;
 	}
 
 	int Font::GetNumGlyphs()
 	{
-		return ((FT_Face)face)->num_glyphs;
+		return face->num_glyphs;
 	}
 
 	int Font::GetUnderlinePosition()
 	{
-		return ((FT_Face)face)->underline_position;
+		return face->underline_position;
 	}
 
 	int Font::GetUnderlineThickness()
 	{
-		return ((FT_Face)face)->underline_thickness;
+		return face->underline_thickness;
 	}
 
 	int Font::GetStrikethroughPosition()
 	{
-		TT_OS2 *os2 = (TT_OS2 *)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_OS2 *os2 = (TT_OS2 *)FT_Get_Sfnt_Table(face, ft_sfnt_os2);
 
 		if (os2 && os2->version != 0xFFFFU)
 		{
@@ -279,7 +266,7 @@ namespace lime
 
 	int Font::GetStrikethroughThickness()
 	{
-		TT_OS2 *os2 = (TT_OS2 *)FT_Get_Sfnt_Table(((FT_Face)face), ft_sfnt_os2);
+		TT_OS2 *os2 = (TT_OS2 *)FT_Get_Sfnt_Table(face, ft_sfnt_os2);
 
 		if (os2 && os2->version != 0xFFFFU)
 		{
@@ -291,7 +278,7 @@ namespace lime
 
 	int Font::GetUnitsPerEM()
 	{
-		return ((FT_Face)face)->units_per_EM;
+		return face->units_per_EM;
 	}
 
 	int Font::RenderGlyph(int index, Bytes *bytes, int offset, int flags)
@@ -303,11 +290,11 @@ namespace lime
 			loadFlags |= flags;
 		}
 
-		if (FT_Load_Glyph((FT_Face)face, index, loadFlags) == 0)
+		if (FT_Load_Glyph(face, index, loadFlags) == 0)
 		{
-			if (FT_Render_Glyph(((FT_Face)face)->glyph, FT_RENDER_MODE_LCD) == 0)
+			if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_LCD) == 0)
 			{
-				FT_Bitmap bitmap = ((FT_Face)face)->glyph->bitmap;
+				FT_Bitmap bitmap = face->glyph->bitmap;
 
 				int height = bitmap.rows;
 				int width = bitmap.width / 3; // Due to each pixel now has 3 components (R, G, B)
@@ -334,8 +321,8 @@ namespace lime
 				data->index = index;
 				data->width = width;
 				data->height = height;
-				data->x = ((FT_Face)face)->glyph->bitmap_left;
-				data->y = ((FT_Face)face)->glyph->bitmap_top;
+				data->x = face->glyph->bitmap_left;
+				data->y = face->glyph->bitmap_top;
 
 				unsigned char *position = &data->data;
 
@@ -394,7 +381,7 @@ namespace lime
 
 	void Font::SetSize(size_t size)
 	{
-		FT_Set_Char_Size((FT_Face)face, 0, static_cast<int>(size * 64), 0, 0);
+		FT_Set_Char_Size(face, 0, static_cast<int>(size * 64), 0, 0);
 	}
 
 } // namespace lime

@@ -1,11 +1,20 @@
 #pragma once
 
+#include <ft2build.h>
 #include <graphics/ImageBuffer.h>
 #include <hx/CFFIPrime.h>
 #include <system/System.h>
 #include <utils/Resource.h>
 
-#ifdef HX_WINDOWS
+#include FT_FREETYPE_H
+#include FT_BITMAP_H
+#include FT_SFNT_NAMES_H
+#include FT_TRUETYPE_IDS_H
+#include FT_TRUETYPE_TABLES_H
+#include FT_GLYPH_H
+#include FT_OUTLINE_H
+
+#ifdef GetGlyphIndices
 #undef GetGlyphIndices
 #endif
 
@@ -59,10 +68,10 @@ namespace lime
 		int RenderGlyphs(int *indices, int numIndices, Bytes *bytes, int flags);
 		void SetSize(size_t size);
 
-		void *face;
+		FT_Face face;
 
 	  private:
-		static void *library;
+		static FT_Library library;
 	};
 
 } // namespace lime
