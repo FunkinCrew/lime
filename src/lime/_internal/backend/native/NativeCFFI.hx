@@ -132,6 +132,7 @@ class NativeCFFI
 	private static var lime_webp_decode_file = new cpp.Callable<String->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_webp_decode_file", "soo", false));
 	private static var lime_render_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_render_event_manager_register", "oov", false));
 	private static var lime_sensor_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_sensor_event_manager_register", "oov", false));
+	private static var lime_system_get_max_threads = new cpp.Callable<Void->Int>(cpp.Prime._loadPrime("lime", "lime_system_get_max_threads", "i", false));
 	private static var lime_system_get_allow_screen_timeout = new cpp.Callable<Void->Bool>(cpp.Prime._loadPrime("lime", "lime_system_get_allow_screen_timeout", "b", false));
 	private static var lime_system_set_allow_screen_timeout = new cpp.Callable<Bool->Bool>(cpp.Prime._loadPrime("lime", "lime_system_set_allow_screen_timeout", "bb", false));
 	private static var lime_system_get_hint = new cpp.Callable<String->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_system_get_hint", "so", false));
@@ -318,6 +319,7 @@ class NativeCFFI
 	private static var lime_webp_decode_file = CFFI.load("lime", "lime_webp_decode_file", 2);
 	private static var lime_render_event_manager_register = CFFI.load("lime", "lime_render_event_manager_register", 2);
 	private static var lime_sensor_event_manager_register = CFFI.load("lime", "lime_sensor_event_manager_register", 2);
+	private static var lime_system_get_max_threads = CFFI.load("lime", "lime_system_get_max_threads", 0);
 	private static var lime_system_get_allow_screen_timeout = CFFI.load("lime", "lime_system_get_allow_screen_timeout", 0);
 	private static var lime_system_set_allow_screen_timeout = CFFI.load("lime", "lime_system_set_allow_screen_timeout", 1);
 	private static var lime_system_get_hint = CFFI.load("lime", "lime_system_get_hint", 1);
