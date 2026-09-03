@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL3/SDL.h>
+
 namespace lime
 {
 
@@ -10,11 +12,10 @@ namespace lime
 		~Mutex();
 
 		void Lock() const;
-		bool TryLock() const;
 		void Unlock() const;
 
 	  private:
-		void *mutex;
+		SDL_Mutex *mutex;
 	};
 
 } // namespace lime
