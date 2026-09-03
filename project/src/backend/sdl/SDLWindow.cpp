@@ -1,6 +1,6 @@
 #include "SDLWindow.h"
 
-#include "../../bindings/opengl/OpenGLBindings.h"
+#include "bindings/opengl/OpenGLBindings.h"
 #include "SDLApplication.h"
 #include "system/System.h"
 

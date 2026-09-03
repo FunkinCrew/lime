@@ -1,4 +1,4 @@
-#include "OpenGLBindings.h"
+#include "bindings/opengl/OpenGLBindings.h"
 
 #include <hx/CFFIPrime.h>
 #include <map>
