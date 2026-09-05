@@ -526,15 +526,16 @@ namespace lime
 	{
 		if (MouseEvent::callback)
 		{
+			float scale = SDL_GetWindowPixelDensity(SDL_GetWindowFromID(event->window.windowID));
 			switch (event->type)
 			{
 				case SDL_EVENT_MOUSE_MOTION:
 
 					mouseEvent.type = MOUSE_MOVE;
-					mouseEvent.x = event->motion.x;
-					mouseEvent.y = event->motion.y;
-					mouseEvent.movementX = event->motion.xrel;
-					mouseEvent.movementY = event->motion.yrel;
+					mouseEvent.x = event->motion.x * scale;
+					mouseEvent.y = event->motion.y * scale;
+					mouseEvent.movementX = event->motion.xrel * scale;
+					mouseEvent.movementY = event->motion.yrel * scale;
 					break;
 
 				case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -543,8 +544,8 @@ namespace lime
 
 					mouseEvent.type = MOUSE_DOWN;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
@@ -554,8 +555,8 @@ namespace lime
 
 					mouseEvent.type = MOUSE_UP;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
