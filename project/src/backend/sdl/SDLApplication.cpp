@@ -526,15 +526,21 @@ namespace lime
 	{
 		if (MouseEvent::callback)
 		{
+#ifndef IPHONE
+			float scale = 1;
+#else
+			float scale = SDL_GetWindowPixelDensity(SDL_GetWindowFromID(event->window.windowID));
+#endif
+
 			switch (event->type)
 			{
 				case SDL_EVENT_MOUSE_MOTION:
 
 					mouseEvent.type = MOUSE_MOVE;
-					mouseEvent.x = event->motion.x;
-					mouseEvent.y = event->motion.y;
-					mouseEvent.movementX = event->motion.xrel;
-					mouseEvent.movementY = event->motion.yrel;
+					mouseEvent.x = event->motion.x * scale;
+					mouseEvent.y = event->motion.y * scale;
+					mouseEvent.movementX = event->motion.xrel * scale;
+					mouseEvent.movementY = event->motion.yrel * scale;
 					break;
 
 				case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -543,8 +549,8 @@ namespace lime
 
 					mouseEvent.type = MOUSE_DOWN;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
@@ -554,8 +560,8 @@ namespace lime
 
 					mouseEvent.type = MOUSE_UP;
 					mouseEvent.button = event->button.button - 1;
-					mouseEvent.x = event->button.x;
-					mouseEvent.y = event->button.y;
+					mouseEvent.x = event->button.x * scale;
+					mouseEvent.y = event->button.y * scale;
 					mouseEvent.clickCount = event->button.clicks;
 					break;
 
@@ -711,20 +717,15 @@ namespace lime
 				case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
 				case SDL_EVENT_WINDOW_METAL_VIEW_RESIZED:
 				case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
-				case SDL_EVENT_WINDOW_RESIZED: {
-					int width = event->window.data1;
-					int height = event->window.data2;
-
-					if (width == 0 && height == 0)
-					{
-						SDL_GetWindowSizeInPixels(SDL_GetWindowFromID(event->window.windowID), &width, &height);
-					}
+				case SDL_EVENT_WINDOW_RESIZED:
 
 					windowEvent.type = WINDOW_RESIZE;
-					windowEvent.width = width;
-					windowEvent.height = height;
+#ifndef IPHONE
+					SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &(windowEvent.width), &(windowEvent.height));
+#else
+					SDL_GetWindowSizeInPixels(SDL_GetWindowFromID(event->window.windowID), &(windowEvent.width), &(windowEvent.height));
+#endif
 					break;
-				}
 
 				case SDL_EVENT_WINDOW_RESTORED:
 					windowEvent.type = WINDOW_RESTORE;
