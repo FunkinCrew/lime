@@ -526,7 +526,12 @@ namespace lime
 	{
 		if (MouseEvent::callback)
 		{
+#ifndef IPHONE
+			float scale = 1;
+#else
 			float scale = SDL_GetWindowPixelDensity(SDL_GetWindowFromID(event->window.windowID));
+#endif
+
 			switch (event->type)
 			{
 				case SDL_EVENT_MOUSE_MOTION:
@@ -715,7 +720,11 @@ namespace lime
 				case SDL_EVENT_WINDOW_RESIZED:
 
 					windowEvent.type = WINDOW_RESIZE;
+#ifndef IPHONE
+					SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &(windowEvent.width), &(windowEvent.height));
+#else
 					SDL_GetWindowSizeInPixels(SDL_GetWindowFromID(event->window.windowID), &(windowEvent.width), &(windowEvent.height));
+#endif
 					break;
 
 				case SDL_EVENT_WINDOW_RESTORED:
