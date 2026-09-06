@@ -545,8 +545,6 @@ namespace lime
 
 				case SDL_EVENT_MOUSE_BUTTON_DOWN:
 
-					SDL_CaptureMouse(true);
-
 					mouseEvent.type = MOUSE_DOWN;
 					mouseEvent.button = event->button.button - 1;
 					mouseEvent.x = event->button.x * scale;
@@ -555,8 +553,6 @@ namespace lime
 					break;
 
 				case SDL_EVENT_MOUSE_BUTTON_UP:
-
-					SDL_CaptureMouse(false);
 
 					mouseEvent.type = MOUSE_UP;
 					mouseEvent.button = event->button.button - 1;
