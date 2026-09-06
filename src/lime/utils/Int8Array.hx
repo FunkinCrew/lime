@@ -24,12 +24,7 @@ abstract Int8Array(JSInt8Array) from JSInt8Array to JSInt8Array
 		else if (array != null)
 		{
 			this = new JSInt8Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSInt8Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

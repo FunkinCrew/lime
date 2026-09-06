@@ -24,12 +24,7 @@ abstract Int16Array(JSInt16Array) from JSInt16Array to JSInt16Array
 		else if (array != null)
 		{
 			this = new JSInt16Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSInt16Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

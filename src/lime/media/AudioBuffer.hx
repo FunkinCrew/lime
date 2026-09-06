@@ -69,16 +69,6 @@ class AudioBuffer
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
 	@:noCompletion private var __srcHowlerDefaultSprite:String;
 
-	#if commonjs
-	private static function __init__()
-	{
-		var p = untyped AudioBuffer.prototype;
-		untyped Object.defineProperties(p, {
-			"src": {get: p.get_src, set: p.set_src}
-		});
-	}
-	#end
-
 	/**
 		Creates a new, empty `AudioBuffer` instance.
 	**/

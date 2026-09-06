@@ -23,12 +23,7 @@ abstract UInt8Array(JSUInt8Array) from JSUInt8Array to JSUInt8Array
 		else if (array != null)
 		{
 			this = new JSUInt8Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSUInt8Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

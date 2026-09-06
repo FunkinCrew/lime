@@ -24,12 +24,7 @@ abstract UInt16Array(JSUInt16Array) from JSUInt16Array to JSUInt16Array
 		else if (array != null)
 		{
 			this = new JSUInt16Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSUInt16Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

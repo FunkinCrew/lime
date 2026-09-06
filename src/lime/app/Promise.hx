@@ -69,17 +69,6 @@ class Promise<T>
 
 	private var jobID:Int = -1;
 
-	#if commonjs
-	private static function __init__()
-	{
-		var p = untyped Promise.prototype;
-		untyped Object.defineProperties(p, {
-			"isComplete": {get: p.get_isComplete},
-			"isError": {get: p.get_isError}
-		});
-	}
-	#end
-
 	/**
 		Create a new `Promise` instance
 	**/

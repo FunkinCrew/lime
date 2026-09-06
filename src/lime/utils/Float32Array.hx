@@ -25,12 +25,7 @@ abstract Float32Array(JSFloat32Array) from JSFloat32Array to JSFloat32Array
 		else if (array != null)
 		{
 			this = new JSFloat32Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSFloat32Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

@@ -24,12 +24,7 @@ abstract Float64Array(JSFloat64Array) from JSFloat64Array to JSFloat64Array
 		else if (array != null)
 		{
 			this = new JSFloat64Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSFloat64Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

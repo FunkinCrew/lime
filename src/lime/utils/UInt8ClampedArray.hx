@@ -24,12 +24,7 @@ abstract UInt8ClampedArray(JSUInt8ClampedArray) from JSUInt8ClampedArray to JSUI
 		else if (array != null)
 		{
 			this = new JSUInt8ClampedArray(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSUInt8ClampedArray(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

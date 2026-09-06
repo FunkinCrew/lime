@@ -100,15 +100,7 @@ class Application extends Module
 
 	private static function __init__()
 	{
-		var _init = ApplicationBackend;
-		#if commonjs
-		var p = untyped Application.prototype;
-		untyped Object.defineProperties(p, {
-			"preloader": {get: p.get_preloader},
-			"window": {get: p.get_window},
-			"windows": {get: p.get_windows}
-		});
-		#end
+		var init = ApplicationBackend;
 	}
 
 	/**

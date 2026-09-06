@@ -255,11 +255,7 @@ class Howl
 import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 
-#if commonjs
-@:jsRequire("howler", "Howl")
-#else
 @:native("Howl")
-#end
 extern class Howl
 {
 	public function new(options:HowlOptions);

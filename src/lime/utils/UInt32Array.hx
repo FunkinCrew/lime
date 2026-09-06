@@ -24,12 +24,7 @@ abstract UInt32Array(JSUInt32Array) from JSUInt32Array to JSUInt32Array
 		else if (array != null)
 		{
 			this = new JSUInt32Array(untyped array);
-		#if (openfl && commonjs)
-		}
-		else if (vector != null)
-		{
-			this = new JSUInt32Array(untyped (vector));
-		#elseif openfl
+		#if openfl
 		}
 		else if (vector != null)
 		{

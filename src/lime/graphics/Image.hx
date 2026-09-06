@@ -164,22 +164,6 @@ class Image
 	**/
 	public var y:Float;
 
-	#if commonjs
-	private static function __init__()
-	{
-		var p = untyped Image.prototype;
-		untyped Object.defineProperties(p, {
-			"data": {get: p.get_data, set: p.set_data},
-			"format": {get: p.get_format, set: p.set_format},
-			"powerOfTwo": {get: p.get_powerOfTwo, set: p.set_powerOfTwo},
-			"premultiplied": {get: p.get_premultiplied, set: p.set_premultiplied},
-			"rect": {get: p.get_rect},
-			"src": {get: p.get_src, set: p.set_src},
-			"transparent": {get: p.get_transparent, set: p.set_transparent}
-		});
-	}
-	#end
-
 	/**
 		Creates a new `Image` instance.
 

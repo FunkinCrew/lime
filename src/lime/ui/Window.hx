@@ -173,38 +173,6 @@ class Window
 	@:noCompletion private var __maxWidth:Int = 0x7FFFFFFF;
 	@:noCompletion private var __maxHeight:Int = 0x7FFFFFFF;
 
-	#if commonjs
-	private static function __init__()
-	{
-		var p = untyped Window.prototype;
-		untyped Object.defineProperties(p, {
-			"borderless": {get: p.get_borderless, set: p.set_borderless},
-			"cursor": {get: p.get_cursor, set: p.set_cursor},
-			"display": {get: p.get_display},
-			"displayMode": {get: p.get_displayMode, set: p.set_displayMode},
-			"frameRate": {get: p.get_frameRate, set: p.set_frameRate},
-			"fullscreen": {get: p.get_fullscreen, set: p.set_fullscreen},
-			"height": {get: p.get_height, set: p.set_height},
-			"maxHeight": {get: p.get_maxHeight, set: p.set_maxHeight},
-			"maximized": {get: p.get_maximized, set: p.set_maximized},
-			"maxWidth": {get: p.get_maxWidth, set: p.set_maxWidth},
-			"minHeight": {get: p.get_minHeight, set: p.set_minHeight},
-			"minimized": {get: p.get_minimized, set: p.set_minimized},
-			"minWidth": {get: p.get_minWidth, set: p.set_minWidth},
-			"mouseLock": {get: p.get_mouseLock, set: p.set_mouseLock},
-			"resizable": {get: p.get_resizable, set: p.set_resizable},
-			"scale": {get: p.get_scale},
-			"textInputEnabled": {get: p.get_textInputEnabled, set: p.set_textInputEnabled},
-			"title": {get: p.get_title, set: p.set_title},
-			"visible": {get: p.get_visible, set: p.set_visible},
-			"alwaysOnTop": {get: p.get_alwaysOnTop, set: p.set_alwaysOnTop},
-			"width": {get: p.get_width, set: p.set_width},
-			"x": {get: p.get_x, set: p.set_y},
-			"y": {get: p.get_x, set: p.set_y}
-		});
-	}
-	#end
-
 	@:noCompletion private function new(application:Application, attributes:WindowAttributes)
 	{
 		this.application = application;

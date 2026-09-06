@@ -58,11 +58,7 @@ import haxe.extern.EitherType;
 
 import js.html.audio.GainNode;
 
-#if commonjs
-@:jsRequire("howler")
-#else
 @:native("Howler")
-#end
 extern class Howler
 {
 	public static var autoSuspend:Bool;
