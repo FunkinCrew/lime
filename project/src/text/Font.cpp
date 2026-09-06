@@ -10,20 +10,22 @@
 namespace lime
 {
 
-	FT_Library Font::library;
+	FT_Library Font::sharedLibrary = 0;
 
 	void Font::InitializeLibrary()
 	{
-		FT_Init_FreeType(&library);
+		if (!sharedLibrary)
+		{
+			FT_Init_FreeType(&sharedLibrary);
+		}
 	}
 
 	void Font::ShutdownLibrary()
 	{
-		if (library)
+		if (sharedLibrary)
 		{
-			FT_Done_FreeType(library);
-
-			library = 0;
+			FT_Done_FreeType(sharedLibrary);
+			sharedLibrary = 0;
 		}
 	}
 
@@ -49,14 +51,35 @@ namespace lime
 	Font::Font(Resource *resource, int faceIndex)
 	{
 		this->face = 0;
+		this->library = 0;
+		this->ownedLibrary = !sharedLibrary;
 
 		if (resource)
 		{
+			if (sharedLibrary)
+			{
+				library = sharedLibrary;
+			}
+			else if (FT_Init_FreeType(&library) != 0)
+			{
+				library = 0;
+				ownedLibrary = false;
+				return;
+			}
+
 			File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data, true);
 
 			if (!file->handle)
 			{
 				delete file;
+
+				if (ownedLibrary && library)
+				{
+					FT_Done_FreeType(library);
+					library = 0;
+					ownedLibrary = false;
+				}
+
 				return;
 			}
 
@@ -99,6 +122,13 @@ namespace lime
 			else
 			{
 				FT_Stream_Close(stream);
+
+				if (ownedLibrary && library)
+				{
+					FT_Done_FreeType(library);
+					library = 0;
+					ownedLibrary = false;
+				}
 			}
 		}
 	}
@@ -109,6 +139,13 @@ namespace lime
 		{
 			FT_Done_Face(face);
 			face = 0;
+		}
+
+		if (ownedLibrary && library)
+		{
+			FT_Done_FreeType(library);
+			library = 0;
+			ownedLibrary = false;
 		}
 	}
 

@@ -71,7 +71,9 @@ namespace lime
 		FT_Face face;
 
 	  private:
-		static FT_Library library;
+		static FT_Library sharedLibrary;
+		FT_Library library;
+		bool ownedLibrary;
 	};
 
 } // namespace lime

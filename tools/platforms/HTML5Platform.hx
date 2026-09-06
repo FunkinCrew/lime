@@ -309,8 +309,6 @@ class HTML5Platform extends PlatformTarget
 			}
 		}
 
-		Font.init();
-
 		var createdDirectories = new Map<String, Bool>();
 
 		for (asset in project.assets)
