@@ -4979,12 +4979,10 @@ abstract WebGL2RenderContext(Dynamic) from Dynamic to Dynamic {
 		return context.webgl2;
 	}
 
-	#if (!doc_gen && (lime_opengl || lime_opengles))
 	@:from private static function fromOpenGLES3RenderContext(gl:OpenGLES3RenderContext):WebGL2RenderContext
 	{
 		return cast gl;
 	}
-	#end
 
 	@:from private static function fromGL(gl:Class<GL>):WebGL2RenderContext
 	{

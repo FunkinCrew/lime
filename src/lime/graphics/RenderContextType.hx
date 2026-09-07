@@ -31,6 +31,11 @@ enum abstract RenderContextType(String) from String to String
 	var WEBGL = "webgl";
 
 	/**
+		Describes a BGFX render context
+	**/
+	var BGFX = "bgfx";
+
+	/**
 		Describes a custom render context
 	**/
 	var CUSTOM = "custom";

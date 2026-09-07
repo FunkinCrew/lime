@@ -48,6 +48,7 @@ namespace lime
 		Window(Application *application, int width, int height, int flags, const char *title);
 		~Window();
 
+		bool CreateRenderer();
 		int Alert(int type, const char *message, const char *title, const char **buttons, int count);
 		bool SetVSyncMode(int mode);
 		void Close();

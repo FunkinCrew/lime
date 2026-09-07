@@ -4,6 +4,7 @@ import haxe.io.Bytes;
 
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
+import lime.graphics.bgfx.BGFX;
 import lime.graphics.opengl.GL;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
@@ -22,6 +23,7 @@ import lime.utils.UInt8Array;
 
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime._internal.backend.native.NativeOpenGLRenderContext)
+@:access(lime._internal.backend.native.NativeBGFXRenderContext)
 @:access(lime.app.Application)
 @:access(lime.graphics.opengl.GL)
 @:access(lime.graphics.OpenGLRenderContext)
@@ -132,6 +134,7 @@ class NativeWindow
 		var context = new RenderContext();
 		context.window = parent;
 
+		#if (lime_opengl || lime_opengles)
 		var gl = new NativeOpenGLRenderContext();
 
 		#if lime_opengl
@@ -153,6 +156,18 @@ class NativeWindow
 		{
 			GL.context = gl;
 		}
+		#elseif lime_bgfx
+		var bgfx = new NativeBGFXRenderContext();
+
+		context.bgfx = bgfx;
+		context.type = bgfx.type;
+		context.version = Std.string(bgfx.version);
+
+		if (BGFX.context == null)
+		{
+			BGFX.context = bgfx;
+		}
+		#end
 
 		contextAttributes.type = context.type;
 		context.attributes = contextAttributes;

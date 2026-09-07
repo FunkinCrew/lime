@@ -55,6 +55,7 @@
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
 #include <utils/File.h>
+#include <utils/HaxeResource.h>
 
 #ifdef HX_WINDOWS
 #include <codecvt>
@@ -206,6 +207,11 @@ namespace lime
 
 		Bytes data = Bytes(bytes);
 		return (uintptr_t)data.b + offset;
+	}
+
+	void lime_haxe_resource_init(value listNames, value getBytes)
+	{
+		HaxeResource::Init(val_is_null(listNames) ? NULL : new ValuePointer(listNames), val_is_null(getBytes) ? NULL : new ValuePointer(getBytes));
 	}
 
 	value lime_bytes_read_file(HxString path, value bytes)
@@ -2077,6 +2083,7 @@ namespace lime
 	DEFINE_PRIME2(lime_bytes_get_data_pointer_offset);
 	DEFINE_PRIME2(lime_bytes_read_file);
 	DEFINE_PRIME2v(lime_bytes_write_file);
+	DEFINE_PRIME2v(lime_haxe_resource_init);
 	DEFINE_PRIME1(lime_cffi_get_native_pointer);
 	DEFINE_PRIME2v(lime_clipboard_event_manager_register);
 	DEFINE_PRIME0(lime_clipboard_get_text);
@@ -2293,12 +2300,22 @@ extern "C" int lime_opengl_register_prims()
 }
 #endif
 
+#ifdef LIME_BGFX
+extern "C" int lime_bgfx_register_prims();
+#else
+extern "C" int lime_bgfx_register_prims()
+{
+	return 0;
+}
+#endif
+
 extern "C" int lime_register_prims()
 {
 	lime_cairo_register_prims();
 	lime_harfbuzz_register_prims();
 	lime_openal_register_prims();
 	lime_opengl_register_prims();
+	lime_bgfx_register_prims();
 
 	return 0;
 }

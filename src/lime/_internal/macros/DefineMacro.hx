@@ -30,19 +30,19 @@ class DefineMacro
 				{
 					Compiler.define("mobile");
 
-					if (cffi)
-					{
-						Compiler.define("lime-opengles");
-					}
+					// if (cffi)
+					// {
+					// 	Compiler.define("lime-opengles");
+					// }
 				}
 				else
 				{
 					Compiler.define("desktop");
 
-					if (cffi)
-					{
-						Compiler.define("lime-opengl");
-					}
+					// if (cffi)
+					// {
+					// 	Compiler.define("lime-opengl");
+					// }
 				}
 
 				if (cffi)
@@ -52,6 +52,11 @@ class DefineMacro
 					Compiler.define("lime-harfbuzz");
 
 					Compiler.define("lime-cffi");
+
+					if (!Context.defined("lime-opengles") || !Context.defined("lime-opengl"))
+					{
+						Compiler.define("lime-bgfx");
+					}
 				}
 				else
 				{

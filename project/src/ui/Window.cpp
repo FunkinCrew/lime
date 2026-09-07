@@ -1,5 +1,10 @@
 #include <app/Application.h>
+#ifdef LIME_OPENGL
 #include <bindings/opengl/OpenGLBindings.h>
+#endif
+#ifdef LIME_BGFX
+#include <bindings/bgfx/BGFXBindings.h>
+#endif
 #include <cstring>
 #include <system/System.h>
 #include <ui/Window.h>
@@ -18,7 +23,11 @@ namespace lime
 
 		this->flags = flags;
 
+#ifdef LIME_OPENGL
 		int sdlWindowFlags = SDL_WINDOW_OPENGL;
+#else
+		int sdlWindowFlags = 0;
+#endif
 
 		if (flags & WINDOW_FLAG_FULLSCREEN)
 			sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
@@ -57,6 +66,7 @@ namespace lime
 		// TODO: Use OpenGL 3.3 Core on Desktop
 #endif
 
+#ifdef LIME_OPENGL
 		if (flags & WINDOW_FLAG_DEPTH_BUFFER)
 		{
 			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32 - ((flags & WINDOW_FLAG_STENCIL_BUFFER) ? 8 : 0));
@@ -91,8 +101,26 @@ namespace lime
 			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
 			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 		}
+#endif
 
-		sdlWindow = SDL_CreateWindow(title, width, height, sdlWindowFlags);
+		SDL_PropertiesID props = SDL_CreateProperties();
+
+		if (title && (*title))
+		{
+			SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title);
+		}
+
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+		SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, sdlWindowFlags);
+
+#ifdef LIME_BGFX
+		SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_EXTERNAL_GRAPHICS_CONTEXT_BOOLEAN, true);
+#endif
+
+		sdlWindow = SDL_CreateWindowWithProperties(props);
+
+		SDL_DestroyProperties(props);
 
 		if (!sdlWindow)
 		{
@@ -105,6 +133,48 @@ namespace lime
 			return;
 		}
 
+		if (!CreateRenderer())
+		{
+			if (sdlWindow)
+			{
+				SDL_DestroyWindow(sdlWindow);
+				sdlWindow = 0;
+			}
+
+#ifdef LIME_OPENGL
+			if (context)
+			{
+				SDL_GL_DestroyContext(context);
+				context = 0;
+			}
+#endif
+		}
+	}
+
+	Window::~Window()
+	{
+		if (sdlWindow)
+		{
+			SDL_DestroyWindow(sdlWindow);
+			sdlWindow = 0;
+		}
+
+#ifdef LIME_OPENGL
+		if (context)
+		{
+			SDL_GL_DestroyContext(context);
+			context = 0;
+		}
+#endif
+
+#ifdef LIME_BGFX
+		BGFXBindings::Shutdown();
+#endif
+	}
+
+	bool Window::CreateRenderer()
+	{
+#ifdef LIME_OPENGL
 		context = SDL_GL_CreateContext(sdlWindow);
 
 		if (context && SDL_GL_MakeCurrent(sdlWindow, context))
@@ -120,6 +190,8 @@ namespace lime
 #endif
 
 			currentApplication->RegisterWindow(this);
+
+			return true;
 		}
 		else
 		{
@@ -129,33 +201,30 @@ namespace lime
 			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Could not create SDL GL Context", SDL_GetError(), sdlWindow);
 #endif
 
-			if (sdlWindow)
-			{
-				SDL_DestroyWindow(sdlWindow);
-				sdlWindow = 0;
-			}
-
-			if (context)
-			{
-				SDL_GL_DestroyContext(context);
-				context = 0;
-			}
+			return false;
 		}
-	}
+#endif
 
-	Window::~Window()
-	{
-		if (sdlWindow)
+#ifdef LIME_BGFX
+		if (BGFXBindings::Init(sdlWindow))
 		{
-			SDL_DestroyWindow(sdlWindow);
-			sdlWindow = 0;
-		}
+			currentApplication->RegisterWindow(this);
 
-		if (context)
-		{
-			SDL_GL_DestroyContext(context);
-			context = 0;
+			return true;
 		}
+		else
+		{
+#if defined(IPHONE)
+			printf("Could not initialize BGFX backend: %s\n", SDL_GetError());
+#else
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Could not initialize BGFX backend", SDL_GetError(), sdlWindow);
+#endif
+
+			return false;
+		}
+#endif
+
+		return false;
 	}
 
 	int Window::Alert(int type, const char *message, const char *title, const char **buttons, int count)
