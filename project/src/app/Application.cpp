@@ -17,6 +17,10 @@
 #include <ui/Gesture.h>
 #include <ui/Joystick.h>
 
+#ifdef LIME_BGFX
+#include <bindings/bgfx/BGFXBindings.h>
+#endif
+
 #ifdef HX_MACOS
 #include <unistd.h>
 #endif
@@ -801,6 +805,9 @@ namespace lime
 				case SDL_EVENT_WINDOW_METAL_VIEW_RESIZED:
 				case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
 				case SDL_EVENT_WINDOW_RESIZED:
+#ifdef LIME_BGFX
+					BGFXBindings::ResetWindow(0, 0);
+#endif
 					windowEvent.type = WINDOW_RESIZE;
 #ifndef IPHONE
 					SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &windowEvent.width, &windowEvent.height);
@@ -838,6 +845,10 @@ namespace lime
 
 #ifdef IPHONE
 		SDL_SetiOSAnimationCallback(window->sdlWindow, 1, HandleAppAnimationCallback, NULL);
+#endif
+
+#ifdef LIME_BGFX
+		BGFXBindings::defaultWindow = window->sdlWindow;
 #endif
 	}
 
@@ -931,6 +942,9 @@ namespace lime
 
 			case SDL_EVENT_DID_ENTER_FOREGROUND:
 			{
+#ifdef LIME_BGFX
+				BGFXBindings::ResetWindow(0, 0);
+#endif
 				WindowEvent windowEvent;
 				windowEvent.type = WINDOW_ACTIVATE;
 				WindowEvent::Dispatch(&windowEvent);
@@ -949,6 +963,10 @@ namespace lime
 	{
 		if (!background && event->type == SDL_EVENT_WINDOW_EXPOSED)
 		{
+#ifdef LIME_BGFX
+			BGFXBindings::ResetWindow(0, 0);
+#endif
+
 			WindowEvent windowResizeEvent;
 			windowResizeEvent.type = WINDOW_RESIZE;
 #ifndef IPHONE
