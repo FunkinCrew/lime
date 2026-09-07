@@ -54,6 +54,7 @@
 #include <ui/Window.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
+#include <utils/File.h>
 
 #ifdef HX_WINDOWS
 #include <codecvt>
@@ -189,14 +190,47 @@ namespace lime
 	value lime_bytes_read_file(HxString path, value bytes)
 	{
 		Bytes data(bytes);
-		data.ReadFile(hxs_utf8(path, nullptr));
+
+		File file(hxs_utf8(path, nullptr), "rb");
+
+		if (file.handle)
+		{
+			file.Seek(0, SEEK_END);
+
+			int size = (int)file.Tell();
+
+			file.Seek(0, SEEK_SET);
+
+			if (size > 0)
+			{
+				data.Resize(size);
+
+				file.Read(data.b, size);
+			}
+
+			file.Close();
+		}
+
 		return data.Value(bytes);
 	}
 
 	void lime_bytes_write_file(HxString path, value bytes)
 	{
-		Bytes data(bytes);
-		data.WriteFile(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "wb");
+
+		if (file.handle)
+		{
+			Bytes data(bytes);
+
+			if (data.length > 0)
+			{
+				file.Write(data.b, data.length);
+
+				file.Flush();
+			}
+
+			file.Close();
+		}
 	}
 
 	double lime_cffi_get_native_pointer(value handle)

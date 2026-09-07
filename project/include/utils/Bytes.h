@@ -15,8 +15,6 @@ namespace lime
 		Bytes(value bytes);
 		~Bytes();
 
-		void ReadFile(const char *path);
-		void WriteFile(const char *path);
 		void Resize(int size);
 		void Set(value bytes);
 		value Value(value bytes);

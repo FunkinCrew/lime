@@ -3,7 +3,6 @@
 #include <system/Mutex.h>
 #include <system/System.h>
 #include <utils/Bytes.h>
-#include <utils/File.h>
 
 namespace lime
 {
@@ -57,49 +56,6 @@ namespace lime
 		{
 			free(b);
 		}
-	}
-
-	void Bytes::ReadFile(const char *path)
-	{
-		File file(path, "rb");
-
-		if (!file.handle)
-		{
-			return;
-		}
-
-		file.Seek(0, SEEK_END);
-
-		int size = (int)file.Tell();
-
-		file.Seek(0, SEEK_SET);
-
-		if (size > 0)
-		{
-			Resize(size);
-
-			file.Read(b, size);
-		}
-
-		file.Close();
-	}
-
-	void Bytes::WriteFile(const char *path)
-	{
-		File file(path, "wb");
-
-		if (!file.handle)
-		{
-			return;
-		}
-
-		if (length > 0)
-		{
-			file.Write(b, length);
-			file.Flush();
-		}
-
-		file.Close();
 	}
 
 	void Bytes::Resize(int size)
