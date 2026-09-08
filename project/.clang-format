@@ -26,6 +26,7 @@ BraceWrapping:
   AfterStruct: true
   AfterUnion: true
   AfterExternBlock: true
+  AfterCaseLabel: true
   BeforeElse: true
   BeforeCatch: true
   IndentBraces: false
@@ -78,6 +79,7 @@ BraceWrapping:
   AfterStruct: true
   AfterUnion: true
   AfterExternBlock: true
+  AfterCaseLabel: true
   BeforeElse: true
   BeforeCatch: true
   IndentBraces: false

@@ -382,7 +382,8 @@ namespace lime
 
 					break;
 
-				case SDL_EVENT_GAMEPAD_REMOVED: {
+				case SDL_EVENT_GAMEPAD_REMOVED:
+				{
 					gamepadEvent.type = GAMEPAD_DISCONNECT;
 					gamepadEvent.id = event->cdevice.which;
 					gamepadEvent.timestamp = event->cdevice.timestamp;

@@ -184,7 +184,6 @@ namespace lime
 
 	enum JNIElement
 	{
-
 		jniUnknown,
 		jniObjectString,
 		jniObjectHaxe,
@@ -201,7 +200,6 @@ namespace lime
 		jniDouble,
 		jniVoid,
 		jniELEMENTS
-
 	};
 
 	std::string ClassNameOf(JNIEnv *inEnv, jclass inObject)
@@ -583,7 +581,8 @@ namespace lime
 	}
 
 #define ARRAY_SET(PRIM, JTYPE, CREATE)                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \
-	case jni##PRIM: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \
+	case jni##PRIM:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+	{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \
 		if (len > 0)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
 		{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
 			jboolean copy;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
@@ -706,7 +705,8 @@ namespace lime
 				ARRAY_SET(Float, jfloat, alloc_float)
 				ARRAY_SET(Double, jdouble, alloc_float)
 
-				case jniByte: {
+				case jniByte:
+				{
 					if (len > 0)
 					{
 						jboolean copy;
@@ -730,7 +730,8 @@ namespace lime
 		{
 			switch (inType.element)
 			{
-				case jniObject: {
+				case jniObject:
+				{
 					JNIObject *obj = new JNIObject(inObject);
 					return ObjectToAbstract(obj);
 				}
@@ -765,7 +766,8 @@ namespace lime
 
 					return alloc_float(inEnv->CallDoubleMethod(inObject, JNIType::elementGetValue[inType.element]));
 
-				default: {
+				default:
+				{
 					jclass cls = inEnv->GetObjectClass(inObject);
 
 					if (cls)
@@ -820,7 +822,8 @@ namespace lime
 				return inStr;
 			case '[':
 				return JNIParseType(inStr, outType, inDepth + 1);
-			case 'L': {
+			case 'L':
+			{
 				const char *src = inStr;
 
 				while (*inStr != '\0' && *inStr != ';' && *inStr != ')')
@@ -855,7 +858,8 @@ namespace lime
 	}
 
 #define ARRAY_COPY(PRIM, JTYPE)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \
-	case jni##PRIM: {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \
+	case jni##PRIM:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+	{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \
 		JTYPE##Array arr = inEnv->New##PRIM##Array(len);                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
 		if (len > 0)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
 		{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
@@ -914,7 +918,8 @@ namespace lime
 				ARRAY_COPY(Float, jfloat)
 				ARRAY_COPY(Double, jdouble)
 
-				case jniByte: {
+				case jniByte:
+				{
 					jbyteArray arr = inEnv->NewByteArray(len);
 
 					if (len > 0)
@@ -939,7 +944,8 @@ namespace lime
 					out.l = 0;
 					return true;
 
-				default: {
+				default:
+				{
 				}
 			}
 
@@ -949,7 +955,8 @@ namespace lime
 		{
 			switch (inType.element)
 			{
-				case jniObjectString: {
+				case jniObjectString:
+				{
 					out.l = inEnv->NewStringUTF(val_string(inValue));
 					return true;
 				}
@@ -959,7 +966,8 @@ namespace lime
 					out.l = CreateJavaHaxeObjectRef(inEnv, inValue);
 					return true;
 
-				case jniObject: {
+				case jniObject:
+				{
 					jobject obj = 0;
 
 					if (!AbstractToJObject(inValue, obj))
@@ -1004,7 +1012,8 @@ namespace lime
 				case jniVoid:
 					out.l = 0;
 					return true;
-				default: {
+				default:
+				{
 				}
 			}
 		}
@@ -1093,7 +1102,8 @@ namespace lime
 				case jniDouble:
 					result = alloc_float(env->GetStaticDoubleField(mClass, mField));
 					break;
-				default: {
+				default:
+				{
 				}
 			}
 
@@ -1143,7 +1153,8 @@ namespace lime
 					case jniDouble:
 						env->SetStaticDoubleField(mClass, mField, setValue.d);
 						break;
-					default: {
+					default:
+					{
 					}
 				}
 			}
@@ -1188,7 +1199,8 @@ namespace lime
 				case jniDouble:
 					result = alloc_float(env->GetDoubleField(inObject, mField));
 					break;
-				default: {
+				default:
+				{
 				}
 			}
 
@@ -1238,7 +1250,8 @@ namespace lime
 					case jniDouble:
 						env->SetDoubleField(inObject, mField, setValue.d);
 						break;
-					default: {
+					default:
+					{
 					}
 				}
 			}
@@ -1487,7 +1500,8 @@ namespace lime
 					case jniDouble:
 						result = alloc_float(env->CallStaticDoubleMethodA(mClass, mMethod, jargs));
 						break;
-					default: {
+					default:
+					{
 					}
 				}
 			}
@@ -1545,7 +1559,8 @@ namespace lime
 					case jniDouble:
 						result = alloc_float(env->CallDoubleMethodA(inObject, mMethod, jargs));
 						break;
-					default: {
+					default:
+					{
 					}
 				}
 			}

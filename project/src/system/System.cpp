@@ -187,27 +187,32 @@ namespace lime
 
 		switch (type)
 		{
-			case APPLICATION: {
+			case APPLICATION:
+			{
 				result = SDL_strdup(SDL_GetBasePath());
 				break;
 			}
 
-			case APPLICATION_STORAGE: {
+			case APPLICATION_STORAGE:
+			{
 				result = SDL_GetPrefPath(company, title);
 				break;
 			}
 
-			case DESKTOP: {
+			case DESKTOP:
+			{
 				result = SDL_strdup(SDL_GetUserFolder(SDL_FOLDER_DESKTOP));
 				break;
 			}
 
-			case DOCUMENTS: {
+			case DOCUMENTS:
+			{
 				result = SDL_strdup(SDL_GetUserFolder(SDL_FOLDER_DOCUMENTS));
 				break;
 			}
 
-			case USER: {
+			case USER:
+			{
 				result = SDL_strdup(SDL_GetUserFolder(SDL_FOLDER_HOME));
 				break;
 			}
