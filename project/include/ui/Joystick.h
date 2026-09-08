@@ -6,7 +6,7 @@ namespace lime
 	class Joystick
 	{
 	  public:
-		static bool Connect(int deviceID);
+		static bool Connect(int id);
 		static bool Disconnect(int id);
 		static char *GetDeviceGUID(int id);
 		static const char *GetDeviceName(int id);
