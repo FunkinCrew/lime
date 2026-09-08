@@ -1,6 +1,5 @@
-#include "LzmaDec.h"
-#include "LzmaEnc.h"
-
+#include <LzmaDec.h>
+#include <LzmaEnc.h>
 #include <string.h>
 #include <utils/compress/LZMA.h>
 
