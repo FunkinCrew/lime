@@ -405,12 +405,12 @@ namespace lime
 
 				case SDL_EVENT_GAMEPAD_ADDED:
 				{
-					if (Gamepad::Connect(event->cdevice.which))
+					if (Gamepad::Connect(event->gdevice.which))
 					{
 						GamepadEvent gamepadEvent;
 						gamepadEvent.type = GAMEPAD_CONNECT;
-						gamepadEvent.id = Gamepad::GetInstanceID(event->cdevice.which);
-						gamepadEvent.timestamp = event->cdevice.timestamp;
+						gamepadEvent.id = Gamepad::GetInstanceID(event->gdevice.which);
+						gamepadEvent.timestamp = event->gdevice.timestamp;
 						GamepadEvent::Dispatch(&gamepadEvent);
 					}
 					break;
@@ -420,11 +420,11 @@ namespace lime
 				{
 					GamepadEvent gamepadEvent;
 					gamepadEvent.type = GAMEPAD_DISCONNECT;
-					gamepadEvent.id = event->cdevice.which;
-					gamepadEvent.timestamp = event->cdevice.timestamp;
+					gamepadEvent.id = event->gdevice.which;
+					gamepadEvent.timestamp = event->gdevice.timestamp;
 					GamepadEvent::Dispatch(&gamepadEvent);
 
-					Gamepad::Disconnect(event->cdevice.which);
+					Gamepad::Disconnect(event->gdevice.which);
 					break;
 				}
 			}
