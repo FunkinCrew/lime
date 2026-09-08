@@ -6,7 +6,7 @@ namespace lime
 	class Gamepad
 	{
 	  public:
-		static bool Connect(int deviceID);
+		static bool Connect(int id);
 		static bool Disconnect(int id);
 		static void AddMapping(const char *content);
 		static char *GetDeviceGUID(int id);
