@@ -118,7 +118,7 @@ namespace lime
 
 	value lime_application_create()
 	{
-		Application *application = CreateApplication();
+		Application *application = new Application();
 		return CFFIPointer(application, gc_application);
 	}
 

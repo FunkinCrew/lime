@@ -176,8 +176,6 @@
             <compilerflag value="-DSDL_USE_BUILTIN_OPENGL_DEFINITIONS" />
             <compilerflag value="-DGLES_SILENCE_DEPRECATION" if="iphone" />
 
-			<file name="src/backend/sdl/SDLApplication.cpp" />
-
 		</section>
 
 		<section if="LIME_SDL_IMAGE">
@@ -230,6 +228,7 @@
 
 		</section>
 
+		<file name="src/app/Application.cpp" />
 		<file name="src/graphics/Image.cpp" />
 		<file name="src/graphics/ImageBuffer.cpp" />
 		<file name="src/graphics/utils/ImageDataUtil.cpp" />

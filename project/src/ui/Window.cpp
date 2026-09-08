@@ -1,8 +1,7 @@
-#include "../backend/sdl/SDLApplication.h"
-#include "bindings/opengl/OpenGLBindings.h"
-#include "system/System.h"
-
+#include <app/Application.h>
+#include <bindings/opengl/OpenGLBindings.h>
 #include <cstring>
+#include <system/System.h>
 #include <ui/Window.h>
 #include <vector>
 
@@ -120,7 +119,7 @@ namespace lime
 			OpenGLBindings::defaultRenderbuffer = (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_RENDERBUFFER_NUMBER, 0);
 #endif
 
-			((SDLApplication *)currentApplication)->RegisterWindow(this);
+			currentApplication->RegisterWindow(this);
 		}
 		else
 		{

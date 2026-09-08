@@ -40,11 +40,13 @@ namespace lime
 		WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00010000
 	};
 
+	class Application;
+
 	class Window
 	{
 	  public:
 		Window(Application *application, int width, int height, int flags, const char *title);
-		virtual ~Window();
+		~Window();
 
 		int Alert(int type, const char *message, const char *title, const char **buttons, int count);
 		bool SetVSyncMode(int mode);
