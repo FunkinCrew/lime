@@ -44,16 +44,6 @@ namespace lime
 		return true;
 	}
 
-	int Joystick::GetInstanceID(int deviceID)
-	{
-		auto it = joystickIDs.find(deviceID);
-
-		if (it == joystickIDs.end())
-			return -1;
-
-		return it->second;
-	}
-
 	char *Joystick::GetDeviceGUID(int id)
 	{
 		auto it = joysticks.find(id);

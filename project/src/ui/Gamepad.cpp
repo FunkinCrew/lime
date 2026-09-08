@@ -47,16 +47,6 @@ namespace lime
 		return true;
 	}
 
-	int Gamepad::GetInstanceID(int deviceID)
-	{
-		auto it = gameControllerIDs.find(deviceID);
-
-		if (it == gameControllerIDs.end())
-			return -1;
-
-		return it->second;
-	}
-
 	void Gamepad::AddMapping(const char *content)
 	{
 		SDL_AddGamepadMapping(content);
