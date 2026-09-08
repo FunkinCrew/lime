@@ -1,8 +1,10 @@
 #pragma once
+
 #include <app/Application.h>
 #include <graphics/ImageBuffer.h>
 #include <hx/CFFIPrime.h>
 #include <math/Rectangle.h>
+#include <SDL3/SDL.h>
 #include <stdint.h>
 #include <system/DisplayMode.h>
 #include <ui/Cursor.h>
@@ -12,69 +14,13 @@ namespace lime
 
 	enum WindowVSyncMode
 	{
-
 		WINDOW_VSYNC_ADAPTIVE = -1,
 		WINDOW_VSYNC_OFF = 0,
 		WINDOW_VSYNC_ON = 1,
-
 	};
-
-	class Window
-	{
-	  public:
-		virtual ~Window() {};
-
-		virtual int Alert(int type, const char *message, const char *title, const char **buttons, int count) = 0;
-		virtual bool SetVSyncMode(int mode) = 0;
-		virtual void Close() = 0;
-		virtual void ContextFlip() = 0;
-		virtual void ContextMakeCurrent() = 0;
-		virtual void Focus() = 0;
-		virtual void *GetHandle() = 0;
-		virtual void *GetContext() = 0;
-		// virtual Cursor GetCursor () = 0;
-		virtual int GetDisplay() = 0;
-		virtual void GetDisplayMode(DisplayMode *displayMode) = 0;
-		virtual int GetHeight() = 0;
-		virtual uint32_t GetID() = 0;
-		virtual bool GetMouseLock() = 0;
-		virtual float GetOpacity() = 0;
-		virtual double GetScale() = 0;
-		virtual bool GetTextInputEnabled() = 0;
-		virtual int GetWidth() = 0;
-		virtual int GetX() = 0;
-		virtual int GetY() = 0;
-		virtual void Move(int x, int y) = 0;
-		virtual void ReadPixels(ImageBuffer *buffer, Rectangle *rect) = 0;
-		virtual void Resize(int width, int height) = 0;
-		virtual void SetMinimumSize(int width, int height) = 0;
-		virtual void SetMaximumSize(int width, int height) = 0;
-		virtual bool SetBorderless(bool borderless) = 0;
-		virtual void SetCursor(SystemCursor cursor) = 0;
-		virtual void SetDisplayMode(DisplayMode *displayMode) = 0;
-		virtual bool SetFullscreen(bool fullscreen) = 0;
-		virtual void SetIcon(ImageBuffer *imageBuffer) = 0;
-		virtual bool SetMaximized(bool minimized) = 0;
-		virtual bool SetMinimized(bool minimized) = 0;
-		virtual void SetMouseLock(bool mouseLock) = 0;
-		virtual void SetOpacity(float opacity) = 0;
-		virtual bool SetResizable(bool resizable) = 0;
-		virtual void SetTextInputEnabled(bool enable) = 0;
-		virtual void SetTextInputRect(Rectangle *rect) = 0;
-		virtual const char *SetTitle(const char *title) = 0;
-		virtual bool SetVisible(bool visible) = 0;
-		virtual bool SetAlwaysOnTop(bool alwaysOnTop) = 0;
-		virtual void WarpMouse(int x, int y) = 0;
-
-		Application *currentApplication;
-		int flags;
-	};
-
-	Window *MakeWindow(Application *application, int width, int height, int flags, const char *title);
 
 	enum WindowFlags
 	{
-
 		WINDOW_FLAG_FULLSCREEN = 0x00000001,
 		WINDOW_FLAG_TRANSPARENT = 0x00000002,
 		WINDOW_FLAG_BORDERLESS = 0x00000004,
@@ -92,7 +38,61 @@ namespace lime
 		WINDOW_FLAG_MAXIMIZED = 0x00004000,
 		WINDOW_FLAG_ALWAYS_ON_TOP = 0x00008000,
 		WINDOW_FLAG_COLOR_DEPTH_32_BIT = 0x00010000
+	};
 
+	class Window
+	{
+	  public:
+		Window(Application *application, int width, int height, int flags, const char *title);
+		virtual ~Window();
+
+		int Alert(int type, const char *message, const char *title, const char **buttons, int count);
+		bool SetVSyncMode(int mode);
+		void Close();
+		void ContextFlip();
+		void ContextMakeCurrent();
+		void Focus();
+		void *GetHandle();
+		void *GetContext();
+		int GetDisplay();
+		void GetDisplayMode(DisplayMode *displayMode);
+		int GetHeight();
+		uint32_t GetID();
+		bool GetMouseLock();
+		float GetOpacity();
+		double GetScale();
+		bool GetTextInputEnabled();
+		int GetWidth();
+		int GetX();
+		int GetY();
+		void Move(int x, int y);
+		void ReadPixels(ImageBuffer *buffer, Rectangle *rect);
+		void Resize(int width, int height);
+		void SetMinimumSize(int width, int height);
+		void SetMaximumSize(int width, int height);
+		bool SetBorderless(bool borderless);
+		void SetCursor(SystemCursor cursor);
+		void SetDisplayMode(DisplayMode *displayMode);
+		bool SetFullscreen(bool fullscreen);
+		void SetIcon(ImageBuffer *imageBuffer);
+		bool SetMaximized(bool maximized);
+		bool SetMinimized(bool minimized);
+		void SetMouseLock(bool mouseLock);
+		void SetOpacity(float opacity);
+		bool SetResizable(bool resizable);
+		void SetTextInputEnabled(bool enabled);
+		void SetTextInputRect(Rectangle *rect);
+		const char *SetTitle(const char *title);
+		bool SetVisible(bool visible);
+		bool SetAlwaysOnTop(bool alwaysOnTop);
+		void WarpMouse(int x, int y);
+
+		Application *currentApplication;
+		int flags;
+		SDL_Window *sdlWindow;
+
+	  private:
+		SDL_GLContext context;
 	};
 
 } // namespace lime

@@ -1,10 +1,9 @@
-#include "../backend/sdl/SDLWindow.h"
-
 #import <Cocoa/Cocoa.h>
 #include <events/GestureEvent.h>
 #import <Foundation/Foundation.h>
 #include <SDL3/SDL.h>
 #include <ui/Gesture.h>
+#include <ui/Window.h>
 
 static inline lime::GestureState ToGestureState(NSGestureRecognizerState state)
 {
@@ -197,7 +196,7 @@ namespace lime
 
 void Gesture::Register(Window *window)
 {
-	SDL_Window *sdlWindow = window ? static_cast<SDLWindow *>(window)->sdlWindow : nullptr;
+	SDL_Window *sdlWindow = window ? static_cast<Window *>(window)->sdlWindow : nullptr;
 
 	if (!sdlWindow)
 	{

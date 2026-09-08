@@ -1,9 +1,8 @@
-#include "../backend/sdl/SDLWindow.h"
-
 #include <functional>
 #include <stdio.h>
 #include <string>
 #include <ui/FileDialog.h>
+#include <ui/Window.h>
 #include <vector>
 
 namespace lime
@@ -124,7 +123,7 @@ namespace lime
 	{
 		SDL_PropertiesID props = SDL_CreateProperties();
 
-		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<SDLWindow *>(window)->sdlWindow : nullptr);
+		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<Window *>(window)->sdlWindow : nullptr);
 		SDL_SetStringProperty(props, SDL_PROP_FILE_DIALOG_LOCATION_STRING, defaultPath);
 		SDL_SetBooleanProperty(props, SDL_PROP_FILE_DIALOG_MANY_BOOLEAN, allowMultiple);
 
@@ -150,7 +149,7 @@ namespace lime
 
 		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_FILTERS_POINTER, (void *)dialogData->filters.data());
 		SDL_SetNumberProperty(props, SDL_PROP_FILE_DIALOG_NFILTERS_NUMBER, static_cast<int>(dialogData->filters.size()));
-		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<SDLWindow *>(window)->sdlWindow : nullptr);
+		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<Window *>(window)->sdlWindow : nullptr);
 		SDL_SetStringProperty(props, SDL_PROP_FILE_DIALOG_LOCATION_STRING, defaultPath);
 		SDL_SetBooleanProperty(props, SDL_PROP_FILE_DIALOG_MANY_BOOLEAN, allowMultiple);
 
@@ -174,7 +173,7 @@ namespace lime
 
 		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_FILTERS_POINTER, (void *)dialogData->filters.data());
 		SDL_SetNumberProperty(props, SDL_PROP_FILE_DIALOG_NFILTERS_NUMBER, static_cast<int>(dialogData->filters.size()));
-		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<SDLWindow *>(window)->sdlWindow : nullptr);
+		SDL_SetPointerProperty(props, SDL_PROP_FILE_DIALOG_WINDOW_POINTER, window ? static_cast<Window *>(window)->sdlWindow : nullptr);
 		SDL_SetStringProperty(props, SDL_PROP_FILE_DIALOG_LOCATION_STRING, defaultPath);
 
 		if (title)

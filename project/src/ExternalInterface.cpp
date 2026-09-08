@@ -1532,7 +1532,7 @@ namespace lime
 
 	value lime_window_create(value application, int width, int height, int flags, HxString title)
 	{
-		Window *window = MakeWindow((Application *)val_data(application), width, height, flags, hxs_utf8(title, nullptr));
+		Window *window = new Window((Application *)val_data(application), width, height, flags, hxs_utf8(title, nullptr));
 		return CFFIPointer(window, gc_window);
 	}
 
