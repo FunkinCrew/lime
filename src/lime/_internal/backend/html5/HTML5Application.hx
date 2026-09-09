@@ -66,6 +66,17 @@ class HTML5Application
 		}
 	}
 
+	public function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int
+	{
+		if (message != null)
+		{
+			Browser.alert(message);
+			return 0;
+		}
+
+		return -1;
+	}
+
 	private function convertKeyCode(keyCode:Int):KeyCode
 	{
 		if (keyCode >= 65 && keyCode <= 90)

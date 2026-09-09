@@ -131,6 +131,11 @@ class Application extends Module
 		__preloader.onComplete.add(onPreloadComplete);
 	}
 
+	public function alert(?type:lime.ui.MessageBoxType = INFORMATION, message:String = null, title:String = null, buttons:Array<String> = null):Int
+	{
+		return __backend.alert(type, message, title, buttons);
+	}
+
 	/**
 		Adds a new module to the Application
 		@param	module	A module to add

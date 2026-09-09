@@ -128,6 +128,27 @@ namespace lime
 		ApplicationEvent::eventObject = new ValuePointer(eventObject);
 	}
 
+	int lime_application_alert(value application, int type, HxString message, HxString title, value buttons)
+	{
+		Application *app = (Application *)val_data(application);
+
+		std::vector<const char *> targetButtons;
+
+		if (buttons)
+		{
+			int buttonCount = val_array_size(buttons);
+
+			targetButtons.reserve(buttonCount);
+
+			for (int i = 0; i < buttonCount; i++)
+			{
+				targetButtons.push_back(val_string(val_array_i(buttons, i)));
+			}
+		}
+
+		return app->Alert(type, hxs_utf8(message, nullptr), hxs_utf8(title, nullptr), targetButtons.data(), targetButtons.size());
+	}
+
 	int lime_application_exec(value application)
 	{
 		Application *app = (Application *)val_data(application);
@@ -2045,6 +2066,7 @@ namespace lime
 
 	DEFINE_PRIME0(lime_application_create);
 	DEFINE_PRIME2v(lime_application_event_manager_register);
+	DEFINE_PRIME5(lime_application_alert);
 	DEFINE_PRIME1(lime_application_exec);
 	DEFINE_PRIME1v(lime_application_init);
 	DEFINE_PRIME1(lime_application_quit);

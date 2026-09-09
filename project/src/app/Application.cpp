@@ -22,6 +22,7 @@
 #endif
 
 #include <cmath>
+#include <vector>
 
 namespace lime
 {
@@ -147,6 +148,68 @@ namespace lime
 			accelerometerSensor = nullptr;
 			accelerometerSensorID = -1;
 		}
+	}
+
+	int Application::Alert(int type, const char *message, const char *title, const char **buttons, int count)
+	{
+		SDL_MessageBoxFlags flags = SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT;
+
+		switch (type)
+		{
+			case 0:
+				flags |= SDL_MESSAGEBOX_ERROR;
+				break;
+
+			case 1:
+				flags |= SDL_MESSAGEBOX_WARNING;
+				break;
+
+			case 2:
+				flags |= SDL_MESSAGEBOX_INFORMATION;
+				break;
+		}
+
+		SDL_MessageBoxData data;
+		SDL_zero(data);
+		data.flags = flags;
+		data.title = title;
+		data.message = message;
+
+		std::vector<SDL_MessageBoxButtonData> sdlButtons;
+
+		sdlButtons.reserve(count);
+
+		if (count == 1)
+		{
+			SDL_MessageBoxButtonData button;
+			button.flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+			button.buttonID = 0;
+			button.text = buttons[0];
+			sdlButtons.push_back(button);
+		}
+		else
+		{
+			for (int i = 0; i < count; ++i)
+			{
+				SDL_MessageBoxButtonData button;
+				SDL_zero(button);
+				button.buttonID = i;
+				button.text = buttons[i];
+				sdlButtons.push_back(button);
+			}
+		}
+
+		data.numbuttons = sdlButtons.size();
+		data.buttons = sdlButtons.data();
+
+		int buttonID;
+
+		if (!SDL_ShowMessageBox(&data, &buttonID))
+		{
+			buttonID = -1;
+		}
+
+		return buttonID;
 	}
 
 	int Application::Exec()

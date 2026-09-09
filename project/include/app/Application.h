@@ -15,6 +15,7 @@ namespace lime
 		Application();
 		~Application();
 
+		int Alert(int type, const char *message, const char *title, const char **buttons, int count);
 		int Exec();
 		void Init();
 		int Quit();

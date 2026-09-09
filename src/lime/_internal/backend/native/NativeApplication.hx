@@ -149,6 +149,22 @@ class NativeApplication
 		return 0;
 	}
 
+	public function alert(type:lime.ui.MessageBoxType, message:String, title:String, buttons:Array<String>):Int
+	{
+		if (handle != null)
+		{
+			#if (!macro && lime_cffi)
+			if (buttons == null || buttons.length <= 0)
+			{
+				buttons = ["Ok"];
+			}
+			return NativeCFFI.lime_application_alert(handle, type, message, title, buttons);
+			#end
+		}
+
+		return -1;
+	}
+
 	public function exit():Void
 	{
 		AudioManager.shutdown();
