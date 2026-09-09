@@ -947,17 +947,28 @@ namespace lime
 #if defined(HX_WINDOWS) || defined(HX_MACOS)
 	bool Application::HandleEventWatcher(void *userdata, SDL_Event *event)
 	{
-		if (!background)
+		if (!background && event->type == SDL_EVENT_WINDOW_EXPOSED)
 		{
-			switch (event->type)
-			{
-				case SDL_EVENT_WINDOW_EXPOSED:
-				case SDL_EVENT_WINDOW_RESIZED:
-					currentApplication->ProcessWindowEvent(event);
-					currentApplication->RenderFrame();
-					currentApplication->FramePacer();
-					return false;
-			}
+			WindowEvent windowResizeEvent;
+			windowResizeEvent.type = WINDOW_RESIZE;
+#ifndef IPHONE
+			SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &windowResizeEvent.width, &windowResizeEvent.height);
+#else
+			SDL_GetWindowSizeInPixels(SDL_GetWindowFromID(event->window.windowID), &windowResizeEvent.width, &windowResizeEvent.height);
+#endif
+			windowResizeEvent.windowID = event->window.windowID;
+			WindowEvent::Dispatch(&windowResizeEvent);
+
+			WindowEvent windowExposeEvent;
+			windowExposeEvent.type = WINDOW_EXPOSE;
+			windowExposeEvent.windowID = event->window.windowID;
+			WindowEvent::Dispatch(&windowExposeEvent);
+
+			currentApplication->RenderFrame();
+
+			currentApplication->FramePacer();
+
+			return false;
 		}
 
 		return true;
