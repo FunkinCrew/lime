@@ -3,7 +3,7 @@ package lime.media;
 import lime.system.CFFIPointer;
 
 import haxe.MainLoop;
-#if (windows || mac || linux || android || ios)
+#if lime_openal
 import haxe.io.Path;
 
 import lime.system.System;
@@ -54,7 +54,7 @@ class AudioManager
 				#if !lime_doc_gen
 				if (context.type == OPENAL)
 				{
-					#if (windows || mac || linux || android || ios)
+					#if lime_openal
 					setupConfig();
 					#end
 
@@ -213,10 +213,10 @@ class AudioManager
 		#end
 	}
 
+	#if lime_openal
 	@:noCompletion
 	private static function setupConfig():Void
 	{
-		#if (lime_openal && (windows || mac || linux || android || ios))
 		final alConfig:Array<String> = [];
 
 		alConfig.push('[general]');
@@ -254,6 +254,6 @@ class AudioManager
 			Sys.putEnv('ALSOFT_CONF', path);
 		}
 		catch (e:Dynamic) {}
-		#end
 	}
+	#end
 }
