@@ -1,21 +1,24 @@
 package lime._internal.backend.native;
 
-import haxe.Int64;
+import haxe.MainLoop;
 
-import lime.app.Application;
 import lime.math.Vector4;
-import lime.media.openal.AL;
-import lime.media.openal.ALBuffer;
-import lime.media.openal.ALSource;
-import lime.media.AudioManager;
 import lime.media.AudioSource;
-import lime.utils.UInt8Array;
+import lime.media.openal.AL;
+import lime.media.openal.ALSource;
+
+import sys.thread.Mutex;
+import sys.thread.Thread;
 
 @:access(lime.media.AudioBuffer)
 class NativeAudioSource
 {
 	private static var hasDirectChannelsExt:Null<Bool>;
 	private static var hasALSoftLatencyExt:Null<Bool>;
+
+	private static var activeAudioSources:Array<NativeAudioSource> = [];
+	private static var processingMutex:Mutex = new Mutex();
+	private static var processingThread:Thread;
 
 	private var completed:Bool;
 	private var dataLength:Int;
@@ -29,6 +32,8 @@ class NativeAudioSource
 
 	public function new(parent:AudioSource)
 	{
+		setupProcessingThread();
+
 		this.parent = parent;
 
 		position = new Vector4();
@@ -38,13 +43,7 @@ class NativeAudioSource
 	{
 		if (handle != null)
 		{
-			if (Application.current != null)
-			{
-				if (Application.current.onUpdate.has(checkPlay))
-				{
-					Application.current.onUpdate.remove(checkPlay);
-				}
-			}
+			unregisterSource(this);
 
 			stop();
 
@@ -114,10 +113,7 @@ class NativeAudioSource
 
 		dataLength = parent.buffer.data.length;
 
-		if (!Application.current.onUpdate.has(checkPlay))
-		{
-			Application.current.onUpdate.add(checkPlay);
-		}
+		registerSource(this);
 	}
 
 	public function play():Void
@@ -158,7 +154,7 @@ class NativeAudioSource
 
 	// Event Handlers
 
-	private function checkPlay(_):Void
+	private function process():Void
 	{
 		if (AL.getSourcei(handle, AL.SOURCE_STATE) == AL.PLAYING)
 		{
@@ -177,7 +173,14 @@ class NativeAudioSource
 		if (!completed)
 		{
 			stop();
-			parent.onComplete.dispatch();
+
+			// `onComplete` must not run from the processing thread,
+			// in case a crash happens from this callback or smth, itll be bad,
+			// it should use the main thread for it.
+			MainLoop.runInMainThread(function():Void
+			{
+				parent.onComplete.dispatch();
+			});
 		}
 
 		completed = true;
@@ -345,5 +348,58 @@ class NativeAudioSource
 		}
 
 		return 0;
+	}
+
+	// processing Thread Functions
+
+	@:noCompletion
+	private static function registerSource(source:NativeAudioSource):Void
+	{
+		processingMutex.acquire();
+
+		if (!activeAudioSources.contains(source))
+			activeAudioSources.push(source);
+
+		processingMutex.release();
+	}
+
+	@:noCompletion
+	private static function unregisterSource(source:NativeAudioSource):Void
+	{
+		processingMutex.acquire();
+
+		if (activeAudioSources.contains(source))
+			activeAudioSources.remove(source);
+
+		processingMutex.release();
+	}
+
+	@:noCompletion
+	private static function setupProcessingThread():Void
+	{
+		if (processingThread == null)
+		{
+			processingThread = Thread.create(function():Void
+			{
+				while (true)
+				{
+					processingMutex.acquire();
+
+					for (activeAudioSource in activeAudioSources)
+					{
+						activeAudioSource.process();
+					}
+
+					// Useful for tracking how many audio sources are currently being processed,
+					// but itll spam the shit out of your console,
+					// should be removed later ig.
+					// MainLoop.runInMainThread(Sys.println.bind('Active sources: ${activeAudioSources.length}'));
+
+					processingMutex.release();
+
+					Sys.sleep(0.01);
+				}
+			});
+		}
 	}
 }
