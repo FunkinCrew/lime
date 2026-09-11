@@ -39,7 +39,7 @@ class AudioSource
 	/**
 		The length of the audio, in milliseconds.
 	**/
-	public var length(get, set):Float;
+	public var length(get, never):Float;
 
 	/**
 		The number of times the audio will loop. A value of `0` means the audio will not loop.
@@ -72,21 +72,14 @@ class AudioSource
 		Creates a new `AudioSource` instance.
 		@param buffer The `AudioBuffer` to associate with this `AudioSource`.
 		@param offset The starting offset within the audio buffer, in milliseconds.
-		@param length The length of the audio to play, in milliseconds. If `null`, the full buffer is used.
 		@param loops The number of times to loop the audio. `0` means no looping.
 	**/
-	public function new(buffer:AudioBuffer = null, offset:Float = 0, length:Null<Int> = null, loops:Int = 0)
+	public function new(buffer:AudioBuffer = null, offset:Float = 0, loops:Int = 0)
 	{
-		this.buffer = buffer;
-		this.offset = offset;
-
 		__backend = new AudioSourceBackend(this);
 
-		if (length != null && length != 0)
-		{
-			this.length = length;
-		}
-
+		this.buffer = buffer;
+		this.offset = offset;
 		this.loops = loops;
 
 		if (buffer != null)
@@ -156,11 +149,6 @@ class AudioSource
 	@:noCompletion private function get_length():Float
 	{
 		return __backend.getLength();
-	}
-
-	@:noCompletion private function set_length(value:Float):Float
-	{
-		return __backend.setLength(value);
 	}
 
 	@:noCompletion private function get_loops():Int

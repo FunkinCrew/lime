@@ -24,7 +24,6 @@ class NativeAudioSource
 	private var dataLength:Int;
 	private var format:Int;
 	private var handle:ALSource;
-	private var length:Null<Float>;
 	private var loops:Int;
 	private var parent:AudioSource;
 	private var playing:Bool;
@@ -257,21 +256,11 @@ class NativeAudioSource
 
 	public function getLength():Float
 	{
-		if (length != null)
-		{
-			return length;
-		}
-
 		var bytesPerFrame = parent.buffer.channels * (parent.buffer.bitsPerSample / 8.0);
 
 		var totalFrames = dataLength / bytesPerFrame;
 
-		return ((totalFrames / parent.buffer.sampleRate) * 1000.0) - parent.offset;
-	}
-
-	public function setLength(value:Float):Float
-	{
-		return length = value;
+		return (totalFrames / parent.buffer.sampleRate) * 1000.0;
 	}
 
 	public function getLoops():Int
