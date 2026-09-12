@@ -80,7 +80,17 @@ class AudioBuffer
 	public function dispose():Void
 	{
 		#if (js && html5 && lime_howlerjs)
-		__srcHowl.unload();
+		if (__srcHowl != null)
+		{
+			__srcHowl.unload();
+			__srcHowl = null;
+		}
+		#elseif (lime_cffi && !macro)
+		if (__srcBuffer != null)
+		{
+			AL.deleteBuffer(__srcBuffer);
+			__srcBuffer = null;
+		}
 		#end
 	}
 
