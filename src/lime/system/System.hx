@@ -372,7 +372,7 @@ class System
 		{
 			#if (sys && windows)
 			Sys.command("start", ["", path]);
-			#elseif mac
+			#elseif macos
 			Sys.command("/usr/bin/open", [path]);
 			#elseif linux
 			Sys.command("/usr/bin/xdg-open", [path]);
@@ -580,7 +580,7 @@ class System
 				}
 				__deviceModel = model;
 			}
-			#elseif mac
+			#elseif macos
 			__deviceModel = __runProcess("sysctl", ["-n", "hw.model"]);
 			#elseif linux
 			__deviceModel = __runProcess("cat", ["/sys/devices/virtual/dmi/id/sys_vendor"]);
@@ -602,7 +602,7 @@ class System
 			{
 				__deviceVendor = vendor.charAt(0).toUpperCase() + vendor.substr(1);
 			}
-			#elseif (ios || mac)
+			#elseif (ios || macos)
 			__deviceVendor = "Apple";
 			#elseif linux
 			__deviceVendor = __runProcess("cat", ["/sys/devices/virtual/dmi/id/product_name"]);
@@ -660,7 +660,7 @@ class System
 		{
 			#if windows
 			__fontsDirectory = Path.join([Sys.getEnv("WINDIR"), "Fonts"]);
-			#elseif mac
+			#elseif macos
 			__fontsDirectory = "/Library/Fonts";
 			#elseif ios
 			__fontsDirectory = "/System/Library/Fonts";
@@ -712,7 +712,7 @@ class System
 		{
 			#if windows
 			__platformName = "Windows";
-			#elseif mac
+			#elseif macos
 			__platformName = "macOS";
 			#elseif linux
 			__platformName = __runProcess("lsb_release", ["-is"]);
@@ -741,7 +741,7 @@ class System
 				__platformVersion = release + " (API " + api + ")";
 			#elseif (lime_cffi && !macro && ios)
 			__platformVersion = NativeCFFI.lime_system_get_platform_version();
-			#elseif mac
+			#elseif macos
 			__platformVersion = __runProcess("sw_vers", ["-productVersion"]);
 			#elseif linux
 			__platformVersion = __runProcess("lsb_release", ["-rs"]);

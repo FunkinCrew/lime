@@ -66,7 +66,7 @@ class Clipboard
 			// formatting will unavoidably be lost.)
 			set_text(_text);
 		}
-		#elseif (windows || mac)
+		#elseif (windows || macos)
 		if (!__updated)
 		{
 			// Lime listens for clipboard updates automatically, but if the
