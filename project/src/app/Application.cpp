@@ -99,11 +99,6 @@ namespace lime
 
 		active = false;
 
-		InitializeSensors();
-	}
-
-	void Application::InitializeSensors()
-	{
 		accelerometerSensorID = System::GetFirstAccelerometerSensorId();
 
 		if (accelerometerSensorID > 0)

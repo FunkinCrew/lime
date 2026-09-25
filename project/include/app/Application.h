@@ -24,8 +24,6 @@ namespace lime
 		void RegisterWindow(Window *window);
 
 	  private:
-		void InitializeSensors();
-
 		void HandleEvent(SDL_Event *event);
 		void ProcessClipboardEvent(SDL_Event *event);
 		void ProcessDropEvent(SDL_Event *event);
