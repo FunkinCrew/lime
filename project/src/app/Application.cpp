@@ -1,4 +1,5 @@
 #include <app/Application.h>
+#include <cmath>
 #include <events/ApplicationEvent.h>
 #include <events/ClipboardEvent.h>
 #include <events/DropEvent.h>
@@ -16,12 +17,6 @@
 #include <ui/Gamepad.h>
 #include <ui/Gesture.h>
 #include <ui/Joystick.h>
-
-#ifdef HX_MACOS
-#include <unistd.h>
-#endif
-
-#include <cmath>
 #include <vector>
 
 namespace lime
@@ -105,15 +100,6 @@ namespace lime
 		active = false;
 
 		InitializeSensors();
-
-#ifdef HX_MACOS
-		const char *path = SDL_GetBasePath();
-
-		if (path)
-		{
-			chdir(path);
-		}
-#endif
 	}
 
 	void Application::InitializeSensors()

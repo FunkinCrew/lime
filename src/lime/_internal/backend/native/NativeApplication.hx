@@ -89,6 +89,10 @@ class NativeApplication
 		handle = NativeCFFI.lime_application_create();
 		#end
 
+		#if (!macro && lime_cffi && macos)
+		Sys.setCwd(System.applicationDirectory);
+		#end
+
 		Font.init();
 
 		AudioManager.init();
