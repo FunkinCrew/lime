@@ -588,8 +588,78 @@ class AssetLibrary
 		}
 	}
 
+	public function unloadAsset(id:String, type:String = null):Void
+	{
+		if (id == null)
+			return;
+
+		var assetType:AssetType = type != null ? cast(type, AssetType) : null;
+
+		if (assetType == null || assetType == SOUND || assetType == MUSIC)
+		{
+			var audio = cachedAudioBuffers.get(id);
+			if (audio != null)
+			{
+				var audioKeys:Array<String> = [];
+				for (key in cachedAudioBuffers.keys())
+				{
+					if (cachedAudioBuffers.get(key) == audio)
+						audioKeys.push(key);
+				}
+
+				for (key in audioKeys)
+				{
+					cachedAudioBuffers.remove(key);
+				}
+
+				audio.dispose();
+			}
+		}
+
+		if (assetType == null || assetType == IMAGE)
+		{
+			var image = cachedImages.get(id);
+			if (image != null)
+			{
+				var imageKeys:Array<String> = [];
+				for (key in cachedImages.keys())
+				{
+					if (cachedImages.get(key) == image)
+						imageKeys.push(key);
+				}
+
+				for (key in imageKeys)
+				{
+					cachedImages.remove(key);
+				}
+			}
+		}
+
+		if (assetType == null || assetType == FONT)
+		{
+			cachedFonts.remove(id);
+			loadingFonts.remove(id);
+		}
+
+		if (assetType == null || assetType == BINARY)
+		{
+			cachedBytes.remove(id);
+		}
+
+		if (assetType == null || assetType == TEXT)
+		{
+			cachedText.remove(id);
+		}
+	}
+
 	public function unload():Void
 	{
+		for (audio in cachedAudioBuffers)
+		{
+			if (audio != null)
+				audio.dispose();
+		}
+
 		cachedBytes.clear();
 		cachedFonts.clear();
 		loadingFonts.clear();
