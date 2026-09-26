@@ -206,6 +206,18 @@ class Assets
 		return getAsset(id, IMAGE, useCache);
 	}
 
+	public static function unload(id:String, type:AssetType = null):Void
+	{
+		if (id == null)
+			return;
+
+		for (library in libraries)
+		{
+			if (library != null)
+				library.unloadAsset(id, type);
+		}
+	}
+
 	public static function getLibrary(name:String):AssetLibrary
 	{
 		if (name == null || name == "")
