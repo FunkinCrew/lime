@@ -423,6 +423,58 @@ class System
 		}
 	}
 
+	/**
+		Report the user's preferred locale.
+	**/
+	public static function getPreferredLocales():Array<Locale>
+	{
+		var preferredLocales:Array<Locale> = [];
+
+		#if (lime_cffi && !macro)
+		var locales:Array<Dynamic> = NativeCFFI.lime_system_get_preferred_locales();
+
+		if (locales != null && locales.length > 0)
+		{
+			for (locale in locales)
+			{
+				var preferredLocale:Locale = new Locale();
+				preferredLocale.language = locale.language;
+				preferredLocale.country = locale.country;
+				preferredLocales.push(preferredLocale);
+			}
+		}
+		#elseif html5
+		var locales:Array<String> = [];
+
+		if (js.Browser.navigator.languages != null && js.Browser.navigator.languages.length > 0)
+		{
+			locales = js.Browser.navigator.languages;
+		}
+		else if (js.Browser.navigator.language != null)
+		{
+			locales = [js.Browser.navigator.language];
+		}
+
+		if (locales != null && locales.length > 0)
+		{
+			for (locale in locales)
+			{
+				var parts:Array<String> = locale.indexOf("-") != -1 ? locale.split("-") : locale.split("_");
+
+				if (parts.length > 0)
+				{
+					var preferredLocale:Locale = new Locale();
+					preferredLocale.language = parts[0];
+					preferredLocale.country = parts.length > 1 ? parts[1] : null;
+					preferredLocales.push(preferredLocale);
+				}
+			}
+		}
+		#end
+
+		return preferredLocales;
+	}
+
 	@:noCompletion private static function __copyMissingFields(target:Dynamic, source:Dynamic):Void
 	{
 		if (source == null || target == null)

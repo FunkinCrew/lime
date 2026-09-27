@@ -41,7 +41,6 @@
 #include <system/Endian.h>
 #include <system/FileWatcher.h>
 #include <system/JNI.h>
-#include <system/Locale.h>
 #include <system/System.h>
 #include <text/Font.h>
 #include <ui/Cursor.h>
@@ -925,22 +924,6 @@ namespace lime
 		KeyEvent::eventObject = new ValuePointer(eventObject);
 	}
 
-	value lime_locale_get_system_locale()
-	{
-		std::string *locale = Locale::GetSystemLocale();
-
-		if (!locale)
-		{
-			return alloc_null();
-		}
-		else
-		{
-			value result = alloc_string(locale->c_str());
-			delete locale;
-			return result;
-		}
-	}
-
 	value lime_lzma_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
@@ -1369,6 +1352,35 @@ namespace lime
 #else
 		return false;
 #endif
+	}
+
+	value lime_system_get_preferred_locales()
+	{
+		int count = 0;
+
+		SDL_Locale **preferredLocales = SDL_GetPreferredLocales(&count);
+
+		if (preferredLocales)
+		{
+			value values = alloc_array(count);
+
+			for (int i = 0; i < count; i++)
+			{
+				if (!preferredLocales[i])
+					continue;
+
+				value value = alloc_empty_object();
+				alloc_field(value, val_id("language"), alloc_string(preferredLocales[i]->language));
+				alloc_field(value, val_id("country"), preferredLocales[i]->country ? alloc_string(preferredLocales[i]->country) : alloc_null());
+				val_array_set_i(values, i, value);
+			}
+
+			SDL_free(preferredLocales);
+
+			return values;
+		}
+
+		return alloc_null();
 	}
 
 	void lime_text_event_manager_register(value callback, value eventObject)
@@ -2017,7 +2029,6 @@ namespace lime
 	DEFINE_PRIME1(lime_key_code_from_scan_code);
 	DEFINE_PRIME1(lime_key_code_to_scan_code);
 	DEFINE_PRIME2v(lime_key_event_manager_register);
-	DEFINE_PRIME0(lime_locale_get_system_locale);
 	DEFINE_PRIME2(lime_lzma_compress);
 	DEFINE_PRIME2(lime_lzma_decompress);
 	DEFINE_PRIME2v(lime_mouse_event_manager_register);
@@ -2058,6 +2069,7 @@ namespace lime
 	DEFINE_PRIME1(lime_system_get_hint);
 	DEFINE_PRIME2v(lime_system_set_hint);
 	DEFINE_PRIME2(lime_system_set_windows_console_mode);
+	DEFINE_PRIME0(lime_system_get_preferred_locales);
 	DEFINE_PRIME2v(lime_text_event_manager_register);
 	DEFINE_PRIME2v(lime_touch_event_manager_register);
 	DEFINE_PRIME5(lime_window_alert);
