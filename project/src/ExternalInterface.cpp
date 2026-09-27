@@ -30,7 +30,6 @@
 #include <graphics/format/WEBP.h>
 #include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
-#include <graphics/utils/ImageDataUtil.h>
 #include <hx/CFFIPrime.h>
 #include <media/decoders/FlacDecoder.h>
 #include <media/decoders/MP3Decoder.h>
@@ -846,124 +845,6 @@ namespace lime
 		}
 
 		return alloc_null();
-	}
-
-	void lime_image_data_util_color_transform(value image, value rect, value colorMatrix)
-	{
-		Image _image = Image(image);
-		Rectangle _rect = Rectangle(rect);
-		ColorMatrix _colorMatrix = ColorMatrix(colorMatrix);
-		ImageDataUtil::ColorTransform(&_image, &_rect, &_colorMatrix);
-	}
-
-	void lime_image_data_util_copy_channel(value image, value sourceImage, value sourceRect, value destPoint, int srcChannel, int destChannel)
-	{
-		Image _image = Image(image);
-		Image _sourceImage = Image(sourceImage);
-		Rectangle _sourceRect = Rectangle(sourceRect);
-		Vector2 _destPoint = Vector2(destPoint);
-		ImageDataUtil::CopyChannel(&_image, &_sourceImage, &_sourceRect, &_destPoint, srcChannel, destChannel);
-	}
-
-	void lime_image_data_util_copy_pixels(value image, value sourceImage, value sourceRect, value destPoint, value alphaImage, value alphaPoint, bool mergeAlpha)
-	{
-		Image _image = Image(image);
-		Image _sourceImage = Image(sourceImage);
-		Rectangle _sourceRect = Rectangle(sourceRect);
-		Vector2 _destPoint = Vector2(destPoint);
-
-		if (val_is_null(alphaImage))
-		{
-			ImageDataUtil::CopyPixels(&_image, &_sourceImage, &_sourceRect, &_destPoint, 0, 0, mergeAlpha);
-		}
-		else
-		{
-			Image _alphaImage = Image(alphaImage);
-			Vector2 _alphaPoint = Vector2(alphaPoint);
-
-			ImageDataUtil::CopyPixels(&_image, &_sourceImage, &_sourceRect, &_destPoint, &_alphaImage, &_alphaPoint, mergeAlpha);
-		}
-	}
-
-	void lime_image_data_util_fill_rect(value image, value rect, int rg, int ba)
-	{
-		Image _image = Image(image);
-		Rectangle _rect = Rectangle(rect);
-		int32_t color = (rg << 16) | ba;
-		ImageDataUtil::FillRect(&_image, &_rect, color);
-	}
-
-	void lime_image_data_util_flood_fill(value image, int x, int y, int rg, int ba)
-	{
-		Image _image = Image(image);
-		int32_t color = (rg << 16) | ba;
-		ImageDataUtil::FloodFill(&_image, x, y, color);
-	}
-
-	void lime_image_data_util_get_pixels(value image, value rect, int format, value bytes)
-	{
-		Image _image = Image(image);
-		Rectangle _rect = Rectangle(rect);
-		PixelFormat _format = (PixelFormat)format;
-		Bytes pixels = Bytes(bytes);
-		ImageDataUtil::GetPixels(&_image, &_rect, _format, &pixels);
-	}
-
-	void lime_image_data_util_merge(value image, value sourceImage, value sourceRect, value destPoint, int redMultiplier, int greenMultiplier, int blueMultiplier, int alphaMultiplier)
-	{
-		Image _image = Image(image);
-		Image _sourceImage = Image(sourceImage);
-		Rectangle _sourceRect = Rectangle(sourceRect);
-		Vector2 _destPoint = Vector2(destPoint);
-		ImageDataUtil::Merge(&_image, &_sourceImage, &_sourceRect, &_destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
-	}
-
-	void lime_image_data_util_multiply_alpha(value image)
-	{
-		Image _image = Image(image);
-		ImageDataUtil::MultiplyAlpha(&_image);
-	}
-
-	void lime_image_data_util_resize(value image, value buffer, int width, int height)
-	{
-		Image _image = Image(image);
-		ImageBuffer _buffer = ImageBuffer(buffer);
-		ImageDataUtil::Resize(&_image, &_buffer, width, height);
-	}
-
-	void lime_image_data_util_set_format(value image, int format)
-	{
-		Image _image = Image(image);
-		PixelFormat _format = (PixelFormat)format;
-		ImageDataUtil::SetFormat(&_image, _format);
-	}
-
-	void lime_image_data_util_set_pixels(value image, value rect, value bytes, int offset, int format, int endian)
-	{
-		Image _image = Image(image);
-		Rectangle _rect = Rectangle(rect);
-		Bytes _bytes(bytes);
-		PixelFormat _format = (PixelFormat)format;
-		Endian _endian = (Endian)endian;
-		ImageDataUtil::SetPixels(&_image, &_rect, &_bytes, offset, _format, _endian);
-	}
-
-	int lime_image_data_util_threshold(value image, value sourceImage, value sourceRect, value destPoint, int operation, int thresholdRG, int thresholdBA, int colorRG, int colorBA, int maskRG, int maskBA, bool copySource)
-	{
-		Image _image = Image(image);
-		Image _sourceImage = Image(sourceImage);
-		Rectangle _sourceRect = Rectangle(sourceRect);
-		Vector2 _destPoint = Vector2(destPoint);
-		int32_t threshold = (thresholdRG << 16) | thresholdBA;
-		int32_t color = (colorRG << 16) | colorBA;
-		int32_t mask = (maskRG << 16) | maskBA;
-		return ImageDataUtil::Threshold(&_image, &_sourceImage, &_sourceRect, &_destPoint, operation, threshold, color, mask, copySource);
-	}
-
-	void lime_image_data_util_unmultiply_alpha(value image)
-	{
-		Image _image = Image(image);
-		ImageDataUtil::UnmultiplyAlpha(&_image);
 	}
 
 	double lime_jni_getenv()
@@ -2121,19 +2002,6 @@ namespace lime
 	DEFINE_PRIME4v(lime_gamepad_set_led);
 	DEFINE_PRIME2(lime_gzip_compress);
 	DEFINE_PRIME2(lime_gzip_decompress);
-	DEFINE_PRIME3v(lime_image_data_util_color_transform);
-	DEFINE_PRIME6v(lime_image_data_util_copy_channel);
-	DEFINE_PRIME7v(lime_image_data_util_copy_pixels);
-	DEFINE_PRIME4v(lime_image_data_util_fill_rect);
-	DEFINE_PRIME5v(lime_image_data_util_flood_fill);
-	DEFINE_PRIME4v(lime_image_data_util_get_pixels);
-	DEFINE_PRIME8v(lime_image_data_util_merge);
-	DEFINE_PRIME1v(lime_image_data_util_multiply_alpha);
-	DEFINE_PRIME4v(lime_image_data_util_resize);
-	DEFINE_PRIME2v(lime_image_data_util_set_format);
-	DEFINE_PRIME6v(lime_image_data_util_set_pixels);
-	DEFINE_PRIME12(lime_image_data_util_threshold);
-	DEFINE_PRIME1v(lime_image_data_util_unmultiply_alpha);
 	DEFINE_PRIME4(lime_image_encode);
 	DEFINE_PRIME2(lime_image_load_bytes);
 	DEFINE_PRIME2(lime_image_load_file);

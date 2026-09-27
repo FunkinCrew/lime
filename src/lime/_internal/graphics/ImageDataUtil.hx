@@ -1,27 +1,22 @@
 package lime._internal.graphics;
 
-import haxe.ds.Vector;
-import haxe.Int32;
 import haxe.io.Bytes;
 
-import lime._internal.backend.native.NativeCFFI;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.graphics.ImageChannel;
 import lime.graphics.PixelFormat;
 import lime.math.ARGB;
 import lime.math.BGRA;
-import lime.math.RGBA;
 import lime.math.ColorMatrix;
+import lime.math.RGBA;
 import lime.math.Rectangle;
 import lime.math.Vector2;
 import lime.math.Vector4;
-import lime.system.CFFI;
 import lime.system.Endian;
 import lime.utils.BytePointer;
 import lime.utils.UInt8Array;
 
-@:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.graphics.ImageBuffer)
 @:access(lime.math.RGBA)
 class ImageDataUtil
@@ -163,9 +158,6 @@ class ImageDataUtil
 		if (data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_color_transform(image, rect, colorMatrix);
-		#else
 		var format = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
 
@@ -191,7 +183,6 @@ class ImageDataUtil
 				pixel.writeUInt8(data, offset, format, premultiplied);
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -222,9 +213,6 @@ class ImageDataUtil
 		if (srcData == null || destData == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_copy_channel(image, sourceImage, sourceRect, destPoint, srcIdx, destIdx);
-		#else
 		var srcView = new ImageDataView(sourceImage, sourceRect);
 		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
 
@@ -275,7 +263,6 @@ class ImageDataUtil
 				destPosition += 4;
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -301,9 +288,6 @@ class ImageDataUtil
 		}
 		else
 		{
-			#if (lime_cffi && !macro)
-			NativeCFFI.lime_image_data_util_copy_pixels(image, sourceImage, sourceRect, destPoint, alphaImage, alphaPoint, mergeAlpha);
-			#else
 			var sourceData = sourceImage.buffer.data;
 			var destData = image.buffer.data;
 
@@ -491,7 +475,6 @@ class ImageDataUtil
 					}
 				}
 			}
-			#end
 		}
 
 		image.dirty = true;
@@ -521,9 +504,6 @@ class ImageDataUtil
 		if (data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_fill_rect(image, rect, (fillColor >> 16) & 0xFFFF, (fillColor) & 0xFFFF);
-		#else
 		var format = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
 		if (premultiplied)
@@ -541,7 +521,6 @@ class ImageDataUtil
 				fillColor.writeUInt8(data, row + (x * 4), format, false);
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -556,9 +535,6 @@ class ImageDataUtil
 		if (format == ARGB32)
 			color = ((color & 0xFFFFFF) << 8) | ((color >> 24) & 0xFF);
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_flood_fill(image, x, y, (color >> 16) & 0xFFFF, (color) & 0xFFFF);
-		#else
 		var format = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
 
@@ -620,7 +596,6 @@ class ImageDataUtil
 				}
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -857,9 +832,6 @@ class ImageDataUtil
 		var length = Std.int(rect.width * rect.height);
 		var bytes = Bytes.alloc(length * 4);
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_get_pixels(image, rect, format, bytes);
-		#else
 		var data = image.buffer.data;
 		var sourceFormat = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
@@ -898,7 +870,6 @@ class ImageDataUtil
 				position += 4;
 			}
 		}
-		#end
 
 		return bytes;
 	}
@@ -909,9 +880,6 @@ class ImageDataUtil
 		if (image.buffer.data == null || sourceImage.buffer.data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_merge(image, sourceImage, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
-		#else
 		var sourceView = new ImageDataView(sourceImage, sourceRect);
 		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, sourceView.width, sourceView.height));
 
@@ -948,7 +916,6 @@ class ImageDataUtil
 				destPosition += 4;
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -960,21 +927,15 @@ class ImageDataUtil
 		if (data == null || !image.buffer.transparent)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_multiply_alpha(image);
-		#else
-		{
-			var format = image.buffer.format;
-			var length = Std.int(data.length / 4);
-			var pixel:RGBA = 0;
+		var format = image.buffer.format;
+		var length = Std.int(data.length / 4);
+		var pixel:RGBA = 0;
 
-			for (i in 0...length)
-			{
-				pixel.readUInt8(data, i * 4, format, false);
-				pixel.writeUInt8(data, i * 4, format, true);
-			}
+		for (i in 0...length)
+		{
+			pixel.readUInt8(data, i * 4, format, false);
+			pixel.writeUInt8(data, i * 4, format, true);
 		}
-		#end
 
 		image.buffer.premultiplied = true;
 		image.dirty = true;
@@ -988,9 +949,6 @@ class ImageDataUtil
 			return;
 		var newBuffer = new ImageBuffer(new UInt8Array(newWidth * newHeight * 4), newWidth, newHeight);
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_resize(image, newBuffer, newWidth, newHeight);
-		#else
 		var imageWidth = image.width;
 		var imageHeight = image.height;
 
@@ -1043,7 +1001,6 @@ class ImageDataUtil
 				}
 			}
 		}
-		#end
 
 		buffer.data = newBuffer.data;
 		buffer.width = newWidth;
@@ -1102,9 +1059,6 @@ class ImageDataUtil
 		if (data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_set_format(image, format);
-		#else
 		var index:Int;
 		var length = Std.int(data.length / 4);
 		var r1:Int;
@@ -1176,7 +1130,6 @@ class ImageDataUtil
 			data[index + b2] = b;
 			data[index + a2] = a;
 		}
-		#end
 
 		image.buffer.format = format;
 		image.dirty = true;
@@ -1239,9 +1192,6 @@ class ImageDataUtil
 		if (image.buffer.data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_set_pixels(image, rect, bytePointer.bytes, bytePointer.offset, format, endian == BIG_ENDIAN ? 1 : 0);
-		#else
 		var data = image.buffer.data;
 		var sourceFormat = image.buffer.format;
 		var premultiplied = image.buffer.premultiplied;
@@ -1285,7 +1235,6 @@ class ImageDataUtil
 				pixel.writeUInt8(data, row + (x * 4), sourceFormat, premultiplied);
 			}
 		}
-		#end
 
 		image.dirty = true;
 		image.version++;
@@ -1336,10 +1285,6 @@ class ImageDataUtil
 
 		var hits = 0;
 
-		#if (lime_cffi && !macro)
-		hits = NativeCFFI.lime_image_data_util_threshold(image, sourceImage, sourceRect, destPoint, _operation, (_threshold >> 16) & 0xFFFF,
-			(_threshold) & 0xFFFF, (_color >> 16) & 0xFFFF, (_color) & 0xFFFF, (_mask >> 16) & 0xFFFF, (_mask) & 0xFFFF, copySource);
-		#else
 		var srcView = new ImageDataView(sourceImage, sourceRect);
 		var destView = new ImageDataView(image, new Rectangle(destPoint.x, destPoint.y, srcView.width, srcView.height));
 
@@ -1388,7 +1333,6 @@ class ImageDataUtil
 				destPosition += 4;
 			}
 		}
-		#end
 
 		if (hits > 0)
 		{
@@ -1405,9 +1349,6 @@ class ImageDataUtil
 		if (data == null)
 			return;
 
-		#if (lime_cffi && !macro)
-		NativeCFFI.lime_image_data_util_unmultiply_alpha(image);
-		#else
 		var format = image.buffer.format;
 		var length = Std.int(data.length / 4);
 		var pixel:RGBA = 0;
@@ -1417,7 +1358,6 @@ class ImageDataUtil
 			pixel.readUInt8(data, i * 4, format, true);
 			pixel.writeUInt8(data, i * 4, format, false);
 		}
-		#end
 
 		image.buffer.premultiplied = false;
 		image.dirty = true;
