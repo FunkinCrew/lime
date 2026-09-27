@@ -12,8 +12,7 @@ class Zlib
 		#if (lime_cffi && !macro)
 		return NativeCFFI.lime_zlib_compress(bytes, Bytes.alloc(0));
 		#elseif js
-		var data = untyped js.Syntax.code("pako.deflate")(bytes.getData());
-		return Bytes.ofData(data);
+		return Bytes.ofData(untyped js.Syntax.code("pako.deflate")(bytes.getData()));
 		#else
 		return null;
 		#end
@@ -24,8 +23,7 @@ class Zlib
 		#if (lime_cffi && !macro)
 		return NativeCFFI.lime_zlib_decompress(bytes, Bytes.alloc(0));
 		#elseif js
-		var data = untyped js.Syntax.code("pako.inflate")(bytes.getData());
-		return Bytes.ofData(data);
+		return Bytes.ofData(untyped js.Syntax.code("pako.inflate")(bytes.getData()));
 		#else
 		return null;
 		#end

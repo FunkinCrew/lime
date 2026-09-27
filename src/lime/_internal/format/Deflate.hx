@@ -12,8 +12,7 @@ class Deflate
 		#if (lime_cffi && !macro)
 		return NativeCFFI.lime_deflate_compress(bytes, Bytes.alloc(0));
 		#elseif js
-		var data = untyped js.Syntax.code("pako.deflateRaw")(bytes.getData());
-		return Bytes.ofData(data);
+		return Bytes.ofData(untyped js.Syntax.code("pako.deflateRaw")(bytes.getData()));
 		#else
 		return null;
 		#end
@@ -24,8 +23,7 @@ class Deflate
 		#if (lime_cffi && !macro)
 		return NativeCFFI.lime_deflate_decompress(bytes, Bytes.alloc(0));
 		#elseif js
-		var data = untyped js.Syntax.code("pako.inflateRaw")(bytes.getData());
-		return Bytes.ofData(data);
+		return Bytes.ofData(untyped js.Syntax.code("pako.inflateRaw")(bytes.getData()));
 		#else
 		return null;
 		#end

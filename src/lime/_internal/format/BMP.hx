@@ -6,10 +6,11 @@ import lime._internal.backend.native.NativeCFFI;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.utils.UInt8Array;
-#if (js && html5)
-import lime._internal.graphics.ImageCanvasUtil;
 
+#if (js && html5)
 import js.Browser;
+
+import lime._internal.graphics.ImageCanvasUtil;
 #end
 
 @:access(lime._internal.backend.native.NativeCFFI)
