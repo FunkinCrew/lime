@@ -6,7 +6,9 @@ import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 import lime._internal.backend.native.NativeCFFI;
-import lime._internal.format.Base64;
+
+import haxe.crypto.Base64;
+
 import lime._internal.format.BMP;
 import lime._internal.format.GIF;
 import lime._internal.format.JPEG;

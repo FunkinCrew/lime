@@ -13,7 +13,8 @@ import js.html.XMLHttpRequest;
 import js.html.XMLHttpRequestResponseType;
 import js.Browser;
 
-import lime._internal.format.Base64;
+import haxe.crypto.Base64;
+
 import lime.app.Future;
 import lime.app.Promise;
 import lime.graphics.Image;

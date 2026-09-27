@@ -7,9 +7,8 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 #end
-
 #if (macro && !display)
-import lime._internal.format.Base64;
+import haxe.crypto.Base64;
 
 import sys.io.File;
 import sys.FileSystem;

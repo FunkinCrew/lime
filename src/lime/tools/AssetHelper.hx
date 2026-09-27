@@ -9,7 +9,8 @@ import hxp.Log;
 import hxp.Path;
 import hxp.System;
 
-import lime._internal.format.Base64;
+import haxe.crypto.Base64;
+
 import lime.tools.Asset;
 import lime.tools.AssetType;
 import lime.tools.HXProject;
