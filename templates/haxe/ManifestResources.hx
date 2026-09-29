@@ -110,7 +110,7 @@ import sys.FileSystem;
 
 #else
 
-::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__::flatName::') @:noCompletion #if display private #end class __ASSET__::flatName:: extends lime.text.Font { public function new () { #if !html5 __fontPath = "::targetPath::"; #else ascender = ::ascender::; descender = ::descender::; height = ::height::; numGlyphs = ::numGlyphs::; underlinePosition = ::underlinePosition::; underlineThickness = ::underlineThickness::; unitsPerEM = ::unitsPerEM::; #end::if (fontName):: name = "::fontName::";::end:: super (); }}
+::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__::flatName::') @:noCompletion #if display private #end class __ASSET__::flatName:: extends lime.text.Font { public function new () { __fontPath = "::targetPath::"; #if html5 ascender = ::ascender::; descender = ::descender::; height = ::height::; numGlyphs = ::numGlyphs::; underlinePosition = ::underlinePosition::; underlineThickness = ::underlineThickness::; unitsPerEM = ::unitsPerEM::; #end::if (fontName):: name = "::fontName::";::end:: super (); }}
 ::end::::end::::end::
 
 #end
@@ -118,7 +118,7 @@ import sys.FileSystem;
 #if openfl
 
 #if html5
-::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__OPENFL__::flatName::') @:noCompletion #if display private #end class __ASSET__OPENFL__::flatName:: extends openfl.text.Font { public function new () {::if (embed):: __fromLimeFont (new __ASSET__::flatName:: ());::else::::if (fontName):: name = "::fontName::";::end::::end:: super (); }}
+::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__OPENFL__::flatName::') @:noCompletion #if display private #end class __ASSET__OPENFL__::flatName:: extends openfl.text.Font { public function new () {::if (embed):: __fromLimeFont (new __ASSET__::flatName:: ());::else::::if (fontName):: name = "::fontName::";::end::::end:: ::if (library != null)::__fontID = "::library:::::id::";::else::__fontID = "::id::";::end:: super (); }}
 ::end::::end::::end::
 #else
 ::if (assets != null)::::foreach assets::::if (type == "font")::@:keep @:expose('__ASSET__OPENFL__::flatName::') @:noCompletion #if display private #end class __ASSET__OPENFL__::flatName:: extends openfl.text.Font { public function new () {::if (embed):: __fromLimeFont (new __ASSET__::flatName:: ());::else:: ::if (targetPath != null)::__fontPath = ManifestResources.rootPath + "::targetPath::";::else::::if (library != null)::__fontID = "::library:::::id::";::else::__fontID = "::id::";::end::::end::::if (fontName):: name = "::fontName::";::end::::end:: super (); }}
