@@ -11,7 +11,7 @@ ndll/*/*.dylib
 ndll/*/*.lib
 ndll/*/hl*
 ndll/*/*.dll
-templates/bin/hl/*
+templates/bin/alias/*
 project/all_objs
 project/obj
 project/vc*.pdb
@@ -21,6 +21,7 @@ project/vc*.pdb
 *.iml
 tools/*.exe
 tools/obj
+tools/alias/obj
 haxedoc.xml
 .vscode/settings.json
 package-lock.json
