@@ -188,14 +188,10 @@ class PlatformSetup
 				case "lime":
 					setupLime();
 
-				case "openfl":
-					setupOpenFL();
-
 				case "":
 					switch (CommandLineTools.defaultLibrary)
 					{
 						case "lime": setupLime();
-						case "openfl": setupOpenFL();
 						default: setupHaxelib(new Haxelib(CommandLineTools.defaultLibrary));
 					}
 
@@ -328,12 +324,27 @@ class PlatformSetup
 			return;
 		}
 
+		var aliasPath = getAliasExecutable();
+
+		if (aliasPath.length == 0)
+		{
+			Log.warn("For your current system architecture, there no way to rebuild the alias script.");
+			return;
+		}
+
+		if (!FileSystem.exists(aliasPath))
+		{
+			Log.warn("Run `haxelib run lime rebuild alias` in order to rebuild the alias script.");
+			return;
+		}
+
 		var haxePathEnv = Sys.getEnv("HAXEPATH");
 		var haxePath = haxePathEnv;
 
 		if (System.hostPlatform == WINDOWS)
 		{
 			var usingDefaultHaxePath = false;
+
 			if (haxePath == null || haxePath == "")
 			{
 				usingDefaultHaxePath = true;
@@ -341,25 +352,30 @@ class PlatformSetup
 			}
 
 			var copyFailure = false;
-			var batDestPath = haxePath + "\\lime.bat";
+
 			try
 			{
 				// To remove the old lime behaviour
-				if (FileSystem.exists(haxePath + "\\lime.exe"))
+
+				var batAlias = Path.join([haxePath, "lime.bat"]);
+
+				if (FileSystem.exists(batAlias))
 				{
-					FileSystem.deleteFile(haxePath + "\\lime.exe");
+					FileSystem.deleteFile(batAlias);
 				}
 
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", batDestPath);
+				File.copy(aliasPath, Path.join([haxePath, "lime.exe"]));
 			}
 			catch (e:Dynamic)
 			{
 				copyFailure = true;
+
 				if (Log.verbose)
 				{
-					Log.warn("Failed to copy lime.bat alias to destination: " + batDestPath);
+					Log.warn("Failed to copy lime.exe alias to destination: " + haxePath);
 				}
 			}
+
 			if (Log.verbose && copyFailure && usingDefaultHaxePath && !FileSystem.exists(haxePath))
 			{
 				Log.warn("Did you install Haxe to a custom location? Set the HAXEPATH environment variable, and run Lime setup again.");
@@ -372,7 +388,6 @@ class PlatformSetup
 				haxePath = "/usr/lib/haxe";
 			}
 
-			var installedCommand = false;
 			var answer = YES;
 
 			if (!(targetFlags.exists("alias") || targetFlags.exists("cli")))
@@ -389,62 +404,25 @@ class PlatformSetup
 
 			if (answer == YES || answer == ALWAYS)
 			{
-				if (System.hostPlatform == MAC)
+				// Stupid "System.runCommand" wont work, so we use `haxe` Sys!
+				if (Sys.command("sudo -n true >/dev/null 2>&1") == 0)
 				{
-					var aliasDestPath = "/usr/local/bin/lime";
+					var aliasDestination = "/usr/local/bin/";
+
 					try
 					{
-						System.runCommand("", "cp", [
-							"-f",
-							Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/lime.sh",
-							aliasDestPath
-						], false);
-						System.runCommand("", "chmod", ["755", aliasDestPath], false);
-						installedCommand = true;
+						System.runCommand("", "cp", ["-f", aliasPath, Path.join([aliasDestination, "lime"])], false);
+						System.runCommand("", "chmod", ["755", Path.join([aliasDestination, "lime"])], false);
 					}
 					catch (e:Dynamic)
 					{
-						if (Log.verbose)
-						{
-							Log.warn("Failed to copy Lime alias to destination: " + aliasDestPath);
-						}
+						Log.warn("Failed to copy lime alias to destination: " + aliasDestination);
 					}
 				}
 				else
 				{
-					var aliasDestPath = "/usr/local/bin/lime";
-					try
-					{
-						System.runCommand("", "sudo", [
-							"cp",
-							"-f",
-							Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/lime.sh",
-							aliasDestPath
-						], false);
-						System.runCommand("", "sudo", ["chmod", "755", aliasDestPath], false);
-						installedCommand = true;
-					}
-					catch (e:Dynamic)
-					{
-						if (Log.verbose)
-						{
-							Log.warn("Failed to copy Lime alias to destination: " + aliasDestPath);
-						}
-					}
+					Log.error("You need to run the command with \"sudo\" in order to install the alias! (For example \"sudo haxelib run lime\")");
 				}
-			}
-
-			if (!installedCommand)
-			{
-				Sys.println("");
-				Sys.println("To finish setup, we recommend you either...");
-				Sys.println("");
-				Sys.println(" a) Manually add an alias called \"lime\" to run \"haxelib run lime\"");
-				Sys.println(" b) Run the following commands:");
-				Sys.println("");
-				Sys.println("sudo cp \"" + Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates/bin/lime.sh") + "\" /usr/local/bin/lime");
-				Sys.println("sudo chmod 755 /usr/local/bin/lime");
-				Sys.println("");
 			}
 		}
 	}
@@ -570,143 +548,6 @@ class PlatformSetup
 		}
 	}
 
-	public static function setupOpenFL():Void
-	{
-		if (!targetFlags.exists("alias") && !targetFlags.exists("cli"))
-		{
-			setupHaxelib(new Haxelib("openfl"));
-		}
-
-		if (targetFlags.exists("noalias"))
-		{
-			return;
-		}
-
-		var haxePath = Sys.getEnv("HAXEPATH");
-		var project:HXProject = null;
-
-		try
-		{
-			project = HXProject.fromHaxelib(new Haxelib("openfl"));
-		}
-		catch (e:Dynamic) {}
-
-		if (System.hostPlatform == WINDOWS)
-		{
-			if (haxePath == null || haxePath == "")
-			{
-				haxePath = "C:\\HaxeToolkit\\haxe\\";
-			}
-
-			try
-			{
-				// To remove the old lime behaviour
-				if (FileSystem.exists(haxePath + "\\lime.exe"))
-				{
-					FileSystem.deleteFile(haxePath + "\\lime.exe");
-				}
-
-				File.copy(Haxelib.getPath(new Haxelib("lime")) + "\\templates\\\\bin\\lime.bat", haxePath + "\\lime.bat");
-			}
-			catch (e:Dynamic) {}
-
-			try
-			{
-				// To remove the old lime behaviour
-				if (FileSystem.exists(haxePath + "\\openfl.exe"))
-				{
-					FileSystem.deleteFile(haxePath + "\\openfl.exe");
-				}
-
-				System.copyFileTemplate(project.templatePaths, "bin/openfl.bat", haxePath + "\\openfl.bat");
-			}
-			catch (e:Dynamic) {}
-		}
-		else
-		{
-			if (haxePath == null || haxePath == "")
-			{
-				haxePath = "/usr/lib/haxe";
-			}
-
-			var installedCommand = false;
-			var answer = YES;
-
-			if (!(targetFlags.exists("alias") || targetFlags.exists("cli")))
-			{
-				if (targetFlags.exists("y"))
-				{
-					Sys.println("Do you want to install the \"openfl\" command? [y/n/a] y");
-				}
-				else
-				{
-					answer = CLIHelper.ask("Do you want to install the \"openfl\" command?");
-				}
-			}
-
-			if (answer == YES || answer == ALWAYS)
-			{
-				if (System.hostPlatform == MAC)
-				{
-					try
-					{
-						System.runCommand("", "cp", [
-							"-f",
-							Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/lime.sh",
-							"/usr/local/bin/lime"
-						], false);
-						System.runCommand("", "chmod", ["755", "/usr/local/bin/lime"], false);
-						System.runCommand("", "cp", [
-							"-f",
-							System.findTemplate(project.templatePaths, "bin/openfl.sh"),
-							"/usr/local/bin/openfl"
-						], false);
-						System.runCommand("", "chmod", ["755", "/usr/local/bin/openfl"], false);
-						installedCommand = true;
-					}
-					catch (e:Dynamic) {}
-				}
-				else
-				{
-					try
-					{
-						System.runCommand("", "sudo", [
-							"cp",
-							"-f",
-							Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/lime.sh",
-							"/usr/local/bin/lime"
-						], false);
-						System.runCommand("", "sudo", ["chmod", "755", "/usr/local/bin/lime"], false);
-						System.runCommand("", "sudo", [
-							"cp",
-							"-f",
-							System.findTemplate(project.templatePaths, "bin/openfl.sh"),
-							"/usr/local/bin/openfl"
-						], false);
-						System.runCommand("", "sudo", ["chmod", "755", "/usr/local/bin/openfl"], false);
-						installedCommand = true;
-					}
-					catch (e:Dynamic) {}
-				}
-			}
-
-			if (!installedCommand)
-			{
-				Sys.println("");
-				Sys.println("To finish setup, we recommend you either...");
-				Sys.println("");
-				Sys.println(" a) Manually add an alias called \"openfl\" to run \"haxelib run openfl\"");
-				Sys.println(" b) Run the following commands:");
-				Sys.println("");
-				Sys.println("sudo cp \"" + Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates/bin/lime.sh") + "\" /usr/local/bin/lime");
-				Sys.println("sudo chmod 755 /usr/local/bin/lime");
-				Sys.println("sudo cp \"" + System.findTemplate(project.templatePaths, "bin/openfl.sh") + "\" /usr/local/bin/openfl");
-				Sys.println("sudo chmod 755 /usr/local/bin/openfl");
-				Sys.println("");
-			}
-		}
-	}
-
 	public static function setupWindows():Void
 	{
 		Log.println("\x1b[1mIn order to build native executables for Windows, you must have a");
@@ -753,6 +594,52 @@ class PlatformSetup
 
 		Log.println("");
 		Log.println("Setup complete.");
+	}
+
+	private static function getAliasExecutable():String
+	{
+		var aliasDirectory:String = Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates/bin/alias/");
+
+		switch (System.hostPlatform)
+		{
+			case WINDOWS:
+				if (System.hostArchitecture == X64)
+				{
+					return Path.combine(aliasDirectory, "Windows64/lime.exe");
+				}
+				else
+				{
+					return Path.combine(aliasDirectory, "Windows/lime.exe");
+				}
+			case MAC:
+				if (System.hostArchitecture == X64)
+				{
+					return Path.combine(aliasDirectory, "Mac64/lime");
+				}
+				else if (System.hostArchitecture == ARM64)
+				{
+					return Path.combine(aliasDirectory, "MacArm64/lime");
+				}
+			case LINUX:
+				if (System.hostArchitecture == ARMV7)
+				{
+					return Path.combine(aliasDirectory, "LinuxArm/lime");
+				}
+				else if (System.hostArchitecture == ARM64)
+				{
+					return Path.combine(aliasDirectory, "LinuxArm64/lime");
+				}
+				else if (System.hostArchitecture == X64)
+				{
+					return Path.combine(aliasDirectory, "Linux64/lime");
+				}
+				else
+				{
+					return Path.combine(aliasDirectory, "Linux/lime");
+				}
+		}
+
+		return '';
 	}
 
 	private static function throwPermissionsError()
