@@ -6,10 +6,6 @@
 	path = project/lib/sdl
 	url = https://github.com/FunkinCrew/SDL
 	shallow = true
-[submodule "project/lib/openal"]
-	path = project/lib/openal
-	url = https://github.com/kcat/openal-soft
-	shallow = true
 [submodule "project/lib/ogg"]
 	path = project/lib/ogg
 	url = https://github.com/xiph/ogg

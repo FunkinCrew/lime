@@ -1,7 +1,7 @@
-Notices
-=======
+# Notices
 
 ### Lime
+
 Copyright (c) 2013-2025 Joshua Granick and other Lime contributors
 
 This product bundles cairo 1.15.2, which is available under an
@@ -25,12 +25,6 @@ This product bundles libogg 1.3.6, which is available under a
 This product bundles LZMA SDK 4.65, which is available under
 public domain. For details, see [project/lib/lzma/](project/lzma).
 
-This product bundles OpenAL-Soft 1.19.0, which is available under an
-"LGPLv2" license. For details, see [project/lib/openal/](project/lib).
-
-_OpenAL-Soft is only included in dynamically-linked builds, it is excluded
-from Lime static builds in order to preserve Lime's permissive nature._
-
 This product bundles pixman 0.32.8, which is available under an
 "MIT" license. For details, see [project/lib/pixman/](project/lib).
 
@@ -49,7 +43,7 @@ This product bundles libvorbis 1.3.7, which is available under a
 This product bundles zlib 1.2.8, which is available under a
 "zlib" (BSD-style) license. For details, see [project/lib/zlib/](project/lib).
 
--------
+---
 
 Modifications and source-repository versions of Haxe core files are included in the
 [haxe/](haxe/) folder, which are available under an "MIT" license. For details, see
@@ -74,12 +68,12 @@ For details, see https://github.com/underscorediscovery/hxtypedarray
 The unifill project is included in the [lime/text/unifill/](lime/text/unifill/) directory,
 which is available under an "MIT" license. For details, see https://github.com/mandel59/unifill
 
-lime/_internal/graphics/StackBlur.hx is adapted from original code by Mario Klingemann
+lime/\_internal/graphics/StackBlur.hx is adapted from original code by Mario Klingemann
 and the EaselJS project, and is available under an "MIT" license. For details, see
 http://www.quasimondo.com/StackBlurForCanvas/StackBlur.js and
 https://github.com/createjs/easeljs
 
--------
+---
 
 _The following are not embedded in Lime applications directly, but are used
 as dependencies for web-based builds. Their licensing does not affect products
@@ -106,7 +100,7 @@ This product bundles SWFObject 2.2, which is available under an
 This product bundles webgl-debug.js 1.0.0, which is available under an
 "MIT" license. For details, see [dependencies/webgl-debug.min.js](dependencies/webgl-debug.min.js).
 
--------
+---
 
 _The following are not included in Lime applications, but are used by
 the Lime command-line tools. Their licensing does not affect products

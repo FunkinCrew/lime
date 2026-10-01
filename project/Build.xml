@@ -9,7 +9,6 @@
 	</compiler>
 
 	<set name="HXCPP_NO_SEGV_HANDLING" value="1" if="isMsvc" />
-	<set name="HXCPP_CPP20" value="1" />
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml" />
 
@@ -24,7 +23,6 @@
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
-	<set name="LIME_OPENAL" value="1" if="windows || linux || mac || android || iphone" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -137,17 +135,6 @@
 			<file name="src/media/decoders/FlacDecoder.cpp" />
 			<file name="src/media/decoders/MP3Decoder.cpp" />
 			<file name="src/media/decoders/WavDecoder.cpp" />
-
-		</section>
-
-		<section if="LIME_OPENAL">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/openal/include" />
-			<compilerflag value="-DLIME_OPENAL" />
-			<compilerflag value="-DAL_LIBTYPE_STATIC" />
-			<compilerflag value="-DAL_ALEXT_PROTOTYPES" />
-
-			<file name="src/bindings/openal/OpenALBindings.cpp" />
 
 		</section>
 
@@ -277,7 +264,6 @@
 	<include name="lib/ogg-files.xml" />
 	<include name="lib/opusfile-files.xml" />
 	<include name="lib/opus-files.xml" />
-	<include name="lib/openal-files.xml" />
 	<include name="lib/pixman-files.xml" />
 	<include name="lib/sdl-files.xml" />
 	<include name="lib/sdl_image-files.xml" />
@@ -301,7 +287,6 @@
 		<files id="native-toolkit-ogg" if="LIME_OGG" />
 		<files id="native-toolkit-opusfile" if="LIME_OPUS" />
 		<files id="native-toolkit-opus" if="LIME_OPUS" />
-		<files id="native-toolkit-openal" if="LIME_OPENAL" />
 		<files id="native-toolkit-pixman" if="LIME_PIXMAN" />
 		<files id="native-toolkit-sdl" if="LIME_SDL" />
 
@@ -328,7 +313,6 @@
 				<section unless="mingw">
 
 					<lib name="advapi32.lib" />
-					<lib name="avrt.lib" if="LIME_OPENAL" />
 					<lib name="comdlg32.lib" />
 					<lib name="comsuppw.lib" />
 					<lib name="dwrite.lib" />
@@ -354,7 +338,6 @@
 				<section if="mingw">
 
 					<lib name="-ladvapi32" />
-					<lib name="-lavrt" if="LIME_OPENAL" />
 					<lib name="-lcomdlg32" />
 					<lib name="-ldwrite" />
 					<lib name="-lgdi32" />

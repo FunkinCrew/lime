@@ -10,8 +10,6 @@ import haxe.crypto.Base64;
 
 import lime.app.Future;
 import lime.app.Promise;
-import lime.media.openal.AL;
-import lime.media.openal.ALBuffer;
 import lime.net.HTTPRequest;
 import lime.utils.Log;
 import lime.utils.UInt8Array;
@@ -66,7 +64,6 @@ class AudioBuffer
 	**/
 	public var src(get, set):Dynamic;
 
-	@:noCompletion private var __srcBuffer:#if lime_cffi ALBuffer #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
 	@:noCompletion private var __srcHowlerDefaultSprite:String;
@@ -86,12 +83,6 @@ class AudioBuffer
 		{
 			__srcHowl.unload();
 			__srcHowl = null;
-		}
-		#elseif (lime_cffi && !macro)
-		if (__srcBuffer != null)
-		{
-			AL.deleteBuffer(__srcBuffer);
-			__srcBuffer = null;
 		}
 		#end
 	}

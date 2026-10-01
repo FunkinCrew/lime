@@ -77,26 +77,6 @@
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/SDL_mixer.c" />
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/SDL_wave.c" />
 
-            <section if="android">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/aaudio/SDL_aaudio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/openslES/SDL_openslES.c" />
-            </section>
-
-            <section if="apple">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/coreaudio/SDL_coreaudio.m" />
-            </section>
-
-            <section if="linux">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/alsa/SDL_alsa_audio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pipewire/SDL_pipewire.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/pulseaudio/SDL_pulseaudio.c" />
-            </section>
-
-            <section if="windows">
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/wasapi/SDL_wasapi.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/directsound/SDL_directsound.c" />
-            </section>
-
             <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/audio/dummy/SDL_dummyaudio.c" />
 
         </section>
