@@ -21,7 +21,7 @@ import js.html.SpanElement;
 import lime.utils.Log;
 #end
 
-#if (lime_cffi && !macro)
+#if !macro
 import haxe.io.Path;
 #end
 
@@ -77,7 +77,10 @@ class Font
 	 */
 	public var numGlyphs:Int;
 
-	public var src:Dynamic;
+	public var src:Any;
+	#if (html5 && js)
+	public var fontFace:Dynamic;
+	#end
 
 	/**
 	 * The underline position of the font.
@@ -114,9 +117,7 @@ class Font
 	@:noCompletion private static var __webFontID:Int = 0;
 	#end
 
-	#if lime_cffi
 	@:noCompletion private var __fontPathWithoutDirectory:String;
-	#end
 	@:noCompletion private var __init:Bool;
 
 	/**
@@ -163,7 +164,7 @@ class Font
 			{
 				if (Assets.isLocal(__fontID))
 				{
-					__fromBytes(Assets.getBytes(__fontID));
+					__fromBytes(Assets.getBytes(__fontID), name);
 				}
 			}
 			else if (__fontPath != null)
@@ -179,13 +180,13 @@ class Font
 	 * @param bytes The byte data containing the font.
 	 * @return A `Font` instance.
 	 */
-	public static function fromBytes(bytes:Bytes):Font
+	public static function fromBytes(bytes:Bytes, wantedFontName:String = null):Font
 	{
 		if (bytes == null)
 			return null;
 
 		var font = new Font();
-		font.__fromBytes(bytes);
+		font.__fromBytes(bytes, wantedFontName);
 
 		#if (lime_cffi && !macro)
 		return (font.src != null) ? font : null;
@@ -221,13 +222,13 @@ class Font
 	 * @param bytes The byte data containing the font.
 	 * @return A `Future` containing a `Font` instance.
 	 */
-	public static function loadFromBytes(bytes:Bytes):Future<Font>
+	public static function loadFromBytes(bytes:Bytes, wantedFontName:String = null):Future<Font>
 	{
 		if (bytes == null)
 			return cast Future.withError("Could not load font from empty data");
 
 		var font = new Font();
-		font.__fromBytes(bytes);
+		font.__fromBytes(bytes, wantedFontName);
 
 		#if (js && html5)
 		return font.__loadWebFont();
@@ -249,13 +250,14 @@ class Font
 			return cast Future.withError("Could not load font: empty path");
 
 		var request = new HTTPRequest<Bytes>();
+		var fileName = Path.withoutDirectory(Path.withoutExtension(path));
 
 		return request.load(path).then(function(bytes)
 		{
 			if (bytes == null)
 				return cast Future.withError("Could not load font: " + path);
 
-			return loadFromBytes(bytes);
+			return loadFromBytes(bytes, fileName);
 		});
 		#else
 		var request = new HTTPRequest<Font>();
@@ -611,48 +613,50 @@ class Font
 
 			__fontID = other.__fontID;
 			__fontPath = other.__fontPath;
-
-			#if lime_cffi
 			__fontPathWithoutDirectory = other.__fontPathWithoutDirectory;
+
+			#if (html5 && js)
+			fontFace = other.fontFace;
 			#end
 
 			__init = true;
 		}
 	}
 
-	@:noCompletion private function __fromBytes(bytes:Bytes):Void
+	@:noCompletion private function __fromBytes(bytes:Bytes, fontName:String = null):Void
 	{
-		__fontPath = null;
+		__fontPath = __fontPathWithoutDirectory = null;
 
 		#if (js && html5)
+		if (bytes == null || bytes.length == 0) return; // i will not load an empty font bytes
+		var ogName = fontName ?? name;
 		__parseFontMetadata(bytes);
 
-		// Just to be sure fonts from same family wont use their internal css crap in browser.
-		var originalName = name;
-		var webFontName = "__lime_font_" + Std.string(__webFontID++);
-		if (originalName == null || originalName.length == 0)
+
+		if (ogName != null)
 		{
-			originalName = webFontName;
+			name = ogName;
 		}
 
-		name = webFontName;
+		// Just to be sure fonts from same family wont use their internal css crap in browser.
+		if (name == null || name.length == 0)
+		{
+			var webFontName = "__lime_font_" + Std.string(__webFontID++);
+			name = webFontName;
+		}
 
 		var descriptors:Dynamic = {
 			weight: Std.string(__webFontWeight),
 			style: __webFontStyle
 		};
 
-		var fontFace:Dynamic = untyped js.Syntax.code("new FontFace({0}, {1}, {2})", name, bytes.getData(), descriptors);
+		fontFace = untyped js.Syntax.code("new FontFace({0}, {1}, {2})", name, bytes.getData(), descriptors);
 
-		src = fontFace;
-
-		untyped Browser.document.fonts.add(fontFace);
+		src = bytes;
 
 		__webFontLoad = null;
 		__init = true;
 		#elseif (lime_cffi && !macro)
-		__fontPathWithoutDirectory = null;
-
 		src = NativeCFFI.lime_font_load_bytes(bytes);
 
 		__initializeSource();
@@ -661,8 +665,6 @@ class Font
 
 	@:noCompletion private function __fromFile(path:String):Void
 	{
-		__fontPath = path;
-
 		#if (js && html5)
 		var bytes:Bytes = null;
 
@@ -673,18 +675,20 @@ class Font
 
 		if (bytes != null)
 		{
-			__fromBytes(bytes);
-			return;
+			var fileName = Path.withoutDirectory(Path.withoutExtension(path));
+			__fromBytes(bytes, fileName);
+			src = bytes;
+		} else {
+			src = null;
+			__init = true;
 		}
-
-		__init = true;
 		#elseif (lime_cffi && !macro)
-		__fontPathWithoutDirectory = Path.withoutDirectory(__fontPath);
-
-		src = NativeCFFI.lime_font_load_file(__fontPath);
+		src = NativeCFFI.lime_font_load_file(path);
 
 		__initializeSource();
 		#end
+		__fontPath = path;
+		__fontPathWithoutDirectory = Path.withoutDirectory(__fontPath);
 	}
 
 	@:noCompletion private function __initializeSource():Void
@@ -715,7 +719,7 @@ class Font
 	#if (js && html5)
 	@:noCompletion private function __loadWebFont():Future<Font>
 	{
-		if (src == null && name != null)
+		if (fontFace == null && name != null)
 		{
 			return __loadFromName(name);
 		}
@@ -726,16 +730,15 @@ class Font
 		var promise = new Promise<Font>();
 		__webFontLoad = promise.future;
 
-		if (src == null)
+		if (fontFace == null)
 		{
 			promise.error("Could not load web font \"" + name + "\": missing FontFace");
 			return __webFontLoad;
 		}
 
-		var fontFace:Dynamic = src;
-
 		untyped fontFace.load().then(function(_)
 		{
+			untyped Browser.document.fonts.add(fontFace);
 			promise.complete(this);
 		}, function(error)
 		{
