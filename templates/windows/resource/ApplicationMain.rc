@@ -1,5 +1,7 @@
 #include "winres.h"
 
+1 RT_MANIFEST "ApplicationMain.manifest"
+
 IDI_ICON1 ICON "ApplicationMain.ico"
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
