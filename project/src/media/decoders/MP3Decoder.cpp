@@ -1,6 +1,9 @@
-#include <dr_mp3.h>
 #include <media/decoders/MP3Decoder.h>
 #include <utils/File.h>
+
+#define DR_MP3_IMPLEMENTATION
+#define DR_MP3_NO_STDIO
+#include "dr_mp3.h"
 
 namespace lime
 {

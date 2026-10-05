@@ -1,6 +1,9 @@
-#include <dr_flac.h>
 #include <media/decoders/FlacDecoder.h>
 #include <utils/File.h>
+
+#define DR_FLAC_IMPLEMENTATION
+#define DR_FLAC_NO_STDIO
+#include "dr_flac.h"
 
 namespace lime
 {
