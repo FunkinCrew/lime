@@ -180,7 +180,7 @@ class NativeWindow
 			#if (!macro && lime_cffi)
 			if (buttons == null || buttons.length <= 0)
 			{
-				buttons = ["Ok"];
+				buttons = ["OK"];
 			}
 			return NativeCFFI.lime_window_alert(handle, type, message, title, buttons);
 			#end
