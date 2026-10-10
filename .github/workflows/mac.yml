@@ -8,12 +8,12 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
 
@@ -29,8 +29,9 @@ jobs:
       - name: Configure Lime
         run: |
           haxelib dev lime ${{ github.workspace }}
-          haxelib run lime setup -alias -y -nocffi
           haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild alias
+          haxelib run lime setup -alias -y -nocffi
 
       - name: Remove Previous NDLLs
         run: |
@@ -38,20 +39,20 @@ jobs:
           mkdir ./ndll
 
       - name: Rebuild Lime (x86_64)
-        run: haxelib run lime rebuild mac -64
+        run: haxelib run lime rebuild mac -64 -release
 
       - name: Rebuild Lime (ARM64)
-        run: haxelib run lime rebuild mac -arm64 -D HXCPP_ARM64
+        run: haxelib run lime rebuild mac -arm64 -release
 
       - name: Upload Artifact (ndll/Mac64)
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: Mac64-NDLL
           path: ndll/Mac64
           if-no-files-found: error
 
       - name: Upload Artifact (ndll/MacArm64)
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: MacArm64-NDLL
           path: ndll/MacArm64

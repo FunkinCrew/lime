@@ -5,31 +5,25 @@ on:
 
 jobs:
   miscellaneous:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
 
       - name: Set HAXEPATH
         run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
 
-      - name: Install Packages
-        run: |
-          sudo apt-get install g++ g++-multilib gcc-multilib
-
       - name: Install Haxe dependencies
         run: |
           haxelib git hxcpp https://github.com/FunkinCrew/hxcpp --quiet
-          haxelib git openfl https://github.com/FunkinCrew/openfl --quiet
           haxelib install format --quiet
-          haxelib install svg --quiet
           haxelib install hxp --quiet
 
       - name: Configure Lime
@@ -41,7 +35,7 @@ jobs:
           haxelib run lime rebuild tools
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: Miscellaneous
           path: |
