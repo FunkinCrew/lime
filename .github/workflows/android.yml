@@ -8,20 +8,14 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: "zulu"
-          java-version: 17
 
       - name: Set HAXEPATH
         run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
@@ -30,7 +24,7 @@ jobs:
         uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
-          ndk-version: r29
+          ndk-version: r30
 
       - name: Install Haxe dependencies
         run: |
@@ -43,7 +37,6 @@ jobs:
           haxelib dev lime ${{ github.workspace }}
           export ANDROID_SDK=$ANDROID_HOME
           export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
-          export JAVA_HOME=$JAVA_HOME_17_arm64
           export ANDROID_SETUP=true
           haxelib run lime setup android -alias -y -nocffi
 
@@ -58,7 +51,7 @@ jobs:
           haxelib run lime rebuild android -release
 
       - name: Upload Artifact (ndll/Android)
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: Android-NDLL
           path: ndll/Android
