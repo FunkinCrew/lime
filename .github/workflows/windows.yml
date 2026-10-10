@@ -8,12 +8,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
 
@@ -26,8 +26,9 @@ jobs:
       - name: Configure Lime
         run: |
           haxelib dev lime ${{ github.workspace }}
-          haxelib run lime setup -alias -y -nocffi
           haxelib run lime rebuild hxcpp
+          haxelib run lime rebuild alias
+          haxelib run lime setup -alias -y -nocffi
 
       - name: Remove Previous NDLLs
         shell: bash
@@ -36,20 +37,20 @@ jobs:
           mkdir ./ndll
 
       - name: Rebuild Lime (x86_64)
-        run: haxelib run lime rebuild windows -64
+        run: haxelib run lime rebuild windows -64 -release
 
       - name: Rebuild Lime (x86)
-        run: haxelib run lime rebuild windows -32
+        run: haxelib run lime rebuild windows -32 -release
 
       - name: Upload Artifact (ndll/Windows64)
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: Windows64-NDLL
           path: ndll/Windows64
           if-no-files-found: error
 
       - name: Upload Artifact (ndll/Windows)
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: Windows-NDLL
           path: ndll/Windows
