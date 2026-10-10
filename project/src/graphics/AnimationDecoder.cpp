@@ -25,6 +25,8 @@ namespace lime
 
 		if (!file->handle)
 		{
+			delete file;
+
 			return false;
 		}
 
@@ -33,6 +35,8 @@ namespace lime
 		if (!decoder)
 		{
 			file->Close();
+
+			delete file;
 
 			return false;
 		}

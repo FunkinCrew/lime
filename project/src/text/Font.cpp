@@ -42,6 +42,8 @@ namespace lime
 
 		if (file)
 		{
+			file->Close();
+
 			delete file;
 		}
 
