@@ -2162,6 +2162,15 @@ extern "C" int lime_harfbuzz_register_prims()
 }
 #endif
 
+#ifdef LIME_MINIAUDIO
+extern "C" int lime_ma_register_prims();
+#else
+extern "C" int lime_ma_register_prims()
+{
+	return 0;
+}
+#endif
+
 #ifdef LIME_OPENGL
 extern "C" int lime_opengl_register_prims();
 #else
@@ -2175,6 +2184,7 @@ extern "C" int lime_register_prims()
 {
 	lime_cairo_register_prims();
 	lime_harfbuzz_register_prims();
+	lime_ma_register_prims();
 	lime_opengl_register_prims();
 
 	return 0;

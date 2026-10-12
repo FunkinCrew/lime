@@ -1,0 +1,78 @@
+package lime.media.miniaudio;
+
+#if (!lime_doc_gen || lime_miniaudio)
+enum abstract MAResult(Int) from Int to Int from UInt to UInt
+{
+	var SUCCESS = 0;
+	var ERROR = -1;
+	var INVALID_ARGS = -2;
+	var INVALID_OPERATION = -3;
+	var OUT_OF_MEMORY = -4;
+	var OUT_OF_RANGE = -5;
+	var ACCESS_DENIED = -6;
+	var DOES_NOT_EXIST = -7;
+	var ALREADY_EXISTS = -8;
+	var TOO_MANY_OPEN_FILES = -9;
+	var INVALID_FILE = -10;
+	var TOO_BIG = -11;
+	var PATH_TOO_LONG = -12;
+	var NAME_TOO_LONG = -13;
+	var NOT_DIRECTORY = -14;
+	var IS_DIRECTORY = -15;
+	var DIRECTORY_NOT_EMPTY = -16;
+	var AT_END = -17;
+	var NO_SPACE = -18;
+	var BUSY = -19;
+	var IO_ERROR = -20;
+	var INTERRUPT = -21;
+	var UNAVAILABLE = -22;
+	var ALREADY_IN_USE = -23;
+	var BAD_ADDRESS = -24;
+	var BAD_SEEK = -25;
+	var BAD_PIPE = -26;
+	var DEADLOCK = -27;
+	var TOO_MANY_LINKS = -28;
+	var NOT_IMPLEMENTED = -29;
+	var NO_MESSAGE = -30;
+	var BAD_MESSAGE = -31;
+	var NO_DATA_AVAILABLE = -32;
+	var INVALID_DATA = -33;
+	var TIMEOUT = -34;
+	var NO_NETWORK = -35;
+	var NOT_UNIQUE = -36;
+	var NOT_SOCKET = -37;
+	var NO_ADDRESS = -38;
+	var BAD_PROTOCOL = -39;
+	var PROTOCOL_UNAVAILABLE = -40;
+	var PROTOCOL_NOT_SUPPORTED = -41;
+	var PROTOCOL_FAMILY_NOT_SUPPORTED = -42;
+	var ADDRESS_FAMILY_NOT_SUPPORTED = -43;
+	var SOCKET_NOT_SUPPORTED = -44;
+	var CONNECTION_RESET = -45;
+	var ALREADY_CONNECTED = -46;
+	var NOT_CONNECTED = -47;
+	var CONNECTION_REFUSED = -48;
+	var NO_HOST = -49;
+	var IN_PROGRESS = -50;
+	var CANCELLED = -51;
+	var MEMORY_ALREADY_MAPPED = -52;
+	var CRC_MISMATCH = -100;
+	var FORMAT_NOT_SUPPORTED = -200;
+	var DEVICE_TYPE_NOT_SUPPORTED = -201;
+	var SHARE_MODE_NOT_SUPPORTED = -202;
+	var NO_BACKEND = -203;
+	var NO_DEVICE = -204;
+	var API_NOT_FOUND = -205;
+	var INVALID_DEVICE_CONFIG = -206;
+	var LOOP = -207;
+	var BACKEND_NOT_ENABLED = -208;
+	var DEVICE_NOT_INITIALIZED = -300;
+	var DEVICE_ALREADY_INITIALIZED = -301;
+	var DEVICE_NOT_STARTED = -302;
+	var DEVICE_NOT_STOPPED = -303;
+	var FAILED_TO_INIT_BACKEND = -400;
+	var FAILED_TO_OPEN_BACKEND_DEVICE = -401;
+	var FAILED_TO_START_BACKEND_DEVICE = -402;
+	var FAILED_TO_STOP_BACKEND_DEVICE = -403;
+}
+#end

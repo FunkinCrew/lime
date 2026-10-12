@@ -12,6 +12,7 @@
 	<define name="lime-canvas" if="html5" />
 	<define name="lime-cffi" if="native" />
 	<define name="lime-harfbuzz" if="native" />
+	<define name="lime-miniaudio" if="native" />
 	<define name="lime-howlerjs" if="html5" />
 	<define name="lime-html5" if="html5" />
 	<define name="lime-native" if="native" />

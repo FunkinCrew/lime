@@ -22,6 +22,7 @@
 	<set name="LIME_LZMA" value="1" />
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
+	<set name="LIME_MINIAUDIO" value="1" />
 	<set name="LIME_DR_LIBS" value="1" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone" />
@@ -124,6 +125,15 @@
 			<compilerflag value="-DLIME_OPUS" />
 
 			<file name="src/media/decoders/OpusDecoder.cpp" />
+
+		</section>
+
+		<section if="LIME_MINIAUDIO">
+
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio" />
+			<compilerflag value="-DLIME_MINIAUDIO" />
+
+			<file name="src/bindings/miniaudio/MiniAudioBindings.cpp" />
 
 		</section>
 
