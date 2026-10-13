@@ -50,10 +50,6 @@
 	path = project/lib/opusfile
 	url = https://github.com/xiph/opusfile.git
 	shallow = true
-[submodule "project/lib/dr_libs"]
-	path = project/lib/dr_libs
-	url = https://github.com/mackron/dr_libs.git
-	shallow = true
 [submodule "project/lib/miniaudio"]
 	path = project/lib/miniaudio
 	url = https://github.com/mackron/miniaudio.git

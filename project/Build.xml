@@ -23,7 +23,6 @@
 	<set name="LIME_OGG" value="1" />
 	<set name="LIME_OPUS" value="1" />
 	<set name="LIME_MINIAUDIO" value="1" />
-	<set name="LIME_DR_LIBS" value="1" />
 	<set name="LIME_OPENGL" value="1" />
 	<set name="LIME_GLAD" value="1" if="LIME_OPENGL" unless="iphone" />
 	<set name="LIME_PIXMAN" value="1" />
@@ -106,45 +105,28 @@
 
 		</section>
 
-		<section if="LIME_OGG">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
-			<compilerflag value="-DLIME_OGG" />
-
-			<file name="src/media/decoders/OggDecoder.cpp" />
-
-		</section>
-
-		<section if="LIME_OPUS">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/opusfile/include" />
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
-			<compilerflag value="-DLIME_OPUS" />
-
-			<file name="src/media/decoders/OpusDecoder.cpp" />
-
-		</section>
-
 		<section if="LIME_MINIAUDIO">
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/ogg/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/ogg/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/vorbis/include" />
+
+			</section>
+
+			<section>
+
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opus/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/custom/opusfile/include" />
+				<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/opusfile/include" />
+
+			</section>
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio" />
 			<compilerflag value="-DLIME_MINIAUDIO" />
 
 			<file name="src/bindings/miniaudio/MiniAudioBindings.cpp" />
-
-		</section>
-
-		<section if="LIME_DR_LIBS">
-
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/dr_libs" />
-			<compilerflag value="-DLIME_DR_LIBS" />
-
-			<file name="src/media/decoders/FlacDecoder.cpp" />
-			<file name="src/media/decoders/MP3Decoder.cpp" />
-			<file name="src/media/decoders/WavDecoder.cpp" />
 
 		</section>
 
