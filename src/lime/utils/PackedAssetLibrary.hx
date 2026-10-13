@@ -288,14 +288,13 @@ import lime.utils.Bytes;
 		}
 		else
 		{
-			// TODO: More efficient method, use `loadFromBytes` method
 			var bytes = Bytes.alloc(lengths[id]);
 			bytes.blit(0, packedData, positions[id], lengths[id]);
 			if (type == "gzip")
 				bytes = bytes.decompress(GZIP);
 			else if (type == "zip" || type == "deflate")
 				bytes = bytes.decompress(DEFLATE);
-			return Future.withValue(AudioBuffer.fromBytes(bytes));
+			return AudioBuffer.loadFromBytes(bytes);
 		}
 		#end
 	}

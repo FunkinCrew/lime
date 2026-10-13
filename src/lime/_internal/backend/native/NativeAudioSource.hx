@@ -1,124 +1,184 @@
 package lime._internal.backend.native;
 
+#if cpp
+import cpp.Pointer;
+#end
+
 import haxe.MainLoop;
 
-import lime.math.Vector4;
+import lime.media.AudioManager;
 import lime.media.AudioSource;
-
-import sys.thread.Mutex;
-import sys.thread.Thread;
+import lime.media.miniaudio.MAAudioBuffer;
+import lime.media.miniaudio.MAAudioBufferConfig;
+import lime.media.miniaudio.MASound;
+import lime.media.miniaudio.MASoundNotifications;
 
 @:access(lime.media.AudioBuffer)
 class NativeAudioSource
 {
-	private static var hasDirectChannelsExt:Null<Bool>;
-	private static var hasALSoftLatencyExt:Null<Bool>;
-
-	private static var activeAudioSources:Array<NativeAudioSource> = [];
-	private static var processingMutex:Mutex = new Mutex();
-	private static var processingThread:Thread;
-
-	private var completed:Bool;
-	private var dataLength:Int;
-	private var format:Int;
-	private var loops:Int;
+	private var buffer:MAAudioBuffer;
+	private var handle:MASound;
+	private var loops:Int = 0;
 	private var parent:AudioSource;
-	private var playing:Bool;
-	private var position:Vector4;
 
-	public function new(parent:AudioSource)
+	public function new(parent:AudioSource):Void
 	{
-		setupProcessingThread();
-
 		this.parent = parent;
-
-		position = new Vector4();
 	}
 
-	public function dispose():Void {}
+	public function dispose():Void
+	{
+		if (handle != null)
+		{
+			handle.stop();
+			handle.uninit();
+			handle = null;
+		}
+
+		if (buffer != null)
+		{
+			buffer.uninit();
+			buffer = null;
+		}
+	}
 
 	public function init():Void
 	{
-		registerSource(this);
+		if (handle == null)
+		{
+			if (parent.buffer.__srcMADecoder != null)
+			{
+				final flags:Int = MASound.FLAG_NO_SPATIALIZATION;
+
+				final notifications:MASoundNotifications = {onAtEnd: sound_atEnd};
+
+				handle = MASound.init_from_data_source(AudioManager.engine, parent.buffer.__srcMADecoder, flags, null, notifications);
+			}
+			else if (parent.buffer.data != null && parent.buffer.data.length > 0)
+			{
+				if (buffer == null)
+				{
+					buffer = MAAudioBuffer.init(MAAudioBufferConfig.init(parent.buffer.format, parent.buffer.channels, parent.buffer.sampleRate,
+						parent.buffer.frames, #if cpp Pointer.ofArray(parent.buffer.data.buffer.getData()) #else null #end));
+				}
+
+				final flags:Int = MASound.FLAG_NO_SPATIALIZATION;
+
+				final notifications:MASoundNotifications = {onAtEnd: sound_atEnd};
+
+				handle = MASound.init_from_data_source(AudioManager.engine, buffer, flags, null, notifications);
+			}
+		}
 	}
 
 	public function play():Void
 	{
-		if (playing || handle == null)
+		if (handle != null)
 		{
-			return;
+			handle.start();
 		}
-
-		playing = true;
-
-		setCurrentTime(completed ? 0 : getCurrentTime());
 	}
 
 	public function pause():Void
 	{
-		playing = false;
+		if (handle != null)
+		{
+			handle.stop();
+		}
 	}
 
 	public function stop():Void
 	{
-		playing = false;
+		if (handle != null)
+		{
+			handle.stop();
 
-		setCurrentTime(0);
+			handle.seek_to_pcm_frame(0);
+		}
 	}
 
 	// Event Handlers
 
-	private function process():Void
+	private function sound_atEnd(_):Void
 	{
 		if (loops > 0)
 		{
-			playing = false;
 			loops--;
-			setCurrentTime(0);
+			stop();
 			play();
 			return;
 		}
 
-		if (!completed)
+		MainLoop.runInMainThread(function():Void
 		{
-			stop();
-
-			// `onComplete` must not run from the processing thread,
-			// in case a crash happens from this callback or smth, itll be bad,
-			// it should use the main thread for it.
-			MainLoop.runInMainThread(function():Void
-			{
-				parent.onComplete.dispatch();
-			});
-		}
-
-		completed = true;
+			parent.onComplete.dispatch();
+		});
 	}
 
 	// Get & Set Methods
+	public function getLength():Float
+	{
+		return handle != null ? handle.get_length_in_seconds() * 1000.0 : 0;
+	}
+
 	public function getCurrentTime():Float
 	{
-		return 0;
+		return handle != null ? cast handle.get_cursor_in_seconds() * 1000.0 : 0;
 	}
 
 	public function setCurrentTime(value:Float):Float
 	{
+		if (handle != null)
+		{
+			handle.seek_to_second(value / 1000.0);
+		}
+
 		return value;
 	}
 
 	public function getGain():Float
 	{
-		return 1;
+		return handle != null ? handle.get_volume() : 1;
 	}
 
 	public function setGain(value:Float):Float
 	{
+		if (handle != null)
+		{
+			handle.set_volume(value);
+		}
+
 		return value;
 	}
 
-	public function getLength():Float
+	public function getPitch():Float
 	{
-		return 0;
+		return handle != null ? handle.get_pitch() : 1;
+	}
+
+	public function setPitch(value:Float):Float
+	{
+		if (handle != null)
+		{
+			handle.set_pitch(value);
+		}
+
+		return value;
+	}
+
+	public function getPan():Float
+	{
+		return handle != null ? handle.get_pan() : 0;
+	}
+
+	public function setPan(value:Float):Float
+	{
+		if (handle != null)
+		{
+			handle.set_pan(value);
+		}
+
+		return value;
 	}
 
 	public function getLoops():Int
@@ -131,86 +191,8 @@ class NativeAudioSource
 		return loops = value;
 	}
 
-	public function getPitch():Float
+	public function getPlaying():Bool
 	{
-		return 1;
-	}
-
-	public function setPitch(value:Float):Float
-	{
-		return value;
-	}
-
-	public function getPosition():Vector4
-	{
-		return position;
-	}
-
-	public function setPosition(value:Vector4):Vector4
-	{
-		position.x = value.x;
-		position.y = value.y;
-		position.z = value.z;
-		position.w = value.w;
-
-		return position;
-	}
-
-	public function getLatency():Float
-	{
-		return 0;
-	}
-
-	// processing Thread Functions
-
-	@:noCompletion
-	private static function registerSource(source:NativeAudioSource):Void
-	{
-		processingMutex.acquire();
-
-		if (!activeAudioSources.contains(source))
-			activeAudioSources.push(source);
-
-		processingMutex.release();
-	}
-
-	@:noCompletion
-	private static function unregisterSource(source:NativeAudioSource):Void
-	{
-		processingMutex.acquire();
-
-		if (activeAudioSources.contains(source))
-			activeAudioSources.remove(source);
-
-		processingMutex.release();
-	}
-
-	@:noCompletion
-	private static function setupProcessingThread():Void
-	{
-		if (processingThread == null)
-		{
-			processingThread = Thread.create(function():Void
-			{
-				while (true)
-				{
-					processingMutex.acquire();
-
-					for (activeAudioSource in activeAudioSources)
-					{
-						activeAudioSource.process();
-					}
-
-					// Useful for tracking how many audio sources are currently being processed,
-					// but itll spam the shit out of your console,
-					// should be removed later ig.
-					// MainLoop.runInMainThread(Sys.println.bind('Active sources: ${activeAudioSources.length}'));
-
-					processingMutex.release();
-
-					Sys.sleep(0.01);
-				}
-			});
-		}
+		return handle != null ? handle.is_playing() : false;
 	}
 }

@@ -1,24 +1,26 @@
 package lime.media;
 
 import haxe.Int64;
-import haxe.io.Bytes;
-import haxe.io.Path;
-
-import lime._internal.backend.native.NativeCFFI;
-
 import haxe.crypto.Base64;
+import haxe.io.Bytes;
 
 import lime.app.Future;
-import lime.app.Promise;
-import lime.net.HTTPRequest;
+import lime.utils.ArrayBufferView;
+import lime.utils.Float32Array;
+import lime.utils.Int16Array;
+import lime.utils.Int32Array;
 import lime.utils.Log;
 import lime.utils.UInt8Array;
 #if lime_howlerjs
 import lime.media.howlerjs.Howl;
-#end
-
-#if (js && html5)
-import js.html.Audio;
+#elseif lime_miniaudio
+import lime.media.miniaudio.MADataFormat;
+import lime.media.miniaudio.MADecoder;
+import lime.media.miniaudio.MADecoderConfig;
+import lime.media.miniaudio.MAFormat;
+import lime.media.miniaudio.MAHelpers;
+import lime.system.ThreadPool;
+import lime.system.WorkOutput;
 #end
 
 /**
@@ -30,14 +32,17 @@ import js.html.Audio;
 
 	@see lime.media.AudioSource
 **/
-@:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime.utils.Assets)
 class AudioBuffer
 {
 	/**
 		The number of bits per sample in the audio data.
 	**/
+	#if lime_miniaudio
 	public var bitsPerSample(get, never):Int;
+	#else
+	public var bitsPerSample:Int;
+	#end
 
 	/**
 		The number of audio channels (e.g., 1 for mono, 2 for stereo).
@@ -45,28 +50,40 @@ class AudioBuffer
 	public var channels:Int;
 
 	/**
-		The raw audio data stored as a `UInt8Array`.
-	**/
-	public var data:UInt8Array;
-
-	/**
-		The format the raw audio data is stored in.
-	**/
-	public var dataFormat:AudioFormat;
-
-	/**
 		The sample rate of the audio data, in Hz.
 	**/
 	public var sampleRate:Int;
 
+	#if lime_miniaudio
 	/**
-		The source of the audio data. This can be an `Audio`, `Sound`, `Howl`, or other platform-specific object.
+		The format of the audio data.
+	**/
+	public var format:MAFormat;
+	#end
+
+	/**
+		The number of audio frames.
+	**/
+	public var frames:Int64;
+
+	/**
+		The raw audio data stored as a `ArrayBufferView`.
+	**/
+	public var data:ArrayBufferView;
+
+	/**
+		The source of the audio data. This can be an `Howl` or `MADecoder`.
 	**/
 	public var src(get, set):Dynamic;
+
+	#if lime_miniaudio
+	@:noCompletion private static var __localThreadPool:ThreadPool;
+	#end
 
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
 	@:noCompletion private var __srcHowlerDefaultSprite:String;
+	@:noCompletion private var __srcMADecoder:#if lime_miniaudio MADecoder #else Dynamic #end;
 
 	/**
 		Creates a new, empty `AudioBuffer` instance.
@@ -84,6 +101,12 @@ class AudioBuffer
 			__srcHowl.unload();
 			__srcHowl = null;
 		}
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		if (__srcMADecoder != null)
+		{
+			__srcMADecoder.uninit();
+			__srcMADecoder = null;
+		}
 		#end
 	}
 
@@ -91,12 +114,15 @@ class AudioBuffer
 		Creates an `AudioBuffer` from a Base64-encoded string.
 
 		@param base64String The Base64-encoded audio data.
+		@param stream Whether to use streaming instead of directly decoding all the audio data.
 		@return An `AudioBuffer` instance with the decoded audio data.
 	**/
-	public static function fromBase64(base64String:String):AudioBuffer
+	public static function fromBase64(base64String:String, ?stream:Bool = false):AudioBuffer
 	{
 		if (base64String == null)
+		{
 			return null;
+		}
 
 		#if (js && html5 && lime_howlerjs)
 		// if base64String doesn't contain codec data, add it.
@@ -108,197 +134,97 @@ class AudioBuffer
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.__srcHowl = new Howl({src: [base64String], preload: true});
 		return audioBuffer;
-		#elseif (lime_cffi && !macro)
+		#elseif (lime_cffi && lime_miniaudio && !macro)
 		// if base64String contains codec data, strip it then decode it.
 		var base64StringSplit = base64String.split(",");
 		var base64StringNoEncoding = base64StringSplit[base64StringSplit.length - 1];
-		var decoder:AudioDecoder = AudioDecoder.fromBytes(Base64.decode(base64StringNoEncoding));
-
-		if (decoder != null)
-		{
-			var buffer:AudioBuffer = new AudioBuffer();
-			buffer.sampleRate = decoder.sampleRate;
-			buffer.channels = decoder.channels;
-			buffer.dataFormat = S16;
-			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
-			return buffer;
-		}
-		#end
-
+		return __createFromMADecoder(MADecoder.init_memory(Base64.decode(base64StringNoEncoding), MADecoderConfig.init(S16, 0, 0)), stream);
+		#else
 		return null;
+		#end
 	}
 
 	/**
 		Creates an `AudioBuffer` from a `Bytes` object.
 
 		@param bytes The `Bytes` object containing the audio data.
+		@param stream Whether to use streaming instead of directly decoding all the audio data.
 		@return An `AudioBuffer` instance with the decoded audio data.
 	**/
-	public static function fromBytes(bytes:Bytes):AudioBuffer
+	public static function fromBytes(bytes:Bytes, ?stream:Bool = false):AudioBuffer
 	{
 		if (bytes == null)
+		{
 			return null;
+		}
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
 		return audioBuffer;
-		#elseif (lime_cffi && !macro)
-		var decoder:AudioDecoder = AudioDecoder.fromBytes(bytes);
-
-		if (decoder != null)
-		{
-			var buffer:AudioBuffer = new AudioBuffer();
-			buffer.sampleRate = decoder.sampleRate;
-			buffer.channels = decoder.channels;
-			buffer.dataFormat = S16;
-			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
-			return buffer;
-		}
-		#end
-
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		return __createFromMADecoder(MADecoder.init_memory(bytes, MADecoderConfig.init(S16, 0, 0)), stream);
+		#else
 		return null;
+		#end
 	}
 
 	/**
 		Creates an `AudioBuffer` from a file.
 
 		@param path The file path to the audio data.
+		@param stream Whether to use streaming instead of directly decoding all the audio data.
 		@return An `AudioBuffer` instance with the audio data loaded from the file.
 	**/
-	public static function fromFile(path:String):AudioBuffer
+	public static function fromFile(path:String, ?stream:Bool = false):AudioBuffer
 	{
 		if (path == null)
+		{
 			return null;
+		}
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.__srcHowl = new Howl({src: [path], preload: false});
 		return audioBuffer;
-		#elseif (lime_cffi && !macro)
-		var decoder:AudioDecoder = AudioDecoder.fromFile(path);
-
-		if (decoder != null)
-		{
-			var buffer:AudioBuffer = new AudioBuffer();
-			buffer.sampleRate = decoder.sampleRate;
-			buffer.channels = decoder.channels;
-			buffer.dataFormat = S16;
-			buffer.data = UInt8Array.fromBytes(decoder.decode(Int64.toInt(decoder.total()), buffer.dataFormat));
-			return buffer;
-		}
-		#end
-
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		return __createFromMADecoder(MADecoder.init_file(path, MADecoderConfig.init(S16, 0, 0)), stream);
+		#else
 		return null;
+		#end
 	}
 
 	/**
-		Creates an `AudioBuffer` from an array of file paths.
+		Asynchronously loads an `AudioBuffer` from a `Bytes` object.
 
-		@param paths An array of file paths to search for audio data.
-		@return An `AudioBuffer` instance with the audio data loaded from the first valid file found.
+		@param bytes The `Bytes` object containing the audio data.
+		@param stream Whether to use streaming instead of directly decoding all the audio data.
+		@return A `Future` that resolves to the loaded `AudioBuffer`.
 	**/
-	public static function fromFiles(paths:Array<String>):AudioBuffer
+	public static function loadFromBytes(bytes:Bytes, ?stream:Bool = false):Future<AudioBuffer>
 	{
+		if (bytes == null)
+		{
+			return Future.withValue(null);
+		}
+
 		#if (js && html5 && lime_howlerjs)
+		var promise = new lime.app.Promise<AudioBuffer>();
+
 		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcHowl = new Howl({src: paths, preload: false});
-		return audioBuffer;
-		#else
-		var buffer = null;
 
-		for (path in paths)
-		{
-			buffer = AudioBuffer.fromFile(path);
-			if (buffer != null)
-				break;
-		}
+		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: false});
 
-		return buffer;
-		#end
-	}
-
-	/**
-		Asynchronously loads an `AudioBuffer` from a file.
-
-		@param path The file path to the audio data.
-		@return A `Future` that resolves to the loaded `AudioBuffer`.
-	**/
-	public static function loadFromFile(path:String):Future<AudioBuffer>
-	{
-		#if (js && html5)
-		var promise = new Promise<AudioBuffer>();
-
-		var audioBuffer = AudioBuffer.fromFile(path);
-
-		if (audioBuffer != null)
-		{
-			#if (js && html5 && lime_howlerjs)
-			if (audioBuffer != null)
-			{
-				audioBuffer.__srcHowl.on("load", function()
-				{
-					promise.complete(audioBuffer);
-				});
-
-				audioBuffer.__srcHowl.on("loaderror", function(id, msg)
-				{
-					promise.error(msg);
-				});
-
-				audioBuffer.__srcHowl.load();
-			}
-			#else
-			promise.complete(audioBuffer);
-			#end
-		}
-		else
-		{
-			promise.error(null);
-		}
-
-		return promise.future;
-		#else
-		// TODO: Streaming
-
-		var request = new HTTPRequest<AudioBuffer>();
-		return request.load(path).then(function(buffer)
-		{
-			if (buffer != null)
-			{
-				return Future.withValue(buffer);
-			}
-			else
-			{
-				return cast Future.withError("");
-			}
-		});
-		#end
-	}
-
-	/**
-		Asynchronously loads an `AudioBuffer` from multiple files.
-
-		@param paths An array of file paths to search for audio data.
-		@return A `Future` that resolves to the loaded `AudioBuffer`.
-	**/
-	public static function loadFromFiles(paths:Array<String>):Future<AudioBuffer>
-	{
-		#if (js && html5 && lime_howlerjs)
-		var promise = new Promise<AudioBuffer>();
-
-		var audioBuffer = AudioBuffer.fromFiles(paths);
-
-		if (audioBuffer != null)
+		if (audioBuffer.__srcHowl != null)
 		{
 			audioBuffer.__srcHowl.on("load", function()
 			{
 				promise.complete(audioBuffer);
 			});
 
-			audioBuffer.__srcHowl.on("loaderror", function()
+			audioBuffer.__srcHowl.on("loaderror", function(id, msg)
 			{
-				promise.error(null);
+				promise.error(msg);
 			});
 
 			audioBuffer.__srcHowl.load();
@@ -309,14 +235,85 @@ class AudioBuffer
 		}
 
 		return promise.future;
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		if (__localThreadPool == null)
+		{
+			__localThreadPool = new ThreadPool(0, 2);
+			__localThreadPool.onComplete.add(localThreadPool_onComplete);
+			__localThreadPool.onError.add(localThreadPool_onError);
+		}
+
+		var promise = new lime.app.Promise<AudioBuffer>();
+
+		__localThreadPool.run(localThreadPool_doWork, {promise: promise, bytes: bytes, stream: stream});
+
+		return promise.future;
 		#else
-		return new Future(fromFiles.bind(paths), true);
+		return Future.withValue(null);
 		#end
 	}
 
-	private static function __getCodec(bytes:Bytes):String
+	/**
+		Asynchronously loads an `AudioBuffer` from a file.
+
+		@param path The file path to the audio data.
+		@param stream Whether to use streaming instead of directly decoding all the audio data.
+		@return A `Future` that resolves to the loaded `AudioBuffer`.
+	**/
+	public static function loadFromFile(path:String, ?stream:Bool = false):Future<AudioBuffer>
+	{
+		if (path == null)
+		{
+			return Future.withValue(null);
+		}
+
+		#if (js && html5 && lime_howlerjs)
+		var promise = new lime.app.Promise<AudioBuffer>();
+
+		var audioBuffer = AudioBuffer.fromFile(path);
+
+		if (audioBuffer != null)
+		{
+			audioBuffer.__srcHowl.on("load", function()
+			{
+				promise.complete(audioBuffer);
+			});
+
+			audioBuffer.__srcHowl.on("loaderror", function(id, msg)
+			{
+				promise.error(msg);
+			});
+
+			audioBuffer.__srcHowl.load();
+		}
+		else
+		{
+			promise.error(null);
+		}
+
+		return promise.future;
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		if (__localThreadPool == null)
+		{
+			__localThreadPool = new ThreadPool(0, 2);
+			__localThreadPool.onComplete.add(localThreadPool_onComplete);
+			__localThreadPool.onError.add(localThreadPool_onError);
+		}
+
+		var promise = new lime.app.Promise<AudioBuffer>();
+
+		__localThreadPool.run(localThreadPool_doWork, {promise: promise, path: path, stream: stream});
+
+		return promise.future;
+		#else
+		return Future.withValue(null);
+		#end
+	}
+
+	@:noCompletion private static function __getCodec(bytes:Bytes):String
 	{
 		var signature:String = null;
+
 		try
 		{
 			signature = bytes.getString(0, 4);
@@ -331,6 +328,15 @@ class AudioBuffer
 		switch (signature)
 		{
 			case "OggS":
+				try
+				{
+					if (bytes.length >= 36 && bytes.getString(28, 8) == "OpusHead")
+					{
+						return "audio/opus";
+					}
+				}
+				catch (e:Dynamic) {}
+
 				return "audio/ogg";
 			case "fLaC":
 				return "audio/flac";
@@ -345,26 +351,143 @@ class AudioBuffer
 		}
 
 		Log.error("Unsupported sound format");
+
 		return null;
 	}
 
+	#if (lime_cffi && lime_miniaudio && !macro)
+	@:noCompletion private static function __createFromMADecoder(decoder:MADecoder, stream:Bool):AudioBuffer
+	{
+		if (decoder != null)
+		{
+			if (stream)
+			{
+				var audioBuffer = new AudioBuffer();
+				audioBuffer.__srcMADecoder = decoder;
+				return audioBuffer;
+			}
+			else
+			{
+				var totalFrames:Int = Int64.toInt(decoder.get_length_in_pcm_frames());
+
+				if (totalFrames > 0)
+				{
+					// When we are not streaming and we are required to put these frames inside an buffer,
+					// We cant use Int64 as the buffer's length as per Haxe's limitation,
+					// And even if youd wanna go beyound the limit, at that point youd use streaming which doesnt have this issue anyway.
+					var dataFormat:MADataFormat = decoder.get_data_format();
+
+					var bytesPerSample:Int = MAHelpers.get_bytes_per_sample(dataFormat.format);
+
+					var dataBuffer:ArrayBufferView = null;
+
+					switch (dataFormat.format)
+					{
+						case U8:
+							dataBuffer = new UInt8Array(Bytes.alloc(totalFrames * dataFormat.channels * bytesPerSample));
+						case S16:
+							dataBuffer = new Int16Array(Bytes.alloc(totalFrames * dataFormat.channels * bytesPerSample));
+						case S32:
+							dataBuffer = new Int32Array(Bytes.alloc(totalFrames * dataFormat.channels * bytesPerSample));
+						case F32:
+							dataBuffer = new Float32Array(Bytes.alloc(totalFrames * dataFormat.channels * bytesPerSample));
+						default:
+							Log.error('Unsupported audio buffer format: ${MAHelpers.get_format_name(dataFormat.format)}');
+					}
+
+					if (dataBuffer != null)
+					{
+						if (decoder.read_pcm_frames(#if cpp cpp.Pointer.ofArray(dataBuffer.buffer.getData()) #else null #end, totalFrames) > 0)
+						{
+							decoder.uninit();
+							decoder = null;
+
+							var buffer = new AudioBuffer();
+							buffer.sampleRate = dataFormat.sampleRate;
+							buffer.channels = dataFormat.channels;
+							buffer.format = dataFormat.format;
+							buffer.frames = totalFrames;
+							buffer.data = dataBuffer;
+							return buffer;
+						}
+					}
+				}
+			}
+
+			decoder.uninit();
+			decoder = null;
+		}
+
+		return null;
+	}
+
+	@:noCompletion private static function localThreadPool_doWork(state:Dynamic, output:WorkOutput):Void
+	{
+		var decoder:MADecoder = null;
+
+		if (state.path != null)
+		{
+			decoder = MADecoder.init_file(state.path, MADecoderConfig.init(S16, 0, 0));
+		}
+		else if (state.bytes != null)
+		{
+			decoder = MADecoder.init_memory(state.bytes, MADecoderConfig.init(S16, 0, 0));
+		}
+
+		if (decoder != null)
+		{
+			var audioBuffer:AudioBuffer = __createFromMADecoder(decoder, state.stream);
+
+			if (audioBuffer != null)
+			{
+				output.sendComplete({
+					state: state,
+					audioBuffer: audioBuffer
+				});
+
+				return;
+			}
+		}
+
+		output.sendError({
+			state: state,
+			message: "Cannot load file: " + state.path
+		});
+	}
+
+	@:noCompletion private static function localThreadPool_onComplete(data:Dynamic):Void
+	{
+		data.state.promise.complete(data.audioBuffer);
+	}
+
+	@:noCompletion private static function localThreadPool_onError(data:Dynamic):Void
+	{
+		data.state.promise.error(data.message);
+	}
+	#end
+
 	// Get & Set Methods
+	#if lime_miniaudio
 	@:noCompletion private function get_bitsPerSample():Int
 	{
-		return switch (dataFormat)
+		return switch (format)
 		{
+			case U8: 8;
 			case S16: 16;
+			case S24: 24;
+			case S32: 32;
 			case F32: 32;
 			default: 0;
 		}
 	}
+	#end
 
 	@:noCompletion private function get_src():Dynamic
 	{
-		#if (js && html5)
-		#if lime_howlerjs
+		#if (js && html5 && lime_howlerjs)
 		return __srcHowl;
-		#end
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		return __srcMADecoder;
 		#else
 		return __srcCustom;
 		#end
@@ -372,10 +495,10 @@ class AudioBuffer
 
 	@:noCompletion private function set_src(value:Dynamic):Dynamic
 	{
-		#if (js && html5)
-		#if lime_howlerjs
+		#if (js && html5 && lime_howlerjs)
 		return __srcHowl = value;
-		#end
+		#elseif (lime_cffi && lime_miniaudio && !macro)
+		return __srcMADecoder = value;
 		#else
 		return __srcCustom = value;
 		#end

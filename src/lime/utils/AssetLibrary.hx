@@ -410,7 +410,16 @@ class AssetLibrary
 		}
 		else if (classTypes.exists(id))
 		{
-			return Future.withValue(AudioBuffer.fromBytes(cast(Type.createInstance(classTypes.get(id), []), Bytes)));
+			return AudioBuffer.loadFromBytes(cast(Type.createInstance(classTypes.get(id), []), Bytes));
+		}
+		else if (cachedBytes.exists(id))
+		{
+			return AudioBuffer.loadFromBytes(cachedBytes.get(id)).then(function(buffer)
+			{
+				cachedBytes.remove(id);
+				cachedAudioBuffers.set(id, buffer);
+				return Future.withValue(buffer);
+			});
 		}
 		else
 		{

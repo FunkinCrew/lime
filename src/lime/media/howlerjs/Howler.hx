@@ -1,13 +1,11 @@
 package lime.media.howlerjs;
 
 #if (!lime_doc_gen || lime_howlerjs)
-import lime.media.WebAudioContext;
-
 #if (!lime_howlerjs || display)
 class Howler
 {
 	public static var autoSuspend:Bool;
-	public static var ctx:WebAudioContext;
+	public static var ctx:Dynamic;
 	public static var masterGain:Dynamic;
 	public static var mobileAutoEnable:Bool;
 	public static var noAudio:Bool;
@@ -57,12 +55,13 @@ class Howler
 import haxe.extern.EitherType;
 
 import js.html.audio.GainNode;
+import js.html.audio.AudioContext;
 
 @:native("Howler")
 extern class Howler
 {
 	public static var autoSuspend:Bool;
-	public static var ctx:WebAudioContext;
+	public static var ctx:AudioContext;
 	public static var masterGain:GainNode;
 	public static var mobileAutoEnable:Bool;
 	public static var noAudio:Bool;
