@@ -330,51 +330,9 @@ class HTML5Platform extends PlatformTarget
 				{
 					AssetHelper.copyAssetIfNewer(asset, path);
 				}
-				else if (asset.type == AssetType.FONT)
+				else
 				{
 					System.copyIfNewer(asset.sourcePath, path);
-
-					var embeddedAssets:Array<Dynamic> = cast context.assets;
-
-					for (embeddedAsset in embeddedAssets)
-					{
-						if (embeddedAsset.type == "font" && embeddedAsset.sourcePath == asset.sourcePath)
-						{
-							var font = Font.fromFile(asset.sourcePath);
-
-							embeddedAsset.fontName = font.name;
-							embeddedAsset.ascender = font.ascender;
-							embeddedAsset.descender = font.descender;
-							embeddedAsset.height = font.height;
-							embeddedAsset.numGlyphs = font.numGlyphs;
-							embeddedAsset.underlinePosition = font.underlinePosition;
-							embeddedAsset.underlineThickness = font.underlineThickness;
-							embeddedAsset.unitsPerEM = font.unitsPerEM;
-
-							var extension = Path.extension(asset.sourcePath).toLowerCase();
-
-							var format = switch (extension)
-							{
-								case "woff2": "woff2";
-								case "woff": "woff";
-								case "otf": "opentype";
-								case "ttf": "truetype";
-								default: "";
-							}
-
-							var fontFace = "\t\t@font-face {\n";
-
-							fontFace += "\t\t\tfont-family: '" + embeddedAsset.fontName + "';\n";
-							fontFace += "\t\t\tsrc: url('" + embeddedAsset.targetPath + "') format('" + format + "');\n";
-							fontFace += "\t\t\tfont-weight: normal;\n";
-							fontFace += "\t\t\tfont-style: normal;\n";
-							fontFace += "\t\t}\n";
-
-							embeddedAsset.cssFontFace = fontFace;
-
-							break;
-						}
-					}
 				}
 			}
 		}

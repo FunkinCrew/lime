@@ -168,9 +168,9 @@ class AssetLibrary
 		{
 			return cachedAudioBuffers.get(id);
 		}
-		else if (classTypes.exists(id))
+		else if (classTypes.exists(id) && Std.isOfType(classTypes.get(id), haxe.io.Bytes))
 		{
-			return AudioBuffer.fromBytes(cast(Type.createInstance(classTypes.get(id), []), Bytes));
+			return AudioBuffer.fromBytes(Type.createInstance(classTypes.get(id), []));
 		}
 		else
 		{
@@ -190,9 +190,9 @@ class AssetLibrary
 			cachedBytes.set(id, bytes);
 			return bytes;
 		}
-		else if (classTypes.exists(id))
+		else if (classTypes.exists(id) && Std.isOfType(classTypes.get(id), haxe.io.Bytes))
 		{
-			return cast(Type.createInstance(classTypes.get(id), []), Bytes);
+			return Type.createInstance(classTypes.get(id), []);
 		}
 		else
 		{
@@ -208,7 +208,7 @@ class AssetLibrary
 		}
 		else if (classTypes.exists(id))
 		{
-			return cast(Type.createInstance(classTypes.get(id), []), Font);
+			return Type.createInstance(classTypes.get(id), []);
 		}
 		else
 		{
@@ -224,7 +224,7 @@ class AssetLibrary
 		}
 		else if (classTypes.exists(id))
 		{
-			return cast(Type.createInstance(classTypes.get(id), []), Image);
+			return Type.createInstance(classTypes.get(id), []);
 		}
 		else
 		{
@@ -413,9 +413,9 @@ class AssetLibrary
 		{
 			return Future.withValue(cachedAudioBuffers.get(id));
 		}
-		else if (classTypes.exists(id))
+		else if (classTypes.exists(id) && Std.isOfType(classTypes.get(id), haxe.io.Bytes))
 		{
-			return Future.withValue(AudioBuffer.fromBytes(cast(Type.createInstance(classTypes.get(id), []), Bytes)));
+			return Future.withValue(AudioBuffer.fromBytes(Type.createInstance(classTypes.get(id), [])));
 		}
 		else
 		{
@@ -436,7 +436,7 @@ class AssetLibrary
 		{
 			return Future.withValue(cachedBytes.get(id));
 		}
-		else if (classTypes.exists(id))
+		else if (classTypes.exists(id) && Std.isOfType(classTypes.get(id), haxe.io.Bytes))
 		{
 			return Future.withValue(Type.createInstance(classTypes.get(id), []));
 		}
