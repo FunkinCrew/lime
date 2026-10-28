@@ -13,6 +13,7 @@ import lime.utils.Log;
 import lime.utils.UInt8Array;
 #if lime_howlerjs
 import lime.media.howlerjs.Howl;
+import lime.media.howlerjs.Howl.HowlOptions;
 #elseif lime_miniaudio
 import lime.media.miniaudio.MADataFormat;
 import lime.media.miniaudio.MADecoder;
@@ -82,6 +83,10 @@ class AudioBuffer
 
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
+	@:noCompletion private var __srcHowlOptions:#if lime_howlerjs HowlOptions #else Dynamic #end;
+	@:noCompletion private var __srcHowlNeedsReload:Bool = false;
+	@:noCompletion private var __activeHowlHandles:Int = 0;
+	@:noCompletion private var __disposePending:Bool = false;
 	@:noCompletion private var __srcHowlerDefaultSprite:String;
 	@:noCompletion private var __srcMADecoder:#if lime_miniaudio MADecoder #else Dynamic #end;
 
@@ -96,10 +101,10 @@ class AudioBuffer
 	public function dispose():Void
 	{
 		#if (js && html5 && lime_howlerjs)
-		if (__srcHowl != null)
+		if (__srcHowl != null && !__srcHowlNeedsReload)
 		{
-			__srcHowl.unload();
-			__srcHowl = null;
+			__disposePending = true;
+			__tryDisposeHowlIfUnused();
 		}
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		if (__srcMADecoder != null)
@@ -132,7 +137,7 @@ class AudioBuffer
 		}
 
 		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcHowl = new Howl({src: [base64String], preload: true});
+		audioBuffer.__setHowl({src: [base64String], preload: true});
 		return audioBuffer;
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		// if base64String contains codec data, strip it then decode it.
@@ -160,7 +165,7 @@ class AudioBuffer
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
+		audioBuffer.__setHowl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
 		return audioBuffer;
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		return __createFromMADecoder(MADecoder.init_memory(bytes, MADecoderConfig.init(S16, 0, 0)), stream);
@@ -185,7 +190,7 @@ class AudioBuffer
 
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcHowl = new Howl({src: [path], preload: false});
+		audioBuffer.__setHowl({src: [path], preload: false});
 		return audioBuffer;
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		return __createFromMADecoder(MADecoder.init_file(path, MADecoderConfig.init(S16, 0, 0)), stream);
@@ -213,7 +218,7 @@ class AudioBuffer
 
 		var audioBuffer = new AudioBuffer();
 
-		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: false});
+		audioBuffer.__setHowl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: false});
 
 		if (audioBuffer.__srcHowl != null)
 		{
@@ -466,6 +471,104 @@ class AudioBuffer
 	}
 	#end
 
+	#if (js && html5 && lime_howlerjs)
+	@:noCompletion private function __setHowl(options:HowlOptions):Howl
+	{
+		__srcHowlOptions = options;
+		__srcHowl = new Howl(options);
+		__srcHowlNeedsReload = false;
+		__disposePending = false;
+		__watchHowl(__srcHowl);
+		return __srcHowl;
+	}
+
+	@:noCompletion private function __getHowl():Howl
+	{
+		if (__srcHowlNeedsReload && __srcHowlOptions != null)
+		{
+			__srcHowl = new Howl(__srcHowlOptions);
+			__srcHowlNeedsReload = false;
+			__disposePending = false;
+			__watchHowl(__srcHowl);
+		}
+
+		return __srcHowl;
+	}
+
+	@:noCompletion private function __watchHowl(howl:Howl):Void
+	{
+		howl.on("loaderror", function(id, error)
+		{
+			__requestHowlDispose(howl);
+		});
+	}
+
+	@:noCompletion private function __captureHowlOptions(howl:Howl):HowlOptions
+	{
+		final source:Dynamic = untyped howl._src;
+		if (source == null)
+			return null;
+
+		var sources:Array<String>;
+		if (Std.isOfType(source, Array))
+		{
+			sources = (cast source : Array<String>).copy();
+		}
+		else
+		{
+			sources = [cast source];
+		}
+
+		return {
+			src: sources,
+			volume: untyped howl._volume,
+			html5: untyped howl._html5,
+			loop: untyped howl._loop,
+			preload: untyped howl._preload,
+			autoplay: untyped howl._autoplay,
+			mute: untyped howl._muted,
+			sprite: untyped howl._sprite,
+			rate: untyped howl._rate,
+			pool: untyped howl._pool,
+			format: untyped howl._format
+		};
+	}
+
+	@:noCompletion private function __retainHowlHandle():Void
+	{
+		__activeHowlHandles++;
+	}
+
+	@:noCompletion private function __releaseHowlHandle():Void
+	{
+		if (__activeHowlHandles > 0)
+			__activeHowlHandles--;
+		__tryDisposeHowlIfUnused();
+	}
+
+	@:noCompletion private function __requestHowlDispose(howl:Howl):Void
+	{
+		if (__srcHowl != howl || __srcHowlNeedsReload)
+			return;
+		__disposePending = true;
+		__tryDisposeHowlIfUnused();
+	}
+
+	@:noCompletion private function __tryDisposeHowlIfUnused():Void
+	{
+		if (!__disposePending || __srcHowl == null || __srcHowlNeedsReload || __activeHowlHandles > 0)
+			return;
+
+		final howl = __srcHowl;
+		untyped howl._queue = [];
+		howl.unload();
+		__srcHowlNeedsReload = __srcHowlOptions != null;
+		__disposePending = false;
+		if (!__srcHowlNeedsReload)
+			__srcHowl = null;
+	}
+	#end
+
 	// Get & Set Methods
 	#if lime_miniaudio
 	@:noCompletion private function get_bitsPerSample():Int
@@ -485,7 +588,7 @@ class AudioBuffer
 	@:noCompletion private function get_src():Dynamic
 	{
 		#if (js && html5 && lime_howlerjs)
-		return __srcHowl;
+		return __getHowl();
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		return __srcMADecoder;
 		#else
@@ -496,7 +599,13 @@ class AudioBuffer
 	@:noCompletion private function set_src(value:Dynamic):Dynamic
 	{
 		#if (js && html5 && lime_howlerjs)
-		return __srcHowl = value;
+		__srcHowl = cast value;
+		__srcHowlOptions = value == null ? null : __captureHowlOptions(__srcHowl);
+		__srcHowlNeedsReload = false;
+		__disposePending = false;
+		if (__srcHowl != null)
+			__watchHowl(__srcHowl);
+		return value;
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		return __srcMADecoder = value;
 		#else
