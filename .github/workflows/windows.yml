@@ -30,6 +30,11 @@ jobs:
           haxelib run lime rebuild alias
           haxelib run lime setup -alias -y -nocffi
 
+      - name: Update SDL_image's submodules
+        run: |
+          cd ./project/lib/sdl_image
+          git submodule update --init --recursive --force
+
       - name: Remove Previous NDLLs
         shell: bash
         run: |
