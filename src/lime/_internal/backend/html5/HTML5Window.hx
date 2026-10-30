@@ -861,6 +861,7 @@ class HTML5Window
 		var y:Float;
 		var cacheX:Float;
 		var cacheY:Float;
+		var timestamp:Int64 = haxe.Int64.fromFloat(Browser.window.performance.now()) * 1000;
 
 		for (data in event.changedTouches)
 		{
@@ -884,7 +885,7 @@ class HTML5Window
 
 				if (touch == null)
 				{
-					touch = new Touch(x / windowWidth, y / windowHeight, data.identifier, 0, 0, data.force, parent.id);
+					touch = new Touch(x / windowWidth, y / windowHeight, data.identifier, 0, 0, data.force, parent.id, timestamp);
 				}
 				else
 				{
@@ -895,6 +896,7 @@ class HTML5Window
 					touch.dy = 0;
 					touch.pressure = data.force;
 					touch.device = parent.id;
+					touch.timestamp = timestamp;
 				}
 
 				currentTouches.set(data.identifier, touch);
@@ -925,6 +927,7 @@ class HTML5Window
 					touch.dx = touch.x - cacheX;
 					touch.dy = touch.y - cacheY;
 					touch.pressure = data.force;
+					touch.timestamp = timestamp;
 
 					switch (event.type)
 					{
