@@ -17,6 +17,7 @@ namespace lime
 		dy = 0;
 		pressure = 0;
 		device = 0;
+		timestamp = 0;
 	}
 
 	void TouchEvent::Dispatch(TouchEvent *event)
@@ -33,6 +34,7 @@ namespace lime
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 			alloc_field(object, val_id("x"), alloc_float(event->x));
 			alloc_field(object, val_id("y"), alloc_float(event->y));
+			alloc_field(object, val_id("timestamp"), alloc_float(event->timestamp));
 
 			TouchEvent::callback->Call();
 		}
