@@ -35,10 +35,8 @@ jobs:
       - name: Configure Lime & Android support
         run: |
           haxelib dev lime ${{ github.workspace }}
-          export ANDROID_SDK=$ANDROID_HOME
-          export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
-          export ANDROID_SETUP=true
-          haxelib run lime setup android -alias -y -nocffi
+          haxelib run lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }} -nocffi
+          haxelib run lime config ANDROID_SETUP true -nocffi
 
       - name: Update SDL_image's submodules
         run: |
