@@ -1,5 +1,7 @@
 package lime.ui;
 
+import haxe.Int64;
+
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Event;
 
@@ -41,8 +43,9 @@ class Touch
 	public var pressure:Float;
 	public var x:Float;
 	public var y:Float;
+	public var timestamp:Int64;
 
-	public function new(x:Float, y:Float, id:Int, dx:Float, dy:Float, pressure:Float, device:Int)
+	public function new(x:Float, y:Float, id:Int, dx:Float, dy:Float, pressure:Float, device:Int, ?timestamp:Float)
 	{
 		this.x = x;
 		this.y = y;
@@ -51,6 +54,7 @@ class Touch
 		this.dy = dy;
 		this.pressure = pressure;
 		this.device = device;
+		this.timestamp = (timestamp != null) ? Int64.fromFloat(timestamp) : Int64.fromFloat(0.0);
 	}
 
 	public static function getDevices():Array<Int>
