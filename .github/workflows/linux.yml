@@ -39,8 +39,6 @@ jobs:
         run: |
           haxelib dev lime ${{ github.workspace }}
           haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild alias
-          haxelib run lime setup -alias -y -nocffi
 
       - name: Update SDL_image's submodules
         run: |
@@ -55,9 +53,19 @@ jobs:
       - name: Rebuild Lime (x86_64)
         run: haxelib run lime rebuild linux -64 -release
 
+      - name: Rebuild Lime (Alias x86_64)
+        run: haxelib run lime rebuild alias -64
+
       - name: Upload Artifact (ndll/Linux64)
         uses: actions/upload-artifact@v7
         with:
           name: Linux64-NDLL
           path: ndll/Linux64
+          if-no-files-found: error
+
+      - name: Upload Artifact (templates/bin/alias/Linux64)
+        uses: actions/upload-artifact@v7
+        with:
+          name: Linux64-Alias
+          path: templates/bin/alias/Linux64
           if-no-files-found: error

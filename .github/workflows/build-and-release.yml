@@ -48,11 +48,23 @@ jobs:
           name: Linux64-NDLL
           path: ndll/Linux64
 
+      - name: Download Linux64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-Alias
+          path: templates/bin/alias/Linux64
+
       - name: Download Mac64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Mac64-NDLL
           path: ndll/Mac64
+
+      - name: Download Mac64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Mac64-Alias
+          path: templates/bin/alias/Mac64
 
       - name: Download MacArm64-NDLL artifact
         uses: actions/download-artifact@v8
@@ -60,17 +72,35 @@ jobs:
           name: MacArm64-NDLL
           path: ndll/MacArm64
 
+      - name: Download MacArm64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MacArm64-Alias
+          path: templates/bin/alias/MacArm64
+
       - name: Download Windows64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Windows64-NDLL
           path: ndll/Windows64
 
+      - name: Download Windows64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-Alias
+          path: templates/bin/alias/Windows64
+            
       - name: Download Windows-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Windows-NDLL
           path: ndll/Windows
+
+      - name: Download Windows-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows-Alias
+          path: templates/bin/alias/Windows
 
       - name: ZIP Repo
         run: |

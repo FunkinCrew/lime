@@ -30,8 +30,6 @@ jobs:
         run: |
           haxelib dev lime ${{ github.workspace }}
           haxelib run lime rebuild hxcpp
-          haxelib run lime rebuild alias
-          haxelib run lime setup -alias -y -nocffi
 
       - name: Update SDL_image's submodules
         run: |
@@ -49,6 +47,12 @@ jobs:
       - name: Rebuild Lime (ARM64)
         run: haxelib run lime rebuild mac -arm64 -release
 
+      - name: Rebuild Lime (Alias x86_64)
+        run: haxelib run lime rebuild alias -64
+
+      - name: Rebuild Lime (Alias ARM64)
+        run: haxelib run lime rebuild alias -arm64
+
       - name: Upload Artifact (ndll/Mac64)
         uses: actions/upload-artifact@v7
         with:
@@ -61,4 +65,18 @@ jobs:
         with:
           name: MacArm64-NDLL
           path: ndll/MacArm64
+          if-no-files-found: error
+
+      - name: Upload Artifact (templates/bin/alias/Mac64)
+        uses: actions/upload-artifact@v7
+        with:
+          name: Mac64-Alias
+          path: templates/bin/alias/Mac64
+          if-no-files-found: error
+
+      - name: Upload Artifact (templates/bin/alias/MacArm64)
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacArm64-Alias
+          path: templates/bin/alias/MacArm64
           if-no-files-found: error

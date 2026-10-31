@@ -26,10 +26,11 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Delete old NDLL's
+      - name: Delete old NDLL's and Alias Templates
         run: |
           rm -rf ndll
           mkdir ndll
+          rm -rf templates/bin/alias
 
       - name: Download Android-NDLL artifact
         uses: actions/download-artifact@v8
@@ -49,11 +50,23 @@ jobs:
           name: Linux64-NDLL
           path: ndll/Linux64
 
+      - name: Download Linux64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Linux64-Alias
+          path: templates/bin/alias/Linux64
+
       - name: Download Mac64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Mac64-NDLL
           path: ndll/Mac64
+
+      - name: Download Mac64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Mac64-Alias
+          path: templates/bin/alias/Mac64
 
       - name: Download MacArm64-NDLL artifact
         uses: actions/download-artifact@v8
@@ -61,17 +74,35 @@ jobs:
           name: MacArm64-NDLL
           path: ndll/MacArm64
 
+      - name: Download MacArm64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MacArm64-Alias
+          path: templates/bin/alias/MacArm64
+
       - name: Download Windows64-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Windows64-NDLL
           path: ndll/Windows64
 
+      - name: Download Windows64-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows64-Alias
+          path: templates/bin/alias/Windows64
+            
       - name: Download Windows-NDLL artifact
         uses: actions/download-artifact@v8
         with:
           name: Windows-NDLL
           path: ndll/Windows
+
+      - name: Download Windows-Alias artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows-Alias
+          path: templates/bin/alias/Windows
 
       - name: Download Miscellaneous artifact
         uses: actions/download-artifact@v8
@@ -91,7 +122,7 @@ jobs:
           git add -f ndll
           git add -f tools/tools.n
           git add -f run.n
-          # git add -f templates/bin/lime.exe
+          git add -f templates/bin/alias
           git commit --author="${USERNAME} <${USERID}+$(echo "$USERACTOR" | sed 's/ /-/g')@users.noreply.github.com>" -m "Built and Pushed New NDLL's." || {
               echo "Didn't commit anything, skipping git push."
               exit 0
