@@ -5,11 +5,7 @@ import haxe.io.Bytes;
 
 import lime.app.Future;
 import lime.utils.ArrayBufferView;
-import lime.utils.Float32Array;
-import lime.utils.Int16Array;
-import lime.utils.Int32Array;
 import lime.utils.Log;
-import lime.utils.UInt8Array;
 
 #if lime_howlerjs
 import haxe.crypto.Base64;
@@ -23,6 +19,10 @@ import lime.media.miniaudio.MAFormat;
 import lime.media.miniaudio.MAHelpers;
 import lime.system.ThreadPool;
 import lime.system.WorkOutput;
+import lime.utils.Float32Array;
+import lime.utils.Int16Array;
+import lime.utils.Int32Array;
+import lime.utils.UInt8Array;
 #end
 
 /**
