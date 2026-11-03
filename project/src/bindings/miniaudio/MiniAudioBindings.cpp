@@ -1596,6 +1596,7 @@ namespace lime
 	struct ma_sound_notifications_gc_roots
 	{
 		AutoGCRoot *onAtEnd;
+		AutoGCRoot *onPreProcess;
 		AutoGCRoot *onProcess;
 	};
 
@@ -1610,6 +1611,22 @@ namespace lime
 			gc_set_top_of_stack(&base, true);
 
 			val_call1(root->get(), CFFIPointer(pSound, NULL));
+
+			gc_set_top_of_stack(0, true);
+		}
+	}
+
+	void ma_sound_notifications_on_pre_process(void *pUserData, ma_sound *pSound, float *pFrames, ma_uint64 frameCount)
+	{
+		AutoGCRoot *root = (AutoGCRoot *)(((ma_sound_notifications_gc_roots *)pUserData)->onPreProcess);
+
+		if (root)
+		{
+			int base = 0;
+
+			gc_set_top_of_stack(&base, true);
+
+			val_call3(root->get(), CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_Int64(frameCount));
 
 			gc_set_top_of_stack(0, true);
 		}
@@ -1646,6 +1663,11 @@ namespace lime
 				if (gc_roots->onAtEnd)
 				{
 					delete gc_roots->onAtEnd;
+				}
+
+				if (gc_roots->onPreProcess)
+				{
+					delete gc_roots->onPreProcess;
 				}
 
 				if (gc_roots->onProcess)
@@ -1697,9 +1719,10 @@ namespace lime
 		if (!val_is_null(pNotifications))
 		{
 			value onAtEnd = val_field(pNotifications, val_id("onAtEnd"));
+			value onPreProcess = val_field(pNotifications, val_id("onPreProcess"));
 			value onProcess = val_field(pNotifications, val_id("onProcess"));
 
-			if (!val_is_null(onAtEnd) || !val_is_null(onProcess))
+			if (!val_is_null(onAtEnd) || !val_is_null(onPreProcess) || !val_is_null(onProcess))
 			{
 				notifications = ma_sound_notifications_init();
 
@@ -1710,6 +1733,13 @@ namespace lime
 					notifications.onAtEnd = ma_sound_notifications_on_at_end;
 
 					gc_roots->onAtEnd = new AutoGCRoot(onAtEnd);
+				}
+
+				if (!val_is_null(onPreProcess))
+				{
+					notifications.onPreProcess = ma_sound_notifications_on_pre_process;
+
+					gc_roots->onPreProcess = new AutoGCRoot(onPreProcess);
 				}
 
 				if (!val_is_null(onProcess))
@@ -1736,6 +1766,11 @@ namespace lime
 				if (gc_roots->onAtEnd)
 				{
 					delete gc_roots->onAtEnd;
+				}
+
+				if (gc_roots->onPreProcess)
+				{
+					delete gc_roots->onPreProcess;
 				}
 
 				if (gc_roots->onProcess)
@@ -1769,6 +1804,11 @@ namespace lime
 				if (gc_roots->onAtEnd)
 				{
 					delete gc_roots->onAtEnd;
+				}
+
+				if (gc_roots->onPreProcess)
+				{
+					delete gc_roots->onPreProcess;
 				}
 
 				if (gc_roots->onProcess)
