@@ -3,9 +3,6 @@
 #include <utils/File.h>
 
 // MiniAudio Implementation
-#if defined(ANDROID)
-#define MA_NO_AAUDIO
-#endif
 #define MA_NO_ENCODING
 #define MA_NO_RESOURCE_MANAGER
 #define MA_NO_GENERATION
