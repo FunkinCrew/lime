@@ -108,6 +108,11 @@ class AudioBuffer
 			__srcMADecoder.uninit();
 			__srcMADecoder = null;
 		}
+		else if (data != null && data.length > 0)
+		{
+			data.buffer = null;
+			data = null;
+		}
 		#end
 	}
 
