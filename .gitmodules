@@ -52,4 +52,4 @@
 	shallow = true
 [submodule "project/lib/miniaudio"]
 	path = project/lib/miniaudio
-	url = https://github.com/mackron/miniaudio.git
+	url = https://github.com/FunkinCrew/miniaudio.git
