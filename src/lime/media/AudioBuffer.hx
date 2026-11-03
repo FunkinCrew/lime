@@ -16,13 +16,18 @@ import lime.media.miniaudio.MADataFormat;
 import lime.media.miniaudio.MADecoder;
 import lime.media.miniaudio.MADecoderConfig;
 import lime.media.miniaudio.MAFormat;
-import lime.media.miniaudio.MAHelpers;
 import lime.system.ThreadPool;
 import lime.system.WorkOutput;
+
+#if cpp
+import cpp.Pointer;
+
+import lime.media.miniaudio.MAHelpers;
 import lime.utils.Float32Array;
 import lime.utils.Int16Array;
 import lime.utils.Int32Array;
 import lime.utils.UInt8Array;
+#end
 #end
 
 /**
@@ -372,7 +377,7 @@ class AudioBuffer
 							Log.error('Unsupported audio buffer format: ${MAHelpers.get_format_name(dataFormat.format)}');
 					}
 
-					if (dataBuffer != null && decoder.read_pcm_frames(cpp.Pointer.ofArray(dataBuffer.buffer.getData()), totalFrames) > 0)
+					if (dataBuffer != null && decoder.read_pcm_frames(Pointer.ofArray(dataBuffer.buffer.getData()), totalFrames) > 0)
 					{
 						decoder.uninit();
 						decoder = null;
