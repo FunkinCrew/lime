@@ -121,14 +121,24 @@ class AudioSource
 	}
 
 	#if lime_miniaudio
-	public function addRingBuffer(rb:MAAudioRingBuffer):Void
+	public function addPreRingBuffer(rb:MAAudioRingBuffer):Void
 	{
-		__backend.addRingBuffer(rb);
+		__backend.addPreRingBuffer(rb);
 	}
 
-	public function removeRingBuffer(rb:MAAudioRingBuffer):Void
+	public function removePreRingBuffer(rb:MAAudioRingBuffer):Void
 	{
-		__backend.removeRingBuffer(rb);
+		__backend.removePreRingBuffer(rb);
+	}
+
+	public function addPostRingBuffer(rb:MAAudioRingBuffer):Void
+	{
+		__backend.addPostRingBuffer(rb);
+	}
+
+	public function removePostRingBuffer(rb:MAAudioRingBuffer):Void
+	{
+		__backend.removePostRingBuffer(rb);
 	}
 	#end
 
