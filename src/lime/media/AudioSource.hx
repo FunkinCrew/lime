@@ -74,7 +74,7 @@ class AudioSource
 
 		this.buffer = buffer;
 
-		if (buffer != null && (buffer.src != null || buffer.data != null))
+		if (buffer != null && buffer.isValid())
 		{
 			__backend.init();
 		}

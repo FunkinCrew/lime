@@ -298,9 +298,7 @@ class Assets
 
 	private static function isValidAudio(buffer:AudioBuffer):Bool
 	{
-		// TODO: Check disposed
-
-		return buffer != null;
+		return buffer != null && buffer.isValid();
 	}
 
 	private static function isValidImage(image:Image):Bool
