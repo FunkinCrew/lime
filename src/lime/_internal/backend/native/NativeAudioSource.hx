@@ -66,6 +66,30 @@ class NativeAudioSource
 
 				handle = MASound.init(AudioManager.engine, config);
 			}
+			else if (parent.buffer.__srcMAAudioBuffer != null)
+			{
+				final config:MASoundConfig = MASoundConfig.init();
+
+				config.flags = MASound.FLAG_NO_SPATIALIZATION;
+				config.pDataSource = parent.buffer.__srcMAAudioBuffer;
+				config.pNotifications.onAtEnd = sound_atEnd;
+				config.pNotifications.onPreProcess = sound_onPreProcess;
+				config.pNotifications.onProcess = sound_onProcess;
+
+				handle = MASound.init(AudioManager.engine, config);
+			}
+			else if (parent.buffer.__srcMAAudioRingBuffer != null)
+			{
+				final config:MASoundConfig = MASoundConfig.init();
+
+				config.flags = MASound.FLAG_NO_SPATIALIZATION;
+				config.pDataSource = parent.buffer.__srcMAAudioRingBuffer;
+				config.pNotifications.onAtEnd = sound_atEnd;
+				config.pNotifications.onPreProcess = sound_onPreProcess;
+				config.pNotifications.onProcess = sound_onProcess;
+
+				handle = MASound.init(AudioManager.engine, config);
+			}
 			else if (parent.buffer.data != null && parent.buffer.data.length > 0)
 			{
 				if (buffer == null)
