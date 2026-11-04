@@ -45,7 +45,7 @@ class Touch
 	public var y:Float;
 	public var timestamp:Int64;
 
-	public function new(x:Float, y:Float, id:Int, dx:Float, dy:Float, pressure:Float, device:Int, ?timestamp:Float)
+	public function new(x:Float, y:Float, id:Int, dx:Float, dy:Float, pressure:Float, device:Int, ?timestamp:Int64)
 	{
 		this.x = x;
 		this.y = y;
@@ -54,7 +54,7 @@ class Touch
 		this.dy = dy;
 		this.pressure = pressure;
 		this.device = device;
-		this.timestamp = (timestamp != null) ? Int64.fromFloat(timestamp) : 0;
+		this.timestamp = timestamp != null ? timestamp : 0;
 	}
 
 	public static function getDevices():Array<Int>
