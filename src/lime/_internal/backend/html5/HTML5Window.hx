@@ -1,5 +1,6 @@
 package lime._internal.backend.html5;
 
+import haxe.Int64;
 import haxe.Timer;
 import haxe.io.Bytes;
 
@@ -861,7 +862,7 @@ class HTML5Window
 		var y:Float;
 		var cacheX:Float;
 		var cacheY:Float;
-		var timestamp:Int64 = haxe.Int64.fromFloat(Browser.window.performance.now()) * 1000;
+		var timestamp:Int64 = Int64.fromFloat(Browser.window.performance.now()) * 1000;
 
 		for (data in event.changedTouches)
 		{
