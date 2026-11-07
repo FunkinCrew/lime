@@ -111,9 +111,6 @@ class CommandLineTools
 			case "document":
 				document();
 
-			case "generate":
-				generate();
-
 			case "compress":
 				compress();
 
@@ -1096,32 +1093,6 @@ class CommandLineTools
 		}
 
 		return "";
-	}
-
-	private function generate():Void
-	{
-		if (targetFlags.exists("font-hash"))
-		{
-			var sourcePath = words[0];
-			var glyphs = "32-255";
-
-			System.runCommand(Path.directory(sourcePath), "neko", [
-				Haxelib.getPath(new Haxelib("lime")) + "/templates/bin/hxswfml.n",
-				"ttf2hash2",
-				Path.withoutDirectory(sourcePath),
-				Path.withoutDirectory(sourcePath) + ".hash",
-				"-glyphs",
-				glyphs
-			]);
-		}
-		else if (targetFlags.exists("font-details"))
-		{
-			// var sourcePath = words[0];
-
-			// var details = Font.load (sourcePath);
-			// var json = Json.stringify (details);
-			// Sys.print (json);
-		}
 	}
 
 	private function getBuildNumber(project:HXProject, increment:Bool = true):Void
