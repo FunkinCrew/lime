@@ -1,6 +1,7 @@
 package;
 
 import hxp.Haxelib;
+import hxp.HostArchitecture;
 import hxp.Log;
 import hxp.Path;
 import hxp.System;
@@ -16,8 +17,28 @@ class RunScript
 		System.runCommand(toolsDirectory, "haxe", ["tools.hxml"]);
 	}
 
-	private static function rebuildAlias(limeDirectory:String, aliasDirectory:String):Void
+	private static function rebuildAlias(limeDirectory:String, aliasDirectory:String, args:Array<String>):Void
 	{
+		// Defaults to the host architecture; -32, -64, -arm64 or -armv7 cross-builds like `lime rebuild <platform>`.
+		var architecture:HostArchitecture = System.hostArchitecture;
+
+		if (args.indexOf("-32") > -1)
+		{
+			architecture = X86;
+		}
+		else if (args.indexOf("-64") > -1)
+		{
+			architecture = X64;
+		}
+		else if (args.indexOf("-arm64") > -1)
+		{
+			architecture = ARM64;
+		}
+		else if (args.indexOf("-armv7") > -1)
+		{
+			architecture = ARMV7;
+		}
+		
 		var aliasTargetDirectory:String = Path.combine(limeDirectory, "templates/bin/alias/");
 
 		System.makeDirectory(aliasTargetDirectory);
@@ -50,33 +71,33 @@ class RunScript
 		switch (System.hostPlatform)
 		{
 			case WINDOWS:
-				if (System.hostArchitecture == X64)
+				if (architecture == X64)
 				{
 					rebuildAliasExecutable('Windows64', 'HXCPP_M64', 'exe');
 				}
-				else if (System.hostArchitecture == X86)
+				else if (architecture == X86)
 				{
 					rebuildAliasExecutable('Windows', 'HXCPP_M32', 'exe');
 				}
 			case MAC:
-				if (System.hostArchitecture == X64)
+				if (architecture == X64)
 				{
 					rebuildAliasExecutable('Mac64', 'HXCPP_M64');
 				}
-				else if (System.hostArchitecture == ARM64)
+				else if (architecture == ARM64)
 				{
 					rebuildAliasExecutable('MacArm64', 'HXCPP_ARM64');
 				}
 			case LINUX:
-				if (System.hostArchitecture == ARMV7)
+				if (architecture == ARMV7)
 				{
 					rebuildAliasExecutable('LinuxArm', 'HXCPP_ARMV7');
 				}
-				else if (System.hostArchitecture == ARM64)
+				else if (architecture == ARM64)
 				{
 					rebuildAliasExecutable('LinuxArm64', 'HXCPP_ARM64');
 				}
-				else if (System.hostArchitecture == X64)
+				else if (architecture == X64)
 				{
 					rebuildAliasExecutable('Linux64', 'HXCPP_M64');
 				}
@@ -182,7 +203,7 @@ class RunScript
 
 			if (args[1] == "alias")
 			{
-				rebuildAlias(limeDirectory, Path.combine(toolsDirectory, 'alias'));
+				rebuildAlias(limeDirectory, Path.combine(toolsDirectory, 'alias'), args);
 			}
 			else
 			{
