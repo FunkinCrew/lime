@@ -7,24 +7,42 @@ namespace lime
 	{
 		ownedMemory = NULL;
 
-		handle = SDL_IOFromFile(path, mode);
+#if defined(ANDROID) || defined(IPHONE)
+		handle = NULL;
 
-		if (!handle && (*path) != '/')
+#ifdef ANDROID
+		const bool uri = SDL_strstr(path, "://");
+#else
+		const bool uri = false;
+#endif
+
+		if ((*path) != '/' && !uri)
 		{
-			const char *base = SDL_GetBasePath();
+			char *cwd = SDL_GetCurrentDirectory();
 
-			if (base)
+			const char *dirs[2] = {SDL_GetBasePath(), cwd};
+
+			for (int i = 0; i < 2 && !handle; i++)
 			{
 				char *fullpath;
 
-				if (SDL_asprintf(&fullpath, "%s%s", base, path) >= 0)
+				if (dirs[i] && SDL_asprintf(&fullpath, "%s%s", dirs[i], path) >= 0)
 				{
 					handle = SDL_IOFromFile(fullpath, mode);
 
 					SDL_free(fullpath);
 				}
 			}
+
+			SDL_free(cwd);
 		}
+		else
+		{
+			handle = SDL_IOFromFile(path, mode);
+		}
+#else
+		handle = SDL_IOFromFile(path, mode);
+#endif
 	}
 
 	File::File(Bytes *bytes, bool copy)
