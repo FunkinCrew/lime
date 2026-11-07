@@ -67,11 +67,10 @@
 		<section if="html5">
 
 			<dependency path="dependencies/howler.js" embed="true" />
-			<dependency path="dependencies/pako.min.js" embed="true" allow-web-workers="true" />
 			<dependency path="dependencies/lzma_worker-min.js" embed="true" />
-			<dependency path="dependencies/FileSaver.min.js" embed="true" />
-			<dependency path="dependencies/webgl-debug.js" if="webgl-debug" embed="true" />
+			<dependency path="dependencies/pako.min.js" embed="true" allow-web-workers="true" />
 			<dependency path="dependencies/stats.min.js" if="stats" embed="true" />
+			<dependency path="dependencies/webgl-debug.js" if="webgl-debug" embed="true" />
 
 		</section>
 
