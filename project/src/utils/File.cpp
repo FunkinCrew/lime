@@ -9,7 +9,7 @@ namespace lime
 
 		handle = SDL_IOFromFile(path, mode);
 
-		if (!handle)
+		if (!handle && (*path) != '/')
 		{
 			const char *base = SDL_GetBasePath();
 
