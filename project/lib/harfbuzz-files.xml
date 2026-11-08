@@ -6,6 +6,8 @@
 
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/freetype/include" />
 
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/zlib" />
+
 		</section>
 
 		<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/harfbuzz/src" />
@@ -20,17 +22,22 @@
 
 			</section>
 
+			<compilerflag value="-DHAVE_STDARG_H" />
+
 			<compilerflag value="-DHAVE_STDBOOL_H" />
 
 			<compilerflag value="-DHAVE_PTHREAD" unless="windows" />
 
 			<compilerflag value="-DHAVE_FREETYPE" />
 
+			<compilerflag value="-DHAVE_ZLIB" />
+
 			<compilerflag value="-DHAVE_CORETEXT" if="apple" />
 
 			<section if="windows">
 
 				<compilerflag value="-DHAVE_DIRECTWRITE" />
+				<compilerflag value="-DHAVE_GDI" />
 				<compilerflag value="-DHAVE_UNISCRIBE" />
 
 				<section if="isMsvc">
@@ -64,6 +71,8 @@
 
 		</section>
 
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/failing-alloc.c" />
+
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/graph/gsubgpos-context.cc" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-aat-layout.cc" />
@@ -73,18 +82,23 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-buffer-verify.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-buffer.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-common.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-depend.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-draw.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-face-builder.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-face.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-fallback-shape.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-font.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ft.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-gpu-draw.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-gpu-paint.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-gpu.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-map.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-number.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-cff1-table.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-cff2-table.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-color.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-face.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-fetch.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-font.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-layout.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-map.cc" />
@@ -110,8 +124,12 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-tag.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ot-var.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-outline.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-paint-bounded.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-paint-extents.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-paint.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-raster-draw.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-raster-image.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-raster-paint.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-set.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-shape-plan.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-shape.cc" />
@@ -124,15 +142,32 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-input.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-instancer-iup.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-instancer-solver.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-plan-layout.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-plan-var.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-plan.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-serialize.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-table-cff.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-table-color.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-table-layout.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-table-other.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset-table-var.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-subset.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-ucd.cc" />
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-unicode.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector-draw.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector-paint-pdf.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector-paint-svg.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector-paint.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector-path.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-vector.cc" />
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-zlib.cc" />
 
 		<section if="windows">
 
+			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-directwrite-font.cc" />
+			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-directwrite-shape.cc" />
 			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-directwrite.cc" />
+			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-gdi.cc" />
 			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-uniscribe.cc" />
 
 		</section>
@@ -141,8 +176,11 @@
 
 			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-coretext-font.cc" />
 			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-coretext-shape.cc" />
+			<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-coretext.cc" />
 
 		</section>
+
+		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/OT/Var/VARC/VARC.cc" />
 
 	</files>
 
