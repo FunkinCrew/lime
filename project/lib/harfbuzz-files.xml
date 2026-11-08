@@ -71,8 +71,6 @@
 
 		</section>
 
-		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/failing-alloc.c" />
-
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/graph/gsubgpos-context.cc" />
 
 		<file name="${NATIVE_TOOLKIT_PATH}/harfbuzz/src/hb-aat-layout.cc" />
