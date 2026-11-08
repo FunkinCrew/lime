@@ -11,7 +11,7 @@
 
    1. Compare this file to project/lib/pixman/config.h.
    2. If you find a new `#define`, copy it to this file, placing it in a
-      conditional compilation block. Use the existing blocks as a guide.
+	  conditional compilation block. Use the existing blocks as a guide.
    3. Update the version number(s) if they've changed.
 **/
 
@@ -277,7 +277,7 @@
 /* #undef USE_VMX */
 
 /* use x86 MMX compiler intrinsics */
-#if (defined(HX_WINDOWS) || /*defined(HX_MACOS) ||*/ (defined(HX_LINUX) && !defined(RASPBERRYPI)) ) && !defined(HXCPP_M64)
+#if (defined(HX_WINDOWS) || /*defined(HX_MACOS) ||*/ (defined(HX_LINUX) && !defined(RASPBERRYPI))) && !defined(HXCPP_M64)
 #define USE_X86_MMX 1
 #else
 /* #undef USE_X86_MMX */
@@ -286,13 +286,13 @@
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
 #if defined AC_APPLE_UNIVERSAL_BUILD
-# if defined __BIG_ENDIAN__
-#  define WORDS_BIGENDIAN 1
-# endif
+#if defined __BIG_ENDIAN__
+#define WORDS_BIGENDIAN 1
+#endif
 #else
-# ifndef WORDS_BIGENDIAN
+#ifndef WORDS_BIGENDIAN
 /* #  undef WORDS_BIGENDIAN */
-# endif
+#endif
 #endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler

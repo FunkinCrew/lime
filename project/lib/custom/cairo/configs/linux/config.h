@@ -1,7 +1,6 @@
 #ifndef _cairo_config_h
 #define _cairo_config_h
 
-
 // #define CAIRO_HAS_PNG_FUNCTIONS 1
 // #define CAIRO_HAS_XLIB_SURFACE 1
 // #define CAIRO_HAS_XLIB_XRENDER_SURFACE 1
@@ -43,7 +42,6 @@
 // #define CAIRO_HAS_SYMBOL_LOOKUP 1
 #define CAIRO_HAS_DLSYM 1
 
-
 #define HAVE_BYTESWAP_H 1
 // #define HAVE_INTTYPES_H 1
 #define HAVE_STDINT_H 1
@@ -51,7 +49,6 @@
 #define HAVE_UNISTD_H 1
 // #define HAVE_UINT128_T 1
 #define HAVE_UINT64_T 1
-
 
 // #define HAVE_INTEL_ATOMIC_PRIMITIVES 1
 // #define HAVE_LIB_ATOMIC_OPS 1
@@ -80,6 +77,5 @@
 // #define HAVE_XRENDERCREATECONICALGRADIENT 1
 
 // #define HAVE_VALGRIND 1
-
 
 #endif
