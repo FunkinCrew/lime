@@ -62,6 +62,7 @@
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-radial-gradient.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-region16.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-region32.c" />
+		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-region64f.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-solid-fill.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-sse2.c" if="windows || mac || linux" unless="rpi || HXCPP_ARM64" />
 		<file name="${NATIVE_TOOLKIT_PATH}/pixman/pixman/pixman-ssse3.c" if="windows || mac || linux" unless="rpi || HXCPP_ARM64" />
