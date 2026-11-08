@@ -248,40 +248,29 @@ class MacPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "cpp/hxml", targetDirectory + "/haxe", context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "mac/template", targetDirectory + "/bin", context, true, false);
 
-		System.copyFileTemplate(project.templatePaths, "mac/Info.plist", targetDirectory + "/bin/" + project.app.file + ".app/Contents/Info.plist", context);
-		System.copyFileTemplate(project.templatePaths, "mac/Entitlements.plist",
-			targetDirectory
-			+ "/bin/"
-			+ project.app.file
-			+ ".app/Contents/Entitlements.plist", context);
-
-		// We use some technique to generate the .icns file for legacy macOS versions (before macOS 26) from the Icon Composer file
 		if ((project.adaptiveIcon != null && project.adaptiveIcon.iconComposerFile) && System.hostPlatform == MAC)
 		{
-			try
-			{
-				System.runProcess("", "xcrun", [
-					"actool",
-					project.adaptiveIcon.path,
-					"--compile",
-					contentDirectory,
-					"--app-icon",
-					"icon",
-					"--include-all-app-icons",
-					"--output-partial-info-plist",
-					"/dev/null",
-					"--minimum-deployment-target",
-					"11.0",
-					"--platform",
-					"macosx",
-					"--target-device",
-					"mac",
-				], false, false);
-			}
-			catch (e:Dynamic)
-			{
-				Log.warn("Failed to compile adaptive icon via actool");
-			}
+			var bundleIconName = new Path(project.adaptiveIcon.path).file;
+
+			System.runProcess("", "xcrun", [
+				"actool",
+				project.adaptiveIcon.path,
+				"--compile",
+				contentDirectory,
+				"--app-icon",
+				bundleIconName,
+				"--include-all-app-icons",
+				"--output-partial-info-plist",
+				"/dev/null",
+				"--minimum-deployment-target",
+				"11.0",
+				"--platform",
+				"macosx",
+				"--target-device",
+				"mac",
+			], false, false);
+
+			context.APP_BUNDLE_ICON_NAME = bundleIconName;
 		}
 		else
 		{
@@ -293,7 +282,16 @@ class MacPlatform extends PlatformTarget
 			}
 
 			IconHelper.createMacIcon(icons, Path.combine(contentDirectory, "icon.icns"));
+
+			context.APP_BUNDLE_ICON_NAME = "icon";
 		}
+
+		System.copyFileTemplate(project.templatePaths, "mac/Info.plist", targetDirectory + "/bin/" + project.app.file + ".app/Contents/Info.plist", context);
+		System.copyFileTemplate(project.templatePaths, "mac/Entitlements.plist",
+			targetDirectory
+			+ "/bin/"
+			+ project.app.file
+			+ ".app/Contents/Entitlements.plist", context);
 
 		copyProjectAssets(targetDirectory, contentDirectory);
 	}
