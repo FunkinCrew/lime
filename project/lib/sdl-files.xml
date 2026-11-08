@@ -675,6 +675,7 @@
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylanddyn.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandevents.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandeventthread.c" />
+                    <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandframebuffer.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandkeyboard.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmessagebox.c" />
                     <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/video/wayland/SDL_waylandmouse.c" />
