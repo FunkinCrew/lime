@@ -10,6 +10,8 @@
 
 		</section>
 
+		<compilerflag value="-DHAVE_STDARG_H" />
+
 		<file name="${NATIVE_TOOLKIT_PATH}/zlib/adler32.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/zlib/compress.c" />
 		<file name="${NATIVE_TOOLKIT_PATH}/zlib/crc32.c" />
