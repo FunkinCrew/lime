@@ -20,7 +20,21 @@ class AdaptiveIcon
 		this.hasRoundIcon = hasRoundIcon;
 
 		// Some macOS files are actually folders with a file extension and the icon composer file is one of them
-		this.iconComposerFile = Path.extension(path) == "icon" && FileSystem.isDirectory(path);
+		if (Path.extension(path) == "icon")
+		{
+			try
+			{
+				// Stupid workaround for Neko, this shouldve been `isDirectory` but some instaltions have it broken for some weird reason.
+				FileSystem.readDirectory(path);
+
+				this.iconComposerFile = true;
+
+				return;
+			}
+			catch (e:Dynamic) {}
+		}
+
+		this.iconComposerFile = false;
 	}
 
 	public function clone():AdaptiveIcon
