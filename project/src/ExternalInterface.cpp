@@ -28,7 +28,6 @@
 #include <graphics/format/PNG.h>
 #include <graphics/format/SVG.h>
 #include <graphics/format/WEBP.h>
-#include <graphics/Image.h>
 #include <graphics/ImageBuffer.h>
 #include <hx/CFFIPrime.h>
 #include <system/CFFIPointer.h>
