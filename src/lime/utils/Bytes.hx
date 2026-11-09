@@ -128,12 +128,4 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 		var bytes = HaxeBytes.ofString(s);
 		return new Bytes(bytes.length, bytes.getData());
 	}
-
-	#if (lime_cffi && !macro)
-	public static function __fromNativePointer(data:Dynamic, length:Int):Bytes
-	{
-		var bytes = Bytes.alloc(0);
-		return NativeCFFI.lime_bytes_from_data_pointer(data, length, bytes);
-	}
-	#end
 }

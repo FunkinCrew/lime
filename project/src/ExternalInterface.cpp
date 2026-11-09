@@ -165,20 +165,6 @@ namespace lime
 		return app->Update();
 	}
 
-	value lime_bytes_from_data_pointer(double data, int length, value _bytes)
-	{
-		uintptr_t ptr = (uintptr_t)data;
-		Bytes bytes(_bytes);
-		bytes.Resize(length);
-
-		if (ptr)
-		{
-			memcpy(bytes.b, (const void *)ptr, length);
-		}
-
-		return bytes.Value(_bytes);
-	}
-
 	double lime_bytes_get_data_pointer(value bytes)
 	{
 		Bytes data = Bytes(bytes);
@@ -1909,7 +1895,6 @@ namespace lime
 	DEFINE_PRIME1(lime_application_quit);
 	DEFINE_PRIME2v(lime_application_set_frame_rate);
 	DEFINE_PRIME1(lime_application_update);
-	DEFINE_PRIME3(lime_bytes_from_data_pointer);
 	DEFINE_PRIME1(lime_bytes_get_data_pointer);
 	DEFINE_PRIME2(lime_bytes_get_data_pointer_offset);
 	DEFINE_PRIME2(lime_bytes_read_file);
