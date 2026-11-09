@@ -4,7 +4,7 @@
 #include <graphics/ImageBuffer.h>
 #include <hx/CFFIPrime.h>
 #include <system/System.h>
-#include <utils/Resource.h>
+#include <utils/File.h>
 
 #include FT_FREETYPE_H
 #include FT_BITMAP_H
@@ -47,7 +47,7 @@ namespace lime
 		static void InitializeLibrary();
 		static void ShutdownLibrary();
 
-		Font(Resource *resource, int faceIndex = 0);
+		Font(File *file, int faceIndex = 0);
 		~Font();
 
 		int GetAscender();

@@ -50,87 +50,73 @@ namespace lime
 		free(stream);
 	}
 
-	Font::Font(Resource *resource, int faceIndex)
+	Font::Font(File *file, int faceIndex)
 	{
 		this->face = 0;
 		this->library = 0;
 		this->ownedLibrary = !sharedLibrary;
 
-		if (resource)
+		if (!file || !file->handle)
 		{
-			if (sharedLibrary)
+			return;
+		}
+
+		if (sharedLibrary)
+		{
+			library = sharedLibrary;
+		}
+		else if (FT_Init_FreeType(&library) != 0)
+		{
+			library = 0;
+			ownedLibrary = false;
+			file->Close();
+			delete file;
+			return;
+		}
+
+		file->Seek(0, SEEK_END);
+		size_t size = (size_t)file->Tell();
+		file->Seek(0, SEEK_SET);
+
+		FT_Stream stream = (FT_Stream)malloc(sizeof(*stream));
+		memset(stream, 0, sizeof(*stream));
+		stream->read = FT_Stream_Read;
+		stream->close = FT_Stream_Close;
+		stream->descriptor.pointer = file;
+		stream->pos = 0;
+		stream->size = (unsigned long)size;
+
+		FT_Open_Args args;
+		memset(&args, 0, sizeof(args));
+		args.flags = FT_OPEN_STREAM;
+		args.stream = stream;
+
+		FT_Face face;
+
+		if (!FT_Open_Face(library, &args, faceIndex, &face))
+		{
+			this->face = face;
+
+			for (int i = 0; i < face->num_charmaps; i++)
 			{
-				library = sharedLibrary;
+				FT_UShort pid = face->charmaps[i]->platform_id;
+				FT_UShort eid = face->charmaps[i]->encoding_id;
+
+				if (((pid == 0) && (eid == 3)) || ((pid == 3) && (eid == 1)))
+				{
+					FT_Set_Charmap(face, face->charmaps[i]);
+				}
 			}
-			else if (FT_Init_FreeType(&library) != 0)
+		}
+		else
+		{
+			FT_Stream_Close(stream);
+
+			if (ownedLibrary && library)
 			{
+				FT_Done_FreeType(library);
 				library = 0;
 				ownedLibrary = false;
-				return;
-			}
-
-			File *file = resource->path ? new File(resource->path, "rb") : new File(resource->data, true);
-
-			if (!file->handle)
-			{
-				delete file;
-
-				if (ownedLibrary && library)
-				{
-					FT_Done_FreeType(library);
-					library = 0;
-					ownedLibrary = false;
-				}
-
-				return;
-			}
-
-			file->Seek(0, SEEK_END);
-
-			size_t size = (size_t)file->Tell();
-
-			file->Seek(0, SEEK_SET);
-
-			FT_Stream stream = (FT_Stream)malloc(sizeof(*stream));
-			memset(stream, 0, sizeof(*stream));
-			stream->read = FT_Stream_Read;
-			stream->close = FT_Stream_Close;
-			stream->descriptor.pointer = file;
-			stream->pos = 0;
-			stream->size = (unsigned long)size;
-
-			FT_Open_Args args;
-			memset(&args, 0, sizeof(args));
-			args.flags = FT_OPEN_STREAM;
-			args.stream = stream;
-
-			FT_Face face;
-
-			if (!FT_Open_Face(library, &args, faceIndex, &face))
-			{
-				this->face = face;
-
-				for (int i = 0; i < face->num_charmaps; i++)
-				{
-					FT_UShort pid = face->charmaps[i]->platform_id;
-					FT_UShort eid = face->charmaps[i]->encoding_id;
-
-					if (((pid == 0) && (eid == 3)) || ((pid == 3) && (eid == 1)))
-					{
-						FT_Set_Charmap(face, face->charmaps[i]);
-					}
-				}
-			}
-			else
-			{
-				FT_Stream_Close(stream);
-
-				if (ownedLibrary && library)
-				{
-					FT_Done_FreeType(library);
-					library = 0;
-					ownedLibrary = false;
-				}
 			}
 		}
 	}

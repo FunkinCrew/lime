@@ -10,28 +10,22 @@
 namespace lime
 {
 
-	bool GIF::Decode(Resource *resource, ImageBuffer *imageBuffer)
+	bool GIF::Decode(File *file, ImageBuffer *imageBuffer)
 	{
-		File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
-
-		if (!file.handle)
+		if (!file->handle)
 		{
 			return false;
 		}
 
-		if (!IMG_isGIF((SDL_IOStream *)file.handle))
+		if (!IMG_isGIF((SDL_IOStream *)file->handle))
 		{
-			file.Close();
-
 			return false;
 		}
 
-		SDL_Surface *surface = IMG_LoadGIF_IO((SDL_IOStream *)file.handle);
+		SDL_Surface *surface = IMG_LoadGIF_IO((SDL_IOStream *)file->handle);
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -44,8 +38,6 @@ namespace lime
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -54,8 +46,6 @@ namespace lime
 		memcpy(imageBuffer->data->buffer->b, surface->pixels, surface->h * surface->pitch);
 
 		SDL_DestroySurface(surface);
-
-		file.Close();
 
 		return true;
 	}

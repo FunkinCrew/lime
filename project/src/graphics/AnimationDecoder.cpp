@@ -5,6 +5,12 @@
 
 namespace lime
 {
+	AnimationDecoder::AnimationDecoder()
+	{
+		file = nullptr;
+		handle = nullptr;
+	}
+
 	AnimationDecoder::~AnimationDecoder()
 	{
 		if (handle)
@@ -13,20 +19,18 @@ namespace lime
 			handle = nullptr;
 		}
 
-		if (file->handle)
+		if (file)
 		{
 			file->Close();
+
+			delete file;
 		}
 	}
 
-	bool AnimationDecoder::Open(Resource *resource, const char *type)
+	bool AnimationDecoder::Open(File *file, const char *type)
 	{
-		file = resource->path ? new File(resource->path, "rb") : new File(resource->data, true);
-
-		if (!file->handle)
+		if (!file || !file->handle)
 		{
-			delete file;
-
 			return false;
 		}
 
@@ -40,6 +44,8 @@ namespace lime
 
 			return false;
 		}
+
+		this->file = file;
 
 		this->handle = decoder;
 

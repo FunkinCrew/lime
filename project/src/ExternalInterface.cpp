@@ -544,20 +544,29 @@ namespace lime
 	{
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File *file = new File(&bytes, true);
 
-		Font *font = new Font(&resource, 0);
-
-		if (font)
+		if (file->handle)
 		{
-			if (font->face)
+			Font *font = new Font(file, 0);
+
+			if (font)
 			{
-				return CFFIPointer(font, gc_font);
+				if (font->face)
+				{
+					return CFFIPointer(font, gc_font);
+				}
+				else
+				{
+					delete font;
+				}
 			}
-			else
-			{
-				delete font;
-			}
+		}
+		else
+		{
+			file->Close();
+
+			delete file;
 		}
 
 		return alloc_null();
@@ -565,20 +574,29 @@ namespace lime
 
 	value lime_font_load_file(value data)
 	{
-		Resource resource = Resource(val_string(data));
+		File *file = new File(val_string(data), "rb");
 
-		Font *font = new Font(&resource, 0);
-
-		if (font)
+		if (file->handle)
 		{
-			if (font->face)
+			Font *font = new Font(file, 0);
+
+			if (font)
 			{
-				return CFFIPointer(font, gc_font);
+				if (font->face)
+				{
+					return CFFIPointer(font, gc_font);
+				}
+				else
+				{
+					delete font;
+				}
 			}
-			else
-			{
-				delete font;
-			}
+		}
+		else
+		{
+			file->Close();
+
+			delete file;
 		}
 
 		return alloc_null();
@@ -759,38 +777,22 @@ namespace lime
 
 	value lime_image_load_bytes(value data, value buffer)
 	{
-		Bytes bytes = Bytes(data);
-		ImageBuffer imageBuffer = ImageBuffer(buffer);
-		Resource resource = Resource(&bytes);
+		Bytes bytes(data);
 
-		if (PNG::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
+		File file(&bytes, false);
 
-		if (JPEG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
-		}
+			ImageBuffer imageBuffer(buffer);
 
-		if (BMP::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
+			bool success = PNG::Decode(&file, &imageBuffer) || JPEG::Decode(&file, &imageBuffer) || BMP::Decode(&file, &imageBuffer) || SVG::Decode(&file, &imageBuffer) || GIF::Decode(&file, &imageBuffer) || WEBP::Decode(&file, &imageBuffer);
 
-		if (SVG::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
+			file.Close();
 
-		if (GIF::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
-
-		if (WEBP::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -798,38 +800,20 @@ namespace lime
 
 	value lime_image_load_file(value data, value buffer)
 	{
-		Resource resource = Resource(val_string(data));
+		File file(val_string(data), "rb");
 
-		ImageBuffer imageBuffer = ImageBuffer(buffer);
-
-		if (PNG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
-		}
+			ImageBuffer imageBuffer = ImageBuffer(buffer);
 
-		if (JPEG::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
+			bool success = PNG::Decode(&file, &imageBuffer) || JPEG::Decode(&file, &imageBuffer) || BMP::Decode(&file, &imageBuffer) || SVG::Decode(&file, &imageBuffer) || GIF::Decode(&file, &imageBuffer) || WEBP::Decode(&file, &imageBuffer);
 
-		if (BMP::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
+			file.Close();
 
-		if (SVG::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
-
-		if (GIF::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
-		}
-
-		if (WEBP::Decode(&resource, &imageBuffer))
-		{
-			return imageBuffer.Value(buffer);
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -947,15 +931,22 @@ namespace lime
 
 	value lime_png_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (PNG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = PNG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -963,12 +954,20 @@ namespace lime
 
 	value lime_png_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (PNG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = PNG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -976,15 +975,22 @@ namespace lime
 
 	value lime_jpeg_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (JPEG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = JPEG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -992,12 +998,20 @@ namespace lime
 
 	value lime_jpeg_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (JPEG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = JPEG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1005,15 +1019,22 @@ namespace lime
 
 	value lime_bmp_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (BMP::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = BMP::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1021,12 +1042,20 @@ namespace lime
 
 	value lime_bmp_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (BMP::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = BMP::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1034,15 +1063,22 @@ namespace lime
 
 	value lime_svg_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (SVG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = SVG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1050,12 +1086,20 @@ namespace lime
 
 	value lime_svg_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (SVG::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = SVG::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1063,15 +1107,22 @@ namespace lime
 
 	value lime_svg_decode_sized_bytes(value data, int width, int height, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (SVG::DecodeSized(&resource, width, height, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = SVG::DecodeSized(&file, width, height, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1079,12 +1130,20 @@ namespace lime
 
 	value lime_svg_decode_sized_file(HxString path, int width, int height, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (SVG::DecodeSized(&resource, width, height, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = SVG::DecodeSized(&file, width, height, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1092,15 +1151,22 @@ namespace lime
 
 	value lime_gif_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (GIF::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = GIF::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1108,12 +1174,20 @@ namespace lime
 
 	value lime_gif_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (GIF::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = GIF::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1121,15 +1195,22 @@ namespace lime
 
 	value lime_webp_decode_bytes(value data, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File file(&bytes, false);
 
-		if (WEBP::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = WEBP::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1137,12 +1218,20 @@ namespace lime
 
 	value lime_webp_decode_file(HxString path, value buffer)
 	{
-		ImageBuffer imageBuffer(buffer);
-		Resource resource = Resource(hxs_utf8(path, nullptr));
+		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (WEBP::Decode(&resource, &imageBuffer))
+		if (file.handle)
 		{
-			return imageBuffer.Value(buffer);
+			ImageBuffer imageBuffer(buffer);
+
+			bool success = WEBP::Decode(&file, &imageBuffer);
+
+			file.Close();
+
+			if (success)
+			{
+				return imageBuffer.Value(buffer);
+			}
 		}
 
 		return alloc_null();
@@ -1699,34 +1788,48 @@ namespace lime
 
 	value lime_animation_decoder_open_file(value data, value type)
 	{
-		AnimationDecoder *decoder = new AnimationDecoder();
+		File *file = new File(val_string(data), "rb");
 
-		Resource resource = Resource(val_string(data));
-
-		if (decoder->Open(&resource, val_string(type)))
+		if (file->handle)
 		{
-			return CFFIPointer(decoder, gc_animation_decoder);
-		}
+			AnimationDecoder *decoder = new AnimationDecoder();
 
-		delete decoder;
+			if (decoder->Open(file, val_string(type)))
+			{
+				return CFFIPointer(decoder, gc_animation_decoder);
+			}
+
+			delete decoder;
+		}
+		else
+		{
+			delete file;
+		}
 
 		return alloc_null();
 	}
 
 	value lime_animation_decoder_open_bytes(value data, value type)
 	{
-		AnimationDecoder *decoder = new AnimationDecoder();
-
 		Bytes bytes(data);
 
-		Resource resource = Resource(&bytes);
+		File *file = new File(&bytes, true);
 
-		if (decoder->Open(&resource, val_string(type)))
+		if (file->handle)
 		{
-			return CFFIPointer(decoder, gc_animation_decoder);
-		}
+			AnimationDecoder *decoder = new AnimationDecoder();
 
-		delete decoder;
+			if (decoder->Open(file, val_string(type)))
+			{
+				return CFFIPointer(decoder, gc_animation_decoder);
+			}
+
+			delete decoder;
+		}
+		else
+		{
+			delete file;
+		}
 
 		return alloc_null();
 	}

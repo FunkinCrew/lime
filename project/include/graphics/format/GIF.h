@@ -1,8 +1,7 @@
 #pragma once
 
 #include <graphics/ImageBuffer.h>
-#include <utils/Bytes.h>
-#include <utils/Resource.h>
+#include <utils/File.h>
 
 namespace lime
 {
@@ -10,7 +9,7 @@ namespace lime
 	class GIF
 	{
 	  public:
-		static bool Decode(Resource *resource, ImageBuffer *imageBuffer);
+		static bool Decode(File *file, ImageBuffer *imageBuffer);
 		static bool Encode(ImageBuffer *imageBuffer, Bytes *bytes);
 	};
 

@@ -2,7 +2,6 @@
 
 #include <graphics/ImageBuffer.h>
 #include <utils/File.h>
-#include <utils/Resource.h>
 
 namespace lime
 {
@@ -10,9 +9,10 @@ namespace lime
 	class AnimationDecoder
 	{
 	  public:
+		AnimationDecoder();
 		~AnimationDecoder();
 
-		bool Open(Resource *resource, const char *type);
+		bool Open(File *file, const char *type);
 		bool GetFrame(ImageBuffer *imageBuffer, int64_t *duration);
 		int GetStatus();
 		bool Reset();

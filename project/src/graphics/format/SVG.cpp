@@ -9,28 +9,22 @@
 namespace lime
 {
 
-	bool SVG::Decode(Resource *resource, ImageBuffer *imageBuffer)
+	bool SVG::Decode(File *file, ImageBuffer *imageBuffer)
 	{
-		File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
-
-		if (!file.handle)
+		if (!file->handle)
 		{
 			return false;
 		}
 
-		if (!IMG_isSVG((SDL_IOStream *)file.handle))
+		if (!IMG_isSVG((SDL_IOStream *)file->handle))
 		{
-			file.Close();
-
 			return false;
 		}
 
-		SDL_Surface *surface = IMG_LoadSVG_IO((SDL_IOStream *)file.handle);
+		SDL_Surface *surface = IMG_LoadSVG_IO((SDL_IOStream *)file->handle);
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -43,8 +37,6 @@ namespace lime
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -53,34 +45,26 @@ namespace lime
 		memcpy(imageBuffer->data->buffer->b, surface->pixels, surface->h * surface->pitch);
 
 		SDL_DestroySurface(surface);
-
-		file.Close();
 
 		return true;
 	}
 
-	bool SVG::DecodeSized(Resource *resource, int width, int height, ImageBuffer *imageBuffer)
+	bool SVG::DecodeSized(File *file, int width, int height, ImageBuffer *imageBuffer)
 	{
-		File file = resource->path ? File(resource->path, "rb") : File(resource->data, false);
-
-		if (!file.handle)
+		if (!file->handle)
 		{
 			return false;
 		}
 
-		if (!IMG_isSVG((SDL_IOStream *)file.handle))
+		if (!IMG_isSVG((SDL_IOStream *)file->handle))
 		{
-			file.Close();
-
 			return false;
 		}
 
-		SDL_Surface *surface = IMG_LoadSizedSVG_IO((SDL_IOStream *)file.handle, width, height);
+		SDL_Surface *surface = IMG_LoadSizedSVG_IO((SDL_IOStream *)file->handle, width, height);
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -93,8 +77,6 @@ namespace lime
 
 		if (!surface)
 		{
-			file.Close();
-
 			return false;
 		}
 
@@ -103,8 +85,6 @@ namespace lime
 		memcpy(imageBuffer->data->buffer->b, surface->pixels, surface->h * surface->pitch);
 
 		SDL_DestroySurface(surface);
-
-		file.Close();
 
 		return true;
 	}
