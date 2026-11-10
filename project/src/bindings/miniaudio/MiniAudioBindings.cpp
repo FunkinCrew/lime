@@ -1331,6 +1331,10 @@ namespace lime
 	{
 		ma_engine_config config = ma_engine_config_init();
 
+		// Period Config
+		config.deviceConfig.periods = 4;
+		config.deviceConfig.periodSizeInFrames = 480;
+
 		// WASAPI Device Config
 		config.deviceConfig.wasapi.usage = ma_wasapi_usage_games;
 
