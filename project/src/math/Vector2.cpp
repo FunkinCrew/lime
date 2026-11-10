@@ -3,29 +3,22 @@
 namespace lime
 {
 
+	Vector2::Vector2()
+	{
+		this->x = 0;
+		this->y = 0;
+	}
+
 	Vector2::Vector2(double x, double y)
 	{
-		SetTo(x, y);
+		this->x = x;
+		this->y = y;
 	}
 
 	Vector2::Vector2(value vec)
 	{
-		if (!val_is_null(vec))
-		{
-			x = val_number(val_field(vec, val_id("x")));
-			y = val_number(val_field(vec, val_id("y")));
-		}
-		else
-		{
-			x = 0;
-			y = 0;
-		}
-	}
-
-	void Vector2::SetTo(double x, double y)
-	{
-		this->x = x;
-		this->y = y;
+		this->x = val_number(val_field(vec, val_id("x")));
+		this->y = val_number(val_field(vec, val_id("y")));
 	}
 
 	value Vector2::Value()
