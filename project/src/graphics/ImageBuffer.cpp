@@ -6,14 +6,14 @@ namespace lime
 
 	ImageBuffer::ImageBuffer(value imageBuffer)
 	{
-		object = imageBuffer;
-		width = val_int(val_field(imageBuffer, val_id("width")));
-		height = val_int(val_field(imageBuffer, val_id("height")));
-		bitsPerPixel = val_int(val_field(imageBuffer, val_id("bitsPerPixel")));
-		format = (PixelFormat)val_int(val_field(imageBuffer, val_id("format")));
-		transparent = val_bool(val_field(imageBuffer, val_id("transparent")));
-		premultiplied = val_bool(val_field(imageBuffer, val_id("premultiplied")));
-		data = new ArrayBufferView(val_field(imageBuffer, val_id("data")));
+		this->object = imageBuffer;
+		this->width = val_int(val_field(imageBuffer, val_id("width")));
+		this->height = val_int(val_field(imageBuffer, val_id("height")));
+		this->bitsPerPixel = val_int(val_field(imageBuffer, val_id("bitsPerPixel")));
+		this->format = (PixelFormat)val_int(val_field(imageBuffer, val_id("format")));
+		this->transparent = val_bool(val_field(imageBuffer, val_id("transparent")));
+		this->premultiplied = val_bool(val_field(imageBuffer, val_id("premultiplied")));
+		this->data = new ArrayBufferView(val_field(imageBuffer, val_id("data")));
 	}
 
 	ImageBuffer::~ImageBuffer()
