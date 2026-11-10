@@ -15,11 +15,11 @@ namespace lime
 		int width;
 
 		DisplayMode();
-		DisplayMode(value DisplayMode);
+		DisplayMode(value displayMode);
 		DisplayMode(int width, int height, PixelFormat pixelFormat, int refreshRate);
 
-		void CopyFrom(DisplayMode *other);
-		void *Value();
+		value Value();
+		value Value(value displayMode);
 	};
 
 } // namespace lime

@@ -1466,7 +1466,7 @@ namespace lime
 		Window *targetWindow = (Window *)val_data(window);
 		DisplayMode displayMode;
 		targetWindow->GetDisplayMode(&displayMode);
-		return (value)displayMode.Value();
+		return displayMode.Value();
 	}
 
 	int lime_window_get_height(value window)
@@ -1574,13 +1574,11 @@ namespace lime
 		targetWindow->SetCursor((SystemCursor)cursor);
 	}
 
-	value lime_window_set_display_mode(value window, value displayMode)
+	void lime_window_set_display_mode(value window, value mode)
 	{
 		Window *targetWindow = (Window *)val_data(window);
-		DisplayMode _displayMode(displayMode);
-		targetWindow->SetDisplayMode(&_displayMode);
-		targetWindow->GetDisplayMode(&_displayMode);
-		return (value)_displayMode.Value();
+		DisplayMode displayMode(mode);
+		targetWindow->SetDisplayMode(&displayMode);
 	}
 
 	bool lime_window_set_fullscreen(value window, bool fullscreen)
@@ -1927,7 +1925,7 @@ namespace lime
 	DEFINE_PRIME3v(lime_window_set_maximum_size);
 	DEFINE_PRIME2(lime_window_set_borderless);
 	DEFINE_PRIME2v(lime_window_set_cursor);
-	DEFINE_PRIME2(lime_window_set_display_mode);
+	DEFINE_PRIME2v(lime_window_set_display_mode);
 	DEFINE_PRIME2(lime_window_set_fullscreen);
 	DEFINE_PRIME2v(lime_window_set_icon);
 	DEFINE_PRIME2(lime_window_set_maximized);

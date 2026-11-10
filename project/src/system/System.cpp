@@ -303,7 +303,7 @@ namespace lime
 		mode.refreshRate = displayMode->refresh_rate;
 		mode.width = displayMode->w;
 
-		alloc_field(display, val_id("currentMode"), (value)mode.Value());
+		alloc_field(display, val_id("currentMode"), mode.Value());
 
 		int numDisplayModes;
 		SDL_DisplayMode **displayModes = SDL_GetFullscreenDisplayModes(id, &numDisplayModes);
@@ -336,7 +336,7 @@ namespace lime
 			mode.refreshRate = sdlDisplayMode->refresh_rate;
 			mode.width = sdlDisplayMode->w;
 
-			val_array_set_i(supportedModes, i, (value)mode.Value());
+			val_array_set_i(supportedModes, i, mode.Value());
 		}
 
 		alloc_field(display, val_id("supportedModes"), supportedModes);

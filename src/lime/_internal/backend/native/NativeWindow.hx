@@ -516,12 +516,10 @@ class NativeWindow
 		if (handle != null)
 		{
 			#if (!macro && lime_cffi)
-			var data:Dynamic = NativeCFFI.lime_window_set_display_mode(handle, value);
-			displayMode.width = data.width;
-			displayMode.height = data.height;
-			displayMode.pixelFormat = data.pixelFormat;
-			displayMode.refreshRate = data.refreshRate;
+			NativeCFFI.lime_window_set_display_mode(handle, value);
 			#end
+
+			displayMode = value;
 		}
 
 		return displayMode;
