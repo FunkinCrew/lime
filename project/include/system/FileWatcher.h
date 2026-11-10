@@ -1,7 +1,7 @@
 #pragma once
-#include <hx/CFFIPrime.h>
 #include <map>
 #include <string>
+#include <system/CFFI.h>
 #include <system/Mutex.h>
 #include <vector>
 

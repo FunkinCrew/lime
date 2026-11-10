@@ -1,8 +1,8 @@
 #include <bindings/opengl/OpenGLBindings.h>
-#include <hx/CFFIPrime.h>
 #include <map>
 #include <SDL3/SDL.h>
 #include <string>
+#include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Mutex.h>
 #include <utils/Bytes.h>

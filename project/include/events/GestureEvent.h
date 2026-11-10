@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -8,12 +8,10 @@ namespace lime
 
 	enum GestureState
 	{
-
 		GESTURE_START = 0,
 		GESTURE_MOVE = 1,
 		GESTURE_END = 2,
 		GESTURE_CANCEL = 3
-
 	};
 
 	struct GestureEvent

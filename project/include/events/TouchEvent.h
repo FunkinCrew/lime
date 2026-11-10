@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <stdint.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -9,11 +9,9 @@ namespace lime
 
 	enum TouchEventType
 	{
-
 		TOUCH_START,
 		TOUCH_END,
 		TOUCH_MOVE
-
 	};
 
 	struct TouchEvent

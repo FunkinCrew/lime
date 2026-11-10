@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <stdint.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -9,7 +9,6 @@ namespace lime
 
 	enum WindowEventType
 	{
-
 		WINDOW_ACTIVATE,
 		WINDOW_CLOSE,
 		WINDOW_DEACTIVATE,
@@ -26,7 +25,6 @@ namespace lime
 		WINDOW_SHOW,
 		WINDOW_HIDE,
 		WINDOW_SCALE_CHANGED
-
 	};
 
 	struct WindowEvent

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <stdint.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -9,10 +9,8 @@ namespace lime
 
 	enum KeyEventType
 	{
-
 		KEY_DOWN,
 		KEY_UP
-
 	};
 
 	struct KeyEvent

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -8,13 +8,11 @@ namespace lime
 
 	enum GamepadEventType
 	{
-
 		GAMEPAD_AXIS_MOVE,
 		GAMEPAD_BUTTON_DOWN,
 		GAMEPAD_BUTTON_UP,
 		GAMEPAD_CONNECT,
 		GAMEPAD_DISCONNECT
-
 	};
 
 	struct GamepadEvent

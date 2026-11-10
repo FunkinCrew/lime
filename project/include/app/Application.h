@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <SDL3/SDL.h>
+#include <system/CFFI.h>
 #include <ui/Window.h>
 
 namespace lime

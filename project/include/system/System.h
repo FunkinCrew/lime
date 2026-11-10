@@ -1,30 +1,26 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <stdio.h>
 #include <string>
+#include <system/CFFI.h>
 
 namespace lime
 {
 
 	enum SystemDirectory
 	{
-
 		APPLICATION,
 		APPLICATION_STORAGE,
 		DESKTOP,
 		DOCUMENTS,
 		USER
-
 	};
 
 	enum SystemTheme
 	{
-
 		UNKNOWN,
 		LIGHT,
 		DARK
-
 	};
 
 	class System

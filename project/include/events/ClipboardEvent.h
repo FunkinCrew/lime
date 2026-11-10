@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -8,9 +8,7 @@ namespace lime
 
 	enum ClipboardEventType
 	{
-
 		CLIPBOARD_UPDATE
-
 	};
 
 	struct ClipboardEvent

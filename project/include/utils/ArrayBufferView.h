@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <utils/Bytes.h>
 
 namespace lime

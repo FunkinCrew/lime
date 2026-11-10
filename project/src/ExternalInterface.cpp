@@ -30,7 +30,7 @@
 #include <graphics/format/SVG.h>
 #include <graphics/format/WEBP.h>
 #include <graphics/ImageBuffer.h>
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Clipboard.h>
 #include <system/Endian.h>

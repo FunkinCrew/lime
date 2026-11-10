@@ -2,10 +2,10 @@
 
 #include <app/Application.h>
 #include <graphics/ImageBuffer.h>
-#include <hx/CFFIPrime.h>
 #include <math/Rectangle.h>
 #include <SDL3/SDL.h>
 #include <stdint.h>
+#include <system/CFFI.h>
 #include <system/DisplayMode.h>
 #include <ui/Cursor.h>
 

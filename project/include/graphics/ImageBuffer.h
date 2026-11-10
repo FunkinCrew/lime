@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/PixelFormat.h>
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <utils/ArrayBufferView.h>
 
 namespace lime

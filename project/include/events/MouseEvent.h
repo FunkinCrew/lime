@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
 #include <stdint.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -9,12 +9,10 @@ namespace lime
 
 	enum MouseEventType
 	{
-
 		MOUSE_DOWN,
 		MOUSE_UP,
 		MOUSE_MOVE,
 		MOUSE_WHEEL
-
 	};
 
 	struct MouseEvent

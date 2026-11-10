@@ -1,9 +1,9 @@
 #include <cairo-ft.h>
 #include <cairo.h>
-#include <hx/CFFIPrime.h>
 #include <map>
 #include <math/Matrix3.h>
 #include <math/Vector2.h>
+#include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Mutex.h>
 #include <system/ValuePointer.h>

@@ -2,7 +2,7 @@
 
 #include <ft2build.h>
 #include <graphics/ImageBuffer.h>
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/System.h>
 #include <utils/Bytes.h>
 #include <utils/File.h>

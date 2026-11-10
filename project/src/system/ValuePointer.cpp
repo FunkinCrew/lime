@@ -1,4 +1,4 @@
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime

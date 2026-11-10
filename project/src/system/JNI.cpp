@@ -1,8 +1,8 @@
-#include <hx/CFFIPrime.h>
 #include <jni.h>
 #include <map>
 #include <SDL3/SDL.h>
 #include <string>
+#include <system/CFFI.h>
 #include <system/JNI.h>
 #include <system/Mutex.h>
 

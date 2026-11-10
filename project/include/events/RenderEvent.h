@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -8,11 +8,9 @@ namespace lime
 
 	enum RenderEventType
 	{
-
 		RENDER,
 		RENDER_CONTEXT_LOST,
 		RENDER_CONTEXT_RESTORED
-
 	};
 
 	struct RenderEvent

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hx/CFFIPrime.h>
+#include <system/CFFI.h>
 #include <system/ValuePointer.h>
 
 namespace lime
@@ -8,10 +8,8 @@ namespace lime
 
 	enum SensorEventType
 	{
-
 		SENSOR_ACCELEROMETER,
 		SENSOR_GYROSCOPE
-
 	};
 
 	struct SensorEvent
