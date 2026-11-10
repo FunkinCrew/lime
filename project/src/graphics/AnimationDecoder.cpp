@@ -52,7 +52,7 @@ namespace lime
 		return true;
 	}
 
-	bool AnimationDecoder::GetFrame(ImageBuffer *imageBuffer, int64_t *duration)
+	bool AnimationDecoder::GetFrame(ImageBuffer *imageBuffer, int *duration)
 	{
 		if (!handle || !imageBuffer)
 		{
@@ -88,7 +88,7 @@ namespace lime
 
 		if (duration)
 		{
-			(*duration) = frameDuration;
+			(*duration) = (int)frameDuration;
 		}
 
 		SDL_DestroySurface(frame);

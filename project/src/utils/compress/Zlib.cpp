@@ -4,12 +4,13 @@
 namespace lime
 {
 
-	void Zlib::Compress(ZlibType type, Bytes *data, Bytes *result)
+	bool Zlib::Compress(ZlibType type, Bytes *data, Bytes *result)
 	{
 		if (data == NULL || data->b == NULL || data->length <= 0)
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		int windowBits = 15;
@@ -31,7 +32,8 @@ namespace lime
 		if (deflateInit2(&stream, Z_BEST_COMPRESSION, Z_DEFLATED, windowBits, 8, Z_DEFAULT_STRATEGY) != Z_OK)
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		int maxBufferSize = deflateBound(&stream, data->length);
@@ -50,19 +52,22 @@ namespace lime
 		if (ret == Z_STREAM_END)
 		{
 			result->Resize((int)stream.total_out);
+
+			return true;
 		}
-		else
-		{
-			result->Resize(0);
-		}
+
+		result->Resize(0);
+
+		return false;
 	}
 
-	void Zlib::Decompress(ZlibType type, Bytes *data, Bytes *result)
+	bool Zlib::Decompress(ZlibType type, Bytes *data, Bytes *result)
 	{
 		if (data == NULL || data->b == NULL || data->length <= 0)
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		int windowBits = 15;
@@ -84,7 +89,8 @@ namespace lime
 		if (inflateInit2(&stream, windowBits) != Z_OK)
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		stream.next_in = (Bytef *)data->b;
@@ -115,11 +121,13 @@ namespace lime
 		if (status == Z_STREAM_END)
 		{
 			result->Resize((int)stream.total_out);
+
+			return true;
 		}
-		else
-		{
-			result->Resize(0);
-		}
+
+		result->Resize(0);
+
+		return false;
 	}
 
 } // namespace lime

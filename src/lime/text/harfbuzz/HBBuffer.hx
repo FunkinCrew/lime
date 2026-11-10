@@ -82,13 +82,8 @@ abstract HBBuffer(CFFIPointer) from CFFIPointer to CFFIPointer
 	{
 		#if (lime_cffi && lime_harfbuzz && !macro)
 		var bytes = Bytes.alloc(0);
-		bytes = NativeCFFI.lime_hb_buffer_get_glyph_infos(this, bytes);
 
-		if (bytes == null)
-		{
-			return null;
-		}
-		else
+		if (NativeCFFI.lime_hb_buffer_get_glyph_infos(this, bytes))
 		{
 			var result = new Array<HBGlyphInfo>();
 
@@ -109,22 +104,17 @@ abstract HBBuffer(CFFIPointer) from CFFIPointer to CFFIPointer
 
 			return result;
 		}
-		#else
-		return null;
 		#end
+
+		return null;
 	}
 
 	public function getGlyphPositions():Array<HBGlyphPosition>
 	{
 		#if (lime_cffi && lime_harfbuzz && !macro)
 		var bytes = Bytes.alloc(0);
-		bytes = NativeCFFI.lime_hb_buffer_get_glyph_positions(this, bytes);
 
-		if (bytes == null)
-		{
-			return null;
-		}
-		else
+		if (NativeCFFI.lime_hb_buffer_get_glyph_positions(this, bytes))
 		{
 			var result = new Array<HBGlyphPosition>();
 
@@ -147,9 +137,9 @@ abstract HBBuffer(CFFIPointer) from CFFIPointer to CFFIPointer
 
 			return result;
 		}
-		#else
-		return null;
 		#end
+
+		return null;
 	}
 
 	public function guessSegmentProperties():Void

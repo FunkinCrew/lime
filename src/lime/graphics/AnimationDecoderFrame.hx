@@ -1,11 +1,9 @@
 package lime.graphics;
 
-import haxe.Int64;
-
 class AnimationDecoderFrame
 {
 	public var buffer:ImageBuffer;
-	public var duration:Int64;
+	public var duration:Int;
 
 	public function new() {}
 }

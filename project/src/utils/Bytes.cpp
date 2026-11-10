@@ -1,196 +1,60 @@
-#include <stdlib.h>
-#include <string.h>
-#include <system/Mutex.h>
-#include <system/System.h>
 #include <utils/Bytes.h>
 
 namespace lime
 {
 
-	static bool init = false;
-	static bool useBuffer = false;
-
-	Bytes::Bytes()
-	{
-		if (!init)
-		{
-			buffer _buffer = alloc_buffer_len(1);
-
-			if (buffer_data(_buffer))
-			{
-				useBuffer = true;
-			}
-
-			init = true;
-		}
-
-		b = 0;
-		length = 0;
-		ownsMemory = true;
-	}
-
 	Bytes::Bytes(value bytes)
 	{
-		if (!init)
+		object = bytes;
+
+		value bVal = val_field(bytes, val_id("b"));
+
+		if (val_is_string(bVal))
 		{
-			buffer _buffer = alloc_buffer_len(1);
-
-			if (buffer_data(_buffer))
-			{
-				useBuffer = true;
-			}
-
-			init = true;
+			b = (unsigned char *)val_string(bVal);
+		}
+		else
+		{
+			b = (unsigned char *)buffer_data(val_to_buffer(bVal));
 		}
 
-		b = 0;
-		length = 0;
-		ownsMemory = true;
-
-		Set(bytes);
+		length = val_int(val_field(bytes, val_id("length")));
 	}
 
 	Bytes::~Bytes()
 	{
-		if (ownsMemory && b)
-		{
-			free(b);
-		}
+		alloc_field(object, val_id("length"), alloc_int(length));
 	}
 
 	void Bytes::Resize(int size)
 	{
-		if (size == length)
-		{
-			return;
-		}
+		value bVal = val_field(object, val_id("b"));
 
-		if (size <= 0)
+		if (val_is_string(bVal))
 		{
-			if (ownsMemory && b)
+			if (val_int(val_field(object, val_id("length"))) == size)
 			{
-				free(b);
-			}
-
-			b = 0;
-			length = 0;
-			ownsMemory = true;
-		}
-		else
-		{
-			if (ownsMemory)
-			{
-				unsigned char *data = (unsigned char *)realloc(b, size);
-
-				if (data)
-				{
-					b = data;
-				}
+				b = (unsigned char *)val_string(bVal);
 			}
 			else
 			{
-				unsigned char *data = (unsigned char *)malloc(size);
+				value fresh = alloc_raw_string(size);
 
-				if (b && length > 0)
-				{
-					memcpy(data, b, length < size ? length : size);
-				}
+				b = (unsigned char *)val_string(fresh);
 
-				b = data;
-
-				ownsMemory = true;
+				alloc_field(object, val_id("b"), fresh);
 			}
-
-			length = size;
-		}
-	}
-
-	void Bytes::Set(value bytes)
-	{
-		int newLength = 0;
-		unsigned char *newB = 0;
-		bool isNull = val_is_null(bytes);
-
-		if (!isNull)
-		{
-			value lengthVal = val_field(bytes, val_id("length"));
-			value bVal = val_field(bytes, val_id("b"));
-
-			newLength = val_int(lengthVal);
-
-			if (newLength > 0)
-			{
-				if (val_is_string(bVal))
-				{
-					newB = (unsigned char *)val_string(bVal);
-				}
-				else
-				{
-					newB = (unsigned char *)buffer_data(val_to_buffer(bVal));
-				}
-			}
-		}
-
-		if (ownsMemory && b)
-		{
-			free(b);
-		}
-
-		if (isNull)
-		{
-			length = 0;
-			b = 0;
-			ownsMemory = true;
 		}
 		else
 		{
-			length = newLength;
-			b = newB;
-			ownsMemory = false;
+			buffer buf = val_to_buffer(bVal);
+
+			buffer_set_size(buf, size);
+
+			b = (unsigned char *)buffer_data(buf);
 		}
-	}
 
-	value Bytes::Value()
-	{
-		return alloc_null();
-	}
-
-	value Bytes::Value(value bytes)
-	{
-		if (val_is_null(bytes) || !b)
-		{
-			return alloc_null();
-		}
-		else
-		{
-			alloc_field(bytes, val_id("length"), alloc_int(length));
-
-			if (useBuffer)
-			{
-				value _buffer = val_field(bytes, val_id("b"));
-
-				if (val_is_null(_buffer) || (char *)b != buffer_data(val_to_buffer(_buffer)))
-				{
-					buffer bufferValue = alloc_buffer_len(length);
-					_buffer = buffer_val(bufferValue);
-					memcpy((unsigned char *)buffer_data(bufferValue), b, length);
-					alloc_field(bytes, val_id("b"), _buffer);
-				}
-			}
-			else
-			{
-				value _string = val_field(bytes, val_id("b"));
-
-				if (val_is_null(_string) || (const char *)b != val_string(_string))
-				{
-					value data = alloc_raw_string(length);
-					memcpy((void *)val_string(data), b, length);
-					alloc_field(bytes, val_id("b"), data);
-				}
-			}
-
-			return bytes;
-		}
+		length = size;
 	}
 
 } // namespace lime

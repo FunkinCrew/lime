@@ -8,20 +8,15 @@ namespace lime
 
 	struct ArrayBufferView
 	{
-		int type;
+		value object;
 		Bytes *buffer;
-		int byteOffset;
 		int byteLength;
 		int length;
-		int bytesPerElement;
 
 		ArrayBufferView(value arrayBufferView);
 		~ArrayBufferView();
 
 		void Resize(int size);
-		void Set(value bytes);
-		value Value();
-		value Value(value arrayBufferView);
 	};
 
 } // namespace lime

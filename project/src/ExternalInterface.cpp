@@ -22,6 +22,7 @@
 #include <events/TouchEvent.h>
 #include <events/WindowEvent.h>
 #include <graphics/AnimationDecoder.h>
+#include <graphics/AnimationDecoderFrame.h>
 #include <graphics/format/BMP.h>
 #include <graphics/format/GIF.h>
 #include <graphics/format/JPEG.h>
@@ -44,6 +45,7 @@
 #include <ui/KeyCode.h>
 #include <ui/Touch.h>
 #include <ui/Window.h>
+#include <utils/Bytes.h>
 #include <utils/compress/LZMA.h>
 #include <utils/compress/Zlib.h>
 #include <utils/File.h>
@@ -167,7 +169,11 @@ namespace lime
 
 	double lime_bytes_get_data_pointer(value bytes)
 	{
-		Bytes data = Bytes(bytes);
+		if (val_is_null(bytes))
+			return 0;
+
+		Bytes data(bytes);
+
 		return (uintptr_t)data.b;
 	}
 
@@ -176,35 +182,42 @@ namespace lime
 		if (val_is_null(bytes))
 			return 0;
 
-		Bytes data = Bytes(bytes);
+		Bytes data(bytes);
+
 		return (uintptr_t)data.b + offset;
 	}
 
-	value lime_bytes_read_file(HxString path, value bytes)
+	int lime_bytes_read_file(HxString path, value bytes)
 	{
-		Bytes data(bytes);
-
 		File file(hxs_utf8(path, nullptr), "rb");
 
-		if (file.handle)
+		if (!file.handle)
 		{
-			file.Seek(0, SEEK_END);
-
-			int size = (int)file.Tell();
-
-			file.Seek(0, SEEK_SET);
-
-			if (size > 0)
-			{
-				data.Resize(size);
-
-				file.Read(data.b, size);
-			}
-
-			file.Close();
+			return 0;
 		}
 
-		return data.Value(bytes);
+		file.Seek(0, SEEK_END);
+
+		int size = (int)file.Tell();
+
+		file.Seek(0, SEEK_SET);
+
+		if (size <= 0)
+		{
+			file.Close();
+
+			return 0;
+		}
+
+		Bytes data(bytes);
+
+		data.Resize(size);
+
+		int bytesRead = (int)file.Read(data.b, data.length);
+
+		file.Close();
+
+		return bytesRead;
 	}
 
 	void lime_bytes_write_file(HxString path, value bytes)
@@ -264,24 +277,22 @@ namespace lime
 		return (uintptr_t)pointer + offset;
 	}
 
-	value lime_deflate_compress(value buffer, value bytes)
+	bool lime_deflate_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Compress(DEFLATE, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Compress(DEFLATE, &data, &result);
 	}
 
-	value lime_deflate_decompress(value buffer, value bytes)
+	bool lime_deflate_decompress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Decompress(DEFLATE, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Decompress(DEFLATE, &data, &result);
 	}
 
 	void lime_drop_event_manager_register(value callback, value eventObject)
@@ -587,21 +598,16 @@ namespace lime
 		return alloc_null();
 	}
 
-	value lime_font_render_glyph(value fontHandle, int index, value data, int flags)
+	int lime_font_render_glyph(value fontHandle, int index, value data, int flags)
 	{
 		Font *font = (Font *)val_data(fontHandle);
 
 		Bytes bytes(data);
 
-		if (font->RenderGlyph(index, &bytes, 0, flags))
-		{
-			return bytes.Value(data);
-		}
-
-		return alloc_null();
+		return font->RenderGlyph(index, &bytes, 0, flags);
 	}
 
-	value lime_font_render_glyphs(value fontHandle, value indices, value data, int flags)
+	int lime_font_render_glyphs(value fontHandle, value indices, value data, int flags)
 	{
 		Font *font = (Font *)val_data(fontHandle);
 
@@ -614,12 +620,7 @@ namespace lime
 			_indices.push_back(val_int(val_array_i(indices, i)));
 		}
 
-		if (font->RenderGlyphs(_indices.data(), _indices.size(), &bytes, flags))
-		{
-			return bytes.Value(data);
-		}
-
-		return alloc_null();
+		return font->RenderGlyphs(_indices.data(), _indices.size(), &bytes, flags);
 	}
 
 	void lime_font_set_size(value fontHandle, int size)
@@ -686,81 +687,48 @@ namespace lime
 		Gamepad::SetLED(id, red, green, blue);
 	}
 
-	value lime_gzip_compress(value buffer, value bytes)
+	bool lime_gzip_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Compress(GZIP, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Compress(GZIP, &data, &result);
 	}
 
-	value lime_gzip_decompress(value buffer, value bytes)
+	bool lime_gzip_decompress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Decompress(GZIP, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Decompress(GZIP, &data, &result);
 	}
 
-	value lime_image_encode(value buffer, int type, int quality, value bytes)
+	bool lime_image_encode(value buffer, int type, int quality, value bytes)
 	{
-		ImageBuffer imageBuffer = ImageBuffer(buffer);
-		Bytes data = Bytes(bytes);
+		ImageBuffer imageBuffer(buffer);
+
+		Bytes data(bytes);
 
 		switch (type)
 		{
 			case 0:
-
-				if (PNG::Encode(&imageBuffer, &data))
-				{
-					return data.Value(bytes);
-				}
-				break;
-
+				return PNG::Encode(&imageBuffer, &data);
 			case 1:
-
-				if (JPEG::Encode(&imageBuffer, &data, quality))
-				{
-					return data.Value(bytes);
-				}
-				break;
-
+				return JPEG::Encode(&imageBuffer, &data, quality);
 			case 2:
-
-				if (BMP::Encode(&imageBuffer, &data))
-				{
-					return data.Value(bytes);
-				}
-				break;
-
+				return BMP::Encode(&imageBuffer, &data);
 			case 3:
-
-				if (GIF::Encode(&imageBuffer, &data))
-				{
-					return data.Value(bytes);
-				}
-				break;
-
+				return GIF::Encode(&imageBuffer, &data);
 			case 4:
-
-				if (WEBP::Encode(&imageBuffer, &data, quality))
-				{
-					return data.Value(bytes);
-				}
-				break;
-
+				return WEBP::Encode(&imageBuffer, &data, quality);
 			default:
-				break;
+				return false;
 		}
-
-		return alloc_null();
 	}
 
-	value lime_image_load_bytes(value data, value buffer)
+	bool lime_image_load_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -774,16 +742,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_image_load_file(value data, value buffer)
+	bool lime_image_load_file(value data, value buffer)
 	{
 		File file(val_string(data), "rb");
 
@@ -795,13 +760,10 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
 	double lime_jni_getenv()
@@ -882,24 +844,22 @@ namespace lime
 		KeyEvent::eventObject = new ValuePointer(eventObject);
 	}
 
-	value lime_lzma_compress(value buffer, value bytes)
+	bool lime_lzma_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		LZMA::Compress(&data, &result);
-
-		return result.Value(bytes);
+		return LZMA::Compress(&data, &result);
 	}
 
-	value lime_lzma_decompress(value buffer, value bytes)
+	bool lime_lzma_decompress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		LZMA::Decompress(&data, &result);
-
-		return result.Value(bytes);
+		return LZMA::Decompress(&data, &result);
 	}
 
 	void lime_mouse_event_manager_register(value callback, value eventObject)
@@ -914,7 +874,7 @@ namespace lime
 		OrientationEvent::eventObject = new ValuePointer(eventObject);
 	}
 
-	value lime_png_decode_bytes(value data, value buffer)
+	bool lime_png_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -928,16 +888,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_png_decode_file(HxString path, value buffer)
+	bool lime_png_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -949,16 +906,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_jpeg_decode_bytes(value data, value buffer)
+	bool lime_jpeg_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -972,16 +926,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_jpeg_decode_file(HxString path, value buffer)
+	bool lime_jpeg_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -993,16 +944,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_bmp_decode_bytes(value data, value buffer)
+	bool lime_bmp_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -1016,16 +964,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_bmp_decode_file(HxString path, value buffer)
+	bool lime_bmp_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -1037,16 +982,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_svg_decode_bytes(value data, value buffer)
+	bool lime_svg_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -1060,16 +1002,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_svg_decode_file(HxString path, value buffer)
+	bool lime_svg_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -1081,16 +1020,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_svg_decode_sized_bytes(value data, int width, int height, value buffer)
+	bool lime_svg_decode_sized_bytes(value data, int width, int height, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -1104,16 +1040,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_svg_decode_sized_file(HxString path, int width, int height, value buffer)
+	bool lime_svg_decode_sized_file(HxString path, int width, int height, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -1125,16 +1058,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_gif_decode_bytes(value data, value buffer)
+	bool lime_gif_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -1148,16 +1078,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_gif_decode_file(HxString path, value buffer)
+	bool lime_gif_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -1169,16 +1096,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_webp_decode_bytes(value data, value buffer)
+	bool lime_webp_decode_bytes(value data, value buffer)
 	{
 		Bytes bytes(data);
 
@@ -1192,16 +1116,13 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
-	value lime_webp_decode_file(HxString path, value buffer)
+	bool lime_webp_decode_file(HxString path, value buffer)
 	{
 		File file(hxs_utf8(path, nullptr), "rb");
 
@@ -1213,13 +1134,10 @@ namespace lime
 
 			file.Close();
 
-			if (success)
-			{
-				return imageBuffer.Value(buffer);
-			}
+			return success;
 		}
 
-		return alloc_null();
+		return false;
 	}
 
 	void lime_render_event_manager_register(value callback, value eventObject)
@@ -1617,22 +1535,13 @@ namespace lime
 		targetWindow->Move(x, y);
 	}
 
-	value lime_window_read_pixels(value window, value rect, value imageBuffer)
+	void lime_window_read_pixels(value window, value rect, value imageBuffer)
 	{
 		Window *targetWindow = (Window *)val_data(window);
 		ImageBuffer buffer(imageBuffer);
+		Rectangle rectangle = Rectangle(rect);
 
-		if (!val_is_null(rect))
-		{
-			Rectangle _rect = Rectangle(rect);
-			targetWindow->ReadPixels(&buffer, &_rect);
-		}
-		else
-		{
-			targetWindow->ReadPixels(&buffer, NULL);
-		}
-
-		return buffer.Value(imageBuffer);
+		targetWindow->ReadPixels(&buffer, &rectangle);
 	}
 
 	void lime_window_resize(value window, int width, int height)
@@ -1819,23 +1728,13 @@ namespace lime
 		return alloc_null();
 	}
 
-	value lime_animation_decoder_get_frame(value animation_decoder, value buffer)
+	bool lime_animation_decoder_get_frame(value animation_decoder, value frame)
 	{
 		AnimationDecoder *targetAnimationDecoder = (AnimationDecoder *)val_data(animation_decoder);
 
-		ImageBuffer imageBuffer(buffer);
+		AnimationDecoderFrame decodedFrame(frame);
 
-		int64_t imageDuration = 0;
-
-		if (targetAnimationDecoder->GetFrame(&imageBuffer, &imageDuration))
-		{
-			value decodedFrame = alloc_empty_object();
-			alloc_field(decodedFrame, val_id("buffer"), imageBuffer.Value(buffer));
-			alloc_field(decodedFrame, val_id("duration"), allocInt64(imageDuration));
-			return decodedFrame;
-		}
-
-		return alloc_null();
+		return targetAnimationDecoder->GetFrame(decodedFrame.buffer, &decodedFrame.duration);
 	}
 
 	int lime_animation_decoder_get_status(value animation_decoder)
@@ -1850,24 +1749,22 @@ namespace lime
 		return targetAnimationDecoder->Reset();
 	}
 
-	value lime_zlib_compress(value buffer, value bytes)
+	bool lime_zlib_compress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Compress(ZLIB, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Compress(ZLIB, &data, &result);
 	}
 
-	value lime_zlib_decompress(value buffer, value bytes)
+	bool lime_zlib_decompress(value buffer, value bytes)
 	{
 		Bytes data(buffer);
+
 		Bytes result(bytes);
 
-		Zlib::Decompress(ZLIB, &data, &result);
-
-		return result.Value(bytes);
+		return Zlib::Decompress(ZLIB, &data, &result);
 	}
 
 	value lime_touch_get_devices()
@@ -2024,7 +1921,7 @@ namespace lime
 	DEFINE_PRIME1(lime_window_get_x);
 	DEFINE_PRIME1(lime_window_get_y);
 	DEFINE_PRIME3v(lime_window_move);
-	DEFINE_PRIME3(lime_window_read_pixels);
+	DEFINE_PRIME3v(lime_window_read_pixels);
 	DEFINE_PRIME3v(lime_window_resize);
 	DEFINE_PRIME3v(lime_window_set_minimum_size);
 	DEFINE_PRIME3v(lime_window_set_maximum_size);

@@ -79,15 +79,13 @@ class AnimationDecoder
 		#if (lime_cffi && !macro)
 		if (handle != null)
 		{
-			final imageBuffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
+			final frame:AnimationDecoderFrame = new AnimationDecoderFrame();
 
-			final decodedFrame:Dynamic = NativeCFFI.lime_animation_decoder_get_frame(handle, imageBuffer);
+			frame.buffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
+			frame.duration = 0;
 
-			if (decodedFrame != null)
+			if (NativeCFFI.lime_animation_decoder_get_frame(handle, frame))
 			{
-				final frame:AnimationDecoderFrame = new AnimationDecoderFrame();
-				frame.buffer = decodedFrame.buffer;
-				frame.duration = Int64.make(decodedFrame.duration.high, decodedFrame.duration.low);
 				return frame;
 			}
 		}

@@ -7,18 +7,15 @@ namespace lime
 
 	struct Bytes
 	{
-		int length;
+		value object;
 		unsigned char *b;
-		bool ownsMemory;
+		int length;
 
-		Bytes();
 		Bytes(value bytes);
 		~Bytes();
 
 		void Resize(int size);
-		void Set(value bytes);
-		value Value(value bytes);
-		value Value();
+		void Commit();
 	};
 
 } // namespace lime

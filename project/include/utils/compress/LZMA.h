@@ -8,8 +8,8 @@ namespace lime
 	class LZMA
 	{
 	  public:
-		static void Compress(Bytes *data, Bytes *result);
-		static void Decompress(Bytes *data, Bytes *result);
+		static bool Compress(Bytes *data, Bytes *result);
+		static bool Decompress(Bytes *data, Bytes *result);
 	};
 
 } // namespace lime

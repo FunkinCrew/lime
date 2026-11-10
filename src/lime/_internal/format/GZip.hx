@@ -10,7 +10,14 @@ class GZip
 	public static function compress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		return NativeCFFI.lime_gzip_compress(bytes, Bytes.alloc(0));
+		var result:Bytes = Bytes.alloc(0);
+
+		if (NativeCFFI.lime_gzip_compress(bytes, result))
+		{
+			return result;
+		}
+
+		return null;
 		#elseif js
 		return Bytes.ofData(untyped js.Syntax.code("pako.gzip")(bytes.getData()));
 		#else
@@ -21,7 +28,14 @@ class GZip
 	public static function decompress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		return NativeCFFI.lime_gzip_decompress(bytes, Bytes.alloc(0));
+		var result:Bytes = Bytes.alloc(0);
+
+		if (NativeCFFI.lime_gzip_decompress(bytes, result))
+		{
+			return result;
+		}
+
+		return null;
 		#elseif js
 		return Bytes.ofData(untyped js.Syntax.code("pako.ungzip")(bytes.getData()));
 		#else

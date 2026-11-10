@@ -13,7 +13,7 @@ namespace lime
 		~AnimationDecoder();
 
 		bool Open(File *file, const char *type);
-		bool GetFrame(ImageBuffer *imageBuffer, int64_t *duration);
+		bool GetFrame(ImageBuffer *imageBuffer, int *duration);
 		int GetStatus();
 		bool Reset();
 

@@ -10,7 +10,14 @@ class Zlib
 	public static function compress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		return NativeCFFI.lime_zlib_compress(bytes, Bytes.alloc(0));
+		var result:Bytes = Bytes.alloc(0);
+
+		if (NativeCFFI.lime_zlib_compress(bytes, result))
+		{
+			return result;
+		}
+
+		return null;
 		#elseif js
 		return Bytes.ofData(untyped js.Syntax.code("pako.deflate")(bytes.getData()));
 		#else
@@ -21,7 +28,14 @@ class Zlib
 	public static function decompress(bytes:Bytes):Bytes
 	{
 		#if (lime_cffi && !macro)
-		return NativeCFFI.lime_zlib_decompress(bytes, Bytes.alloc(0));
+		var result:Bytes = Bytes.alloc(0);
+
+		if (NativeCFFI.lime_zlib_decompress(bytes, result))
+		{
+			return result;
+		}
+
+		return null;
 		#elseif js
 		return Bytes.ofData(untyped js.Syntax.code("pako.inflate")(bytes.getData()));
 		#else

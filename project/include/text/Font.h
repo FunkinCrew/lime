@@ -4,6 +4,7 @@
 #include <graphics/ImageBuffer.h>
 #include <hx/CFFIPrime.h>
 #include <system/System.h>
+#include <utils/Bytes.h>
 #include <utils/File.h>
 
 #include FT_FREETYPE_H

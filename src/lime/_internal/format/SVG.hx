@@ -14,9 +14,9 @@ class SVG
 	public static function decodeBytes(bytes:Bytes):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_svg_decode_bytes(bytes, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_svg_decode_bytes(bytes, buffer))
 		{
 			return new Image(buffer);
 		}
@@ -28,9 +28,9 @@ class SVG
 	public static function decodeFile(path:String):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_svg_decode_file(path, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_svg_decode_file(path, buffer))
 		{
 			return new Image(buffer);
 		}
@@ -42,9 +42,9 @@ class SVG
 	public static function decodeBytesSized(bytes:Bytes, width:Int, height:Int):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_svg_decode_sized_bytes(bytes, width, height, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_svg_decode_sized_bytes(bytes, width, height, buffer))
 		{
 			return new Image(buffer);
 		}
@@ -56,9 +56,9 @@ class SVG
 	public static function decodeFileSized(path:String, width:Int, height:Int):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_svg_decode_sized_file(path, width, height, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_svg_decode_sized_file(path, width, height, buffer))
 		{
 			return new Image(buffer);
 		}

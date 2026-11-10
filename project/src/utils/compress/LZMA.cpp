@@ -27,12 +27,13 @@ namespace lime
 		}
 	}
 
-	void LZMA::Compress(Bytes *data, Bytes *result)
+	bool LZMA::Compress(Bytes *data, Bytes *result)
 	{
 		if (data == NULL || data->b == NULL || data->length <= 0)
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		SizeT inputBufferSize = data->length;
@@ -59,19 +60,22 @@ namespace lime
 		if (res == SZ_OK)
 		{
 			result->Resize(LZMA_PROPS_SIZE + sizeof(UInt64) + actualCompressedSize);
+
+			return true;
 		}
-		else
-		{
-			result->Resize(0);
-		}
+
+		result->Resize(0);
+
+		return false;
 	}
 
-	void LZMA::Decompress(Bytes *data, Bytes *result)
+	bool LZMA::Decompress(Bytes *data, Bytes *result)
 	{
 		if (data == NULL || data->b == NULL || data->length < (LZMA_PROPS_SIZE + sizeof(UInt64)))
 		{
 			result->Resize(0);
-			return;
+
+			return false;
 		}
 
 		Byte *inPtr = data->b;
@@ -90,7 +94,11 @@ namespace lime
 		if (res != SZ_OK)
 		{
 			result->Resize(0);
+
+			return false;
 		}
+
+		return true;
 	}
 
 } // namespace lime

@@ -9,6 +9,7 @@ namespace lime
 
 	struct ImageBuffer
 	{
+		value object;
 		int bitsPerPixel;
 		ArrayBufferView *data;
 		PixelFormat format;
@@ -20,11 +21,8 @@ namespace lime
 		ImageBuffer(value imageBuffer);
 		~ImageBuffer();
 
-		void Blit(const unsigned char *data, int x, int y, int width, int height);
-		void Resize(int width, int height, int bitsPerPixel = 32);
+		void Resize(int width, int height, int bitsPerPixel);
 		int Stride();
-		value Value();
-		value Value(value imageBuffer);
 	};
 
 } // namespace lime

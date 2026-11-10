@@ -1185,9 +1185,9 @@ class Image
 			return false;
 		}
 
-		var imageBuffer:ImageBuffer = NativeCFFI.lime_image_load_bytes(bytes, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var imageBuffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (imageBuffer != null)
+		if (NativeCFFI.lime_image_load_bytes(bytes, imageBuffer))
 		{
 			__fromImageBuffer(imageBuffer);
 
@@ -1247,9 +1247,9 @@ class Image
 
 		return true;
 		#elseif (lime_cffi && !macro)
-		var buffer:ImageBuffer = NativeCFFI.lime_image_load_file(path, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_image_load_file(path, buffer))
 		{
 			__fromImageBuffer(buffer);
 

@@ -92,10 +92,13 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 	{
 		#if (sys && lime_cffi && !macro)
 		var bytes = Bytes.alloc(0);
-		NativeCFFI.lime_bytes_read_file(path, bytes);
-		if (bytes.length > 0)
+
+		if (NativeCFFI.lime_bytes_read_file(path, bytes) > 0)
+		{
 			return bytes;
+		}
 		#end
+
 		return null;
 	}
 

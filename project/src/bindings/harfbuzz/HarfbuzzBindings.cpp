@@ -4,6 +4,7 @@
 #include <system/CFFIPointer.h>
 #include <system/Mutex.h>
 #include <text/Font.h>
+#include <utils/Bytes.h>
 #include FT_FREETYPE_H
 #include <hb-ft.h>
 #include <hb.h>
@@ -188,17 +189,19 @@ namespace lime
 		return hb_buffer_get_flags((hb_buffer_t *)val_data(buffer));
 	}
 
-	value lime_hb_buffer_get_glyph_infos(value buffer, value bytes)
+	bool lime_hb_buffer_get_glyph_infos(value buffer, value bytes)
 	{
 		unsigned int length = 0;
+
 		hb_glyph_info_t *info = hb_buffer_get_glyph_infos((hb_buffer_t *)val_data(buffer), &length);
 
 		if (length > 0)
 		{
-			Bytes _bytes = Bytes(bytes);
-			_bytes.Resize(length * sizeof(HBGlyphInfo));
+			Bytes data(bytes);
 
-			HBGlyphInfo *glyphInfo = (HBGlyphInfo *)_bytes.b;
+			data.Resize(length * sizeof(HBGlyphInfo));
+
+			HBGlyphInfo *glyphInfo = (HBGlyphInfo *)data.b;
 
 			for (int i = 0; i < length; i++, info++, glyphInfo++)
 			{
@@ -207,25 +210,25 @@ namespace lime
 				glyphInfo->cluster = info->cluster;
 			}
 
-			return _bytes.Value(bytes);
+			return true;
 		}
-		else
-		{
-			return alloc_null();
-		}
+
+		return false;
 	}
 
-	value lime_hb_buffer_get_glyph_positions(value buffer, value bytes)
+	bool lime_hb_buffer_get_glyph_positions(value buffer, value bytes)
 	{
 		unsigned int length = 0;
+
 		hb_glyph_position_t *positions = hb_buffer_get_glyph_positions((hb_buffer_t *)val_data(buffer), &length);
 
 		if (length > 0)
 		{
-			Bytes _bytes = Bytes(bytes);
-			_bytes.Resize(length * sizeof(HBGlyphPosition));
+			Bytes data(bytes);
 
-			HBGlyphPosition *glyphPosition = (HBGlyphPosition *)_bytes.b;
+			data.Resize(length * sizeof(HBGlyphPosition));
+
+			HBGlyphPosition *glyphPosition = (HBGlyphPosition *)data.b;
 
 			for (int i = 0; i < length; i++, positions++, glyphPosition++)
 			{
@@ -235,12 +238,10 @@ namespace lime
 				glyphPosition->yOffset = positions->y_offset;
 			}
 
-			return _bytes.Value(bytes);
+			return true;
 		}
-		else
-		{
-			return alloc_null();
-		}
+
+		return false;
 	}
 
 	value lime_hb_buffer_get_language(value buffer)

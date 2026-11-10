@@ -19,9 +19,9 @@ class WEBP
 	public static function decodeBytes(bytes:Bytes):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_webp_decode_bytes(bytes, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_webp_decode_bytes(bytes, buffer))
 		{
 			return new Image(buffer);
 		}
@@ -33,9 +33,9 @@ class WEBP
 	public static function decodeFile(path:String):Image
 	{
 		#if (lime_cffi && !macro)
-		var buffer = NativeCFFI.lime_webp_decode_file(path, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
+		var buffer:ImageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
 
-		if (buffer != null)
+		if (NativeCFFI.lime_webp_decode_file(path, buffer))
 		{
 			return new Image(buffer);
 		}
@@ -56,7 +56,9 @@ class WEBP
 		}
 
 		#if (lime_cffi && !macro)
-		return NativeCFFI.lime_image_encode(image.buffer, 4, quality, Bytes.alloc(0));
+		var bytes = Bytes.alloc(0);
+		NativeCFFI.lime_image_encode(image.buffer, 4, quality, bytes);
+		return bytes;
 		#elseif (js && html5)
 		ImageCanvasUtil.convertToCanvas(image, false);
 

@@ -1214,14 +1214,16 @@ namespace lime
 	void lime_gl_get_program_binary(int program, int binaryFormat, value bytes)
 	{
 		GLint size = 0;
+
 		glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &size);
 
 		if (size > 0)
 		{
-			Bytes _bytes(bytes);
-			_bytes.Resize(size);
+			Bytes data(bytes);
 
-			glGetProgramBinary(program, size, &size, (GLenum *)&binaryFormat, _bytes.b);
+			data.Resize(size);
+
+			glGetProgramBinary(program, size, &size, (GLenum *)&binaryFormat, data.b);
 		}
 	}
 

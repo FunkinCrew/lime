@@ -59,16 +59,9 @@ namespace lime
 		{
 			ownedMemory = SDL_malloc(bytes->length);
 
-			if (ownedMemory)
-			{
-				SDL_memcpy(ownedMemory, bytes->b, bytes->length);
+			SDL_memcpy(ownedMemory, bytes->b, bytes->length);
 
-				handle = SDL_IOFromMem(ownedMemory, bytes->length);
-			}
-			else
-			{
-				handle = NULL;
-			}
+			handle = SDL_IOFromMem(ownedMemory, bytes->length);
 		}
 		else
 		{

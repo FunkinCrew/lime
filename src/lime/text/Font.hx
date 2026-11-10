@@ -381,13 +381,9 @@ class Font
 	public function renderGlyph(glyph:Glyph, ?flags:Int = 0):Image
 	{
 		#if (lime_cffi && !macro)
-		// Allocate an estimated buffer size
 		var bytes:Bytes = Bytes.alloc(0);
 
-		// Call native function to render glyph and get byte data
-		bytes = NativeCFFI.lime_font_render_glyph(src, glyph, bytes, flags);
-
-		if (bytes != null && bytes.length > 0)
+		if (NativeCFFI.lime_font_render_glyph(src, glyph, bytes, flags) > 0)
 		{
 			var dataPosition = 0;
 
@@ -462,13 +458,9 @@ class Font
 			glyphList.push(key);
 		}
 
-		// Allocate an estimated buffer size
 		var bytes:Bytes = Bytes.alloc(0);
 
-		// Call native function to render glyphs and get byte data
-		bytes = NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes, flags);
-
-		if (bytes != null && bytes.length > 0)
+		if (NativeCFFI.lime_font_render_glyphs(src, glyphList, bytes, flags) > 0)
 		{
 			var bytesPosition = 0;
 			var count = bytes.getInt32(bytesPosition);

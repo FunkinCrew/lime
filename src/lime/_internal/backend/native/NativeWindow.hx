@@ -404,13 +404,15 @@ class NativeWindow
 
 			default:
 				#if (!macro && lime_cffi)
-				imageBuffer = NativeCFFI.lime_window_read_pixels(handle, rect, new ImageBuffer(new UInt8Array(Bytes.alloc(0))));
-				#end
+				imageBuffer = new ImageBuffer(new UInt8Array(Bytes.alloc(0)));
+
+				NativeCFFI.lime_window_read_pixels(handle, rect, imageBuffer);
 
 				if (imageBuffer != null)
 				{
 					imageBuffer.format = RGBA32;
 				}
+				#end
 		}
 
 		if (imageBuffer != null)
