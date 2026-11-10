@@ -1336,7 +1336,6 @@ namespace lime
 
 		// AAudio Device Config
 		config.deviceConfig.aaudio.usage = ma_aaudio_usage_game;
-		config.deviceConfig.aaudio.performanceMode = ma_aaudio_performance_mode_low_latency;
 
 		// CoreAudio Device Context Config
 		config.deviceConfig.contextConfig.coreaudio.sessionCategory = ma_ios_session_category_playback;
