@@ -1459,7 +1459,7 @@ namespace lime
 			return 0;
 		}
 
-		return (double)device->playback.internalPeriodSizeInFrames * device->playback.internalPeriods * 1000.0 / device->playback.internalSampleRate;
+		return (double)(ma_device_get_period_size_in_frames(device) * 1000.0 / device->playback.internalSampleRate);
 	}
 
 	int lime_ma_engine_start(value pEngine)
