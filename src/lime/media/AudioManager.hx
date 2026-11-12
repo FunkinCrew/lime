@@ -67,9 +67,10 @@ class AudioManager
 			config.pLog = log;
 			#end
 
+			#if !android
 			// Period Config
 			config.periods = 4;
-			config.periodSizeInFrames = 480;
+			#end
 
 			#if ios
 			// Since we are doing our own modification to the `AVAudioSession` shared instance,
