@@ -63,8 +63,13 @@ class AudioManager
 			final config:MAEngineConfig = MAEngineConfig.init();
 
 			#if lime_miniaudio_debug_output
+			// Attach the debug logging output
 			config.pLog = log;
 			#end
+
+			// Period Config
+			config.periods = 4;
+			config.periodSizeInFrames = 480;
 
 			#if ios
 			// Since we are doing our own modification to the `AVAudioSession` shared instance,

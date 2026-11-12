@@ -14,6 +14,8 @@ class MAEngineConfig
 	public var listenerCount:Int;
 	public var channels:Int;
 	public var sampleRate:Int;
+	public var periods:Int;
+	public var periodSizeInFrames:Int;
 	public var spatializationVolumeSmoothTimeInFrames:Int;
 	public var spatializationVolumeSmoothTimeInMilliseconds:Int;
 	public var defaultVolumeSmoothTimeInFrames:Int;
@@ -29,6 +31,8 @@ class MAEngineConfig
 		listenerCount = 0;
 		channels = 0;
 		sampleRate = 0;
+		periods = 0;
+		periodSizeInFrames = 0;
 		spatializationVolumeSmoothTimeInFrames = 0;
 		spatializationVolumeSmoothTimeInMilliseconds = 0;
 		defaultVolumeSmoothTimeInFrames = 0;
@@ -46,6 +50,8 @@ class MAEngineConfig
 			listenerCount: listenerCount,
 			channels: channels,
 			sampleRate: sampleRate,
+			periods: periods,
+			periodSizeInFrames: periodSizeInFrames,
 			spatializationVolumeSmoothTimeInFrames: spatializationVolumeSmoothTimeInFrames,
 			spatializationVolumeSmoothTimeInMilliseconds: spatializationVolumeSmoothTimeInMilliseconds,
 			defaultVolumeSmoothTimeInFrames: defaultVolumeSmoothTimeInFrames,

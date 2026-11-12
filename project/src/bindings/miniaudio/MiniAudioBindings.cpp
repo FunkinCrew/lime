@@ -1305,10 +1305,6 @@ namespace lime
 	{
 		ma_engine_config config = ma_engine_config_init();
 
-		// Period Config
-		config.deviceConfig.periods = 4;
-		config.deviceConfig.periodSizeInFrames = 480;
-
 		// WASAPI Device Config
 		config.deviceConfig.wasapi.usage = ma_wasapi_usage_games;
 
@@ -1323,6 +1319,8 @@ namespace lime
 		config.listenerCount = val_int(val_field(pConfig, val_id("listenerCount")));
 		config.channels = val_int(val_field(pConfig, val_id("channels")));
 		config.sampleRate = val_int(val_field(pConfig, val_id("sampleRate")));
+		config.deviceConfig.periods = val_int(val_field(pConfig, val_id("periods")));
+		config.deviceConfig.periodSizeInFrames = val_int(val_field(pConfig, val_id("periodSizeInFrames")));
 		config.spatializationVolumeSmoothTimeInFrames = val_int(val_field(pConfig, val_id("spatializationVolumeSmoothTimeInFrames")));
 		config.spatializationVolumeSmoothTimeInMilliseconds = val_int(val_field(pConfig, val_id("spatializationVolumeSmoothTimeInMilliseconds")));
 		config.defaultVolumeSmoothTimeInFrames = val_int(val_field(pConfig, val_id("defaultVolumeSmoothTimeInFrames")));
