@@ -726,9 +726,11 @@ class NativeApplication
 
 					if (newScale != 0)
 					{
+						#if !ios
 						final scaleRatio:Float = newScale / oldScale;
 
 						window.resize(Math.floor(windowEventInfo.width * scaleRatio), Math.floor(windowEventInfo.height * scaleRatio));
+						#end
 
 						window.onDisplayScaleChange.dispatch(newScale, oldScale);
 					}
