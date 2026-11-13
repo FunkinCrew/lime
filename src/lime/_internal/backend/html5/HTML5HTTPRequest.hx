@@ -13,7 +13,6 @@ import js.html.XMLHttpRequest;
 import js.html.XMLHttpRequestResponseType;
 import js.Browser;
 
-import haxe.crypto.Base64;
 
 import lime.app.Future;
 import lime.app.Promise;
@@ -223,32 +222,25 @@ class HTML5HTTPRequest
 	private static function loadImageFromBytes(bytes:Bytes, type:String):Future<Image>
 	{
 		var uri = __createBlobURIFromBytes(bytes, type);
-		if (uri != null)
+		var promise = new Promise<Image>();
+
+		if (activeRequests < requestLimit)
 		{
-			var promise = new Promise<Image>();
-
-			if (activeRequests < requestLimit)
-			{
-				activeRequests++;
-				__loadImage(uri, promise, OPTION_REVOKE_URL);
-			}
-			else
-			{
-				requestQueue.add({
-					instance: null,
-					uri: uri,
-					promise: promise,
-					type: AssetType.IMAGE,
-					options: OPTION_REVOKE_URL
-				});
-			}
-
-			return promise.future;
+			activeRequests++;
+			__loadImage(uri, promise, OPTION_REVOKE_URL);
 		}
 		else
 		{
-			return loadImage("data:" + type + ";base64," + Base64.encode(bytes));
+			requestQueue.add({
+				instance: null,
+				uri: uri,
+				promise: promise,
+				type: AssetType.IMAGE,
+				options: OPTION_REVOKE_URL
+			});
 		}
+
+		return promise.future;
 	}
 
 	public function loadText(uri:String):Future<String>
@@ -494,9 +486,8 @@ class HTML5HTTPRequest
 			}
 		}
 
-		var loadBytes = function(bytes:Bytes, type:String):Void
+		var loadBlob = function(blob:Blob):Void
 		{
-			var blob = new Blob([bytes.getData()], {type: type});
 			var createImageBitmap:Dynamic = untyped js.Syntax.code("typeof globalThis.createImageBitmap === 'function' ? globalThis.createImageBitmap : null");
 			var hasOffscreenCanvas:Bool = untyped js.Syntax.code("typeof globalThis.OffscreenCanvas !== 'undefined'");
 
@@ -539,24 +530,34 @@ class HTML5HTTPRequest
 			});
 		};
 
+		var loadBytes = function(bytes:Bytes, type:String):Void
+		{
+			loadBlob(new Blob([bytes.getData()], {type: type}));
+		};
+
 		if (StringTools.startsWith(uri, "data:"))
 		{
-			var comma = uri.indexOf(",");
-			if (comma > -1 && StringTools.endsWith(uri.substring(0, comma), ";base64"))
+			var fetchData:Dynamic = untyped js.Syntax.code("typeof globalThis.fetch === 'function' ? globalThis.fetch : null");
+
+			if (fetchData != null)
 			{
-				try
+				fetchData(uri).then(function(response:Dynamic)
 				{
-					var type = uri.substring(5, comma).split(";")[0];
-					loadBytes(Base64.decode(uri.substr(comma + 1)), type);
-					return;
-				}
-				catch (e:Dynamic)
+					if (!response.ok)
+						throw "Unable to load image data URL: " + response.status;
+
+					return response.blob();
+				}).then(function(blob:Dynamic)
+				{
+					loadBlob(cast blob);
+				}, function(error:Dynamic)
 				{
 					activeRequests--;
 					processQueue();
-					promise.error(e);
-					return;
-				}
+					promise.error(error);
+				});
+
+				return;
 			}
 		}
 
@@ -564,6 +565,8 @@ class HTML5HTTPRequest
 
 		request.onload = function(_)
 		{
+			__revokeBlobURI(uri, options);
+
 			var type = request.getResponseHeader("Content-Type");
 			if (type == null || type == "")
 				type = "image/png";
@@ -572,6 +575,7 @@ class HTML5HTTPRequest
 
 		request.onerror = function(event:ErrorEvent)
 		{
+			__revokeBlobURI(uri, options);
 			activeRequests--;
 			processQueue();
 			promise.error(new _HTTPRequestErrorResponse(event.message, null));
