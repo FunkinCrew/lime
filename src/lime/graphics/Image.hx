@@ -39,6 +39,8 @@ import lime._internal.backend.html5.HTML5HTTPRequest;
 #end
 
 import js.Browser;
+import js.html.Blob;
+import js.html.URL;
 import js.html.CanvasElement;
 import js.html.Image as JSImage;
 import js.html.ImageElement;
@@ -1157,6 +1159,9 @@ class Image
 	@:noCompletion private function __fromBytes(bytes:Bytes, onload:Image->Void = null):Bool
 	{
 		#if (js && html5)
+		if (bytes == null || bytes.length == 0)
+			return false;
+
 		var type = "";
 
 		if (__isPNG(bytes))
@@ -1171,13 +1176,41 @@ class Image
 		{
 			type = "image/gif";
 		}
+		else if (__isWebP(bytes))
+		{
+			type = "image/webp";
+		}
 		else
 		{
 			// throw "Image tried to read PNG/JPG Bytes, but found an invalid header.";
 			return false;
 		}
 
-		__fromBase64(Base64.encode(bytes), type, onload);
+		var image:JSImage = untyped js.Syntax.code('new window.Image ()');
+		var objectURL = URL.createObjectURL(new Blob([bytes.getData()], {type: type}));
+
+		image.addEventListener("load", function(event)
+		{
+			URL.revokeObjectURL(objectURL);
+
+			buffer = new ImageBuffer(null, image.width, image.height);
+			buffer.__srcImage = cast image;
+
+			offsetX = 0;
+			offsetY = 0;
+			width = buffer.width;
+			height = buffer.height;
+
+			if (onload != null)
+				onload(this);
+		}, false);
+
+		image.addEventListener("error", function(event)
+		{
+			URL.revokeObjectURL(objectURL);
+		}, false);
+
+		image.src = objectURL;
 		return true;
 		#elseif (lime_cffi && !macro)
 		if (bytes == null || bytes.length == 0)
