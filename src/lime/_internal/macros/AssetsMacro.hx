@@ -8,8 +8,6 @@ import haxe.macro.Expr;
 import haxe.macro.Type;
 #end
 #if (macro && !display)
-import haxe.crypto.Base64;
-
 import sys.io.File;
 import sys.FileSystem;
 #end
@@ -81,7 +79,7 @@ class AssetsMacro
 		return fields;
 	}
 
-	private static function embedData(metaName:String, encode:Bool = false):Array<Field>
+	private static function embedData(metaName:String):Array<Field>
 	{
 		if (Context.defined("display"))
 			return null;
@@ -122,33 +120,7 @@ class AssetsMacro
 						return null;
 					}
 
-					if (encode)
-					{
-						var resourceType = "image/png";
-
-						if (bytes.get(0) == 0xFF && bytes.get(1) == 0xD8)
-						{
-							resourceType = "image/jpg";
-						}
-						else if (bytes.get(0) == 0x47 && bytes.get(1) == 0x49 && bytes.get(2) == 0x46)
-						{
-							resourceType = "image/gif";
-						}
-
-						var definition = macro class Temp
-							{
-								private static inline var resourceType:String = $v{resourceType};
-							};
-
-						fields.push(definition.fields[0]);
-
-						var base64 = Base64.encode(bytes);
-						Context.addResource(resourceName, Bytes.ofString(base64));
-					}
-					else
-					{
-						Context.addResource(resourceName, bytes);
-					}
+					Context.addResource(resourceName, bytes);
 
 					var definition = macro class Temp
 						{
@@ -248,7 +220,7 @@ class AssetsMacro
 
 	macro public static function embedImage():Array<Field>
 	{
-		var fields = embedData(":image", Context.defined("html5"));
+		var fields = embedData(":image");
 		if (fields == null)
 			return null;
 
@@ -275,7 +247,7 @@ class AssetsMacro
 						}
 						else
 						{
-							__fromBase64(haxe.Resource.getString(resourceName), resourceType, function(image)
+							__fromBytes(haxe.Resource.getBytes(resourceName), function(image)
 							{
 								if (preload == null)
 								{
