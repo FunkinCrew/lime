@@ -1305,11 +1305,23 @@ namespace lime
 	{
 		ma_engine_config config = ma_engine_config_init();
 
+		// Disable Fixed Sized Callback (For optimization)
+		config.deviceConfig.noFixedSizedCallback = MA_TRUE;
+
+		// Periods Device Config
+		config.deviceConfig.periods = val_int(val_field(pConfig, val_id("periods")));
+
+		// Period Size Device Config
+		config.deviceConfig.periodSizeInFrames = val_int(val_field(pConfig, val_id("periodSizeInFrames")));
+
 		// WASAPI Device Config
 		config.deviceConfig.wasapi.usage = ma_wasapi_usage_games;
 
 		// AAudio Device Config
 		config.deviceConfig.aaudio.usage = ma_aaudio_usage_game;
+
+		// Thread Priority Device Context Config
+		config.deviceConfig.contextConfig.threadPriority = ma_thread_priority_realtime;
 
 		// CoreAudio Device Context Config
 		config.deviceConfig.contextConfig.coreaudio.sessionCategory = ma_ios_session_category_playback;
@@ -1319,8 +1331,6 @@ namespace lime
 		config.listenerCount = val_int(val_field(pConfig, val_id("listenerCount")));
 		config.channels = val_int(val_field(pConfig, val_id("channels")));
 		config.sampleRate = val_int(val_field(pConfig, val_id("sampleRate")));
-		config.deviceConfig.periods = val_int(val_field(pConfig, val_id("periods")));
-		config.deviceConfig.periodSizeInFrames = val_int(val_field(pConfig, val_id("periodSizeInFrames")));
 		config.spatializationVolumeSmoothTimeInFrames = val_int(val_field(pConfig, val_id("spatializationVolumeSmoothTimeInFrames")));
 		config.spatializationVolumeSmoothTimeInMilliseconds = val_int(val_field(pConfig, val_id("spatializationVolumeSmoothTimeInMilliseconds")));
 		config.defaultVolumeSmoothTimeInFrames = val_int(val_field(pConfig, val_id("defaultVolumeSmoothTimeInFrames")));
