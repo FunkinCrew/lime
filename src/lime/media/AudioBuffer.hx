@@ -8,9 +8,12 @@ import lime.utils.ArrayBufferView;
 import lime.utils.Log;
 
 #if lime_howlerjs
-import haxe.crypto.Base64;
-
 import lime.media.howlerjs.Howl;
+
+#if (js && html5)
+import js.html.Blob;
+import js.html.URL;
+#end
 #elseif lime_miniaudio
 import lime.media.miniaudio.MAAudioBuffer;
 import lime.media.miniaudio.MAAudioRingBuffer;
@@ -83,6 +86,9 @@ class AudioBuffer
 	#if lime_howlerjs
 	@:noCompletion private var __srcHowl:Howl;
 	@:noCompletion private var __srcHowlerDefaultSprite:String;
+	#if (js && html5)
+	@:noCompletion private var __srcObjectURL:String;
+	#end
 	#elseif lime_miniaudio
 	@:noCompletion private static var __localThreadPool:ThreadPool;
 
@@ -164,9 +170,7 @@ class AudioBuffer
 		}
 
 		#if (js && html5 && lime_howlerjs)
-		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: true});
-		return audioBuffer;
+		return __createFromBytes(bytes, true);
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		return __createFromMADecoder(MADecoder.init_memory(bytes, MADecoderConfig.init(S16, 0, 0)), stream);
 		#else
@@ -215,11 +219,9 @@ class AudioBuffer
 		#if (js && html5 && lime_howlerjs)
 		var promise = new lime.app.Promise<AudioBuffer>();
 
-		var audioBuffer = new AudioBuffer();
+		var audioBuffer = __createFromBytes(bytes, false);
 
-		audioBuffer.__srcHowl = new Howl({src: ["data:" + __getCodec(bytes) + ";base64," + Base64.encode(bytes)], preload: false});
-
-		if (audioBuffer.__srcHowl != null)
+		if (audioBuffer != null && audioBuffer.__srcHowl != null)
 		{
 			audioBuffer.__srcHowl.on("load", function()
 			{
@@ -228,6 +230,7 @@ class AudioBuffer
 
 			audioBuffer.__srcHowl.on("loaderror", function(id, msg)
 			{
+				audioBuffer.dispose();
 				promise.error(msg);
 			});
 
@@ -235,7 +238,7 @@ class AudioBuffer
 		}
 		else
 		{
-			promise.error(null);
+			promise.error("Unsupported audio format");
 		}
 
 		return promise.future;
@@ -312,6 +315,28 @@ class AudioBuffer
 		return Future.withValue(null);
 		#end
 	}
+
+	#if (js && html5 && lime_howlerjs)
+	@:noCompletion private static function __createFromBytes(bytes:Bytes, preload:Bool):AudioBuffer
+	{
+		var codec = __getCodec(bytes);
+
+		if (codec == null)
+		{
+			return null;
+		}
+
+		var audioBuffer = new AudioBuffer();
+		audioBuffer.__srcObjectURL = URL.createObjectURL(new Blob([bytes.getData()], {type: codec}));
+		audioBuffer.__srcHowl = new Howl({
+			src: [audioBuffer.__srcObjectURL],
+			format: [codec.substr("audio/".length)],
+			preload: preload
+		});
+
+		return audioBuffer;
+	}
+	#end
 
 	@:noCompletion private static function __getCodec(bytes:Bytes):String
 	{
