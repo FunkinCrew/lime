@@ -17,6 +17,16 @@
 #include <ui/Gamepad.h>
 #include <ui/Gesture.h>
 #include <ui/Joystick.h>
+
+#ifdef LIME_BGFX
+#include <bindings/bgfx/BGFXBindings.h>
+#endif
+
+#ifdef HX_MACOS
+#include <unistd.h>
+#endif
+
+#include <cmath>
 #include <vector>
 
 namespace lime
@@ -62,6 +72,8 @@ namespace lime
 		SDL_SetHint(SDL_HINT_MAC_SCROLL_MOMENTUM, "1");
 
 		SDL_SetHint(SDL_HINT_VIDEO_MAC_FULLSCREEN_MENU_VISIBILITY, "1");
+
+		SDL_SetHint(SDL_HINT_VIDEO_METAL_AUTO_RESIZE_DRAWABLE, "0");
 #endif
 
 		Uint32 initFlags = SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK | SDL_INIT_SENSOR;
@@ -773,6 +785,9 @@ namespace lime
 				case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
 				case SDL_EVENT_WINDOW_RESIZED:
 					windowEvent.type = (event->type == SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED) ? WINDOW_SCALE_CHANGED : WINDOW_RESIZE;
+#ifdef LIME_BGFX
+					BGFXBindings::ResetWindow(0, 0);
+#endif
 #ifndef IPHONE
 					SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &windowEvent.width, &windowEvent.height);
 #else
@@ -813,6 +828,10 @@ namespace lime
 		SDL_SetiOSAnimationCallback(window->sdlWindow, frameRate, HandleAppAnimationCallback, NULL);
 
 		currentWindow = window;
+#endif
+
+#ifdef LIME_BGFX
+		BGFXBindings::defaultWindow = window->sdlWindow;
 #endif
 	}
 
@@ -915,6 +934,9 @@ namespace lime
 
 			case SDL_EVENT_DID_ENTER_FOREGROUND:
 			{
+#ifdef LIME_BGFX
+				BGFXBindings::ResetWindow(0, 0);
+#endif
 				WindowEvent windowEvent;
 				windowEvent.type = WINDOW_ACTIVATE;
 				WindowEvent::Dispatch(&windowEvent);
@@ -950,6 +972,10 @@ namespace lime
 			{
 				WindowEvent windowResizeEvent;
 				windowResizeEvent.type = WINDOW_RESIZE;
+#ifdef LIME_BGFX
+				BGFXBindings::ResetWindow(0, 0);
+#endif
+
 #ifndef IPHONE
 				SDL_GetWindowSize(SDL_GetWindowFromID(event->window.windowID), &windowResizeEvent.width, &windowResizeEvent.height);
 #else

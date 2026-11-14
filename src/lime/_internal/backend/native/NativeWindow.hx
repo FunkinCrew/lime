@@ -4,10 +4,13 @@ import haxe.io.Bytes;
 
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
+import lime.graphics.bgfx.BGFX;
+import lime.graphics.bgfx.BGFXScreenShot;
 import lime.graphics.opengl.GL;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.graphics.OpenGLRenderContext;
+import lime.graphics.PixelFormat;
 import lime.graphics.RenderContext;
 import lime.math.Rectangle;
 import lime.math.Vector2;
@@ -22,6 +25,7 @@ import lime.utils.UInt8Array;
 
 @:access(lime._internal.backend.native.NativeCFFI)
 @:access(lime._internal.backend.native.NativeOpenGLRenderContext)
+@:access(lime._internal.backend.native.NativeBGFXRenderContext)
 @:access(lime.app.Application)
 @:access(lime.graphics.opengl.GL)
 @:access(lime.graphics.OpenGLRenderContext)
@@ -38,6 +42,8 @@ class NativeWindow
 	private var frameRate:Float;
 	private var mouseLock:Bool;
 	private var parent:Window;
+
+	private static var nextReadPixelsID:Int = 0;
 
 	public function new(parent:Window)
 	{
@@ -137,6 +143,7 @@ class NativeWindow
 		var context = new RenderContext();
 		context.window = parent;
 
+		#if (lime_opengl || lime_opengles)
 		var gl = new NativeOpenGLRenderContext();
 
 		#if lime_opengl
@@ -158,6 +165,18 @@ class NativeWindow
 		{
 			GL.context = gl;
 		}
+		#elseif lime_bgfx
+		var bgfx = new NativeBGFXRenderContext();
+
+		context.bgfx = bgfx;
+		context.type = bgfx.type;
+		context.version = Std.string(bgfx.version);
+
+		if (BGFX.context == null)
+		{
+			BGFX.context = bgfx;
+		}
+		#end
 
 		contextAttributes.type = context.type;
 		context.attributes = contextAttributes;
@@ -421,6 +440,64 @@ class NativeWindow
 		}
 
 		return null;
+	}
+
+	public function readPixelsAsync(rect:Rectangle, callback:Image->Void):Void
+	{
+		switch (parent.context.type)
+		{
+			case BGFX:
+				#if (!macro && lime_cffi && lime_bgfx)
+				parent.context.bgfx.requestScreenShot(null, 'lime-read-pixels-${nextReadPixelsID++}', function(screenShot:BGFXScreenShot):Void
+				{
+					function processScreenshot():Image {
+						final format:Null<PixelFormat> = switch (screenShot.format)
+							{
+								case RGBA8: RGBA32;
+								case BGRA8: BGRA32;
+								default: null;
+							}
+
+						if (format == null) return null;
+
+						final width = screenShot.width;
+						final height = screenShot.height;
+						final stride = width * 4;
+						var data:UInt8Array;
+
+						if (screenShot.pitch == stride && !screenShot.yflip)
+						{
+							data = UInt8Array.fromBytes(screenShot.data);
+						}
+						else
+						{
+							data = new UInt8Array(stride * height);
+
+							for (y in 0...height)
+								data.buffer.blit(y * stride, screenShot.data, (screenShot.yflip ? height - 1 - y : y) * screenShot.pitch, stride);
+						}
+
+						var image = new Image(new ImageBuffer(data, width, height, 32, format));
+						if (format != RGBA32) image.format = RGBA32;
+
+						if (rect != null)
+						{
+							var cropped = new Image(null, 0, 0, Std.int(rect.width), Std.int(rect.height));
+							cropped.copyPixels(image, rect, new Vector2());
+							image = cropped;
+						}
+
+						return image;
+					}
+					callback(processScreenshot());
+				});
+				#else
+				callback(null);
+				#end
+
+			default:
+				callback(readPixels(rect));
+		}
 	}
 
 	public function render():Void

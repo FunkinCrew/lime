@@ -30,19 +30,19 @@ class DefineMacro
 				{
 					Compiler.define("mobile");
 
-					if (cffi)
-					{
-						Compiler.define("lime-opengles");
-					}
+					// if (cffi)
+					// {
+					// 	Compiler.define("lime-opengles");
+					// }
 				}
 				else
 				{
 					Compiler.define("desktop");
 
-					if (cffi)
-					{
-						Compiler.define("lime-opengl");
-					}
+					// if (cffi)
+					// {
+					// 	Compiler.define("lime-opengl");
+					// }
 				}
 
 				if (cffi)

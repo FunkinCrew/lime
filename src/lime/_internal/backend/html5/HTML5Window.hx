@@ -991,6 +991,11 @@ class HTML5Window
 
 	public function move(x:Int, y:Int):Void {}
 
+	public function readPixelsAsync(rect:Rectangle, callback:Image->Void):Void
+	{
+		callback(readPixels(rect));
+	}
+
 	public function readPixels(rect:Rectangle):Image
 	{
 		if (canvas != null)

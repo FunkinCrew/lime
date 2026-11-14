@@ -1,5 +1,6 @@
 -main ApplicationMain ::HAXE_FLAGS::
 -cpp ::CPP_DIR::
 -cp ::OUTPUT_DIR::/haxe
+--resource bgfx_shader.sh@bgfx_shader.sh
 --macro keep("::APP_MAIN::")
 -debug

@@ -245,6 +245,11 @@ class Window
 		return __backend.readPixels(rect);
 	}
 
+	public function readPixelsAsync(callback:Image->Void, rect:Rectangle = null):Void
+	{
+		__backend.readPixelsAsync(rect, callback);
+	}
+
 	public function resize(width:Int, height:Int):Void
 	{
 		if (width < __minWidth)
