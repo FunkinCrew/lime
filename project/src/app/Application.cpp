@@ -32,6 +32,10 @@ namespace lime
 
 	Application *Application::currentApplication = 0;
 
+#ifdef IPHONE
+	Window *Application::currentWindow = 0;
+#endif
+
 	FrameTime frameTime;
 	bool active = false;
 	bool background = false;
@@ -804,13 +808,24 @@ namespace lime
 #endif
 
 #ifdef IPHONE
-		SDL_SetiOSAnimationCallback(window->sdlWindow, 1, HandleAppAnimationCallback, NULL);
+		float frameRate = frameTime.target > 0 ? (float)(1e9 / (double)frameTime.target) : 0.0f;
+
+		SDL_SetiOSAnimationCallback(window->sdlWindow, frameRate, HandleAppAnimationCallback, NULL);
+
+		currentWindow = window;
 #endif
 	}
 
 	void Application::SetFrameRate(double frameRate)
 	{
 		frameTime.target = frameRate < 1 ? 0 : (Uint64)std::llround(1e9 / frameRate);
+
+#ifdef IPHONE
+		if (currentWindow)
+		{
+			SDL_SetiOSAnimationFrameRate(currentWindow->sdlWindow, frameRate < 1 ? 0.0f : (float)frameRate);
+		}
+#endif
 	}
 
 	void Application::RenderFrame()
@@ -832,6 +847,7 @@ namespace lime
 		frameTime.frame = frameTime.current - frameTime.previous;
 		frameTime.previous = frameTime.current;
 
+#ifndef IPHONE
 		// If the frame was faster than the target frame time, delay to cap FPS
 		if (frameTime.frame < frameTime.target)
 		{
@@ -843,6 +859,7 @@ namespace lime
 			frameTime.frame += frameTime.current - frameTime.previous;
 			frameTime.previous = frameTime.current;
 		}
+#endif
 	}
 
 	bool Application::Update()

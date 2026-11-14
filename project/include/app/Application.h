@@ -48,6 +48,10 @@ namespace lime
 #endif
 
 		static Application *currentApplication;
+
+#ifdef IPHONE
+		static Window *currentWindow;
+#endif
 	};
 
 } // namespace lime
