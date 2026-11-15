@@ -1463,6 +1463,12 @@ class NativeCFFI
 	private static var lime_ma_delay_node_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_delay_node_uninit", "ov", false));
 	private static var lime_ma_delay_node_set_decay = new cpp.Callable<cpp.Object->Float->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_delay_node_set_decay", "odv", false));
 	private static var lime_ma_delay_node_get_decay = new cpp.Callable<cpp.Object->Float>(cpp.Prime._loadPrime("lime", "lime_ma_delay_node_get_decay", "od", false));
+    private static var lime_ma_ltrim_node_init = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_ltrim_node_init", "ooo", false));
+    private static var lime_ma_ltrim_node_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_ltrim_node_uninit", "ov", false));
+    private static var lime_ma_reverb_node_init = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_reverb_node_init", "ooo", false));
+    private static var lime_ma_reverb_node_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_reverb_node_uninit", "ov", false));
+    private static var lime_ma_vocoder_node_init = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_vocoder_node_init", "ooo", false));
+    private static var lime_ma_vocoder_node_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_vocoder_node_uninit", "ov", false));
 	private static var lime_ma_engine_init = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_engine_init", "oo", false));
 	private static var lime_ma_engine_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_engine_uninit", "ov", false));
 	private static var lime_ma_engine_read_pcm_frames = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_engine_read_pcm_frames", "oooo", false));
@@ -1642,6 +1648,12 @@ class NativeCFFI
 	private static var lime_ma_delay_node_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_delay_node_uninit", 1);
 	private static var lime_ma_delay_node_set_decay:Dynamic->Float->Void = CFFI.load("lime", "lime_ma_delay_node_set_decay", 2);
 	private static var lime_ma_delay_node_get_decay:Dynamic->Float = CFFI.load("lime", "lime_ma_delay_node_get_decay", 1);
+    private static var lime_ma_ltrim_node_init:Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_ltrim_node_init", 2);
+    private static var lime_ma_ltrim_node_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_ltrim_node_uninit", 1);
+    private static var lime_ma_reverb_node_init:Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_reverb_node_init", 2);
+    private static var lime_ma_reverb_node_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_reverb_node_uninit", 1);
+    private static var lime_ma_vocoder_node_init:Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_vocoder_node_init", 2);
+    private static var lime_ma_vocoder_node_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_vocoder_node_uninit", 1);
 	private static var lime_ma_engine_init:Dynamic->Dynamic = CFFI.load("lime", "lime_ma_engine_init", 1);
 	private static var lime_ma_engine_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_engine_uninit", 1);
 	private static var lime_ma_engine_read_pcm_frames:Dynamic->Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_engine_read_pcm_frames", 3);

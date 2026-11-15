@@ -37,8 +37,9 @@ abstract MADelayNode(MANode) from MANode to MANode
 	{
 		#if (lime_cffi && lime_miniaudio && !macro)
 		return NativeCFFI.lime_ma_delay_node_get_decay(this);
-		#end
+		#else
 		return 0.0;
+		#end
 	}
 
 	@:noCompletion @:op(A == B) private static inline function equalsPointer(a:MADelayNode, b:MADelayNode):Bool

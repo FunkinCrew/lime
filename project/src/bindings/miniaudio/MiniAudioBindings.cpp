@@ -19,6 +19,11 @@
 #include <extras/decoders/libopus/miniaudio_libopus.c>
 #include <extras/decoders/libvorbis/miniaudio_libvorbis.c>
 
+// Aditional Effect Nodes
+#include <extras/nodes/ltrim/miniaudio_ltrim_node.c>
+#include <extras/nodes/reverb/miniaudio_reverb_node.c>
+#include <extras/nodes/vocoder/miniaudio_vocoder_node.c>
+
 namespace lime
 {
 
@@ -1270,6 +1275,152 @@ namespace lime
 		return ma_delay_node_get_decay((ma_delay_node *)val_data(pDelayNode));
 	}
 
+	void gc_ma_ltrim_node(value handle)
+	{
+		ma_ltrim_node *trimNode = (ma_ltrim_node *)val_data(handle);
+
+		if (trimNode)
+		{
+			ma_ltrim_node_uninit(trimNode, NULL);
+
+			delete trimNode;
+		}
+	}
+
+	value lime_ma_ltrim_node_init(value pNodeGraph, value pConfig)
+	{
+		ma_ltrim_node_config ltrimNodeConfig;
+
+		ltrimNodeConfig.nodeConfig = ma_node_config_init();
+		ltrimNodeConfig.channels = val_int(val_field(pConfig, val_id("channels")));
+		ltrimNodeConfig.threshold = val_number(val_field(pConfig, val_id("threshold")));
+
+		ma_ltrim_node *ltrimNode = new ma_ltrim_node();
+
+		if (ma_ltrim_node_init((ma_node_graph *)val_data(pNodeGraph), &ltrimNodeConfig, NULL, ltrimNode) != MA_SUCCESS)
+		{
+			delete ltrimNode;
+
+			return alloc_null();
+		}
+
+		return CFFIPointer(ltrimNode, gc_ma_ltrim_node);
+	}
+
+	void lime_ma_ltrim_node_uninit(value pTrimNode)
+	{
+		ma_ltrim_node *trimNode = (ma_ltrim_node *)val_data(pTrimNode);
+
+		if (trimNode)
+		{
+			ma_ltrim_node_uninit(trimNode, NULL);
+
+			free_abstract(pTrimNode);
+
+			delete trimNode;
+		}
+	}
+
+	void gc_ma_reverb_node(value handle)
+	{
+		ma_reverb_node *reverbNode = (ma_reverb_node *)val_data(handle);
+
+		if (reverbNode)
+		{
+			ma_reverb_node_uninit(reverbNode, NULL);
+
+			delete reverbNode;
+		}
+	}
+
+	value lime_ma_reverb_node_init(value pNodeGraph, value pConfig)
+	{
+		ma_reverb_node_config reverbNodeConfig;
+
+		reverbNodeConfig.nodeConfig = ma_node_config_init();
+		reverbNodeConfig.channels = val_int(val_field(pConfig, val_id("channels")));
+		reverbNodeConfig.sampleRate = val_int(val_field(pConfig, val_id("sampleRate")));
+		reverbNodeConfig.roomSize = val_number(val_field(pConfig, val_id("roomSize")));
+		reverbNodeConfig.damping = val_number(val_field(pConfig, val_id("damping")));
+		reverbNodeConfig.width = val_number(val_field(pConfig, val_id("width")));
+		reverbNodeConfig.wetVolume = val_number(val_field(pConfig, val_id("wetVolume")));
+		reverbNodeConfig.dryVolume = val_number(val_field(pConfig, val_id("dryVolume")));
+		reverbNodeConfig.mode = val_number(val_field(pConfig, val_id("mode")));
+
+		ma_reverb_node *reverbNode = new ma_reverb_node();
+
+		if (ma_reverb_node_init((ma_node_graph *)val_data(pNodeGraph), &reverbNodeConfig, NULL, reverbNode) != MA_SUCCESS)
+		{
+			delete reverbNode;
+
+			return alloc_null();
+		}
+
+		return CFFIPointer(reverbNode, gc_ma_reverb_node);
+	}
+
+	void lime_ma_reverb_node_uninit(value pReverbNode)
+	{
+		ma_reverb_node *reverbNode = (ma_reverb_node *)val_data(pReverbNode);
+
+		if (reverbNode)
+		{
+			ma_reverb_node_uninit(reverbNode, NULL);
+
+			free_abstract(pReverbNode);
+
+			delete reverbNode;
+		}
+	}
+
+	void gc_ma_vocoder_node(value handle)
+	{
+		ma_vocoder_node *vocoderNode = (ma_vocoder_node *)val_data(handle);
+
+		if (vocoderNode)
+		{
+			ma_vocoder_node_uninit(vocoderNode, NULL);
+
+			delete vocoderNode;
+		}
+	}
+
+	value lime_ma_vocoder_node_init(value pNodeGraph, value pConfig)
+	{
+		ma_vocoder_node_config vocoderNodeConfig;
+
+		vocoderNodeConfig.nodeConfig = ma_node_config_init();
+		vocoderNodeConfig.channels = val_int(val_field(pConfig, val_id("channels")));
+		vocoderNodeConfig.sampleRate = val_int(val_field(pConfig, val_id("sampleRate")));
+		vocoderNodeConfig.bands = val_int(val_field(pConfig, val_id("bands")));
+		vocoderNodeConfig.filtersPerBand = val_int(val_field(pConfig, val_id("filtersPerBand")));
+
+		ma_vocoder_node *vocoderNode = new ma_vocoder_node();
+
+		if (ma_vocoder_node_init((ma_node_graph *)val_data(pNodeGraph), &vocoderNodeConfig, NULL, vocoderNode) != MA_SUCCESS)
+		{
+			delete vocoderNode;
+
+			return alloc_null();
+		}
+
+		return CFFIPointer(vocoderNode, gc_ma_vocoder_node);
+	}
+
+	void lime_ma_vocoder_node_uninit(value pVocoderNode)
+	{
+		ma_vocoder_node *vocoderNode = (ma_vocoder_node *)val_data(pVocoderNode);
+
+		if (vocoderNode)
+		{
+			ma_vocoder_node_uninit(vocoderNode, NULL);
+
+			free_abstract(pVocoderNode);
+
+			delete vocoderNode;
+		}
+	}
+
 	void gc_ma_engine(value handle)
 	{
 		ma_engine *engine = (ma_engine *)val_data(handle);
@@ -2337,6 +2488,12 @@ namespace lime
 	DEFINE_PRIME1v(lime_ma_delay_node_uninit);
 	DEFINE_PRIME2v(lime_ma_delay_node_set_decay);
 	DEFINE_PRIME1(lime_ma_delay_node_get_decay);
+	DEFINE_PRIME2(lime_ma_ltrim_node_init);
+	DEFINE_PRIME1v(lime_ma_ltrim_node_uninit);
+	DEFINE_PRIME2(lime_ma_reverb_node_init);
+	DEFINE_PRIME1v(lime_ma_reverb_node_uninit);
+	DEFINE_PRIME2(lime_ma_vocoder_node_init);
+	DEFINE_PRIME1v(lime_ma_vocoder_node_uninit);
 	DEFINE_PRIME1(lime_ma_engine_init);
 	DEFINE_PRIME1v(lime_ma_engine_uninit);
 	DEFINE_PRIME3(lime_ma_engine_read_pcm_frames);
