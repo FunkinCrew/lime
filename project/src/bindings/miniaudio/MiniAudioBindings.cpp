@@ -9,9 +9,6 @@
 #if defined(IPHONE) || defined(HX_MACOS)
 #define MA_NO_RUNTIME_LINKING
 #endif
-#ifdef HX_WINDOWS
-#define MA_WASAPI_NO_LOW_LATENCY_SHARED_MODE
-#endif
 #if defined(ANDROID) && !defined(MA_NO_AAUDIO)
 #define MA_AAUDIO_MIN_ANDROID_SDK_VERSION 31
 #endif
@@ -1319,6 +1316,7 @@ namespace lime
 
 		// AAudio Device Config
 		config.deviceConfig.aaudio.usage = ma_aaudio_usage_game;
+		config.deviceConfig.aaudio.performanceMode = ma_aaudio_performance_mode_low_latency;
 
 		// Thread Priority Device Context Config
 		config.deviceConfig.contextConfig.threadPriority = ma_thread_priority_realtime;
