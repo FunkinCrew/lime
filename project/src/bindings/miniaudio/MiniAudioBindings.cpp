@@ -1470,6 +1470,7 @@ namespace lime
 
 		// AAudio Device Config
 		config.deviceConfig.aaudio.usage = ma_aaudio_usage_game;
+		config.deviceConfig.aaudio.contentType = ma_aaudio_content_type_sonification;
 		config.deviceConfig.aaudio.performanceMode = ma_aaudio_performance_mode_low_latency;
 
 		// Thread Priority Device Context Config
