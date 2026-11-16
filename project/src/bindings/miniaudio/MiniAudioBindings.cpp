@@ -1456,11 +1456,14 @@ namespace lime
 		// Disable Fixed Sized Callback (For optimization)
 		config.deviceConfig.noFixedSizedCallback = MA_TRUE;
 
-		// Periods Device Config
-		config.deviceConfig.periods = val_int(val_field(pConfig, val_id("periods")));
-
-		// Period Size Device Config
+		// Period Size In Frames Device Config
 		config.deviceConfig.periodSizeInFrames = val_int(val_field(pConfig, val_id("periodSizeInFrames")));
+
+		// Period Size In Milliseconds Device Config
+		config.deviceConfig.periodSizeInMilliseconds = val_int(val_field(pConfig, val_id("periodSizeInMilliseconds")));
+
+		// Periods Count Device Config
+		config.deviceConfig.periods = val_int(val_field(pConfig, val_id("periods")));
 
 		// WASAPI Device Config
 		config.deviceConfig.wasapi.usage = ma_wasapi_usage_games;
