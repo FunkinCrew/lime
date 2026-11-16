@@ -67,11 +67,9 @@ class AudioManager
 			config.pLog = log;
 			#end
 
-			#if !android
 			// Period Config
 			config.periodSizeInMilliseconds = 20;
 			config.periods = 4;
-			#end
 
 			#if ios
 			// Since we are doing our own modification to the `AVAudioSession` shared instance,
