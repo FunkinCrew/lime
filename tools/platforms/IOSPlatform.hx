@@ -21,6 +21,7 @@ import lime.tools.IconHelper;
 import lime.tools.ImageHelper;
 import lime.tools.LaunchStoryboard;
 import lime.tools.PlatformTarget;
+import lime.tools.PlistHelper;
 import lime.tools.ProjectHelper;
 
 import sys.FileSystem;
@@ -764,20 +765,7 @@ class IOSPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "ios/template", targetDirectory, context);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", projectDirectory + "/haxe", context, true, false);
 
-		var plistFiles = System.readDirectory(projectDirectory).filter(function(fileName:String)
-		{
-			return fileName.substr(-11) == "-Info.plist" && fileName != projectDirectory + "/" + project.app.file + "-Info.plist";
-		});
-
-		for (plist in plistFiles)
-		{
-			System.runCommand(project.workingDirectory, "/usr/libexec/PlistBuddy", [
-				"-x",
-				"-c",
-				"Merge '" + plist + "'",
-				projectDirectory + "/" + project.app.file + "-Info.plist"
-			]);
-		}
+		PlistHelper.mergePlists(project.workingDirectory, projectDirectory, projectDirectory + "/" + project.app.file + "-Info.plist");
 
 		System.mkdir(projectDirectory + "/lib");
 
