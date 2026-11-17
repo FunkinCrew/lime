@@ -1962,6 +1962,30 @@ namespace lime
 		}
 	}
 
+	void lime_ma_sound_set_on_pre_process_enabled(value pSound, bool enabled)
+	{
+		ma_sound *sound = (ma_sound *)val_data(pSound);
+
+		ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+
+		if (gc_roots && gc_roots->onPreProcess)
+		{
+			sound->notifications.onPreProcess = enabled ? ma_sound_notifications_on_pre_process : NULL;
+		}
+	}
+
+	void lime_ma_sound_set_on_process_enabled(value pSound, bool enabled)
+	{
+		ma_sound *sound = (ma_sound *)val_data(pSound);
+
+		ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+
+		if (gc_roots && gc_roots->onProcess)
+		{
+			sound->notifications.onProcess = enabled ? ma_sound_notifications_on_process : NULL;
+		}
+	}
+
 	value lime_ma_sound_get_engine(value pSound)
 	{
 		return CFFIPointer(ma_sound_get_engine((ma_sound *)val_data(pSound)), NULL);
@@ -2533,6 +2557,8 @@ namespace lime
 	DEFINE_PRIME2(lime_ma_engine_listener_is_enabled);
 	DEFINE_PRIME2(lime_ma_sound_init);
 	DEFINE_PRIME1v(lime_ma_sound_uninit);
+	DEFINE_PRIME2v(lime_ma_sound_set_on_pre_process_enabled);
+	DEFINE_PRIME2v(lime_ma_sound_set_on_process_enabled);
 	DEFINE_PRIME1(lime_ma_sound_get_engine);
 	DEFINE_PRIME1(lime_ma_sound_get_data_source);
 	DEFINE_PRIME1(lime_ma_sound_start);

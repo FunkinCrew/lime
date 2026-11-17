@@ -32,6 +32,20 @@ abstract MASound(MANode) from MANode to MANode
 		#end
 	}
 
+	public function set_on_pre_process_enabled(enabled:Bool):Void
+	{
+		#if (lime_cffi && lime_miniaudio && !macro)
+		NativeCFFI.lime_ma_sound_set_on_pre_process_enabled(this, enabled);
+		#end
+	}
+
+	public function set_on_process_enabled(enabled:Bool):Void
+	{
+		#if (lime_cffi && lime_miniaudio && !macro)
+		NativeCFFI.lime_ma_sound_set_on_process_enabled(this, enabled);
+		#end
+	}
+
 	public function get_engine():MAEngine
 	{
 		#if (lime_cffi && lime_miniaudio && !macro)

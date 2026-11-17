@@ -1504,6 +1504,8 @@ class NativeCFFI
 	private static var lime_ma_engine_listener_is_enabled = new cpp.Callable<cpp.Object->Int->Bool>(cpp.Prime._loadPrime("lime", "lime_ma_engine_listener_is_enabled", "oib", false));
 	private static var lime_ma_sound_init = new cpp.Callable<cpp.Object->cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_sound_init", "ooo", false));
 	private static var lime_ma_sound_uninit = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_sound_uninit", "ov", false));
+	private static var lime_ma_sound_set_on_pre_process_enabled = new cpp.Callable<cpp.Object->Bool->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_sound_set_on_pre_process_enabled", "obv", false));
+	private static var lime_ma_sound_set_on_process_enabled = new cpp.Callable<cpp.Object->Bool->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_ma_sound_set_on_process_enabled", "obv", false));
 	private static var lime_ma_sound_get_engine = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_sound_get_engine", "oo", false));
 	private static var lime_ma_sound_get_data_source = new cpp.Callable<cpp.Object->cpp.Object>(cpp.Prime._loadPrime("lime", "lime_ma_sound_get_data_source", "oo", false));
 	private static var lime_ma_sound_start = new cpp.Callable<cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_ma_sound_start", "oi", false));
@@ -1689,6 +1691,8 @@ class NativeCFFI
 	private static var lime_ma_engine_listener_is_enabled:Dynamic->Int->Bool = CFFI.load("lime", "lime_ma_engine_listener_is_enabled", 2);
 	private static var lime_ma_sound_init:Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_sound_init", 2);
     private static var lime_ma_sound_uninit:Dynamic->Void = CFFI.load("lime", "lime_ma_sound_uninit", 1);
+	private static var lime_ma_sound_set_on_pre_process_enabled:Dynamic->Bool->Void = CFFI.load("lime", "lime_ma_sound_set_on_pre_process_enabled", 2);
+	private static var lime_ma_sound_set_on_process_enabled:Dynamic->Bool->Void = CFFI.load("lime", "lime_ma_sound_set_on_process_enabled", 2);
     private static var lime_ma_sound_get_engine:Dynamic->Dynamic = CFFI.load("lime", "lime_ma_sound_get_engine", 1);
     private static var lime_ma_sound_get_data_source:Dynamic->Dynamic = CFFI.load("lime", "lime_ma_sound_get_data_source", 1);
     private static var lime_ma_sound_start:Dynamic->Int = CFFI.load("lime", "lime_ma_sound_start", 1);
