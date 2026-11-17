@@ -108,6 +108,12 @@ class NativeAudioSource
 
 				handle = MASound.init(AudioManager.engine, config);
 			}
+
+			if (handle != null)
+			{
+				handle.set_on_pre_process_enabled(preRingBuffers.length > 0);
+				handle.set_on_process_enabled(postRingBuffers.length > 0);
+			}
 		}
 	}
 
@@ -143,6 +149,11 @@ class NativeAudioSource
 			return;
 
 		preRingBuffers.push(rb);
+
+		if (handle != null)
+		{
+			handle.set_on_pre_process_enabled(true);
+		}
 	}
 
 	public function removePreRingBuffer(rb:MAAudioRingBuffer):Void
@@ -151,6 +162,11 @@ class NativeAudioSource
 			return;
 
 		preRingBuffers.remove(rb);
+
+		if (handle != null)
+		{
+			handle.set_on_pre_process_enabled(preRingBuffers.length > 0);
+		}
 	}
 
 	public function addPostRingBuffer(rb:MAAudioRingBuffer):Void
@@ -159,6 +175,11 @@ class NativeAudioSource
 			return;
 
 		postRingBuffers.push(rb);
+
+		if (handle != null)
+		{
+			handle.set_on_process_enabled(true);
+		}
 	}
 
 	public function removePostRingBuffer(rb:MAAudioRingBuffer):Void
@@ -167,6 +188,11 @@ class NativeAudioSource
 			return;
 
 		postRingBuffers.remove(rb);
+
+		if (handle != null)
+		{
+			handle.set_on_process_enabled(postRingBuffers.length > 0);
+		}
 	}
 
 	// Event Handlers
