@@ -67,10 +67,6 @@ class AudioManager
 			config.pLog = log;
 			#end
 
-			// Period Config
-			config.periodSizeInMilliseconds = 20;
-			config.periods = 4;
-
 			#if ios
 			// Since we are doing our own modification to the `AVAudioSession` shared instance,
 			// we should automatically start the `ma_engine` instance, only after it's initialized,
