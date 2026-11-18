@@ -1,3 +1,4 @@
+#include <SDL3/SDL.h>
 #include <system/CFFIPointer.h>
 #include <utils/Bytes.h>
 #include <utils/File.h>
@@ -1476,13 +1477,15 @@ namespace lime
 	{
 		AutoGCRoot *root = (AutoGCRoot *)pUserData;
 
-		if (root)
+		value callback = root ? root->get() : NULL;
+
+		if (!val_is_null(callback))
 		{
 			int base = 0;
 
 			gc_set_top_of_stack(&base, true);
 
-			val_call2(root->get(), CFFIPointer(pFramesOut, NULL), alloc_int64(frameCount));
+			val_call2(callback, CFFIPointer(pFramesOut, NULL), alloc_int64(frameCount));
 
 			gc_set_top_of_stack(0, true);
 		}
@@ -1778,15 +1781,19 @@ namespace lime
 
 	void ma_sound_notifications_on_at_end(void *pUserData, ma_sound *pSound)
 	{
-		AutoGCRoot *root = (AutoGCRoot *)(((ma_sound_notifications_gc_roots *)pUserData)->onAtEnd);
+		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
 
-		if (root)
+		AutoGCRoot *root = roots ? roots->onAtEnd : nullptr;
+
+		value callback = root ? root->get() : NULL;
+
+		if (!val_is_null(callback))
 		{
 			int base = 0;
 
 			gc_set_top_of_stack(&base, true);
 
-			val_call1(root->get(), CFFIPointer(pSound, NULL));
+			val_call1(callback, CFFIPointer(pSound, NULL));
 
 			gc_set_top_of_stack(0, true);
 		}
@@ -1794,15 +1801,19 @@ namespace lime
 
 	void ma_sound_notifications_on_pre_process(void *pUserData, ma_sound *pSound, float *pFrames, ma_uint64 frameCount)
 	{
-		AutoGCRoot *root = (AutoGCRoot *)(((ma_sound_notifications_gc_roots *)pUserData)->onPreProcess);
+		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
 
-		if (root)
+		AutoGCRoot *root = roots ? roots->onPreProcess : nullptr;
+
+		value callback = root ? root->get() : NULL;
+
+		if (!val_is_null(callback))
 		{
 			int base = 0;
 
 			gc_set_top_of_stack(&base, true);
 
-			val_call3(root->get(), CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
+			val_call3(callback, CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
 
 			gc_set_top_of_stack(0, true);
 		}
@@ -1810,15 +1821,19 @@ namespace lime
 
 	void ma_sound_notifications_on_process(void *pUserData, ma_sound *pSound, float *pFrames, ma_uint64 frameCount)
 	{
-		AutoGCRoot *root = (AutoGCRoot *)(((ma_sound_notifications_gc_roots *)pUserData)->onProcess);
+		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
 
-		if (root)
+		AutoGCRoot *root = roots ? roots->onProcess : nullptr;
+
+		value callback = root ? root->get() : NULL;
+
+		if (!val_is_null(callback))
 		{
 			int base = 0;
 
 			gc_set_top_of_stack(&base, true);
 
-			val_call3(root->get(), CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
+			val_call3(callback, CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
 
 			gc_set_top_of_stack(0, true);
 		}
