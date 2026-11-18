@@ -36,19 +36,58 @@ namespace lime
 		return result;
 	}
 
+	struct ma_log_job
+	{
+		AutoGCRoot *root;
+		int level;
+		char *message;
+	};
+
+	static void ma_log_job_free(ma_log_job *job)
+	{
+		SDL_free(job->message);
+		SDL_free(job);
+	}
+
+	static void ma_log_job_run(void *data)
+	{
+		ma_log_job *job = (ma_log_job *)data;
+
+		value callback = job->root->get();
+
+		if (!val_is_null(callback))
+		{
+			val_call2(callback, alloc_int(job->level), alloc_string(job->message));
+		}
+
+		ma_log_job_free(job);
+	}
+
 	void lime_ma_log_callback_proc(void *pUserData, ma_uint32 level, const char *pMessage)
 	{
 		AutoGCRoot *root = (AutoGCRoot *)pUserData;
 
-		if (root)
+		value callback = root ? root->get() : NULL;
+
+		if (!callback || val_is_null(callback))
 		{
-			int base = 0;
+			return;
+		}
 
-			gc_set_top_of_stack(&base, true);
+		ma_log_job *job = (ma_log_job *)SDL_malloc(sizeof(ma_log_job));
 
-			val_call2(root->get(), alloc_int(level), alloc_string(pMessage));
+		if (!job)
+		{
+			return;
+		}
 
-			gc_set_top_of_stack(0, true);
+		job->root = root;
+		job->level = (int)level;
+		job->message = SDL_strdup(pMessage ? pMessage : "");
+
+		if (!SDL_RunOnMainThread(ma_log_job_run, job, false))
+		{
+			ma_log_job_free(job);
 		}
 	}
 
