@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *RenderEvent::callback = 0;
-	ValuePointer *RenderEvent::eventObject = 0;
+	AutoGCRoot *RenderEvent::callback = 0;
+	AutoGCRoot *RenderEvent::eventObject = 0;
 
 	RenderEvent::RenderEvent()
 	{
@@ -16,11 +16,11 @@ namespace lime
 	{
 		if (RenderEvent::callback)
 		{
-			value object = (value)RenderEvent::eventObject->Get();
+			value object = RenderEvent::eventObject->get();
 
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 
-			RenderEvent::callback->Call();
+			val_call0(RenderEvent::callback->get());
 		}
 	}
 

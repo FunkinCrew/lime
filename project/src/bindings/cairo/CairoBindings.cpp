@@ -6,7 +6,6 @@
 #include <system/CFFI.h>
 #include <system/CFFIPointer.h>
 #include <system/Mutex.h>
-#include <system/ValuePointer.h>
 #include <text/Font.h>
 
 namespace lime
@@ -75,7 +74,7 @@ namespace lime
 
 	void gc_user_data(void *data)
 	{
-		ValuePointer *reference = (ValuePointer *)data;
+		AutoGCRoot *reference = (AutoGCRoot *)data;
 		delete reference;
 	}
 
@@ -201,7 +200,7 @@ namespace lime
 		Font *font = (Font *)val_data(face);
 		cairo_font_face_t *cairoFont = cairo_ft_font_face_create_for_ft_face((FT_Face)font->face, flags);
 
-		ValuePointer *fontReference = new ValuePointer(face);
+		AutoGCRoot *fontReference = new AutoGCRoot(face);
 		cairo_font_face_set_user_data(cairoFont, &userData, fontReference, gc_user_data);
 
 		value object = CFFIPointer(cairoFont, gc_cairo_font_face);
@@ -721,11 +720,11 @@ namespace lime
 
 			if (type == CAIRO_FONT_TYPE_FT)
 			{
-				ValuePointer *fontReference = (ValuePointer *)cairo_font_face_get_user_data(face, &userData);
+				AutoGCRoot *fontReference = (AutoGCRoot *)cairo_font_face_get_user_data(face, &userData);
 
 				if (fontReference)
 				{
-					((Font *)val_data((value)fontReference->Get()))->SetSize(size);
+					((Font *)val_data((value)fontReference->get()))->SetSize(size);
 				}
 			}
 		}

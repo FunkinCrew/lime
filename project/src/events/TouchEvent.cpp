@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *TouchEvent::callback = 0;
-	ValuePointer *TouchEvent::eventObject = 0;
+	AutoGCRoot *TouchEvent::callback = 0;
+	AutoGCRoot *TouchEvent::eventObject = 0;
 
 	TouchEvent::TouchEvent()
 	{
@@ -24,7 +24,7 @@ namespace lime
 	{
 		if (TouchEvent::callback)
 		{
-			value object = (value)TouchEvent::eventObject->Get();
+			value object = TouchEvent::eventObject->get();
 
 			alloc_field(object, val_id("device"), alloc_int(event->device));
 			alloc_field(object, val_id("dx"), alloc_float(event->dx));
@@ -36,7 +36,7 @@ namespace lime
 			alloc_field(object, val_id("y"), alloc_float(event->y));
 			alloc_field(object, val_id("timestamp"), alloc_float(event->timestamp));
 
-			TouchEvent::callback->Call();
+			val_call0(TouchEvent::callback->get());
 		}
 	}
 

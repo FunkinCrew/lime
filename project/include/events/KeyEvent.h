@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -21,8 +20,8 @@ namespace lime
 		int windowID;
 		double timestamp;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		KeyEvent();
 

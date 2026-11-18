@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -30,8 +29,8 @@ namespace lime
 		double momentumScrollX;
 		double momentumScrollY;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		GestureEvent();
 

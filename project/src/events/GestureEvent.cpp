@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *GestureEvent::callback = 0;
-	ValuePointer *GestureEvent::eventObject = 0;
+	AutoGCRoot *GestureEvent::callback = 0;
+	AutoGCRoot *GestureEvent::eventObject = 0;
 
 	GestureEvent::GestureEvent()
 	{
@@ -28,7 +28,7 @@ namespace lime
 	{
 		if (GestureEvent::callback)
 		{
-			value object = (value)GestureEvent::eventObject->Get();
+			value object = GestureEvent::eventObject->get();
 
 			alloc_field(object, val_id("x"), alloc_float(event->x));
 			alloc_field(object, val_id("y"), alloc_float(event->y));
@@ -44,7 +44,7 @@ namespace lime
 			alloc_field(object, val_id("momentumScrollX"), alloc_float(event->momentumScrollX));
 			alloc_field(object, val_id("momentumScrollY"), alloc_float(event->momentumScrollY));
 
-			GestureEvent::callback->Call();
+			val_call0(GestureEvent::callback->get());
 		}
 	}
 } // namespace lime

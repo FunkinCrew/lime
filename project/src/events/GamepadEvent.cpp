@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *GamepadEvent::callback = 0;
-	ValuePointer *GamepadEvent::eventObject = 0;
+	AutoGCRoot *GamepadEvent::callback = 0;
+	AutoGCRoot *GamepadEvent::eventObject = 0;
 
 	GamepadEvent::GamepadEvent()
 	{
@@ -21,7 +21,7 @@ namespace lime
 	{
 		if (GamepadEvent::callback)
 		{
-			value object = (value)GamepadEvent::eventObject->Get();
+			value object = GamepadEvent::eventObject->get();
 
 			alloc_field(object, val_id("axis"), alloc_int(event->axis));
 			alloc_field(object, val_id("button"), alloc_int(event->button));
@@ -30,7 +30,7 @@ namespace lime
 			alloc_field(object, val_id("axisValue"), alloc_float(event->axisValue));
 			alloc_field(object, val_id("timestamp"), alloc_float(event->timestamp));
 
-			GamepadEvent::callback->Call();
+			val_call0(GamepadEvent::callback->get());
 		}
 	}
 

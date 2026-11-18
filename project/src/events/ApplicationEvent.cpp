@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *ApplicationEvent::callback = 0;
-	ValuePointer *ApplicationEvent::eventObject = 0;
+	AutoGCRoot *ApplicationEvent::callback = 0;
+	AutoGCRoot *ApplicationEvent::eventObject = 0;
 
 	ApplicationEvent::ApplicationEvent()
 	{
@@ -17,12 +17,12 @@ namespace lime
 	{
 		if (ApplicationEvent::callback)
 		{
-			value object = (value)ApplicationEvent::eventObject->Get();
+			value object = ApplicationEvent::eventObject->get();
 
 			alloc_field(object, val_id("deltaTime"), alloc_float(event->deltaTime));
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 
-			ApplicationEvent::callback->Call();
+			val_call0(ApplicationEvent::callback->get());
 		}
 	}
 

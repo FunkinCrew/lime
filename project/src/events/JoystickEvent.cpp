@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *JoystickEvent::callback = 0;
-	ValuePointer *JoystickEvent::eventObject = 0;
+	AutoGCRoot *JoystickEvent::callback = 0;
+	AutoGCRoot *JoystickEvent::eventObject = 0;
 
 	JoystickEvent::JoystickEvent()
 	{
@@ -21,7 +21,7 @@ namespace lime
 	{
 		if (JoystickEvent::callback)
 		{
-			value object = (value)JoystickEvent::eventObject->Get();
+			value object = JoystickEvent::eventObject->get();
 
 			alloc_field(object, val_id("id"), alloc_int(event->id));
 			alloc_field(object, val_id("index"), alloc_int(event->index));
@@ -30,7 +30,7 @@ namespace lime
 			alloc_field(object, val_id("x"), alloc_float(event->x));
 			alloc_field(object, val_id("y"), alloc_float(event->y));
 
-			JoystickEvent::callback->Call();
+			val_call0(JoystickEvent::callback->get());
 		}
 	}
 

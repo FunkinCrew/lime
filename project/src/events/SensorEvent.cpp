@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *SensorEvent::callback = 0;
-	ValuePointer *SensorEvent::eventObject = 0;
+	AutoGCRoot *SensorEvent::callback = 0;
+	AutoGCRoot *SensorEvent::eventObject = 0;
 
 	SensorEvent::SensorEvent()
 	{
@@ -20,7 +20,7 @@ namespace lime
 	{
 		if (SensorEvent::callback)
 		{
-			value object = (value)SensorEvent::eventObject->Get();
+			value object = SensorEvent::eventObject->get();
 
 			alloc_field(object, val_id("id"), alloc_int(event->id));
 			alloc_field(object, val_id("type"), alloc_int(event->type));
@@ -28,7 +28,7 @@ namespace lime
 			alloc_field(object, val_id("y"), alloc_float(event->y));
 			alloc_field(object, val_id("z"), alloc_float(event->z));
 
-			SensorEvent::callback->Call();
+			val_call0(SensorEvent::callback->get());
 		}
 	}
 

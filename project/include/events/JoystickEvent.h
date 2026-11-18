@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -25,8 +24,8 @@ namespace lime
 		double x;
 		double y;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		JoystickEvent();
 

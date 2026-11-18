@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *ClipboardEvent::callback = 0;
-	ValuePointer *ClipboardEvent::eventObject = 0;
+	AutoGCRoot *ClipboardEvent::callback = 0;
+	AutoGCRoot *ClipboardEvent::eventObject = 0;
 
 	ClipboardEvent::ClipboardEvent()
 	{
@@ -16,11 +16,11 @@ namespace lime
 	{
 		if (ClipboardEvent::callback)
 		{
-			value object = (value)ClipboardEvent::eventObject->Get();
+			value object = ClipboardEvent::eventObject->get();
 
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 
-			ClipboardEvent::callback->Call();
+			val_call0(ClipboardEvent::callback->get());
 		}
 	}
 

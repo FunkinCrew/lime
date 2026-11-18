@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -24,8 +23,8 @@ namespace lime
 		double axisValue;
 		double timestamp;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		GamepadEvent();
 

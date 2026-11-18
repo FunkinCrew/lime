@@ -219,7 +219,6 @@
 		<file name="src/system/JNI.cpp" if="android" />
 		<file name="src/system/Mutex.cpp" />
 		<file name="src/system/System.cpp" />
-		<file name="src/system/ValuePointer.cpp" />
 		<file name="src/ui/Cursor.cpp" />
 		<file name="src/ui/FileDialog.cpp" />
 		<file name="src/ui/Gamepad.cpp" />

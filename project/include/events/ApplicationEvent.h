@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -18,8 +17,8 @@ namespace lime
 		double deltaTime;
 		ApplicationEventType type;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		ApplicationEvent();
 

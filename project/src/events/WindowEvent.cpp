@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *WindowEvent::callback = 0;
-	ValuePointer *WindowEvent::eventObject = 0;
+	AutoGCRoot *WindowEvent::callback = 0;
+	AutoGCRoot *WindowEvent::eventObject = 0;
 
 	WindowEvent::WindowEvent()
 	{
@@ -22,7 +22,7 @@ namespace lime
 	{
 		if (WindowEvent::callback)
 		{
-			value object = (value)WindowEvent::eventObject->Get();
+			value object = WindowEvent::eventObject->get();
 
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 			alloc_field(object, val_id("windowID"), alloc_int(event->windowID));
@@ -45,7 +45,7 @@ namespace lime
 					break;
 			}
 
-			WindowEvent::callback->Call();
+			val_call0(WindowEvent::callback->get());
 		}
 	}
 

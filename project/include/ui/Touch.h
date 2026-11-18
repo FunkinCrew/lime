@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/ValuePointer.h>
+#include <system/CFFI.h>
 
 namespace lime
 {

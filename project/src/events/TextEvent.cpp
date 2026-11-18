@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *TextEvent::callback = 0;
-	ValuePointer *TextEvent::eventObject = 0;
+	AutoGCRoot *TextEvent::callback = 0;
+	AutoGCRoot *TextEvent::eventObject = 0;
 
 	TextEvent::TextEvent()
 	{
@@ -19,7 +19,7 @@ namespace lime
 	{
 		if (TextEvent::callback)
 		{
-			value object = (value)TextEvent::eventObject->Get();
+			value object = TextEvent::eventObject->get();
 
 			if (event->type != TEXT_INPUT)
 			{
@@ -31,7 +31,7 @@ namespace lime
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 			alloc_field(object, val_id("windowID"), alloc_int(event->windowID));
 
-			TextEvent::callback->Call();
+			val_call0(TextEvent::callback->get());
 		}
 	}
 

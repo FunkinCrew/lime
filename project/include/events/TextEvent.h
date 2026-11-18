@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <system/CFFI.h>
-#include <system/ValuePointer.h>
 
 namespace lime
 {
@@ -22,8 +21,8 @@ namespace lime
 		TextEventType type;
 		int windowID;
 
-		static ValuePointer *callback;
-		static ValuePointer *eventObject;
+		static AutoGCRoot *callback;
+		static AutoGCRoot *eventObject;
 
 		TextEvent();
 

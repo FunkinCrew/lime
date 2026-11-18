@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *DropEvent::callback = 0;
-	ValuePointer *DropEvent::eventObject = 0;
+	AutoGCRoot *DropEvent::callback = 0;
+	AutoGCRoot *DropEvent::eventObject = 0;
 
 	DropEvent::DropEvent()
 	{
@@ -21,7 +21,7 @@ namespace lime
 	{
 		if (DropEvent::callback)
 		{
-			value object = (value)DropEvent::eventObject->Get();
+			value object = DropEvent::eventObject->get();
 
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 			alloc_field(object, val_id("windowID"), alloc_int(event->windowID));
@@ -32,7 +32,7 @@ namespace lime
 			alloc_field(object, val_id("data"), event->data ? alloc_string((const char *)event->data) : alloc_null());
 			alloc_field(object, val_id("source"), event->source ? alloc_string((const char *)event->source) : alloc_null());
 
-			DropEvent::callback->Call();
+			val_call0(DropEvent::callback->get());
 		}
 	}
 

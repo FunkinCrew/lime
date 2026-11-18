@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *OrientationEvent::callback = 0;
-	ValuePointer *OrientationEvent::eventObject = 0;
+	AutoGCRoot *OrientationEvent::callback = 0;
+	AutoGCRoot *OrientationEvent::eventObject = 0;
 
 	OrientationEvent::OrientationEvent()
 	{
@@ -18,13 +18,13 @@ namespace lime
 	{
 		if (OrientationEvent::callback)
 		{
-			value object = (value)OrientationEvent::eventObject->Get();
+			value object = OrientationEvent::eventObject->get();
 
 			alloc_field(object, val_id("orientation"), alloc_int(event->orientation));
 			alloc_field(object, val_id("display"), alloc_int(event->display));
 			alloc_field(object, val_id("type"), alloc_int(event->type));
 
-			OrientationEvent::callback->Call();
+			val_call0(OrientationEvent::callback->get());
 		}
 	}
 

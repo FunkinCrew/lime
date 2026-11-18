@@ -4,8 +4,8 @@
 namespace lime
 {
 
-	ValuePointer *KeyEvent::callback = 0;
-	ValuePointer *KeyEvent::eventObject = 0;
+	AutoGCRoot *KeyEvent::callback = 0;
+	AutoGCRoot *KeyEvent::eventObject = 0;
 
 	KeyEvent::KeyEvent()
 	{
@@ -20,7 +20,7 @@ namespace lime
 	{
 		if (KeyEvent::callback)
 		{
-			value object = (value)KeyEvent::eventObject->Get();
+			value object = KeyEvent::eventObject->get();
 
 			alloc_field(object, val_id("keyCode"), alloc_float(event->keyCode));
 			alloc_field(object, val_id("modifier"), alloc_int(event->modifier));
@@ -28,7 +28,7 @@ namespace lime
 			alloc_field(object, val_id("windowID"), alloc_int(event->windowID));
 			alloc_field(object, val_id("timestamp"), alloc_float(event->timestamp));
 
-			KeyEvent::callback->Call();
+			val_call0(KeyEvent::callback->get());
 		}
 	}
 
