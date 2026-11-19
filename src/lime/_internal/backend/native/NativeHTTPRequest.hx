@@ -75,7 +75,7 @@ class NativeHTTPRequest
 		{
 			if (httpThreadPool == null)
 			{
-				httpThreadPool = new ThreadPool(0, 4);
+				httpThreadPool = new ThreadPool(0, 1);
 				httpThreadPool.onProgress.add(httpThreadPool_onProgress);
 				httpThreadPool.onComplete.add(httpThreadPool_onComplete);
 				httpThreadPool.onError.add(httpThreadPool_onError);
