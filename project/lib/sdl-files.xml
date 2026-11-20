@@ -107,17 +107,24 @@
             <section if="linux">
 
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_dbus.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_evdev.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_evdev_capabilities.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_evdev_kbd.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_evdev.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_fcitx.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ibus.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ime.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_progressbar.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_sysfs.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_system_theme.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_threadprio.c" />
-                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_udev.c" />
                 <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_ubuntu_touch.c" />
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/linux/SDL_udev.c" />
+
+            </section>
+
+            <section if="macos">
+
+                <file name="${NATIVE_TOOLKIT_PATH}/sdl/src/core/macos/SDL_ioreg.c" />
 
             </section>
 
@@ -641,7 +648,9 @@
 
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/alpha-modifier-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/color-management-v1-client-protocol.c" />
+                        <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/commit-timing-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/cursor-shape-v1-client-protocol.c" />
+                        <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/fifo-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/fractional-scale-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/frog-color-management-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/idle-inhibit-unstable-v1-client-protocol.c" />
@@ -650,6 +659,7 @@
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/pointer-constraints-unstable-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/pointer-gestures-unstable-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/pointer-warp-v1-client-protocol.c" />
+                        <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/presentation-time-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/primary-selection-unstable-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/relative-pointer-unstable-v1-client-protocol.c" />
                         <file name="${NATIVE_TOOLKIT_PATH}/sdl/wayland-generated-protocols/single-pixel-buffer-v1-client-protocol.c" />

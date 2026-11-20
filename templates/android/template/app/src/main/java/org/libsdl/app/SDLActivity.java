@@ -488,6 +488,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         mSingleton = this;
         SDL.setContext(this);
 
+        // Set the manifest environment variables now, on the UI thread, before the first frame.
+        // Adding a new environment variable reallocates the environment, which can crash other
+        // threads reading it at the same time, e.g. graphics drivers initializing EGL on the
+        // render thread.
+        getManifestEnvironmentVariables();
+
         if (SDL.isControllerManagerReady()) {
             SDLControllerManager.initializeDeviceListener();
         }
@@ -1573,13 +1579,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
 
     static class ShowTextInputTask implements Runnable {
-        /*
-         * This is used to regulate the pan&scan method to have some offset from
-         * the bottom edge of the input region and the top edge of an input
-         * method (soft keyboard)
-         */
-        static final int HEIGHT_PADDING = 15;
-
         public int input_type;
         public int x, y, w, h;
 
@@ -1594,8 +1593,8 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             if (this.w <= 0) {
                 this.w = 1;
             }
-            if (this.h + HEIGHT_PADDING <= 0) {
-                this.h = 1 - HEIGHT_PADDING;
+            if (this.h <= 0) {
+                this.h = 1;
             }
         }
 
@@ -1605,7 +1604,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 return;
             }
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(w, h + HEIGHT_PADDING);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(w, h);
             params.leftMargin = x;
             params.topMargin = y;
 
