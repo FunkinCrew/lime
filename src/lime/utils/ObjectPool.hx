@@ -144,7 +144,7 @@ import haxe.ds.ObjectMap;
 	public function release(object:T):Void
 	{
 		#if debug
-		if (object == null || !__pool.exists(object))
+		if (!__pool.exists(object))
 		{
 			Log.error("Object is not a member of the pool");
 		}
@@ -153,6 +153,11 @@ import haxe.ds.ObjectMap;
 			Log.error("Object has already been released");
 		}
 		#end
+
+		if (object == null)
+		{
+			return;
+		}
 
 		activeObjects--;
 
