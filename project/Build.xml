@@ -126,7 +126,11 @@
 			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/miniaudio" />
 			<compilerflag value="-DLIME_MINIAUDIO" />
 
-			<file name="src/bindings/miniaudio/MiniAudioBindings.cpp" />
+			<file name="src/bindings/miniaudio/MiniAudioBindings.cpp">
+
+				<depend name="${NATIVE_TOOLKIT_PATH}/miniaudio/miniaudio.h" />
+
+			</file>
 
 		</section>
 
