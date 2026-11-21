@@ -1619,7 +1619,7 @@ class NativeCFFI
 	private static var lime_ma_audio_ring_buffer_write_pcm_frames:Dynamic->Dynamic->Int->Int = CFFI.load("lime", "lime_ma_audio_ring_buffer_write_pcm_frames", 3);
 	private static var lime_ma_audio_ring_buffer_read_pcm_frames:Dynamic->Dynamic->Int->Int = CFFI.load("lime", "lime_ma_audio_ring_buffer_read_pcm_frames", 3);
 	private static var lime_ma_audio_ring_buffer_get_length_in_pcm_frames:Dynamic->Int = CFFI.load("lime", "lime_ma_audio_ring_buffer_get_length_in_pcm_frames", 1);
-	private static var lime_ma_node_attach_output_bus:Dynamic->Int->Dynamic->Int->Int = CFFI.load("lime", "lime_ma_engine_init", 1);
+	private static var lime_ma_node_attach_output_bus:Dynamic->Int->Dynamic->Int->Int = CFFI.load("lime", "lime_ma_node_attach_output_bus", 4);
 	private static var lime_ma_node_detach_output_bus:Dynamic->Int->Int = CFFI.load("lime", "lime_ma_node_detach_output_bus", 2);
 	private static var lime_ma_node_detach_all_output_buses:Dynamic->Int = CFFI.load("lime", "lime_ma_node_detach_all_output_buses", 1);
 	private static var lime_ma_biquad_node_init:Dynamic->Dynamic->Dynamic = CFFI.load("lime", "lime_ma_biquad_node_init", 2);
