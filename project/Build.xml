@@ -98,7 +98,7 @@
 
 		<section if="LIME_LZMA">
 
-			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/lzma/src" />
+			<compilerflag value="-I${NATIVE_TOOLKIT_PATH}/lzma" />
 			<compilerflag value="-DLIME_LZMA" />
 
 			<file name="src/utils/compress/LZMA.cpp" />
