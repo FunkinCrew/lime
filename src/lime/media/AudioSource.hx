@@ -52,9 +52,9 @@ class AudioSource
 	public var pan(get, set):Float;
 
 	/**
-		The number of times the audio will loop. A value of `0` means the audio will not loop.
+		Whether the audio should loop during playback.
 	**/
-	public var loops(get, set):Int;
+	public var loop(get, set):Bool;
 
 	/**
 		Whether the audio source is currently playing or not.
@@ -188,14 +188,14 @@ class AudioSource
 		return __backend.setPan(value);
 	}
 
-	@:noCompletion private function get_loops():Int
+	@:noCompletion private function get_loop():Bool
 	{
-		return __backend.getLoops();
+		return __backend.getLoop();
 	}
 
-	@:noCompletion private function set_loops(value:Int):Int
+	@:noCompletion private function set_loop(value:Bool):Bool
 	{
-		return __backend.setLoops(value);
+		return __backend.setLoop(value);
 	}
 
 	@:noCompletion private function get_playing():Bool

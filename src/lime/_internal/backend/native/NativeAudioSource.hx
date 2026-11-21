@@ -22,7 +22,6 @@ class NativeAudioSource
 	private var postRingBuffers:Array<MAAudioRingBuffer> = [];
 	private var buffer:MAAudioBuffer;
 	private var handle:MASound;
-	private var loops:Int = 0;
 	private var parent:AudioSource;
 
 	public function new(parent:AudioSource):Void
@@ -203,14 +202,6 @@ class NativeAudioSource
 
 	private function sound_atEnd(_):Void
 	{
-		if (loops > 0)
-		{
-			loops--;
-			stop();
-			play();
-			return;
-		}
-
 		MainLoop.runInMainThread(function():Void
 		{
 			parent.onComplete.dispatch();
@@ -309,14 +300,19 @@ class NativeAudioSource
 		return value;
 	}
 
-	public function getLoops():Int
+	public function getLoop():Bool
 	{
-		return loops;
+		return handle != null ? handle.is_looping() : false;
 	}
 
-	public function setLoops(value:Int):Int
+	public function setLoop(value:Bool):Bool
 	{
-		return loops = value;
+		if (handle != null)
+		{
+			handle.set_looping(value);
+		}
+
+		return value;
 	}
 
 	public function getPlaying():Bool
