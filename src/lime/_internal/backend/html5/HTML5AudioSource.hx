@@ -10,7 +10,6 @@ class HTML5AudioSource
 {
 	private var handle:Int = -1;
 	private var playPending:Bool = false;
-	private var loops:Int = 0;
 	private var time:Float = 0;
 	private var gain:Float = 1;
 	private var pitch:Float = 1;
@@ -285,18 +284,6 @@ class HTML5AudioSource
 			return;
 		}
 
-		if (loops > 0 && howl != null && hasSound(howl, id))
-		{
-			loops--;
-			
-			howl.seek(0, id);
-			howl.play(id);
-
-			return;
-		}
-
-		loops = 0;
-
 		if (howl != null && howl.state() == "loaded" && hasSound(howl, id))
 		{
 			// Reserve the ended ID for a synchronous replay from onComplete.
@@ -441,14 +428,23 @@ class HTML5AudioSource
 		return pan;
 	}
 
-	public function getLoops():Int
+	public function getLoop():Bool
 	{
-		return loops;
+		final howl:Howl = findHowlForHandle(handle);
+
+		return howl != null && howl.state() == "loaded" && hasSound(howl, handle) ? howl.loop(handle) : false;
 	}
 
-	public function setLoops(value:Int):Int
+	public function setLoop(value:Bool):Bool
 	{
-		return loops = value;
+		final howl:Howl = findHowlForHandle(handle);
+
+		if (howl != null && howl.state() == "loaded" && hasSound(howl, handle))
+		{
+			howl.loop(value, handle);
+		}
+
+		return value;
 	}
 
 	public function getPlaying():Bool
