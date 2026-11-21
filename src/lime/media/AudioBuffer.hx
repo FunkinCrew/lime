@@ -6,7 +6,6 @@ import haxe.io.Bytes;
 import lime.app.Future;
 import lime.utils.ArrayBufferView;
 import lime.utils.Log;
-
 #if lime_howlerjs
 import lime.media.howlerjs.Howl;
 
@@ -92,7 +91,7 @@ class AudioBuffer
 	#elseif lime_miniaudio
 	@:noCompletion private static var __localThreadPool:ThreadPool;
 
-	@:noCompletion private var __audioSources:Array<AudioSource> = [];
+	@:noCompletion private var __audioSources:Array<AudioSource>;
 
 	@:noCompletion private var __srcMADecoder:MADecoder;
 	@:noCompletion private var __srcMAAudioBuffer:MAAudioBuffer;
@@ -103,7 +102,12 @@ class AudioBuffer
 	/**
 		Creates a new, empty `AudioBuffer` instance.
 	**/
-	public function new() {}
+	public function new()
+	{
+		#if lime_miniaudio
+		__audioSources = [];
+		#end
+	}
 
 	/**
 		Returns whether this `AudioBuffer` is valid or not.
