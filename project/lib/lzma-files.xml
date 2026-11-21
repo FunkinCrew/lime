@@ -2,24 +2,11 @@
 
     <files id="native-toolkit-lzma">
 
-        <compilerflag value="-D_7ZIP_ST" unless="windows" />
-
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/7zBuf.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/7zBuf2.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/7zCrc.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/7zFile.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/7zStream.c" />
         <file name="${NATIVE_TOOLKIT_PATH}/lzma/Alloc.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/Bcj2.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/Bra.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/Bra86.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/BraIA64.c" />
         <file name="${NATIVE_TOOLKIT_PATH}/lzma/LzFind.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/LzFindMt.c" if="windows" />
         <file name="${NATIVE_TOOLKIT_PATH}/lzma/LzmaDec.c" />
         <file name="${NATIVE_TOOLKIT_PATH}/lzma/LzmaEnc.c" />
         <file name="${NATIVE_TOOLKIT_PATH}/lzma/LzmaLib.c" />
-        <file name="${NATIVE_TOOLKIT_PATH}/lzma/Threads.c" if="windows" />
 
     </files>
 
