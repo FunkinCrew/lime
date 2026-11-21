@@ -143,18 +143,7 @@ import haxe.ds.ObjectMap;
 	**/
 	public function release(object:T):Void
 	{
-		#if debug
-		if (!__pool.exists(object))
-		{
-			Log.error("Object is not a member of the pool");
-		}
-		else if (!__pool.get(object))
-		{
-			Log.error("Object has already been released");
-		}
-		#end
-
-		if (object == null)
+		if (object == null || !__pool.exists(object) || !__pool.get(object))
 		{
 			return;
 		}
@@ -163,6 +152,7 @@ import haxe.ds.ObjectMap;
 
 		if (__size == null || activeObjects + inactiveObjects < __size)
 		{
+			__pool.set(object, false);
 			clean(object);
 			__addInactive(object);
 		}
@@ -206,10 +196,6 @@ import haxe.ds.ObjectMap;
 
 	@:noCompletion private inline function __addInactive(object:T):Void
 	{
-		#if debug
-		__pool.set(object, false);
-		#end
-
 		if (__inactiveObject0 == null)
 		{
 			__inactiveObject0 = object;
@@ -255,10 +241,7 @@ import haxe.ds.ObjectMap;
 			}
 		}
 
-		#if debug
 		__pool.set(object, true);
-		#end
-
 		inactiveObjects--;
 		activeObjects++;
 
@@ -292,15 +275,12 @@ import haxe.ds.ObjectMap;
 		if (count == 0 || inactiveObjects == 0)
 			return;
 
-		for (object in __inactiveObjectList)
+		while (count > 0 && inactiveObjects > 0 && __inactiveObjectList.length > 0)
 		{
+			var object = __inactiveObjectList.pop();
 			__pool.remove(object);
-			__inactiveObjectList.remove(object);
 			inactiveObjects--;
 			count--;
-
-			if (count == 0 || inactiveObjects == 0)
-				return;
 		}
 	}
 
@@ -327,17 +307,14 @@ import haxe.ds.ObjectMap;
 			}
 			else if (value > current)
 			{
-				var object;
-
 				for (i in 0...(value - current))
 				{
-					object = create();
+					var object = create();
 
 					if (object != null)
 					{
 						__pool.set(object, false);
-						__inactiveObjectList.add(object);
-						inactiveObjects++;
+						__addInactive(object);
 					}
 					else
 					{
