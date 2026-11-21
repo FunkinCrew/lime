@@ -22,6 +22,7 @@ class WindowsPlatform extends PlatformTarget
 {
 	private var applicationDirectory:String;
 	private var executablePath:String;
+	private var isMinGW:Bool;
 	private var is64:Bool;
 	private var outputFile:String;
 
@@ -33,8 +34,6 @@ class WindowsPlatform extends PlatformTarget
 
 		switch (System.hostArchitecture)
 		{
-			case ARMV7:
-				defaults.architectures = [ARMV7];
 			case X86:
 				defaults.architectures = [X86];
 			case X64:
@@ -52,18 +51,16 @@ class WindowsPlatform extends PlatformTarget
 			project.architectures.remove(excludeArchitecture);
 		}
 
-		for (architecture in project.architectures)
-		{
-			if (architecture == Architecture.X64)
-			{
-				is64 = true;
-			}
-		}
+		isMinGW = (project.targetFlags.exists("mingw") || project.target != System.hostPlatform);
+
+		is64 = project.architectures.contains(Architecture.X64) ? true : (isMinGW && System.hostArchitecture == ARM64);
 
 		targetDirectory = Path.combine(project.app.path, project.config.getString("windows.output-directory", "windows"));
+
 		targetDirectory = StringTools.replace(targetDirectory, "arch64", is64 ? "64" : "");
 
 		applicationDirectory = targetDirectory + "/bin/";
+
 		executablePath = applicationDirectory + project.app.file + ".exe";
 	}
 
@@ -117,7 +114,7 @@ class WindowsPlatform extends PlatformTarget
 			flags.push("-DHXCPP_M32");
 		}
 
-		if (project.targetFlags.exists("mingw"))
+		if (isMinGW)
 		{
 			haxeArgs.push("-D");
 			haxeArgs.push("mingw");
@@ -227,15 +224,15 @@ class WindowsPlatform extends PlatformTarget
 
 		if (!x86_64 && !x86_32)
 		{
-			x86_64 = System.hostArchitecture == X64;
-			x86_32 = System.hostArchitecture == X86;
+			x86_64 = !(isMinGW && System.hostArchitecture == ARM64) ? System.hostArchitecture == X64 : true;
+			x86_32 = !(isMinGW && System.hostArchitecture == ARM64) ? System.hostArchitecture == X86 : false;
 		}
 
 		if (x86_64)
 		{
 			var args:Array<String> = ["-Dwindows", "-DHXCPP_M64"];
 
-			if (project.targetFlags.exists("mingw"))
+			if (isMinGW)
 			{
 				args.push("-Dmingw");
 
@@ -250,7 +247,7 @@ class WindowsPlatform extends PlatformTarget
 		{
 			var args:Array<String> = ["-Dwindows", "-DHXCPP_M32"];
 
-			if (project.targetFlags.exists("mingw"))
+			if (isMinGW)
 			{
 				args.push("-Dmingw");
 
@@ -278,7 +275,7 @@ class WindowsPlatform extends PlatformTarget
 			arguments = arguments.concat(["-livereload"]);
 			System.runCommand(applicationDirectory, Path.withoutDirectory(executablePath), arguments);
 		}
-		else if (project.targetFlags.exists("mingw"))
+		else if (isMinGW)
 		{
 			arguments = arguments.concat(["-livereload"]);
 

@@ -707,7 +707,7 @@ class HXProject extends Script
 
 		if (platformType == DESKTOP && target != System.hostPlatform)
 		{
-			if (target == Platform.WINDOWS && (targetFlags.exists("cpp") || targetFlags.exists("mingw")))
+			if (target == Platform.WINDOWS)
 			{
 				defines.set("targetType", "cpp");
 				defines.set("native", "1");

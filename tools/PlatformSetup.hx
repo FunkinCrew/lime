@@ -176,7 +176,7 @@ class PlatformSetup
 					setupElectron();
 
 				case "windows":
-					if (targetFlags.exists("mingw"))
+					if (targetFlags.exists("mingw") || target != System.hostPlatform)
 					{
 						setupMinGW();
 					}
