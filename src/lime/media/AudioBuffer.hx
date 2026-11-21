@@ -92,6 +92,8 @@ class AudioBuffer
 	#elseif lime_miniaudio
 	@:noCompletion private static var __localThreadPool:ThreadPool;
 
+	@:noCompletion private var __audioSources:Array<AudioSource> = [];
+
 	@:noCompletion private var __srcMADecoder:MADecoder;
 	@:noCompletion private var __srcMAAudioBuffer:MAAudioBuffer;
 	@:noCompletion private var __srcMAAudioRingBuffer:MAAudioRingBuffer;
@@ -132,6 +134,11 @@ class AudioBuffer
 			__srcHowl.unload();
 		}
 		#elseif (lime_cffi && lime_miniaudio && !macro)
+		for (source in __audioSources.copy())
+		{
+			source.dispose();
+		}
+
 		if (__srcMADecoder != null)
 		{
 			__srcMADecoder.uninit();

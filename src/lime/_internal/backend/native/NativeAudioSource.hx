@@ -37,6 +37,8 @@ class NativeAudioSource
 			handle.stop();
 			handle.uninit();
 			handle = null;
+
+			parent.buffer.__audioSources.remove(parent);
 		}
 
 		if (buffer != null)
@@ -113,6 +115,8 @@ class NativeAudioSource
 			{
 				handle.set_on_pre_process_enabled(preRingBuffers.length > 0);
 				handle.set_on_process_enabled(postRingBuffers.length > 0);
+
+				parent.buffer.__audioSources.push(parent);
 			}
 		}
 	}
