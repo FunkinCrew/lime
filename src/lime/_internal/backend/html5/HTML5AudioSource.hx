@@ -134,7 +134,7 @@ class HTML5AudioSource
 		playPending = false;
 
 		final howl:Howl = findHowlForHandle(handle);
-		
+
 		if (howl != null && howl.state() == "loaded" && hasSound(howl, handle))
 		{
 			howl.stop(handle);
@@ -219,8 +219,6 @@ class HTML5AudioSource
 
 		handle = cast newHandle;
 
-		howl.loop(looped, handle);
-
 		howl.on("end", howl_onEnd, handle);
 		howl.on("playerror", howl_onError, handle);
 
@@ -232,6 +230,7 @@ class HTML5AudioSource
 		howl.volume(gain, handle);
 		howl.rate(pitch, handle);
 		howl.stereo(pan, handle);
+		howl.loop(looped, handle);
 	}
 
 	private function hasSound(howl:Howl, id:Int):Bool
