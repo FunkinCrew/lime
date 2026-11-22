@@ -3,8 +3,6 @@ package lime.system;
 #if (!lime_doc_gen || lime_cffi)
 import haxe.io.Path;
 
-import lime._internal.macros.CFFIMacro;
-
 #if (sys && !macro)
 import sys.io.Process;
 #end
@@ -28,13 +26,6 @@ class CFFI
 		enabled = false;
 		#end
 	}
-
-	#if macro
-	public static function build(defaultLibrary:String = "lime")
-	{
-		return CFFIMacro.build(defaultLibrary);
-	}
-	#end
 
 	/**
 	 * Tries to load a native CFFI primitive on compatible platforms

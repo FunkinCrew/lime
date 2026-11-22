@@ -418,7 +418,7 @@ class System
 		if (key != null && value != null)
 		{
 			#if (lime_cffi && !macro)
-			return NativeCFFI.lime_system_set_hint(key, value);
+			NativeCFFI.lime_system_set_hint(key, value);
 			#end
 		}
 	}
