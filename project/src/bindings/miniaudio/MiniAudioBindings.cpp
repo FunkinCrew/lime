@@ -1537,24 +1537,6 @@ namespace lime
 		}
 	}
 
-	void lime_ma_engine_process_proc(void *pUserData, float *pFramesOut, ma_uint64 frameCount)
-	{
-		AutoGCRoot *root = (AutoGCRoot *)pUserData;
-
-		value callback = root ? root->get() : NULL;
-
-		if (!val_is_null(callback))
-		{
-			int base = 0;
-
-			gc_set_top_of_stack(&base, true);
-
-			val_call2(callback, CFFIPointer(pFramesOut, NULL), alloc_int64(frameCount));
-
-			gc_set_top_of_stack(0, true);
-		}
-	}
-
 	value lime_ma_engine_init(value pConfig)
 	{
 		ma_engine_config config = ma_engine_config_init();
@@ -1597,14 +1579,6 @@ namespace lime
 		config.noAutoStart = val_bool(val_field(pConfig, val_id("noAutoStart")));
 		config.noDevice = val_bool(val_field(pConfig, val_id("noDevice")));
 		config.noClip = val_bool(val_field(pConfig, val_id("noClip")));
-
-		value onProcess = val_field(pConfig, val_id("onProcess"));
-
-		if (!val_is_null(onProcess))
-		{
-			config.pProcessUserData = new AutoGCRoot(onProcess);
-			config.onProcess = lime_ma_engine_process_proc;
-		}
 
 		ma_engine *engine = new ma_engine();
 

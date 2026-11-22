@@ -24,7 +24,6 @@ class MAEngineConfig
 	public var noAutoStart:Bool;
 	public var noDevice:Bool;
 	public var noClip:Bool;
-	public var onProcess:(pFramesOut:CFFIPointer, frameCount:Dynamic) -> Void;
 
 	public function new():Void
 	{
@@ -42,7 +41,6 @@ class MAEngineConfig
 		noAutoStart = false;
 		noDevice = false;
 		noClip = false;
-		onProcess = null;
 	}
 
 	public function toDynamicObject():Dynamic
@@ -61,8 +59,7 @@ class MAEngineConfig
 			preMixStackSizeInBytes: preMixStackSizeInBytes,
 			noAutoStart: noAutoStart,
 			noDevice: noDevice,
-			noClip: noClip,
-			onProcess: onProcess
+			noClip: noClip
 		}
 	}
 }
