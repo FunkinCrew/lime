@@ -7,6 +7,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 #end
+
 #if (macro && !display)
 import sys.io.File;
 import sys.FileSystem;

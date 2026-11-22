@@ -13,7 +13,6 @@ import js.html.XMLHttpRequest;
 import js.html.XMLHttpRequestResponseType;
 import js.Browser;
 
-
 import lime.app.Future;
 import lime.app.Promise;
 import lime.graphics.Image;
@@ -549,12 +548,12 @@ class HTML5HTTPRequest
 					return response.blob();
 				}).then(function(blob:Dynamic)
 				{
-					loadBlob(cast blob);
+						loadBlob(cast blob);
 				}, function(error:Dynamic)
 				{
-					activeRequests--;
-					processQueue();
-					promise.error(error);
+						activeRequests--;
+						processQueue();
+						promise.error(error);
 				});
 
 				return;

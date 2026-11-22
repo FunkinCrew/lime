@@ -38,7 +38,7 @@ class RunScript
 		{
 			architecture = ARMV7;
 		}
-		
+
 		var aliasTargetDirectory:String = Path.combine(limeDirectory, "templates/bin/alias/");
 
 		System.makeDirectory(aliasTargetDirectory);

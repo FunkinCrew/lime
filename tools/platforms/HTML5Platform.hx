@@ -192,7 +192,8 @@ class HTML5Platform extends PlatformTarget
 		var markerIndex = findUniqueMarker(renderedTemplatePath, markerBytes);
 		if (markerIndex < 0)
 		{
-			if (FileSystem.exists(renderedTemplatePath)) FileSystem.deleteFile(renderedTemplatePath);
+			if (FileSystem.exists(renderedTemplatePath))
+				FileSystem.deleteFile(renderedTemplatePath);
 			context.SOURCE_FILE = null;
 			throw "Unable to stream the large HTML5 output: html5/output.js must resolve to exactly one SOURCE_FILE placeholder.";
 		}
@@ -206,15 +207,16 @@ class HTML5Platform extends PlatformTarget
 		{
 			copyFileRange(renderedTemplatePath, merged, 0, markerIndex);
 			copyFileRange(outputFile, merged, 0, sourceSize);
-			copyFileRange(renderedTemplatePath, merged, markerIndex + markerBytes.length,
-				templateSize - markerIndex - markerBytes.length);
+			copyFileRange(renderedTemplatePath, merged, markerIndex + markerBytes.length, templateSize - markerIndex - markerBytes.length);
 			merged.close();
 		}
 		catch (error:Dynamic)
 		{
 			merged.close();
-			if (FileSystem.exists(mergedOutputPath)) FileSystem.deleteFile(mergedOutputPath);
-			if (FileSystem.exists(renderedTemplatePath)) FileSystem.deleteFile(renderedTemplatePath);
+			if (FileSystem.exists(mergedOutputPath))
+				FileSystem.deleteFile(mergedOutputPath);
+			if (FileSystem.exists(renderedTemplatePath))
+				FileSystem.deleteFile(renderedTemplatePath);
 			throw error;
 		}
 
@@ -228,8 +230,10 @@ class HTML5Platform extends PlatformTarget
 		catch (error:Dynamic)
 		{
 			finalOutput.close();
-			if (FileSystem.exists(mergedOutputPath)) FileSystem.deleteFile(mergedOutputPath);
-			if (FileSystem.exists(renderedTemplatePath)) FileSystem.deleteFile(renderedTemplatePath);
+			if (FileSystem.exists(mergedOutputPath))
+				FileSystem.deleteFile(mergedOutputPath);
+			if (FileSystem.exists(renderedTemplatePath))
+				FileSystem.deleteFile(renderedTemplatePath);
 			throw error;
 		}
 
@@ -256,7 +260,8 @@ class HTML5Platform extends PlatformTarget
 				var chunkLength = remaining > buffer.length ? buffer.length : remaining;
 				readBytesExactly(input, buffer, chunkLength);
 				var combined = haxe.io.Bytes.alloc(carryLength + chunkLength);
-				if (carryLength > 0) combined.blit(0, carry, 0, carryLength);
+				if (carryLength > 0)
+					combined.blit(0, carry, 0, carryLength);
 				combined.blit(carryLength, buffer, 0, chunkLength);
 
 				var lastStart = combined.length - marker.length;
@@ -278,7 +283,8 @@ class HTML5Platform extends PlatformTarget
 
 				carryLength = combined.length < marker.length - 1 ? combined.length : marker.length - 1;
 				carry = haxe.io.Bytes.alloc(marker.length - 1);
-				if (carryLength > 0) carry.blit(0, combined, combined.length - carryLength, carryLength);
+				if (carryLength > 0)
+					carry.blit(0, combined, combined.length - carryLength, carryLength);
 				totalRead += chunkLength;
 				remaining -= chunkLength;
 			}
@@ -295,11 +301,13 @@ class HTML5Platform extends PlatformTarget
 
 	private function bytesMatchAt(source:haxe.io.Bytes, offset:Int, target:haxe.io.Bytes):Bool
 	{
-		if (offset < 0 || offset + target.length > source.length) return false;
+		if (offset < 0 || offset + target.length > source.length)
+			return false;
 		var index = 0;
 		while (index < target.length)
 		{
-			if (source.get(offset + index) != target.get(index)) return false;
+			if (source.get(offset + index) != target.get(index))
+				return false;
 			index++;
 		}
 		return true;
@@ -311,7 +319,8 @@ class HTML5Platform extends PlatformTarget
 		while (total < length)
 		{
 			var count = input.readBytes(buffer, total, length - total);
-			if (count <= 0) throw "Unexpected end of file while streaming the HTML5 output.";
+			if (count <= 0)
+				throw "Unexpected end of file while streaming the HTML5 output.";
 			total += count;
 		}
 	}
