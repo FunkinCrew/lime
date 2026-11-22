@@ -14,6 +14,7 @@ class HTML5AudioSource
 	private var gain:Float = 1;
 	private var pitch:Float = 1;
 	private var pan:Float = 0;
+	private var looped:Bool = false;
 
 	private var parent:AudioSource;
 
@@ -47,6 +48,7 @@ class HTML5AudioSource
 		gain = 1;
 		pitch = 1;
 		pan = 0;
+		looped = false;
 	}
 
 	public function init():Void
@@ -216,6 +218,9 @@ class HTML5AudioSource
 		}
 
 		handle = cast newHandle;
+
+		howl.loop(looped, handle);
+
 		howl.on("end", howl_onEnd, handle);
 		howl.on("playerror", howl_onError, handle);
 
@@ -432,11 +437,13 @@ class HTML5AudioSource
 	{
 		final howl:Howl = findHowlForHandle(handle);
 
-		return howl != null && howl.state() == "loaded" && hasSound(howl, handle) ? howl.loop(handle) : false;
+		return howl != null && howl.state() == "loaded" && hasSound(howl, handle) ? howl.loop(handle) : looped;
 	}
 
 	public function setLoop(value:Bool):Bool
 	{
+		looped = value;
+
 		final howl:Howl = findHowlForHandle(handle);
 
 		if (howl != null && howl.state() == "loaded" && hasSound(howl, handle))
@@ -444,7 +451,7 @@ class HTML5AudioSource
 			howl.loop(value, handle);
 		}
 
-		return value;
+		return looped;
 	}
 
 	public function getPlaying():Bool
