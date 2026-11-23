@@ -136,6 +136,13 @@ class AudioBuffer
 		if (__srcHowl != null)
 		{
 			__srcHowl.unload();
+			__srcHowl = null;
+		}
+
+		if (__srcObjectURL != null)
+		{
+			URL.revokeObjectURL(__srcObjectURL);
+			__srcObjectURL = null;
 		}
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		for (source in __audioSources.copy())
