@@ -1481,8 +1481,8 @@ class NativeCFFI
 	private static final lime_ma_engine_listener_is_enabled = Prime.load("lime", "lime_ma_engine_listener_is_enabled", "oib");
 	private static final lime_ma_sound_init = Prime.load("lime", "lime_ma_sound_init", "ooo");
 	private static final lime_ma_sound_uninit = Prime.load("lime", "lime_ma_sound_uninit", "ov");
-	private static final lime_ma_sound_set_on_pre_process_enabled = Prime.load("lime", "lime_ma_sound_set_on_pre_process_enabled", "obv");
-	private static final lime_ma_sound_set_on_process_enabled = Prime.load("lime", "lime_ma_sound_set_on_process_enabled", "obv");
+	private static final lime_ma_sound_add_tap = Prime.load("lime", "lime_ma_sound_add_tap", "oobb");
+	private static final lime_ma_sound_remove_tap = Prime.load("lime", "lime_ma_sound_remove_tap", "oobv");
 	private static final lime_ma_sound_get_engine = Prime.load("lime", "lime_ma_sound_get_engine", "oo");
 	private static final lime_ma_sound_get_data_source = Prime.load("lime", "lime_ma_sound_get_data_source", "oo");
 	private static final lime_ma_sound_start = Prime.load("lime", "lime_ma_sound_start", "oi");
@@ -1670,8 +1670,8 @@ class NativeCFFI
 	private static final lime_ma_engine_listener_is_enabled = CFFI.load("lime", "lime_ma_engine_listener_is_enabled", 2);
 	private static final lime_ma_sound_init = CFFI.load("lime", "lime_ma_sound_init", 2);
 	private static final lime_ma_sound_uninit = CFFI.load("lime", "lime_ma_sound_uninit", 1);
-	private static final lime_ma_sound_set_on_pre_process_enabled = CFFI.load("lime", "lime_ma_sound_set_on_pre_process_enabled", 2);
-	private static final lime_ma_sound_set_on_process_enabled = CFFI.load("lime", "lime_ma_sound_set_on_process_enabled", 2);
+	private static final lime_ma_sound_add_tap = CFFI.load("lime", "lime_ma_sound_add_tap", 3);
+	private static final lime_ma_sound_remove_tap = CFFI.load("lime", "lime_ma_sound_remove_tap", 3);
 	private static final lime_ma_sound_get_engine = CFFI.load("lime", "lime_ma_sound_get_engine", 1);
 	private static final lime_ma_sound_get_data_source = CFFI.load("lime", "lime_ma_sound_get_data_source", 1);
 	private static final lime_ma_sound_start = CFFI.load("lime", "lime_ma_sound_start", 1);

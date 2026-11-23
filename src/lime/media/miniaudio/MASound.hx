@@ -32,17 +32,19 @@ abstract MASound(MANode) from MANode to MANode
 		#end
 	}
 
-	public function set_on_pre_process_enabled(enabled:Bool):Void
+	public function add_tap(pRingBuffer:MAAudioRingBuffer, inPost:Bool):Bool
 	{
 		#if (lime_cffi && lime_miniaudio && !macro)
-		NativeCFFI.lime_ma_sound_set_on_pre_process_enabled(this, enabled);
+		return NativeCFFI.lime_ma_sound_add_tap(this, pRingBuffer, inPost);
+		#else
+		return false;
 		#end
 	}
 
-	public function set_on_process_enabled(enabled:Bool):Void
+	public function remove_tap(pRingBuffer:MAAudioRingBuffer, inPost:Bool):Void
 	{
 		#if (lime_cffi && lime_miniaudio && !macro)
-		NativeCFFI.lime_ma_sound_set_on_process_enabled(this, enabled);
+		NativeCFFI.lime_ma_sound_remove_tap(this, pRingBuffer, inPost);
 		#end
 	}
 

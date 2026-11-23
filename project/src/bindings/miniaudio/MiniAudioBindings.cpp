@@ -37,9 +37,35 @@ namespace lime
 		return result;
 	}
 
-	struct ma_log_job
+	struct ma_gc_root_state
 	{
 		AutoGCRoot *root;
+		SDL_AtomicInt refCount;
+	};
+
+	static void ma_gc_root_state_release(ma_gc_root_state *state)
+	{
+		if (SDL_AddAtomicInt(&state->refCount, -1) == 1)
+		{
+			delete state;
+		}
+	}
+
+	static void ma_gc_root_state_detach(ma_gc_root_state *state)
+	{
+		if (state)
+		{
+			delete state->root;
+
+			state->root = nullptr;
+
+			ma_gc_root_state_release(state);
+		}
+	}
+
+	struct ma_log_job
+	{
+		ma_gc_root_state *state;
 		int level;
 		char *message;
 	};
@@ -54,21 +80,26 @@ namespace lime
 	{
 		ma_log_job *job = (ma_log_job *)data;
 
-		value callback = job->root->get();
-
-		if (!val_is_null(callback))
+		if (job->state->root)
 		{
-			val_call2(callback, alloc_int(job->level), alloc_string(job->message));
+			value callback = job->state->root->get();
+
+			if (callback != NULL && !val_is_null(callback))
+			{
+				val_call2(callback, alloc_int(job->level), alloc_string(job->message));
+			}
 		}
+
+		ma_gc_root_state_release(job->state);
 
 		ma_log_job_free(job);
 	}
 
 	void lime_ma_log_callback_proc(void *pUserData, ma_uint32 level, const char *pMessage)
 	{
-		AutoGCRoot *root = (AutoGCRoot *)pUserData;
+		ma_gc_root_state *state = (ma_gc_root_state *)pUserData;
 
-		value callback = root ? root->get() : NULL;
+		value callback = (state && state->root) ? state->root->get() : NULL;
 
 		if (!callback || val_is_null(callback))
 		{
@@ -82,13 +113,47 @@ namespace lime
 			return;
 		}
 
-		job->root = root;
+		SDL_AddAtomicInt(&state->refCount, 1);
+
+		job->state = state;
 		job->level = (int)level;
 		job->message = SDL_strdup(pMessage ? pMessage : "");
 
 		if (!SDL_RunOnMainThread(ma_log_job_run, job, false))
 		{
+			ma_gc_root_state_release(job->state);
+
 			ma_log_job_free(job);
+		}
+	}
+
+	static void ma_log_uninit_and_detach(ma_log *log)
+	{
+		ma_gc_root_state *states[MA_MAX_LOG_CALLBACKS];
+
+		ma_uint32 count = 0;
+
+#ifndef MA_NO_THREADING
+		ma_mutex_lock(&log->lock);
+#endif
+
+		for (ma_uint32 i = 0; i < log->callbackCount; ++i)
+		{
+			if (log->callbacks[i].onLog == lime_ma_log_callback_proc)
+			{
+				states[count++] = (ma_gc_root_state *)log->callbacks[i].pUserData;
+			}
+		}
+
+#ifndef MA_NO_THREADING
+		ma_mutex_unlock(&log->lock);
+#endif
+
+		ma_log_uninit(log);
+
+		for (ma_uint32 i = 0; i < count; ++i)
+		{
+			ma_gc_root_state_detach(states[i]);
 		}
 	}
 
@@ -98,7 +163,7 @@ namespace lime
 
 		if (log)
 		{
-			ma_log_uninit(log);
+			ma_log_uninit_and_detach(log);
 
 			delete log;
 		}
@@ -124,7 +189,7 @@ namespace lime
 
 		if (log)
 		{
-			ma_log_uninit(log);
+			ma_log_uninit_and_detach(log);
 
 			free_abstract(pLog);
 
@@ -141,13 +206,17 @@ namespace lime
 			return MA_INVALID_ARGS;
 		}
 
-		AutoGCRoot *root = new AutoGCRoot(onLog);
+		ma_gc_root_state *state = new ma_gc_root_state();
 
-		ma_result result = ma_log_register_callback(log, ma_log_callback_init(lime_ma_log_callback_proc, root));
+		SDL_SetAtomicInt(&state->refCount, 1);
+
+		state->root = new AutoGCRoot(onLog);
+
+		ma_result result = ma_log_register_callback(log, ma_log_callback_init(lime_ma_log_callback_proc, state));
 
 		if (result != MA_SUCCESS)
 		{
-			delete root;
+			ma_gc_root_state_detach(state);
 		}
 
 		return result;
@@ -170,9 +239,9 @@ namespace lime
 
 		for (ma_uint32 i = 0; i < log->callbackCount; ++i)
 		{
-			AutoGCRoot *root = (AutoGCRoot *)log->callbacks[i].pUserData;
+			ma_gc_root_state *state = (ma_gc_root_state *)log->callbacks[i].pUserData;
 
-			if (root && root->get() == onLog)
+			if (state && state->root && state->root->get() == onLog)
 			{
 				callback = log->callbacks[i];
 				break;
@@ -187,12 +256,7 @@ namespace lime
 
 		if (result == MA_SUCCESS)
 		{
-			AutoGCRoot *root = (AutoGCRoot *)callback.pUserData;
-
-			if (root)
-			{
-				delete root;
-			}
+			ma_gc_root_state_detach((ma_gc_root_state *)callback.pUserData);
 		}
 
 		return result;
@@ -1772,70 +1836,154 @@ namespace lime
 		return ma_engine_listener_is_enabled((ma_engine *)val_data(pEngine), listenerIndex);
 	}
 
-	struct ma_sound_notifications_gc_roots
+	struct ma_sound_tap_list
 	{
-		AutoGCRoot *onAtEnd;
-		AutoGCRoot *onPreProcess;
-		AutoGCRoot *onProcess;
+		ma_spinlock lock;
+		ma_audio_ring_buffer *ringBuffers[8];
+		ma_uint32 count;
 	};
+
+	struct ma_sound_notifications_data
+	{
+		ma_gc_root_state *atEnd;
+		ma_sound_tap_list preTaps;
+		ma_sound_tap_list postTaps;
+	};
+
+	static void ma_sound_tap_list_write(ma_sound_tap_list *tapList, const float *pFrames, ma_uint64 frameCount)
+	{
+		ma_spinlock_lock(&tapList->lock);
+
+		for (ma_uint32 i = 0; i < tapList->count; i++)
+		{
+			ma_uint32 framesWritten = 0;
+
+			ma_audio_ring_buffer_write_pcm_frames(tapList->ringBuffers[i], (void *)pFrames, (ma_uint32)frameCount, &framesWritten);
+		}
+
+		ma_spinlock_unlock(&tapList->lock);
+	}
+
+	static bool ma_sound_tap_list_add(ma_sound_tap_list *tapList, ma_audio_ring_buffer *ringBuffer)
+	{
+		bool added = false;
+
+		ma_spinlock_lock(&tapList->lock);
+
+		for (ma_uint32 i = 0; i < tapList->count; i++)
+		{
+			if (tapList->ringBuffers[i] == ringBuffer)
+			{
+				added = true;
+
+				break;
+			}
+		}
+
+		if (!added && tapList->count < 8)
+		{
+			tapList->ringBuffers[tapList->count++] = ringBuffer;
+
+			added = true;
+		}
+
+		ma_spinlock_unlock(&tapList->lock);
+
+		return added;
+	}
+
+	static ma_uint32 ma_sound_tap_list_remove(ma_sound_tap_list *tapList, ma_audio_ring_buffer *ringBuffer)
+	{
+		ma_spinlock_lock(&tapList->lock);
+
+		for (ma_uint32 i = 0; i < tapList->count; i++)
+		{
+			if (tapList->ringBuffers[i] == ringBuffer)
+			{
+				tapList->ringBuffers[i] = tapList->ringBuffers[--tapList->count];
+
+				break;
+			}
+		}
+
+		ma_uint32 count = tapList->count;
+
+		ma_spinlock_unlock(&tapList->lock);
+
+		return count;
+	}
+
+	struct ma_sound_on_at_end_job
+	{
+		ma_gc_root_state *state;
+		ma_sound *pSound;
+	};
+
+	static void ma_sound_notifications_on_at_end_job_run(void *data)
+	{
+		ma_sound_on_at_end_job *job = (ma_sound_on_at_end_job *)data;
+
+		if (job->state->root)
+		{
+			value callback = job->state->root->get();
+
+			if (callback != NULL && !val_is_null(callback))
+			{
+				val_call0(callback);
+			}
+		}
+
+		ma_gc_root_state_release(job->state);
+
+		SDL_free(job);
+	}
 
 	void ma_sound_notifications_on_at_end(void *pUserData, ma_sound *pSound)
 	{
-		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
+		ma_sound_notifications_data *data = (ma_sound_notifications_data *)pUserData;
 
-		AutoGCRoot *root = roots ? roots->onAtEnd : nullptr;
-
-		value callback = root ? root->get() : NULL;
-
-		if (!val_is_null(callback))
+		if (!data || !data->atEnd)
 		{
-			int base = 0;
+			return;
+		}
 
-			gc_set_top_of_stack(&base, true);
+		ma_sound_on_at_end_job *job = (ma_sound_on_at_end_job *)SDL_malloc(sizeof(ma_sound_on_at_end_job));
 
-			val_call1(callback, CFFIPointer(pSound, NULL));
+		if (!job)
+		{
+			return;
+		}
 
-			gc_set_top_of_stack(0, true);
+		SDL_AddAtomicInt(&data->atEnd->refCount, 1);
+
+		job->state = data->atEnd;
+		job->pSound = pSound;
+
+		if (!SDL_RunOnMainThread(ma_sound_notifications_on_at_end_job_run, job, false))
+		{
+			ma_gc_root_state_release(job->state);
+
+			SDL_free(job);
 		}
 	}
 
 	void ma_sound_notifications_on_pre_process(void *pUserData, ma_sound *pSound, float *pFrames, ma_uint64 frameCount)
 	{
-		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
+		ma_sound_notifications_data *data = (ma_sound_notifications_data *)pUserData;
 
-		AutoGCRoot *root = roots ? roots->onPreProcess : nullptr;
-
-		value callback = root ? root->get() : NULL;
-
-		if (!val_is_null(callback))
+		if (data)
 		{
-			int base = 0;
-
-			gc_set_top_of_stack(&base, true);
-
-			val_call3(callback, CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
-
-			gc_set_top_of_stack(0, true);
+			ma_sound_tap_list_write(&data->preTaps, pFrames, frameCount);
 		}
 	}
 
 	void ma_sound_notifications_on_process(void *pUserData, ma_sound *pSound, float *pFrames, ma_uint64 frameCount)
 	{
-		ma_sound_notifications_gc_roots *roots = (ma_sound_notifications_gc_roots *)pUserData;
+		ma_sound_notifications_data *data = (ma_sound_notifications_data *)pUserData;
 
-		AutoGCRoot *root = roots ? roots->onProcess : nullptr;
-
-		value callback = root ? root->get() : NULL;
-
-		if (!val_is_null(callback))
+		if (data)
 		{
-			int base = 0;
-
-			gc_set_top_of_stack(&base, true);
-
-			val_call3(callback, CFFIPointer(pSound, NULL), CFFIPointer(pFrames, NULL), alloc_int64(frameCount));
-
-			gc_set_top_of_stack(0, true);
+			ma_sound_tap_list_write(&data->postTaps, pFrames, frameCount);
 		}
 	}
 
@@ -1845,28 +1993,15 @@ namespace lime
 
 		if (sound)
 		{
-			ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+			ma_sound_notifications_data *data = (ma_sound_notifications_data *)sound->notifications.pUserData;
 
 			ma_sound_uninit(sound);
 
-			if (gc_roots)
+			if (data)
 			{
-				if (gc_roots->onAtEnd)
-				{
-					delete gc_roots->onAtEnd;
-				}
+				ma_gc_root_state_detach(data->atEnd);
 
-				if (gc_roots->onPreProcess)
-				{
-					delete gc_roots->onPreProcess;
-				}
-
-				if (gc_roots->onProcess)
-				{
-					delete gc_roots->onProcess;
-				}
-
-				delete gc_roots;
+				delete data;
 			}
 
 			delete sound;
@@ -1903,48 +2038,29 @@ namespace lime
 
 		value pNotifications = val_field(pConfig, val_id("pNotifications"));
 
-		ma_sound_notifications notifications;
+		ma_sound_notifications notifications = ma_sound_notifications_init();
 
-		ma_sound_notifications_gc_roots *gc_roots = nullptr;
+		ma_sound_notifications_data *data = new ma_sound_notifications_data();
 
 		if (!val_is_null(pNotifications))
 		{
 			value onAtEnd = val_field(pNotifications, val_id("onAtEnd"));
-			value onPreProcess = val_field(pNotifications, val_id("onPreProcess"));
-			value onProcess = val_field(pNotifications, val_id("onProcess"));
 
-			if (!val_is_null(onAtEnd) || !val_is_null(onPreProcess) || !val_is_null(onProcess))
+			if (!val_is_null(onAtEnd))
 			{
-				notifications = ma_sound_notifications_init();
+				notifications.onAtEnd = ma_sound_notifications_on_at_end;
 
-				gc_roots = new ma_sound_notifications_gc_roots{nullptr, nullptr};
+				data->atEnd = new ma_gc_root_state();
 
-				if (!val_is_null(onAtEnd))
-				{
-					notifications.onAtEnd = ma_sound_notifications_on_at_end;
+				SDL_SetAtomicInt(&data->atEnd->refCount, 1);
 
-					gc_roots->onAtEnd = new AutoGCRoot(onAtEnd);
-				}
-
-				if (!val_is_null(onPreProcess))
-				{
-					notifications.onPreProcess = ma_sound_notifications_on_pre_process;
-
-					gc_roots->onPreProcess = new AutoGCRoot(onPreProcess);
-				}
-
-				if (!val_is_null(onProcess))
-				{
-					notifications.onProcess = ma_sound_notifications_on_process;
-
-					gc_roots->onProcess = new AutoGCRoot(onProcess);
-				}
-
-				notifications.pUserData = gc_roots;
-
-				config.pNotifications = &notifications;
+				data->atEnd->root = new AutoGCRoot(onAtEnd);
 			}
 		}
+
+		notifications.pUserData = data;
+
+		config.pNotifications = &notifications;
 
 		ma_sound *sound = new ma_sound();
 
@@ -1952,24 +2068,11 @@ namespace lime
 
 		if (result != MA_SUCCESS)
 		{
-			if (gc_roots)
+			if (data)
 			{
-				if (gc_roots->onAtEnd)
-				{
-					delete gc_roots->onAtEnd;
-				}
+				ma_gc_root_state_detach(data->atEnd);
 
-				if (gc_roots->onPreProcess)
-				{
-					delete gc_roots->onPreProcess;
-				}
-
-				if (gc_roots->onProcess)
-				{
-					delete gc_roots->onProcess;
-				}
-
-				delete gc_roots;
+				delete data;
 			}
 
 			delete sound;
@@ -1986,28 +2089,15 @@ namespace lime
 
 		if (sound)
 		{
-			ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+			ma_sound_notifications_data *data = (ma_sound_notifications_data *)sound->notifications.pUserData;
 
 			ma_sound_uninit(sound);
 
-			if (gc_roots)
+			if (data)
 			{
-				if (gc_roots->onAtEnd)
-				{
-					delete gc_roots->onAtEnd;
-				}
+				ma_gc_root_state_detach(data->atEnd);
 
-				if (gc_roots->onPreProcess)
-				{
-					delete gc_roots->onPreProcess;
-				}
-
-				if (gc_roots->onProcess)
-				{
-					delete gc_roots->onProcess;
-				}
-
-				delete gc_roots;
+				delete data;
 			}
 
 			free_abstract(pSound);
@@ -2016,27 +2106,64 @@ namespace lime
 		}
 	}
 
-	void lime_ma_sound_set_on_pre_process_enabled(value pSound, bool enabled)
+	bool lime_ma_sound_add_tap(value pSound, value pRingBuffer, bool isPost)
 	{
 		ma_sound *sound = (ma_sound *)val_data(pSound);
 
-		ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+		ma_audio_ring_buffer *ringBuffer = (ma_audio_ring_buffer *)val_data(pRingBuffer);
 
-		if (gc_roots && gc_roots->onPreProcess)
+		if (!sound || !ringBuffer)
 		{
-			sound->notifications.onPreProcess = enabled ? ma_sound_notifications_on_pre_process : NULL;
+			return false;
 		}
+
+		ma_sound_notifications_data *data = (ma_sound_notifications_data *)sound->notifications.pUserData;
+
+		if (!data || !ma_sound_tap_list_add(isPost ? &data->postTaps : &data->preTaps, ringBuffer))
+		{
+			return false;
+		}
+
+		if (isPost)
+		{
+			sound->notifications.onProcess = ma_sound_notifications_on_process;
+		}
+		else
+		{
+			sound->notifications.onPreProcess = ma_sound_notifications_on_pre_process;
+		}
+
+		return true;
 	}
 
-	void lime_ma_sound_set_on_process_enabled(value pSound, bool enabled)
+	void lime_ma_sound_remove_tap(value pSound, value pRingBuffer, bool isPost)
 	{
 		ma_sound *sound = (ma_sound *)val_data(pSound);
 
-		ma_sound_notifications_gc_roots *gc_roots = (ma_sound_notifications_gc_roots *)sound->notifications.pUserData;
+		ma_audio_ring_buffer *ringBuffer = (ma_audio_ring_buffer *)val_data(pRingBuffer);
 
-		if (gc_roots && gc_roots->onProcess)
+		if (!sound || !ringBuffer)
 		{
-			sound->notifications.onProcess = enabled ? ma_sound_notifications_on_process : NULL;
+			return;
+		}
+
+		ma_sound_notifications_data *data = (ma_sound_notifications_data *)sound->notifications.pUserData;
+
+		if (!data)
+		{
+			return;
+		}
+
+		if (ma_sound_tap_list_remove(isPost ? &data->postTaps : &data->preTaps, ringBuffer) == 0)
+		{
+			if (isPost)
+			{
+				sound->notifications.onProcess = NULL;
+			}
+			else
+			{
+				sound->notifications.onPreProcess = NULL;
+			}
 		}
 	}
 
@@ -2611,8 +2738,8 @@ namespace lime
 	DEFINE_PRIME2(lime_ma_engine_listener_is_enabled);
 	DEFINE_PRIME2(lime_ma_sound_init);
 	DEFINE_PRIME1v(lime_ma_sound_uninit);
-	DEFINE_PRIME2v(lime_ma_sound_set_on_pre_process_enabled);
-	DEFINE_PRIME2v(lime_ma_sound_set_on_process_enabled);
+	DEFINE_PRIME3(lime_ma_sound_add_tap);
+	DEFINE_PRIME3v(lime_ma_sound_remove_tap);
 	DEFINE_PRIME1(lime_ma_sound_get_engine);
 	DEFINE_PRIME1(lime_ma_sound_get_data_source);
 	DEFINE_PRIME1(lime_ma_sound_start);
