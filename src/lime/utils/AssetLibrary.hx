@@ -91,7 +91,7 @@ class AssetLibrary
 				{
 					var libraryClass = Type.resolveClass(manifest.libraryType);
 
-					if (libraryClass != null)
+					if (__isAssetLibrary(libraryClass))
 					{
 						library = Type.createInstance(libraryClass, manifest.libraryArgs);
 					}
@@ -130,7 +130,7 @@ class AssetLibrary
 		{
 			var libraryClass = Type.resolveClass(manifest.libraryType);
 
-			if (libraryClass != null)
+			if (__isAssetLibrary(libraryClass))
 			{
 				library = Type.createInstance(libraryClass, manifest.libraryArgs);
 			}
@@ -806,6 +806,19 @@ class AssetLibrary
 				bytesTotal += sizes.get(id);
 			}
 		}
+	}
+
+	@:noCompletion private static function __isAssetLibrary(cls:Class<Dynamic>):Bool
+	{
+		while (cls != null)
+		{
+			if (cls == AssetLibrary)
+				return true;
+
+			cls = Type.getSuperClass(cls);
+		}
+
+		return false;
 	}
 
 	@:noCompletion private function __resolvePath(path:String):String
