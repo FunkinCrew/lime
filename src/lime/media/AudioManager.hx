@@ -104,9 +104,9 @@ class AudioManager
 				{
 					audioContext = Howler.ctx;
 				}
-				else
+				else if (Howler.noAudio)
 				{
-					Log.error("Unable to create HowlerJS context for Web!");
+					Log.error("Unable to initialize audio support for Web!");
 				}
 			}
 		}

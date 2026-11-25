@@ -257,7 +257,7 @@ class AudioBuffer
 		var promise = new lime.app.Promise<AudioBuffer>();
 
 		var audioBuffer = __createFromBytes(bytes, false);
-
+		
 		if (audioBuffer != null && audioBuffer.__srcHowl != null)
 		{
 			audioBuffer.__srcHowl.on("load", function()
@@ -301,9 +301,10 @@ class AudioBuffer
 		Asynchronously loads an `AudioBuffer` from a file.
 
 		@param path The file path to the audio data.
+		@param stream Whether to use HTML5 streaming on the JS target.
 		@return A `Future` that resolves to the loaded `AudioBuffer`.
 	**/
-	public static function loadFromFile(path:String):Future<AudioBuffer>
+	public static function loadFromFile(path:String, ?stream:Bool = false):Future<AudioBuffer>
 	{
 		if (path == null)
 		{
@@ -311,9 +312,14 @@ class AudioBuffer
 		}
 
 		#if (js && html5 && lime_howlerjs)
-		var promise = new lime.app.Promise<AudioBuffer>();
+		var audioBuffer = AudioBuffer.fromFile(path, stream);
 
-		var audioBuffer = AudioBuffer.fromFile(path);
+		if (stream)
+		{
+			return Future.withValue(audioBuffer);
+		}
+
+		var promise = new lime.app.Promise<AudioBuffer>();
 
 		if (audioBuffer != null)
 		{
@@ -324,6 +330,7 @@ class AudioBuffer
 
 			audioBuffer.__srcHowl.on("loaderror", function(id, msg)
 			{
+				audioBuffer.dispose();
 				promise.error(msg);
 			});
 

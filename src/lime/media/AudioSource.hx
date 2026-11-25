@@ -3,6 +3,9 @@ package lime.media;
 #if lime_miniaudio
 import lime.media.miniaudio.MAAudioRingBuffer;
 #end
+#if (js && html5 && lime_howlerjs)
+import lime.media.AudioProcessBuffer;
+#end
 import lime.app.Event;
 
 /**
@@ -79,6 +82,25 @@ class AudioSource
 			__backend.init();
 		}
 	}
+
+	#if (js && html5 && lime_howlerjs)
+	/**
+		Adds a listener for PCM blocks from this source.
+		The callback runs synchronously on the audio processing path.
+	**/
+	public function addAudioProcessListener(listener:AudioProcessBuffer->Void):Void
+	{
+		__backend.addAudioProcessListener(listener);
+	}
+
+	/** 
+		Removes a decoded PCM listener.
+	**/
+	public function removeAudioProcessListener(listener:AudioProcessBuffer->Void):Void
+	{
+		__backend.removeAudioProcessListener(listener);
+	}
+	#end
 
 	/**
 		Releases any resources used by this `AudioSource`.
