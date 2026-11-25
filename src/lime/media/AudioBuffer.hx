@@ -183,7 +183,20 @@ class AudioBuffer
 		#if (js && html5 && lime_howlerjs)
 		return __createFromBytes(bytes, true);
 		#elseif (lime_cffi && lime_miniaudio && !macro)
-		return __createFromMADecoder(MADecoder.init_memory(bytes, MADecoderConfig.init(stream ? UNKNOWN : S16, 0, 0)), stream);
+		final config:MADecoderConfig = new MADecoderConfig();
+
+		if (stream)
+		{
+			config.format = F32;
+
+			config.sampleRate = AudioManager.engine.get_sample_rate();
+		}
+		else
+		{
+			config.format = S16;
+		}
+
+		return __createFromMADecoder(MADecoder.init_memory(bytes, config), stream);
 		#else
 		return null;
 		#end
@@ -208,7 +221,20 @@ class AudioBuffer
 		audioBuffer.__srcHowl = new Howl({src: [path], preload: false});
 		return audioBuffer;
 		#elseif (lime_cffi && lime_miniaudio && !macro)
-		return __createFromMADecoder(MADecoder.init_file(path, MADecoderConfig.init(stream ? UNKNOWN : S16, 0, 0)), stream);
+		final config:MADecoderConfig = new MADecoderConfig();
+
+		if (stream)
+		{
+			config.format = F32;
+
+			config.sampleRate = AudioManager.engine.get_sample_rate();
+		}
+		else
+		{
+			config.format = S16;
+		}
+
+		return __createFromMADecoder(MADecoder.init_file(path, config), stream);
 		#else
 		return null;
 		#end
