@@ -9,7 +9,7 @@ namespace lime
 	class File
 	{
 	  public:
-		File(const char *path, const char *mode);
+		File(const char *path, const char *mode, bool wantBuffer);
 		File(Bytes *bytes, bool copy);
 
 		bool Close();
@@ -21,6 +21,14 @@ namespace lime
 
 		void *ownedMemory;
 		SDL_IOStream *handle;
+
+	  private:
+		bool isBuffered;
+		unsigned char *buffer;
+		size_t bufferLength;
+		int64_t bufferStart;
+		int64_t position;
+		int64_t fileSize;
 	};
 
 } // namespace lime

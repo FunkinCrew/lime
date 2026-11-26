@@ -189,7 +189,7 @@ namespace lime
 
 	int lime_bytes_read_file(HxString path, value bytes)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (!file.handle)
 		{
@@ -222,7 +222,7 @@ namespace lime
 
 	void lime_bytes_write_file(HxString path, value bytes)
 	{
-		File file(hxs_utf8(path, nullptr), "wb");
+		File file(hxs_utf8(path, nullptr), "wb", false);
 
 		if (file.handle)
 		{
@@ -570,7 +570,7 @@ namespace lime
 
 	value lime_font_load_file(value data)
 	{
-		File *file = new File(val_string(data), "rb");
+		File *file = new File(val_string(data), "rb", false);
 
 		if (file->handle)
 		{
@@ -750,7 +750,7 @@ namespace lime
 
 	bool lime_image_load_file(value data, value buffer)
 	{
-		File file(val_string(data), "rb");
+		File file(val_string(data), "rb", false);
 
 		if (file.handle)
 		{
@@ -896,7 +896,7 @@ namespace lime
 
 	bool lime_png_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -934,7 +934,7 @@ namespace lime
 
 	bool lime_jpeg_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -972,7 +972,7 @@ namespace lime
 
 	bool lime_bmp_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -1010,7 +1010,7 @@ namespace lime
 
 	bool lime_svg_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -1048,7 +1048,7 @@ namespace lime
 
 	bool lime_svg_decode_sized_file(HxString path, int width, int height, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -1086,7 +1086,7 @@ namespace lime
 
 	bool lime_gif_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -1124,7 +1124,7 @@ namespace lime
 
 	bool lime_webp_decode_file(HxString path, value buffer)
 	{
-		File file(hxs_utf8(path, nullptr), "rb");
+		File file(hxs_utf8(path, nullptr), "rb", false);
 
 		if (file.handle)
 		{
@@ -1679,7 +1679,7 @@ namespace lime
 
 	value lime_animation_decoder_open_file(value data, value type)
 	{
-		File *file = new File(val_string(data), "rb");
+		File *file = new File(val_string(data), "rb", false);
 
 		if (file->handle)
 		{

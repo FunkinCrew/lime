@@ -350,7 +350,7 @@ namespace lime
 
 	value lime_ma_decoder_init_file(value pFilePath, value pConfig)
 	{
-		File *file = new File(val_string(pFilePath), "rb");
+		File *file = new File(val_string(pFilePath), "rb", true);
 
 		if (!file->handle)
 		{
