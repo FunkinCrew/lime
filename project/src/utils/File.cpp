@@ -95,7 +95,7 @@ namespace lime
 
 	size_t File::Read(void *ptr, size_t size)
 	{
-		return handle ? SDL_ReadIO(handle, ptr, size) : -1;
+		return handle ? SDL_ReadIO(handle, ptr, size) : 0;
 	}
 
 	int64_t File::Seek(int64_t offset, int whence)
@@ -130,7 +130,7 @@ namespace lime
 
 	size_t File::Write(const void *ptr, size_t size)
 	{
-		return handle ? SDL_WriteIO(handle, ptr, size) : -1;
+		return handle ? SDL_WriteIO(handle, ptr, size) : 0;
 	}
 
 } // namespace lime
