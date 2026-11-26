@@ -278,7 +278,7 @@ namespace lime
 				(*pBytesRead) = bytesRead;
 			}
 
-			return MA_SUCCESS;
+			return (bytesRead == 0 && bytesToRead > 0) ? MA_AT_END : MA_SUCCESS;
 		}
 
 		return MA_ERROR;
