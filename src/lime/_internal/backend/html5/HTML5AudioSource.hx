@@ -34,6 +34,7 @@ class HTML5AudioSource
 		if (howl != null && handle >= 0)
 		{
 			howl.off("playerror", howl_onError, handle);
+			howl.off("loaderror", howl_onError, handle);
 			howl.off("end", howl_onEnd, handle);
 
 			if (hasSound(howl, handle))
@@ -94,6 +95,7 @@ class HTML5AudioSource
 			final oldHowl:Howl = owner != null ? owner : howl;
 			oldHowl.off("playerror", howl_onError, handle);
 			oldHowl.off("end", howl_onEnd, handle);
+			oldHowl.off("loaderror", howl_onError, handle);
 
 			if (owner != null)
 			{
@@ -221,6 +223,7 @@ class HTML5AudioSource
 
 		howl.on("end", howl_onEnd, handle);
 		howl.on("playerror", howl_onError, handle);
+		howl.on("loaderror", howl_onError, handle);
 
 		if (time > 0)
 		{
@@ -235,7 +238,7 @@ class HTML5AudioSource
 
 	private function hasSound(howl:Howl, id:Int):Bool
 	{
-		return id >= 0 && untyped howl._soundById(id) != null;
+		return id >= 0 && howl.hasSound(id);
 	}
 
 	private function findHowlForHandle(id:Int):Howl
@@ -322,12 +325,7 @@ class HTML5AudioSource
 
 		if (parent.buffer.__srcHowlerDefaultSprite != null)
 		{
-			final sprite:Dynamic = untyped howl._sprite[parent.buffer.__srcHowlerDefaultSprite];
-
-			if (sprite != null)
-			{
-				return sprite[1];
-			}
+			return howl.spriteDuration(parent.buffer.__srcHowlerDefaultSprite) * 1000.0;
 		}
 
 		return howl.duration() * 1000.0;

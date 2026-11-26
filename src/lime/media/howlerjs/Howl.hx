@@ -12,7 +12,16 @@ class Howl
 	 * @param	id		The sound id to check. If none is passed, return full source duration.
 	 * @return	Audio duration in seconds.
 	 */
-	public function duration(?id:Int):Int
+	public function duration(?id:Int):Float
+	{
+		return 0;
+	}
+
+	/**
+	 * Get the duration of a named sprite in seconds.
+	 * Returns 0 when the sprite does not exist.
+	 */
+	public function spriteDuration(name:String):Float
 	{
 		return 0;
 	}
@@ -61,6 +70,14 @@ class Howl
 	public function mute(muted:Bool, ?id:Int):Howl
 	{
 		return this;
+	}
+
+	/**
+	 * Check whether a sound ID still belongs to this Howl.
+	 */
+	public function hasSound(id:Int):Bool
+	{
+		return false;
 	}
 
 	/**
@@ -259,7 +276,8 @@ import haxe.extern.EitherType;
 extern class Howl
 {
 	public function new(options:HowlOptions);
-	public function duration(?id:Int):Int;
+	public function duration(?id:Int):Float;
+	public function spriteDuration(name:String):Float;
 	public function fade(from:Float, to:Float, len:Int, ?id:Int):Howl;
 	public function load():Howl;
 	@:overload(function(id:Int):Bool {})
@@ -267,6 +285,7 @@ extern class Howl
 	@:overload(function(loop:Bool, id:Int):Howl {})
 	public function loop():Bool;
 	public function mute(muted:Bool, ?id:Int):Howl;
+	public function hasSound(id:Int):Bool;
 	public function off(event:String, fn:Function, ?id:Int):Howl;
 	public function on(event:String, fn:Function, ?id:Int):Howl;
 	public function once(event:String, fn:Function, ?id:Int):Howl;
