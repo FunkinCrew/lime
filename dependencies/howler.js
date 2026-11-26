@@ -1783,6 +1783,25 @@
     },
 
     /**
+     * Get the duration of a named sprite.
+     * @param {String} name Sprite name.
+     * @return {Number} Sprite duration in seconds, or 0 if it does not exist.
+     */
+    spriteDuration: function(name) {
+      var sprite = this._sprite && this._sprite[name];
+      return sprite && typeof sprite[1] === 'number' ? sprite[1] / 1000 : 0;
+    },
+
+    /**
+     * Check whether a sound ID belongs to this Howl.
+     * @param {Number} id Sound ID.
+     * @return {Boolean}
+     */
+    hasSound: function(id) {
+      return !!this._soundById(id);
+    },
+
+    /**
      * Returns the current loaded state of this Howl.
      * @return {String} 'unloaded', 'loading', 'loaded'
      */

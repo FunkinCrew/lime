@@ -324,6 +324,7 @@ class AudioBuffer
 
 			audioBuffer.__srcHowl.on("loaderror", function(id, msg)
 			{
+				audioBuffer.dispose();
 				promise.error(msg);
 			});
 
