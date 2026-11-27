@@ -166,6 +166,22 @@ class AudioBuffer
 		#end
 	}
 
+	public function warmUp(framesToPrime:Int = 12000):Void
+	{
+		#if (lime_cffi && lime_miniaudio && !macro && cpp)
+		if (__srcMADecoder != null)
+		{
+			var bytesPerSample:Int = MAHelpers.get_bytes_per_sample(format);
+			var scratch = new Float32Array(Bytes.alloc(framesToPrime * channels * bytesPerSample));
+
+			__srcMADecoder.read_pcm_frames(Pointer.ofArray(scratch.buffer.getData()), framesToPrime);
+
+			__srcMADecoder.seek_to_pcm_frame(0);
+			scratch = null;
+		}
+		#end
+	}
+
 	/**
 		Creates an `AudioBuffer` from a `Bytes` object.
 
