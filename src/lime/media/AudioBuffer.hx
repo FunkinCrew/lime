@@ -170,7 +170,7 @@ class AudioBuffer
 		Creates an `AudioBuffer` from a `Bytes` object.
 
 		@param bytes The `Bytes` object containing the audio data.
-		@param stream Whether to use streaming instead of directly decoding all the audio data.
+		@param stream Whether to use memory streaming instead of directly decoding all the audio data.
 		@return An `AudioBuffer` instance with the decoded audio data.
 	**/
 	public static function fromBytes(bytes:Bytes, ?stream:Bool = false):AudioBuffer
@@ -197,7 +197,7 @@ class AudioBuffer
 		Creates an `AudioBuffer` from a file.
 
 		@param path The file path to the audio data.
-		@param stream Whether to use streaming instead of directly decoding all the audio data.
+		@param stream Whether to use file streaming instead of directly decoding all the audio data.
 		@return An `AudioBuffer` instance with the audio data loaded from the file.
 	**/
 	public static function fromFile(path:String, ?stream:Bool = false):AudioBuffer
