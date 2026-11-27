@@ -35,10 +35,6 @@ class NativeCFFI
 	private static final lime_file_dialog_open_directory = Prime.load("lime", "lime_file_dialog_open_directory", "ososbv");
 	private static final lime_file_dialog_open_file = Prime.load("lime", "lime_file_dialog_open_file", "osoooisbv");
 	private static final lime_file_dialog_save_file = Prime.load("lime", "lime_file_dialog_save_file", "osoooisv");
-	private static final lime_file_watcher_create = Prime.load("lime", "lime_file_watcher_create", "oo");
-	private static final lime_file_watcher_add_directory = Prime.load("lime", "lime_file_watcher_add_directory", "oobo");
-	private static final lime_file_watcher_remove_directory = Prime.load("lime", "lime_file_watcher_remove_directory", "oov");
-	private static final lime_file_watcher_update = Prime.load("lime", "lime_file_watcher_update", "ov");
 	private static final lime_font_get_ascender = Prime.load("lime", "lime_font_get_ascender", "oi");
 	private static final lime_font_get_descender = Prime.load("lime", "lime_font_get_descender", "oi");
 	private static final lime_font_get_family_name = Prime.load("lime", "lime_font_get_family_name", "oo");
@@ -201,10 +197,6 @@ class NativeCFFI
 	private static final lime_file_dialog_open_directory = CFFI.load("lime", "lime_file_dialog_open_directory", 5);
 	private static final lime_file_dialog_open_file = CFFI.load("lime", "lime_file_dialog_open_file", -1);
 	private static final lime_file_dialog_save_file = CFFI.load("lime", "lime_file_dialog_save_file", -1);
-	private static final lime_file_watcher_create = CFFI.load("lime", "lime_file_watcher_create", 1);
-	private static final lime_file_watcher_add_directory = CFFI.load("lime", "lime_file_watcher_add_directory", 3);
-	private static final lime_file_watcher_remove_directory = CFFI.load("lime", "lime_file_watcher_remove_directory", 2);
-	private static final lime_file_watcher_update = CFFI.load("lime", "lime_file_watcher_update", 1);
 	private static final lime_font_get_ascender = CFFI.load("lime", "lime_font_get_ascender", 1);
 	private static final lime_font_get_descender = CFFI.load("lime", "lime_font_get_descender", 1);
 	private static final lime_font_get_family_name = CFFI.load("lime", "lime_font_get_family_name", 1);

@@ -7,9 +7,6 @@ Copyright (c) 2013-2025 Joshua Granick and other Lime contributors
 This product bundles cairo 1.15.2, which is available under an
 "MPL 1.1" license. For details, see [project/lib/cairo/](project/lib).
 
-This product bundles efsw, which is available under an
-"MIT" license. For details, see [project/lib/efsw/](project/lib).
-
 This product bundles freetype 2.9.1, which is available under an
 "FTL" (BSD-style) license. For details, see [project/lib/freetype/](project/lib).
 

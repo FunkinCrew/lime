@@ -1,11 +1,11 @@
 # Submodule projects
+
 Lime includes code from several other C/C++ libraries, listed below. Lime prefers to use GitHub repositories as its submodules, purely so that the links will be clickable when viewed on github.com. However, some of these repos are mirrors, with the development being conducted elsewhere.
 
 **_Always submit issues and pull requests to the primary repo, not to a GitHub mirror._**
 
 - [**Cairo**](https://www.cairographics.org/) | [primary repo](https://gitlab.freedesktop.org/cairo/cairo) | [GitHub mirror](https://github.com/freedesktop/cairo)
 - [**cURL**](https://curl.se/) | [primary repo](https://github.com/curl/curl)
-- **efsw** | [primary repo](https://github.com/SpartanJ/efsw)
 - [**FreeType**](https://freetype.org/) | [primary repo](https://gitlab.freedesktop.org/freetype/freetype) | [GitHub mirror](https://github.com/freetype/freetype)
 - [**HarfBuzz**](https://harfbuzz.github.io/) | [primary repo](https://github.com/harfbuzz/harfbuzz)
 - [**libjpeg-turbo**](https://www.libjpeg-turbo.org/) | [primary repo](https://github.com/libjpeg-turbo/libjpeg-turbo)

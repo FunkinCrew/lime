@@ -30,10 +30,6 @@
 	path = project/lib/pixman
 	url = https://gitlab.freedesktop.org/pixman/pixman.git
 	shallow = true
-[submodule "project/lib/efsw"]
-	path = project/lib/efsw
-	url = https://github.com/SpartanJ/efsw
-	shallow = true
 [submodule "project/lib/sdl_image"]
 	path = project/lib/sdl_image
 	url = https://github.com/libsdl-org/SDL_image.git

@@ -67,14 +67,6 @@ namespace lime
 		delete application;
 	}
 
-	void gc_file_watcher(value handle)
-	{
-#ifdef LIME_EFSW
-		FileWatcher *watcher = (FileWatcher *)val_data(handle);
-		delete watcher;
-#endif
-	}
-
 	void gc_font(value handle)
 	{
 		Font *font = (Font *)val_data(handle);
@@ -411,42 +403,6 @@ namespace lime
 				}
 			},
 			targetNames.data(), targetPatterns.data(), targetCount, targetDefaultPath);
-	}
-
-	value lime_file_watcher_create(value callback)
-	{
-#ifdef LIME_EFSW
-		FileWatcher *watcher = new FileWatcher(callback);
-		return CFFIPointer(watcher, gc_file_watcher);
-#else
-		return alloc_null();
-#endif
-	}
-
-	value lime_file_watcher_add_directory(value handle, value path, bool recursive)
-	{
-#ifdef LIME_EFSW
-		FileWatcher *watcher = (FileWatcher *)val_data(handle);
-		return alloc_int(watcher->AddDirectory(val_string(path), recursive));
-#else
-		return alloc_int(0);
-#endif
-	}
-
-	void lime_file_watcher_remove_directory(value handle, value watchID)
-	{
-#ifdef LIME_EFSW
-		FileWatcher *watcher = (FileWatcher *)val_data(handle);
-		watcher->RemoveDirectory(val_int(watchID));
-#endif
-	}
-
-	void lime_file_watcher_update(value handle)
-	{
-#ifdef LIME_EFSW
-		FileWatcher *watcher = (FileWatcher *)val_data(handle);
-		watcher->Update();
-#endif
 	}
 
 	int lime_font_get_ascender(value fontHandle)
@@ -1804,10 +1760,6 @@ namespace lime
 	DEFINE_PRIME5v(lime_file_dialog_open_directory);
 	DEFINE_PRIME8v(lime_file_dialog_open_file);
 	DEFINE_PRIME7v(lime_file_dialog_save_file);
-	DEFINE_PRIME1(lime_file_watcher_create);
-	DEFINE_PRIME3(lime_file_watcher_add_directory);
-	DEFINE_PRIME2v(lime_file_watcher_remove_directory);
-	DEFINE_PRIME1v(lime_file_watcher_update);
 	DEFINE_PRIME1(lime_font_get_ascender);
 	DEFINE_PRIME1(lime_font_get_descender);
 	DEFINE_PRIME1(lime_font_get_family_name);
