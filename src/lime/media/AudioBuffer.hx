@@ -185,16 +185,7 @@ class AudioBuffer
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		final config:MADecoderConfig = new MADecoderConfig();
 
-		if (stream)
-		{
-			config.format = F32;
-
-			config.sampleRate = AudioManager.engine.get_sample_rate();
-		}
-		else
-		{
-			config.format = S16;
-		}
+		config.format = stream ? F32 : S16;
 
 		return __createFromMADecoder(MADecoder.init_memory(bytes, config), stream);
 		#else
@@ -223,16 +214,7 @@ class AudioBuffer
 		#elseif (lime_cffi && lime_miniaudio && !macro)
 		final config:MADecoderConfig = new MADecoderConfig();
 
-		if (stream)
-		{
-			config.format = F32;
-
-			config.sampleRate = AudioManager.engine.get_sample_rate();
-		}
-		else
-		{
-			config.format = S16;
-		}
+		config.format = stream ? F32 : S16;
 
 		return __createFromMADecoder(MADecoder.init_file(path, config), stream);
 		#else
